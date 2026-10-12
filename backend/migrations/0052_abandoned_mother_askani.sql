@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "uq_sermon_discussion_guides_public_published" ON "sermon_discussion_guides" USING btree ("sermon_id") WHERE "sermon_discussion_guides"."status" = 'published' and "sermon_discussion_guides"."audience_type" = 'public';

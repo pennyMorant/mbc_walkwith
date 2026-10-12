@@ -1,0 +1,29 @@
+backend:
+  base_url: "http://localhost:3020/v1"
+  email: "admin@mbc.local"
+  password: "password123"
+  submit_for_review: true
+
+paths:
+  work_dir: "./work"
+  ffmpeg_bin: "ffmpeg"
+  ffprobe_bin: "ffprobe"
+
+transcription:
+  provider: "faster-whisper-cpu"
+  model: "medium"
+  device: "cpu"
+  compute_type: "int8"
+  language: "zh"
+
+summary:
+  provider: "ollama"
+  model: "qwen3:14b"
+  endpoint: "http://localhost:11434"
+  api_key: null
+  temperature: 0.2
+
+defaults:
+  speaker: ""
+  series: ""
+  primary_reference: ""

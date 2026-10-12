@@ -1,0 +1,929 @@
+{
+  "@@locale": "zh",
+  "appTitle": "MBCG",
+  "commonStatusUnknownLabel": "未知状态",
+  "commonVisibilityUnknownLabel": "未知可见性",
+  "commonPrivacyUnknownLabel": "未知隐私范围",
+  "tabStudy": "读经",
+  "tabSermons": "讲道",
+  "tabLife": "生活",
+  "tabMine": "我的",
+  "mineTitle": "我的",
+  "memberOptionalSignInTitle": "可选登录",
+  "memberOptionalSignInBody": "你可以继续以访客使用；登录后可在后续同步读经、祷告和奉献记录。",
+  "memberEmailLabel": "邮箱",
+  "memberInvalidEmail": "请输入有效的邮箱地址。",
+  "memberShowPasswordTooltip": "显示密码",
+  "memberHidePasswordTooltip": "隐藏密码",
+  "memberNameLabel": "姓名",
+  "memberPasswordLabel": "密码",
+  "memberConfirmPasswordLabel": "确认密码",
+  "memberCodeLabel": "验证码",
+  "memberVerifyEmailAction": "验证邮箱",
+  "memberSignInAction": "登录",
+  "memberContinueWithGoogle": "使用 Google 继续",
+  "memberContinueWithApple": "使用 Apple 继续",
+  "memberAuthAlternative": "或",
+  "memberFederatedSetupUnavailable": "Google 与 Apple 登录尚未完成配置。",
+  "memberFederatedSignInFailed": "登录未能完成，请重试。",
+  "memberLoginEmailTitle": "欢迎回来",
+  "memberLoginEmailBody": "登录后继续参与教会生活。",
+  "memberNextAction": "下一步",
+  "memberCreateAccountAction": "创建账号",
+  "memberPasswordTitle": "输入密码",
+  "memberForgotPasswordAction": "忘记密码？",
+  "memberPasswordResetTitle": "重设密码",
+  "memberPasswordResetRequestBody": "如该邮箱可重设密码，我们会发送验证码。",
+  "memberPasswordResetCodeBody": "请输入邮件中的验证码，然后设置新密码。",
+  "memberPasswordResetAction": "重设密码",
+  "memberPasswordResetComplete": "密码已更新，请使用新密码登录。",
+  "memberBackToSignInAction": "返回登录",
+  "memberRegisterAction": "注册",
+  "memberChangeEmailAction": "更换邮箱",
+  "memberPasswordMismatch": "两次输入的密码不一致。",
+  "memberSignOutAction": "退出登录",
+  "memberRegistrationClosed": "会员注册暂时关闭，请联系教会办公室。",
+  "memberRegistrationPendingApproval": "注册已收到，请等待教会审核。",
+  "memberProfileTitle": "我的资料",
+  "memberProfileEditTitle": "资料详情",
+  "memberProfileSaveAction": "保存资料",
+  "memberProfileSaved": "资料已保存。",
+  "memberProfileOpenAction": "编辑资料",
+  "memberStatusLabel": "状态",
+  "memberRoleLabel": "身份",
+  "memberGroupLabel": "小组",
+  "memberNoGroupLabel": "未加入小组",
+  "memberPhoneLabel": "电话",
+  "memberAddressLabel": "地址",
+  "memberFaithStartYearLabel": "信主年份",
+  "memberBaptizedYearLabel": "受洗年份",
+  "memberJoinedChurchAtLabel": "加入教会日期",
+  "memberEmergencyContactNameLabel": "紧急联系人",
+  "memberEmergencyContactPhoneLabel": "紧急联系人电话",
+  "mineGivingEntryTitle": "奉献与年度证明",
+  "mineGivingEntryBody": "查看奉献记录、已确认数据和年度证明 PDF。",
+  "mineLifeOverviewTitle": "我的教会生活",
+  "mineLifeOverviewBody": "快速查看你的小组、课程、服事和关怀请求状态。",
+  "mineLifeGroupsLabel": "小组",
+  "mineLifeCoursesLabel": "课程",
+  "mineLifeCoursesCountLabel": "{count} 门课程",
+  "@mineLifeCoursesCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeServingLabel": "服事",
+  "mineLifeServingCountLabel": "{count} 项服事",
+  "@mineLifeServingCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeCareLabel": "关怀",
+  "mineLifeOverviewMetricSemanticLabel": "{label}：{count}",
+  "@mineLifeOverviewMetricSemanticLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeOpenLifeAction": "打开生活",
+  "preferencesTitle": "偏好",
+  "appearanceTitle": "外观",
+  "themeModeSystem": "跟随系统",
+  "themeModeLight": "浅色",
+  "themeModeDark": "深色",
+  "textSizeTitle": "字体大小",
+  "textSizeBody": "让读经、敬拜和教会生活内容更容易阅读。",
+  "textSizeSystem": "跟随系统",
+  "textSizeStandard": "标准",
+  "textSizeLarge": "大",
+  "textSizeExtraLarge": "特大",
+  "notificationPermissionTitle": "通知权限",
+  "notificationPermissionEnabledBody": "系统已允许通知。需要关闭时，请通过开关进入系统设置。",
+  "notificationPermissionDisabledBody": "系统通知权限未开启。打开开关后会请求系统权限。",
+  "aboutTitle": "关于",
+  "aboutChurchTitle": "关于教会",
+  "churchAddressTitle": "地址 / 地图",
+  "churchPhoneTitle": "联系电话",
+  "churchEmailTitle": "联系邮箱",
+  "privacyPolicyTitle": "隐私政策",
+  "termsOfUseTitle": "使用条款",
+  "appVersionTitle": "App 版本",
+  "appVersionValue": "版本 {version}",
+  "@appVersionValue": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "periodPickerTooltip": "选择日期范围",
+  "periodThisWeek": "本周",
+  "periodThisMonth": "本月",
+  "periodPreviousAction": "上一段",
+  "periodNextAction": "下一段",
+  "periodApplyAction": "应用",
+  "languageTitle": "语言",
+  "systemLanguageLabel": "系统语言",
+  "languageSystemBody": "App 默认跟随系统语言。需要切换语言时，请在系统原生设置中修改此 App 的语言。",
+  "openSystemSettingsAction": "打开系统设置",
+  "bibleTranslationLabel": "圣经版本",
+  "studyTitle": "读经",
+  "bibleSearchTooltip": "搜索经文",
+  "bibleSearchTitle": "搜索经文",
+  "bibleSearchHint": "输入一句经文或关键词",
+  "bibleSearchStartTitle": "搜索整本圣经",
+  "bibleSearchStartBody": "可以输入一句话、半句经文或几个关键词。搜索会使用当前 App 语言对应的圣经版本。",
+  "bibleSearchNoResultsTitle": "没有找到匹配经文",
+  "bibleSearchNoResultsBody": "可以减少关键词，或换一种说法。搜索会尝试宽松匹配，但太短的词可能会被忽略。",
+  "bibleSearchErrorTitle": "搜索失败",
+  "versePickerTooltip": "选择经节",
+  "versePickerTitle": "选择经节",
+  "readerSettingsTooltip": "阅读设置",
+  "readerSettingsTitle": "阅读设置",
+  "readerAssistsTitle": "阅读辅助",
+  "chapterPeopleAssistTitle": "本章人物",
+  "chapterPeopleAssistBody": "在当前章节统一显示本章出现的圣经人物入口，不在每节反复标注。",
+  "chapterPlacesAssistTitle": "本章地名",
+  "chapterPlacesAssistBody": "在当前章节统一显示本章出现的圣经地名入口，不在每节反复标注。",
+  "lexiconAssistTitle": "原文词汇",
+  "lexiconAssistBody": "经文有本地原文资料时，显示词汇解释入口。",
+  "aiStudyHintsAssistTitle": "AI 解经提示",
+  "aiStudyHintsAssistBody": "启用长按经文释义和相关学习提示。",
+  "chapterPeopleTooltip": "本章人物",
+  "chapterPeopleTitle": "本章人物",
+  "chapterPlacesTooltip": "本章地名",
+  "chapterPlacesTitle": "本章地名",
+  "continueReadingTitle": "继续阅读",
+  "continueReadingAction": "继续",
+  "defaultContinueReadingTitle": "罗马书 8",
+  "defaultContinueReadingSubtitle": "从罗马书 8 继续",
+  "continueReadingChapterSubtitle": "从 {bookName} {chapter} 继续",
+  "@continueReadingChapterSubtitle": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "continueReadingVerseSubtitle": "上次读到 {chapter}:{verse} · {bookName}",
+  "@continueReadingVerseSubtitle": {
+    "placeholders": {
+      "chapter": {
+        "type": "int"
+      },
+      "verse": {
+        "type": "String"
+      },
+      "bookName": {
+        "type": "String"
+      }
+    }
+  },
+  "readingPlansTitle": "我的读经计划",
+  "readingPlansBody": "继续当前计划，使用本地经文阅读或朗读。",
+  "readingPlanStartAction": "开始",
+  "readingPlanContinueAction": "继续",
+  "readingPlanReadAction": "阅读",
+  "readingPlanCompleteDayAction": "标记完成",
+  "readingPlanCompletedLabel": "已完成",
+  "readingPlanNoDaysBody": "这个计划还没有每日经文引用。",
+  "readingPlanLoadErrorTitle": "读经计划载入失败",
+  "readingPlanLoadErrorBody": "请刷新后再试一次。",
+  "readingPlanActionError": "读经计划更新失败，请再试一次。",
+  "readingPlanDaysLabel": "{count} 天",
+  "@readingPlanDaysLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "readingPlanDayLabel": "第 {dayNumber} 天",
+  "@readingPlanDayLabel": {
+    "placeholders": {
+      "dayNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "readingPlanProgressLabel": "已完成 {completed}/{total}",
+  "@readingPlanProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mineReadingPlansTitle": "我的读经计划",
+  "mineReadingPlansBody": "查看我的读经计划和完成进度。",
+  "mineReadingPlansEmpty": "从读经页面开始一个计划后，进度会显示在这里。",
+  "mineReadingPlansOpenStudyAction": "打开读经",
+  "readingPlanCurrentTab": "进行中",
+  "readingPlanHistoryTab": "历史",
+  "readingPlanCurrentEmpty": "当前没有进行中的读经计划。",
+  "readingPlanHistoryEmpty": "已完成或已结束的计划会显示在这里。",
+  "readingPlanViewAllAction": "查看计划",
+  "readingPlanRestartAction": "重新开始",
+  "readingPlanLoadMoreAction": "加载更多",
+  "readingPlanPauseAction": "暂停",
+  "readingPlanResumeAction": "继续",
+  "readingPlanAbandonAction": "结束计划",
+  "readingPlanAbandonConfirmBody": "结束本次计划并移入历史吗？已保存的进度仍会保留。",
+  "readingPlanNotStartedLabel": "未开始",
+  "readingPlanActiveLabel": "进行中",
+  "readingPlanPausedLabel": "已暂停",
+  "readingPlanAbandonedLabel": "已结束",
+  "readingPlanAttemptLabel": "第 {attempt} 次",
+  "@readingPlanAttemptLabel": {"placeholders": {"attempt": {"type": "int"}}},
+  "readingPlanStartedOn": "开始于 {date}",
+  "@readingPlanStartedOn": {"placeholders": {"date": {"type": "String"}}},
+  "readingPlanEndedOn": "结束于 {date}",
+  "@readingPlanEndedOn": {"placeholders": {"date": {"type": "String"}}},
+  "readingPlanHistoryDetailTitle": "计划详情",
+  "readingPlanNoteLabel": "笔记",
+  "readingPlanRestartedMessage": "新的读经计划已开始。",
+  "mineReadingPlanProgressChip": "已完成 {completed}",
+  "@mineReadingPlanProgressChip": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      }
+    }
+  },
+  "oldTestamentLabel": "旧约",
+  "newTestamentLabel": "新约",
+  "bibleBookCountLabel": "{count} 卷",
+  "@bibleBookCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterCountLabel": "{count} 章",
+  "@bibleChapterCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterCountWithName": "{count} 章 · {bookName}",
+  "@bibleChapterCountWithName": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "bookName": {
+        "type": "String"
+      }
+    }
+  },
+  "bibleChapterReference": "{bookName} {chapter}",
+  "@bibleChapterReference": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterButtonSemanticLabel": "{bookName}第 {chapter} 章",
+  "@bibleChapterButtonSemanticLabel": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryLaw": "摩西五经",
+  "categoryOldTestamentHistory": "历史书",
+  "categoryWisdom": "诗歌智慧书",
+  "categoryMajorProphets": "大先知书",
+  "categoryMinorProphets": "小先知书",
+  "categoryGospels": "福音书",
+  "categoryActs": "历史书",
+  "categoryPaulineLetters": "保罗书信",
+  "categoryGeneralLetters": "普通书信",
+  "categoryApocalyptic": "启示文学",
+  "studyLoadErrorTitle": "圣经目录载入失败",
+  "studyLoadErrorBody": "请稍后重试，或检查本地圣经种子数据是否已正确打包。",
+  "readerFallbackTitle": "读经",
+  "previousChapterTooltip": "上一章",
+  "nextChapterTooltip": "下一章",
+  "readerLoadErrorTitle": "章节载入失败",
+  "readerLoadErrorBody": "请稍后重试，或检查本地圣经数据是否完成导入。",
+  "emptyChapterBody": "这一章暂时没有可显示的经文。",
+  "verseActionsTooltip": "笔记与高亮",
+  "verseActionsTitle": "经文工具",
+  "bookmarkVerseTitle": "收藏这一节",
+  "highlightTitle": "高亮",
+  "highlightNone": "无",
+  "highlightYellow": "金色",
+  "highlightGreen": "绿色",
+  "highlightBlue": "蓝色",
+  "highlightRose": "玫瑰色",
+  "noteTitle": "笔记",
+  "noteHint": "写下私人读经笔记",
+  "saveNoteAction": "保存笔记",
+  "verseNotesMyNotesTab": "我的笔记",
+  "verseNotesChurchNotesTab": "教会心得",
+  "verseNotesPublishHint": "发布后，其他使用此 App 的人读到这节经文时可以看到。",
+  "verseNotesDisplayNameHint": "访客显示名",
+  "verseNotesContentHint": "分享你对这节经文的心得",
+  "verseNotesPublishAction": "分享",
+  "verseNotesUpdateAction": "更新",
+  "verseNotesDeleteAction": "删除",
+  "verseNotesYourReflectionTitle": "我的心得",
+  "verseNotesSharedTitle": "公开心得",
+  "verseNotesCountLabel": "{count} 条心得",
+  "@verseNotesCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verseNotesMineLabel": "我的",
+  "verseNotesEmptyState": "这节经文还没有公开心得。",
+  "verseNotesEmptyError": "请先写下心得。",
+  "verseNotesGenericError": "经文心得加载失败。",
+  "studyChapterLabel": "罗马书 8",
+  "translationLabel": "和合本",
+  "relatedSermonsLabel": "{count} 篇相关讲道",
+  "@relatedSermonsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verseNumberLabel": "第 {verse} 节",
+  "@verseNumberLabel": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "explanationTitleSuffix": "{reference} 释义",
+  "@explanationTitleSuffix": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceLabel": "依据来源",
+  "relatedVersesLabel": "相关经文",
+  "aiStudyDisclaimer": "AI 解释供学习参考，重要神学或牧养问题请咨询牧者。",
+  "aiStudySheetTitle": "AI 查经辅助",
+  "aiStudyQuestionLabel": "问题",
+  "aiStudyDefaultQuestion": "请帮助我按上下文理解这节经文。",
+  "aiStudyGenerateAction": "生成查经辅助",
+  "aiStudyRetryAction": "重新提问",
+  "aiStudyResultTitle": "学习回应",
+  "aiStudySignInTitle": "需要登录",
+  "aiStudySignInBody": "请先在“我的”页面登录，再使用 AI 查经辅助。",
+  "aiStudyErrorTitle": "AI 查经辅助暂不可用",
+  "aiStudyProviderDisabled": "AI 服务还没有配置完成，请等教会同工开启后再试。",
+  "aiStudyProviderFailed": "AI 服务暂时没有响应，请稍后重试。",
+  "aiStudyRateLimited": "AI 请求太频繁了，请稍等后再试。",
+  "lexiconLoveTitle": "爱 / agape",
+  "lexiconGoodTitle": "益处 / agathon",
+  "lexiconLoveBody": "希腊文 ἀγάπη，常用于表达出于神主动、坚定、盟约性的爱。",
+  "lexiconGoodBody": "希腊文 ἀγαθόν，指良善、有益处的结果。罗马书 8:28 的重点不是环境本身舒服，而是神最终成就的良善目的。",
+  "confirmKnown": "知道了",
+  "sermonsTitle": "讲道",
+  "searchSermonsTooltip": "搜索讲道",
+  "sermonFilterTooltip": "筛选讲道",
+  "sermonFilterTitle": "筛选讲道",
+  "sermonFilterSpeakerLabel": "讲员",
+  "sermonFilterSeriesLabel": "系列",
+  "sermonFilterTopicLabel": "主题",
+  "sermonFilterClearAction": "清除筛选",
+  "sermonFilterLoadError": "筛选条件暂时无法加载，请稍后重试。",
+  "sermonDetailTitle": "讲道详情",
+  "sermonContinueListeningTitle": "继续收听",
+  "sermonStudyNotesTitle": "讲义",
+  "sermonSummaryTitle": "讲道重点",
+  "sermonOpenDetailAction": "查看讲道详情",
+  "sermonOutlineTitle": "沉浸式讲义",
+  "sermonReferencesTitle": "讲道引用经文",
+  "sermonTranscriptTitle": "讲道文本",
+  "sermonSectionNotesLabel": "讲义",
+  "sermonSectionReferencesLabel": "经文",
+  "sermonSectionTranscriptLabel": "文稿",
+  "sermonPlaybackSpeedTitle": "播放速度",
+  "sermonTranscriptReadAction": "阅读文本",
+  "sermonTranscriptCollapseAction": "收起",
+  "sermonAiAskAction": "询问这篇讲道",
+  "sermonDiscussionTitle": "讲道讨论包",
+  "sermonDiscussionPrivateLabel": "私密回应",
+  "sermonDiscussionQuestionsTitle": "讨论问题",
+  "sermonDiscussionActionStepsTitle": "行动回应",
+  "sermonDiscussionPrayerTitle": "祷告方向",
+  "sermonDiscussionRespondAction": "写回应",
+  "sermonDiscussionResponseTitle": "个人回应",
+  "sermonDiscussionResponseHint": "写下你的心得或下一步行动",
+  "sermonDiscussionResponsePrivateNote": "你的回应默认只对自己可见。",
+  "sermonDiscussionSubmitAction": "提交",
+  "sermonDiscussionSubmitted": "回应已保存。",
+  "sermonDiscussionError": "回应保存失败，请再试一次。",
+  "sermonDiscussionLoadError": "讨论材料加载失败。",
+  "sermonDiscussionObservationChip": "观察",
+  "sermonDiscussionInterpretationChip": "解释",
+  "sermonDiscussionApplicationChip": "应用",
+  "sermonDiscussionPrayerChip": "祷告",
+  "sermonDiscussionActionChip": "行动",
+  "sermonAiSheetTitle": "讲道问答",
+  "sermonAiDefaultQuestion": "请帮助我理解这篇讲道的重点。",
+  "sermonAiGenerateAction": "生成讲道回答",
+  "relatedSermonsTitle": "相关讲道",
+  "sermonLoadErrorTitle": "讲道数据暂时无法加载",
+  "sermonLoadErrorBody": "稍后会从后端重新获取讲道列表。",
+  "retryAction": "重试",
+  "sermonEmptyTitle": "暂无讲道内容",
+  "sermonAudioMissing": "暂未上传音频",
+  "sermonAudioPreparing": "正在准备音频",
+  "sermonAudioLoading": "正在加载音频",
+  "sermonAudioReady": "可以播放",
+  "sermonAudioUnavailable": "音频暂时无法加载",
+  "rewindTooltip": "后退 15 秒",
+  "playTooltip": "播放",
+  "forwardTooltip": "前进 30 秒",
+  "lifeTitle": "教会生活",
+  "notificationsTooltip": "通知",
+  "notificationsPageTitle": "通知",
+  "notificationInboxTitle": "最近通知",
+  "unreadCountSemanticLabel": "{label}，{count} 条未读",
+  "@unreadCountSemanticLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationInboxEmptyTitle": "暂无通知",
+  "notificationInboxEmptyBody": "这台设备收到新的教会更新后会显示在这里。",
+  "notificationRefreshAction": "刷新通知",
+  "notificationMarkAllReadAction": "全部标为已读",
+  "notificationClearAction": "清空通知",
+  "notificationDeviceUnavailableBody": "当前构建还没有接入 Firebase 应用配置，暂时无法启用推送。",
+  "weeklyBulletinTitle": "本周周报",
+  "lifeSundayHeroEmptyBody": "同工发布本周主日信息后，会显示在这里。",
+  "lifeTabWeek": "本周",
+  "lifeTabEvents": "活动",
+  "lifeTabGroups": "小组",
+  "lifeTabCourses": "课程",
+  "lifeTabServing": "服事",
+  "lifeTabPrayer": "代祷",
+  "lifeTabWeekEmpty": "新的教会生活卡片发布后会显示在这里。",
+  "lifeTabEventsEmpty": "当前暂无开放的活动卡片。",
+  "lifeTabMemberSignInBody": "请到“我的”登录后查看会友专属的小组、课程、服事和关怀卡片。",
+  "lifeTabPrayerDisabled": "当前构建暂未启用代祷请求。",
+  "lifeOpenDetailAction": "查看详情",
+  "lifeUpdatesTitle": "最新动态",
+  "lifeParticipationTitle": "我的参与",
+  "lifeLoadErrorTitle": "教会生活数据暂时无法加载",
+  "lifeLoadErrorBody": "稍后会从后端重新获取周报和生活信息。",
+  "lifeSectionLoadError": "此区域暂时无法加载，请重试。",
+  "lifeEmptyTitle": "暂无教会生活内容",
+  "lifePostNoBody": "详细内容会稍后补充。",
+  "lifePostVisibilityMembers": "会众可见",
+  "lifePostVisibilityGroup": "小组可见",
+  "lifePostVisibilityPrivate": "私密",
+  "lifePostTypeWeeklyBulletin": "周报",
+  "lifePostTypeSunday": "主日",
+  "lifePostTypeAnnouncement": "公告",
+  "lifePostTypeEvent": "活动",
+  "lifePostTypeGroup": "小组",
+  "lifePostTypeFellowship": "团契",
+  "lifePostTypeCourse": "课程",
+  "lifePostTypeServing": "服事",
+  "lifePostTypePrayer": "代祷",
+  "lifePostTypeGiving": "奉献",
+  "lifePostUnread": "未读",
+  "lifePostActionOpen": "打开链接",
+  "lifePostScheduleTbd": "时间待定",
+  "myEventRegistrationsTitle": "我的报名",
+  "groupsTitle": "小组与团契",
+  "groupsEmptyBody": "目前暂无可加入的小组或团契。",
+  "groupApplyAction": "申请加入",
+  "groupAlreadyMember": "你已在小组中",
+  "groupApplicationSubmitted": "申请已提交",
+  "groupApplicationSubmitSuccess": "申请已提交。",
+  "groupWithdrawAction": "撤回申请",
+  "groupApplicationWithdrawSuccess": "申请已撤回。",
+  "groupCapacityFull": "小组已满员",
+  "groupMyGroupsTitle": "我的小组",
+  "groupMyGroupsEmptyBody": "你目前还没有加入小组。",
+  "groupSignInToViewMineBody": "登录后可在不同设备查看你的小组。",
+  "groupMemberCount": "{count} 位成员",
+  "@groupMemberCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupMemberCapacity": "{count}/{capacity} 位成员",
+  "@groupMemberCapacity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "coursesTitle": "课程与学习",
+  "coursesEmptyBody": "目前暂无开放的课程。",
+  "courseMyCoursesTitle": "我的课程",
+  "courseMyCoursesEmptyBody": "你目前还没有课程报名记录。",
+  "courseLessonsTitle": "课程课次",
+  "courseLessonsEmptyBody": "这门课程尚未发布课次。",
+  "courseSignInToEnrollBody": "登录后可报名课程，并在不同设备同步学习进度。",
+  "courseSignInToViewMineBody": "登录后可查看正在学习和已经完成的课程。",
+  "courseEnrollAction": "报名课程",
+  "courseSubmittedAction": "已提交",
+  "courseEnrolledAction": "已报名",
+  "courseWaitlistedAction": "候补中",
+  "courseCancelledAction": "已取消",
+  "courseCompletedAction": "已完成",
+  "courseEnrollmentSubmitSuccess": "课程报名已提交。",
+  "courseStatusDraft": "草稿",
+  "courseStatusOpen": "开放报名",
+  "courseStatusClosed": "已关闭",
+  "courseStatusInProgress": "进行中",
+  "courseStatusCompleted": "已完成",
+  "courseStatusArchived": "已归档",
+  "courseLessonCount": "{count} 个课次",
+  "@courseLessonCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "courseCapacityOpen": "名额开放",
+  "courseCapacityLabel": "{count}/{capacity} 个名额",
+  "@courseCapacityLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "courseProgressLabel": "已完成 {completed}/{total} 个课次",
+  "@courseProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "servingTitle": "我的服事",
+  "servingEmptyBody": "目前暂无服事安排。",
+  "servingConfirmAction": "确认服事",
+  "servingLeaveAction": "请假",
+  "servingConfirmSuccess": "服事已确认。",
+  "servingLeaveSuccess": "请假请求已提交。",
+  "servingStatusScheduled": "待确认",
+  "servingStatusConfirmed": "已确认",
+  "servingStatusDeclined": "已请假",
+  "servingStatusSwapRequested": "申请换班",
+  "servingStatusCovered": "已有替补",
+  "servingStatusCancelled": "已取消",
+  "servingScheduleTab": "排班",
+  "servingAvailabilityTab": "可用时间",
+  "servingAvailabilityEmptyBody": "尚未提交可用时间。",
+  "servingAvailabilityAddAction": "添加可用时间",
+  "servingAvailabilitySheetTitle": "新的可用时间",
+  "servingAvailabilityStatusLabel": "可用状态",
+  "servingAvailabilityStatusAvailable": "可以服事",
+  "servingAvailabilityStatusUnavailable": "无法服事",
+  "servingAvailabilityStatusPreferred": "优先时段",
+  "servingAvailabilityStartLabel": "开始时间",
+  "servingAvailabilityEndLabel": "结束时间",
+  "servingAvailabilityNoteHint": "补充说明（可选）",
+  "servingAvailabilitySaveAction": "保存可用时间",
+  "servingAvailabilityCreateSuccess": "可用时间已保存。",
+  "servingAvailabilityInvalidRange": "结束时间必须晚于开始时间。",
+  "servingCheckInTitle": "到岗状态",
+  "servingCheckInAction": "确认到岗",
+  "servingCheckInSuccess": "到岗已确认。",
+  "servingCheckInNotRecorded": "尚未确认到岗。",
+  "servingCheckInStatusPending": "待到岗",
+  "servingCheckInStatusCheckedIn": "已到岗",
+  "servingCheckInStatusMissed": "未到岗",
+  "servingAssignmentNoteTitle": "服事说明",
+  "servingResponseNoteTitle": "我的回复",
+  "eventRegistrationTitle": "活动报名",
+  "eventRegistrationRegisterAction": "报名",
+  "eventRegistrationUpdateAction": "保存修改",
+  "eventRegistrationCancelAction": "取消报名",
+  "eventRegistrationCheckInAction": "签到",
+  "eventCheckInScanAction": "扫描现场码",
+  "eventCheckInScanTitle": "现场签到",
+  "eventCheckInScanPrompt": "请扫描同工打印的活动签到二维码。",
+  "eventCheckInScanSuccessTitle": "签到成功",
+  "eventCheckInScanViewEvent": "查看活动",
+  "eventCheckInScanAgain": "继续扫描",
+  "eventCheckInScanSignInRequired": "请先登录，再扫描现场签到二维码。",
+  "eventCheckInQrInvalid": "这个签到二维码无效，请重新扫描。",
+  "eventCheckInQrExpired": "这个签到二维码已过期，请联系同工。",
+  "eventCheckInQrDisabled": "这个签到二维码已停用，请联系同工。",
+  "eventCheckInQrRegistrationRequired": "没有找到你的活动报名，请先报名或联系同工。",
+  "eventRegistrationRegistered": "你已报名",
+  "eventRegistrationCheckedIn": "你已签到",
+  "eventRegistrationSignInBody": "登录后即可报名参加这个活动。",
+  "eventRegistrationFull": "报名名额已满。",
+  "eventRegistrationClosed": "报名已截止。",
+  "eventRegistrationUnavailable": "这个活动目前不可报名或不可查看。",
+  "eventRegistrationNotFound": "没有找到你的报名记录，请刷新后再试。",
+  "eventRegistrationPartySizeInvalid": "请选择更少的参加人数。",
+  "eventRegistrationCheckInLocked": "已签到的报名只能由同工修改。",
+  "eventRegistrationSuccess": "报名成功。",
+  "eventRegistrationUpdateSuccess": "报名信息已更新。",
+  "eventRegistrationCancelSuccess": "已取消报名。",
+  "eventRegistrationCheckInSuccess": "签到成功。",
+  "eventRegistrationCheckedInAt": "签到时间：{time}",
+  "@eventRegistrationCheckedInAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventRegistrationPartySizeLabel": "参加人数",
+  "eventRegistrationPartySize": "{count} 人",
+  "@eventRegistrationPartySize": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationNoteLabel": "备注",
+  "eventRegistrationNoteHint": "餐食需要、到达说明，或可协助事项",
+  "eventRegistrationSpots": "已报名 {registered}/{capacity}",
+  "@eventRegistrationSpots": {
+    "placeholders": {
+      "registered": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationUnlimitedSpots": "已报名 {registered}",
+  "@eventRegistrationUnlimitedSpots": {
+    "placeholders": {
+      "registered": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationRemaining": "剩余 {remaining} 个名额",
+  "@eventRegistrationRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "givingGuestBody": "登录后可查看自己的奉献记录和年度证明。",
+  "givingHistoryTitle": "奉献记录",
+  "givingTransactionsTitle": "最近交易",
+  "givingTransactionsEmptyBody": "暂时还没有奉献记录。",
+  "givingSummaryYear": "{year} 年",
+  "@givingSummaryYear": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "givingSummaryAmount": "总额 {amount}",
+  "@givingSummaryAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "givingSummaryCount": "{count} 笔奉献",
+  "@givingSummaryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "givingStatementSectionTitle": "年度证明",
+  "annualStatementsTitle": "年度证明",
+  "annualStatementsEmptyBody": "暂时还没有年度证明。",
+  "givingStatementLabel": "{year} 年证明",
+  "@givingStatementLabel": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "prayerTitle": "代祷",
+  "prayerEmptyBody": "暂无公开代祷事项。",
+  "prayerSubmitTitle": "提交代祷事项",
+  "prayerSubmitAction": "提交",
+  "prayerGuestSubmitBody": "可以访客身份提交。私密事项只给牧者和后台同工查看。",
+  "prayerMemberSubmitBody": "这条代祷会关联到你的会员资料，之后可以查看处理状态。",
+  "prayerTitleLabel": "标题",
+  "prayerBodyLabel": "代祷内容",
+  "prayerNameLabel": "姓名",
+  "prayerValidationError": "请填写标题和代祷内容。",
+  "prayerSubmittedMessage": "代祷事项已提交，等待审核。",
+  "prayerMineLabel": "我的",
+  "prayerVisibilityPrivate": "私密",
+  "prayerVisibilityPublic": "公开",
+  "prayerVisibilityMembers": "会众",
+  "prayerVisibilityGroup": "小组",
+  "prayerStatusPending": "待审核",
+  "prayerStatusApproved": "已通过",
+  "prayerStatusHidden": "已隐藏",
+  "prayerStatusArchived": "已归档",
+  "careTitle": "关怀",
+  "careEmptyBody": "暂时还没有关怀请求。",
+  "careSubmitTitle": "请求牧养关怀",
+  "careSubmitAction": "请求关怀",
+  "careSubmitBody": "请简要说明你希望牧者或关怀同工如何跟进。内部跟进备注只给授权同工查看。",
+  "careSignInRequired": "请先以会友身份登录后再提交关怀请求。",
+  "careTitleLabel": "标题",
+  "careBodyLabel": "你希望我们如何关怀你？",
+  "carePrivacyLabel": "隐私范围",
+  "carePrivacyPastoralOnly": "仅牧者团队",
+  "carePrivacyAssignedTeam": "指定关怀团队",
+  "carePrivacyAdminRestricted": "仅受限管理员",
+  "careValidationError": "请填写标题和关怀内容。",
+  "careSubmittedMessage": "关怀请求已提交。",
+  "careStatusSubmitted": "已提交",
+  "careStatusAssigned": "已分配",
+  "careStatusInProgress": "跟进中",
+  "careStatusResolved": "已解决",
+  "careStatusArchived": "已归档",
+  "careNextFollowUp": "下次跟进 {date}",
+  "@careNextFollowUp": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "givingTitle": "奉献",
+  "givingCardTitle": "奉献与年度证明",
+  "givingCardBody": "通过 Stripe 安全奉献，完成后可在这里查看已确认的奉献记录和年度证明。",
+  "givingCheckoutTitle": "现在奉献",
+  "givingCheckoutBody": "付款由 Stripe 处理，App 不保存银行卡或银行账户信息。",
+  "givingAmountLabel": "金额",
+  "givingFundLabel": "奉献项目",
+  "givingFundsLoading": "正在加载奉献项目...",
+  "givingFundsEmpty": "当前没有可用的奉献项目。",
+  "givingCategoryOffering": "奉献",
+  "givingCategoryMissions": "宣教",
+  "givingCheckoutAction": "前往 Stripe",
+  "givingAmountError": "请输入 USD 1.00 至 USD 100,000.00 之间的金额，最多保留两位小数。",
+  "givingCheckoutOpenError": "无法打开 Stripe 付款页面。",
+  "givingCheckoutReturnSuccess": "Stripe 付款流程已完成。确认入账后会显示在奉献记录中。",
+  "givingCheckoutReturnCancel": "Stripe 付款已取消。",
+  "annualStatementTooltip": "年度证明",
+  "annualStatementPreviewAction": "预览 CSV",
+  "annualStatementCopyCsvAction": "复制 CSV",
+  "annualStatementCopiedMessage": "证明 CSV 已复制。",
+  "annualStatementSavePdfAction": "保存 PDF",
+  "annualStatementSharePdfAction": "分享 PDF",
+  "annualStatementSharePdfText": "年度奉献证明",
+  "annualStatementPdfSharedMessage": "年度证明 PDF 已分享。",
+  "annualStatementPdfOpenedMessage": "年度证明 PDF 已保存并打开。",
+  "annualStatementPdfSavedMessage": "年度证明 PDF 已保存到 {path}。",
+  "@annualStatementPdfSavedMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "copyPathAction": "复制路径",
+  "annualStatementExportTitle": "证明导出",
+  "annualStatementStatusPendingLabel": "处理中",
+  "annualStatementStatusReadyLabel": "可用",
+  "annualStatementStatusSentLabel": "已发送",
+  "annualStatementStatusFailedLabel": "失败",
+  "givingStatusPendingLabel": "处理中",
+  "givingStatusSucceededLabel": "成功",
+  "givingStatusFailedLabel": "失败",
+  "givingStatusRefundedLabel": "已退款",
+  "bibleTtsReadyTitle": "朗读圣经",
+  "bibleTtsCurrentVerse": "正在朗读第 {verse} 节",
+  "@bibleTtsCurrentVerse": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleTtsPausedVerse": "已暂停在第 {verse} 节，继续会重读本节。",
+  "@bibleTtsPausedVerse": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleTtsRateLabel": "{rate}x",
+  "@bibleTtsRateLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "double",
+        "format": "compact"
+      }
+    }
+  },
+  "bibleTtsPlayTooltip": "朗读",
+  "bibleTtsPauseTooltip": "暂停朗读",
+  "bibleTtsStopTooltip": "停止朗读",
+  "bibleTtsPreviousVerseTooltip": "上一节",
+  "bibleTtsNextVerseTooltip": "下一节",
+  "bibleTtsErrorTextMissing": "这段经文没有可朗读的文字。",
+  "bibleTtsErrorEngineUnavailable": "此设备暂时无法使用文字朗读。请检查系统语音设置后重试。",
+  "bibleTtsErrorLanguageUnavailable": "系统尚未安装这个圣经语言的语音。",
+  "bibleTtsErrorInterrupted": "朗读已中断。点击播放可从当前经节继续。",
+  "bibleTtsErrorStartFailed": "无法开始朗读。请检查设备语音设置后重试。",
+  "newcomerCardTitle": "第一次来吗？",
+  "newcomerCardBody": "我们很愿意欢迎你、回答问题，并帮助你认识教会生活。",
+  "newcomerCardAction": "我是新朋友",
+  "newcomerSheetTitle": "欢迎来到 MBCG",
+  "newcomerSheetGuestBody": "留下简单资料，教会同工会与你联系。",
+  "newcomerSheetMemberBody": "你也可以介绍自己，或请同工与你联系。",
+  "newcomerNameLabel": "姓名",
+  "newcomerEmailLabel": "邮箱",
+  "newcomerPhoneLabel": "电话",
+  "newcomerInterestLabel": "你想了解什么？",
+  "newcomerSubmitAction": "发送给教会同工",
+  "newcomerNameValidationError": "请输入姓名。",
+  "newcomerContactValidationError": "请至少留下邮箱或电话。",
+  "newcomerEmailValidationError": "请输入有效的邮箱地址。",
+  "newcomerSubmittedMessage": "谢谢，我们已经收到你的资料。",
+  "mineDiscipleshipTitle": "我的门徒成长路径",
+  "mineDiscipleshipBody": "查看教会同工为你安排的下一步成长操练。",
+  "mineDiscipleshipEmpty": "当前还没有分配成长路径。",
+  "mineDiscipleshipLoadError": "无法加载你的成长路径。",
+  "mineDiscipleshipProgressChip": "{completed}/{total} 个任务",
+  "@mineDiscipleshipProgressChip": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "discipleshipStatusNotStarted": "未开始",
+  "discipleshipStatusInProgress": "进行中",
+  "discipleshipStatusBlocked": "受阻",
+  "discipleshipStatusCompleted": "已完成",
+  "discipleshipStatusPaused": "已暂停",
+  "discipleshipStatusCancelled": "已取消"
+}

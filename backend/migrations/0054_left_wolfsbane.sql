@@ -1,0 +1,1 @@
+ALTER TABLE "public_posts" ADD COLUMN "revision" integer DEFAULT 0 NOT NULL;

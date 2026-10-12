@@ -1,0 +1,40 @@
+{
+  "name": "@mbc/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/main.ts",
+    "db:generate": "drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "test -n \"$DATABASE_URL\" || (echo 'DATABASE_URL is required to run Drizzle Kit migrations.' >&2; exit 1); drizzle-kit migrate --config drizzle.config.ts",
+    "db:check": "drizzle-kit check --config drizzle.config.ts",
+    "db:smoke": "bun run db:migrate && bun src/scripts/postgres-smoke.ts",
+    "db:seed:bible-knowledge": "bun run db:migrate && bun src/scripts/import-bible-knowledge-assets.ts",
+    "start": "bun src/main.ts",
+    "build": "echo 'No backend build step; Bun runs the TypeScript source directly.'",
+    "typecheck": "bun run tsc --noEmit",
+    "test": "bun run vitest run"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1138.0",
+    "@fastify/cors": "^10.0.2",
+    "@fastify/helmet": "^13.1.1",
+    "@fastify/sensible": "^6.0.5",
+    "@mbc/api-contracts": "workspace:*",
+    "@mbc/shared-types": "workspace:*",
+    "drizzle-orm": "^0.38.4",
+    "fastify": "^5.12.5",
+    "firebase-admin": "^14.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.23.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/pg": "^8.23.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "drizzle-kit": "^0.30.2",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
+  }
+}

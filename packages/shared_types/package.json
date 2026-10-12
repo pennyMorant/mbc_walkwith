@@ -1,0 +1,17 @@
+{
+  "name": "@mbc/shared-types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "echo 'No shared-types build step; Bun consumes workspace source directly.'",
+    "typecheck": "bun run tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

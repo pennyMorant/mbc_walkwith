@@ -1,0 +1,929 @@
+{
+  "@@locale": "en",
+  "appTitle": "MBCG",
+  "commonStatusUnknownLabel": "Unknown status",
+  "commonVisibilityUnknownLabel": "Unknown visibility",
+  "commonPrivacyUnknownLabel": "Unknown privacy",
+  "tabStudy": "Study",
+  "tabSermons": "Sermons",
+  "tabLife": "Life",
+  "tabMine": "Mine",
+  "mineTitle": "Mine",
+  "memberOptionalSignInTitle": "Optional sign in",
+  "memberOptionalSignInBody": "Keep using the app as a guest, or sign in for synced reading, prayer, and giving records later.",
+  "memberEmailLabel": "Email",
+  "memberInvalidEmail": "Enter a valid email address.",
+  "memberShowPasswordTooltip": "Show password",
+  "memberHidePasswordTooltip": "Hide password",
+  "memberNameLabel": "Name",
+  "memberPasswordLabel": "Password",
+  "memberConfirmPasswordLabel": "Confirm password",
+  "memberCodeLabel": "Code",
+  "memberVerifyEmailAction": "Verify email",
+  "memberSignInAction": "Sign in",
+  "memberContinueWithGoogle": "Continue with Google",
+  "memberContinueWithApple": "Continue with Apple",
+  "memberAuthAlternative": "or",
+  "memberFederatedSetupUnavailable": "Google and Apple sign-in are not configured yet.",
+  "memberFederatedSignInFailed": "Sign-in could not be completed. Please try again.",
+  "memberLoginEmailTitle": "Welcome back",
+  "memberLoginEmailBody": "Sign in to continue your church life.",
+  "memberNextAction": "Next",
+  "memberCreateAccountAction": "Create account",
+  "memberPasswordTitle": "Enter your password",
+  "memberForgotPasswordAction": "Forgot password?",
+  "memberPasswordResetTitle": "Reset password",
+  "memberPasswordResetRequestBody": "We will send a verification code if this email can reset a password.",
+  "memberPasswordResetCodeBody": "Enter the code from your email, then choose a new password.",
+  "memberPasswordResetAction": "Reset password",
+  "memberPasswordResetComplete": "Password updated. Sign in with your new password.",
+  "memberBackToSignInAction": "Back to sign in",
+  "memberRegisterAction": "Register",
+  "memberChangeEmailAction": "Change email",
+  "memberPasswordMismatch": "The passwords do not match.",
+  "memberSignOutAction": "Sign out",
+  "memberRegistrationClosed": "Member registration is currently closed. Please contact the church office.",
+  "memberRegistrationPendingApproval": "Registration received. Please wait for church approval.",
+  "memberProfileTitle": "My profile",
+  "memberProfileEditTitle": "Profile details",
+  "memberProfileSaveAction": "Save profile",
+  "memberProfileSaved": "Profile saved.",
+  "memberProfileOpenAction": "Edit profile",
+  "memberStatusLabel": "Status",
+  "memberRoleLabel": "Role",
+  "memberGroupLabel": "Group",
+  "memberNoGroupLabel": "No group",
+  "memberPhoneLabel": "Phone",
+  "memberAddressLabel": "Address",
+  "memberFaithStartYearLabel": "Faith start year",
+  "memberBaptizedYearLabel": "Baptized year",
+  "memberJoinedChurchAtLabel": "Joined church date",
+  "memberEmergencyContactNameLabel": "Emergency contact",
+  "memberEmergencyContactPhoneLabel": "Emergency phone",
+  "mineGivingEntryTitle": "Giving and annual statements",
+  "mineGivingEntryBody": "Open giving history, confirmed records, and annual statement PDFs.",
+  "mineLifeOverviewTitle": "My church life",
+  "mineLifeOverviewBody": "Quick status for your groups, classes, serving, and care requests.",
+  "mineLifeGroupsLabel": "groups",
+  "mineLifeCoursesLabel": "classes",
+  "mineLifeCoursesCountLabel": "{count, plural, =1{1 class} other{{count} classes}}",
+  "@mineLifeCoursesCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeServingLabel": "serving",
+  "mineLifeServingCountLabel": "{count, plural, =1{1 serving role} other{{count} serving roles}}",
+  "@mineLifeServingCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeCareLabel": "care",
+  "mineLifeOverviewMetricSemanticLabel": "{label}: {count}",
+  "@mineLifeOverviewMetricSemanticLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeOpenLifeAction": "Open Life",
+  "preferencesTitle": "Preferences",
+  "appearanceTitle": "Appearance",
+  "themeModeSystem": "System",
+  "themeModeLight": "Light",
+  "themeModeDark": "Dark",
+  "textSizeTitle": "Text size",
+  "textSizeBody": "Make app text easier to read for worship and church life.",
+  "textSizeSystem": "System",
+  "textSizeStandard": "Standard",
+  "textSizeLarge": "Large",
+  "textSizeExtraLarge": "Extra large",
+  "notificationPermissionTitle": "Notification permission",
+  "notificationPermissionEnabledBody": "Notifications are allowed. Use the switch to open system settings if you want to turn them off.",
+  "notificationPermissionDisabledBody": "Notifications are off. Turn this on to request system permission.",
+  "aboutTitle": "About",
+  "aboutChurchTitle": "About church",
+  "churchAddressTitle": "Address / map",
+  "churchPhoneTitle": "Contact phone",
+  "churchEmailTitle": "Contact email",
+  "privacyPolicyTitle": "Privacy policy",
+  "termsOfUseTitle": "Terms of use",
+  "appVersionTitle": "App version",
+  "appVersionValue": "Version {version}",
+  "@appVersionValue": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "periodPickerTooltip": "Choose date range",
+  "periodThisWeek": "This week",
+  "periodThisMonth": "This month",
+  "periodPreviousAction": "Previous",
+  "periodNextAction": "Next",
+  "periodApplyAction": "Apply",
+  "languageTitle": "Language",
+  "systemLanguageLabel": "System language",
+  "languageSystemBody": "The app follows your system language. To change language, use the native system settings for this app.",
+  "openSystemSettingsAction": "Open system settings",
+  "bibleTranslationLabel": "Bible translation",
+  "studyTitle": "Bible",
+  "bibleSearchTooltip": "Search Scripture",
+  "bibleSearchTitle": "Search Scripture",
+  "bibleSearchHint": "Search a phrase or keywords",
+  "bibleSearchStartTitle": "Search the Bible",
+  "bibleSearchStartBody": "Enter a phrase, partial verse, or keywords. Results use the current app language's Bible translation.",
+  "bibleSearchNoResultsTitle": "No matching verses",
+  "bibleSearchNoResultsBody": "Try fewer words or another phrase. The search allows partial matches, but very short words may be ignored.",
+  "bibleSearchErrorTitle": "Search failed",
+  "versePickerTooltip": "Choose verse",
+  "versePickerTitle": "Choose a verse",
+  "readerSettingsTooltip": "Reader settings",
+  "readerSettingsTitle": "Reader settings",
+  "readerAssistsTitle": "Reading assists",
+  "chapterPeopleAssistTitle": "Chapter people",
+  "chapterPeopleAssistBody": "Show one chapter-level entry for biblical figures found in the current chapter.",
+  "chapterPlacesAssistTitle": "Chapter places",
+  "chapterPlacesAssistBody": "Show one chapter-level entry for biblical places found in the current chapter.",
+  "lexiconAssistTitle": "Original-language words",
+  "lexiconAssistBody": "Show original-language word insight when a verse has local lexicon data.",
+  "aiStudyHintsAssistTitle": "AI study hints",
+  "aiStudyHintsAssistBody": "Enable long-press verse explanations and related study hints.",
+  "chapterPeopleTooltip": "People in this chapter",
+  "chapterPeopleTitle": "People in this chapter",
+  "chapterPlacesTooltip": "Places in this chapter",
+  "chapterPlacesTitle": "Places in this chapter",
+  "continueReadingTitle": "Continue reading",
+  "continueReadingAction": "Continue",
+  "defaultContinueReadingTitle": "Romans 8",
+  "defaultContinueReadingSubtitle": "Resume from Romans 8",
+  "continueReadingChapterSubtitle": "Resume from {bookName} {chapter}",
+  "@continueReadingChapterSubtitle": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "continueReadingVerseSubtitle": "Last read {chapter}:{verse} · {bookName}",
+  "@continueReadingVerseSubtitle": {
+    "placeholders": {
+      "chapter": {
+        "type": "int"
+      },
+      "verse": {
+        "type": "String"
+      },
+      "bookName": {
+        "type": "String"
+      }
+    }
+  },
+  "readingPlansTitle": "My reading plan",
+  "readingPlansBody": "Continue your current plan with local Scripture text and TTS.",
+  "readingPlanStartAction": "Start",
+  "readingPlanContinueAction": "Continue",
+  "readingPlanReadAction": "Read",
+  "readingPlanCompleteDayAction": "Mark complete",
+  "readingPlanCompletedLabel": "Completed",
+  "readingPlanNoDaysBody": "This plan has no daily references yet.",
+  "readingPlanLoadErrorTitle": "Reading plans failed to load",
+  "readingPlanLoadErrorBody": "Please refresh and try again.",
+  "readingPlanActionError": "Could not update the reading plan. Please try again.",
+  "readingPlanDaysLabel": "{count, plural, =1{1 day} other{{count} days}}",
+  "@readingPlanDaysLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "readingPlanDayLabel": "Day {dayNumber}",
+  "@readingPlanDayLabel": {
+    "placeholders": {
+      "dayNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "readingPlanProgressLabel": "{completed}/{total} completed",
+  "@readingPlanProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mineReadingPlansTitle": "My reading plans",
+  "mineReadingPlansBody": "Your personal reading plans and completion progress.",
+  "mineReadingPlansEmpty": "Start a plan from Study to keep your progress here.",
+  "mineReadingPlansOpenStudyAction": "Open Study",
+  "readingPlanCurrentTab": "Current",
+  "readingPlanHistoryTab": "History",
+  "readingPlanCurrentEmpty": "No reading plan is in progress.",
+  "readingPlanHistoryEmpty": "Completed and abandoned plans will appear here.",
+  "readingPlanViewAllAction": "View plans",
+  "readingPlanRestartAction": "Start again",
+  "readingPlanLoadMoreAction": "Load more",
+  "readingPlanPauseAction": "Pause",
+  "readingPlanResumeAction": "Resume",
+  "readingPlanAbandonAction": "End plan",
+  "readingPlanAbandonConfirmBody": "End this attempt and move it to history? Its progress will remain available.",
+  "readingPlanNotStartedLabel": "Not started",
+  "readingPlanActiveLabel": "In progress",
+  "readingPlanPausedLabel": "Paused",
+  "readingPlanAbandonedLabel": "Ended",
+  "readingPlanAttemptLabel": "Attempt {attempt}",
+  "@readingPlanAttemptLabel": {"placeholders": {"attempt": {"type": "int"}}},
+  "readingPlanStartedOn": "Started {date}",
+  "@readingPlanStartedOn": {"placeholders": {"date": {"type": "String"}}},
+  "readingPlanEndedOn": "Ended {date}",
+  "@readingPlanEndedOn": {"placeholders": {"date": {"type": "String"}}},
+  "readingPlanHistoryDetailTitle": "Plan details",
+  "readingPlanNoteLabel": "Note",
+  "readingPlanRestartedMessage": "A new reading-plan attempt has started.",
+  "mineReadingPlanProgressChip": "{completed} done",
+  "@mineReadingPlanProgressChip": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      }
+    }
+  },
+  "oldTestamentLabel": "Old Testament",
+  "newTestamentLabel": "New Testament",
+  "bibleBookCountLabel": "{count, plural, =1{1 book} other{{count} books}}",
+  "@bibleBookCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterCountLabel": "{count, plural, =1{1 chapter} other{{count} chapters}}",
+  "@bibleChapterCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterCountWithName": "{count, plural, =1{1 chapter} other{{count} chapters}} · {bookName}",
+  "@bibleChapterCountWithName": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "bookName": {
+        "type": "String"
+      }
+    }
+  },
+  "bibleChapterReference": "{bookName} {chapter}",
+  "@bibleChapterReference": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterButtonSemanticLabel": "{bookName} chapter {chapter}",
+  "@bibleChapterButtonSemanticLabel": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryLaw": "Law",
+  "categoryOldTestamentHistory": "History",
+  "categoryWisdom": "Poetry and Wisdom",
+  "categoryMajorProphets": "Major Prophets",
+  "categoryMinorProphets": "Minor Prophets",
+  "categoryGospels": "Gospels",
+  "categoryActs": "History",
+  "categoryPaulineLetters": "Pauline Letters",
+  "categoryGeneralLetters": "General Letters",
+  "categoryApocalyptic": "Apocalyptic",
+  "studyLoadErrorTitle": "Bible catalog could not be loaded",
+  "studyLoadErrorBody": "Try again later, or check that local Bible seed data is bundled correctly.",
+  "readerFallbackTitle": "Study",
+  "previousChapterTooltip": "Previous chapter",
+  "nextChapterTooltip": "Next chapter",
+  "readerLoadErrorTitle": "Chapter could not be loaded",
+  "readerLoadErrorBody": "Try again later, or check that local Bible data has finished importing.",
+  "emptyChapterBody": "No verses are available for this chapter yet.",
+  "verseActionsTooltip": "Notes and highlights",
+  "verseActionsTitle": "Verse tools",
+  "bookmarkVerseTitle": "Bookmark this verse",
+  "highlightTitle": "Highlight",
+  "highlightNone": "None",
+  "highlightYellow": "Gold",
+  "highlightGreen": "Green",
+  "highlightBlue": "Blue",
+  "highlightRose": "Rose",
+  "noteTitle": "Note",
+  "noteHint": "Write a private study note",
+  "saveNoteAction": "Save note",
+  "verseNotesMyNotesTab": "My notes",
+  "verseNotesChurchNotesTab": "Church notes",
+  "verseNotesPublishHint": "Shared notes are visible to other people reading this verse in the app.",
+  "verseNotesDisplayNameHint": "Display name for guests",
+  "verseNotesContentHint": "Share a reflection on this verse",
+  "verseNotesPublishAction": "Share",
+  "verseNotesUpdateAction": "Update",
+  "verseNotesDeleteAction": "Delete",
+  "verseNotesYourReflectionTitle": "Your reflection",
+  "verseNotesSharedTitle": "Shared reflections",
+  "verseNotesCountLabel": "{count, plural, =1{1 reflection} other{{count} reflections}}",
+  "@verseNotesCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verseNotesMineLabel": "Mine",
+  "verseNotesEmptyState": "No shared reflections yet.",
+  "verseNotesEmptyError": "Write a reflection before sharing.",
+  "verseNotesGenericError": "Could not load verse notes.",
+  "studyChapterLabel": "Romans 8",
+  "translationLabel": "CUV",
+  "relatedSermonsLabel": "{count, plural, =1{1 related sermon} other{{count} related sermons}}",
+  "@relatedSermonsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verseNumberLabel": "Verse {verse}",
+  "@verseNumberLabel": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "explanationTitleSuffix": "{reference} explanation",
+  "@explanationTitleSuffix": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceLabel": "Sources",
+  "relatedVersesLabel": "Related verses",
+  "aiStudyDisclaimer": "AI explanations are for study support. Please consult church leaders for important theological or pastoral questions.",
+  "aiStudySheetTitle": "AI study help",
+  "aiStudyQuestionLabel": "Question",
+  "aiStudyDefaultQuestion": "Help me understand this verse in context.",
+  "aiStudyGenerateAction": "Generate study help",
+  "aiStudyRetryAction": "Ask again",
+  "aiStudyResultTitle": "Study response",
+  "aiStudySignInTitle": "Sign in required",
+  "aiStudySignInBody": "Sign in from Mine to use AI study help.",
+  "aiStudyErrorTitle": "AI study help is unavailable",
+  "aiStudyProviderDisabled": "AI provider is not configured yet. Please try again after church staff enable it.",
+  "aiStudyProviderFailed": "AI provider did not respond. Please try again later.",
+  "aiStudyRateLimited": "Too many AI requests. Please wait a moment and try again.",
+  "lexiconLoveTitle": "Love / agape",
+  "lexiconGoodTitle": "Good / agathon",
+  "lexiconLoveBody": "Greek ἀγάπη often describes God's active, steadfast, covenantal love.",
+  "lexiconGoodBody": "Greek ἀγαθόν refers to a good or beneficial result. In Romans 8:28, the focus is not that every circumstance feels good, but that God works toward his good purpose.",
+  "confirmKnown": "Got it",
+  "sermonsTitle": "Sermons",
+  "searchSermonsTooltip": "Search sermons",
+  "sermonFilterTooltip": "Filter sermons",
+  "sermonFilterTitle": "Filter sermons",
+  "sermonFilterSpeakerLabel": "Speaker",
+  "sermonFilterSeriesLabel": "Series",
+  "sermonFilterTopicLabel": "Topic",
+  "sermonFilterClearAction": "Clear filters",
+  "sermonFilterLoadError": "Filters could not be loaded. Please try again.",
+  "sermonDetailTitle": "Sermon detail",
+  "sermonContinueListeningTitle": "Continue listening",
+  "sermonStudyNotesTitle": "Sermon notes",
+  "sermonSummaryTitle": "Summary",
+  "sermonOpenDetailAction": "View sermon details",
+  "sermonOutlineTitle": "Immersive outline",
+  "sermonReferencesTitle": "Cited Scripture",
+  "sermonTranscriptTitle": "Transcript",
+  "sermonSectionNotesLabel": "Notes",
+  "sermonSectionReferencesLabel": "Scripture",
+  "sermonSectionTranscriptLabel": "Text",
+  "sermonPlaybackSpeedTitle": "Playback speed",
+  "sermonTranscriptReadAction": "Read transcript",
+  "sermonTranscriptCollapseAction": "Show less",
+  "sermonAiAskAction": "Ask about this sermon",
+  "sermonDiscussionTitle": "Discussion guide",
+  "sermonDiscussionPrivateLabel": "Private response",
+  "sermonDiscussionQuestionsTitle": "Discussion questions",
+  "sermonDiscussionActionStepsTitle": "Action steps",
+  "sermonDiscussionPrayerTitle": "Prayer prompts",
+  "sermonDiscussionRespondAction": "Write response",
+  "sermonDiscussionResponseTitle": "Personal response",
+  "sermonDiscussionResponseHint": "Write your reflection or next step",
+  "sermonDiscussionResponsePrivateNote": "Your response is private by default.",
+  "sermonDiscussionSubmitAction": "Submit",
+  "sermonDiscussionSubmitted": "Response saved.",
+  "sermonDiscussionError": "Could not save the response. Please try again.",
+  "sermonDiscussionLoadError": "Could not load the discussion guide.",
+  "sermonDiscussionObservationChip": "Observe",
+  "sermonDiscussionInterpretationChip": "Interpret",
+  "sermonDiscussionApplicationChip": "Apply",
+  "sermonDiscussionPrayerChip": "Pray",
+  "sermonDiscussionActionChip": "Act",
+  "sermonAiSheetTitle": "Sermon Q&A",
+  "sermonAiDefaultQuestion": "Help me understand the main point of this sermon.",
+  "sermonAiGenerateAction": "Ask sermon question",
+  "relatedSermonsTitle": "Related sermons",
+  "sermonLoadErrorTitle": "Sermons could not be loaded",
+  "sermonLoadErrorBody": "The app will fetch the sermon list from the backend again.",
+  "retryAction": "Retry",
+  "sermonEmptyTitle": "No sermons yet",
+  "sermonAudioMissing": "Audio not uploaded yet",
+  "sermonAudioPreparing": "Preparing audio",
+  "sermonAudioLoading": "Loading audio",
+  "sermonAudioReady": "Ready to play",
+  "sermonAudioUnavailable": "Audio could not be loaded",
+  "rewindTooltip": "Back 15 seconds",
+  "playTooltip": "Play",
+  "forwardTooltip": "Forward 30 seconds",
+  "lifeTitle": "Church Life",
+  "notificationsTooltip": "Notifications",
+  "notificationsPageTitle": "Notifications",
+  "notificationInboxTitle": "Recent notifications",
+  "unreadCountSemanticLabel": "{label}, {count, plural, =1{1 unread item} other{{count} unread items}}",
+  "@unreadCountSemanticLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationInboxEmptyTitle": "No notifications yet",
+  "notificationInboxEmptyBody": "New church updates will appear here after this device receives them.",
+  "notificationRefreshAction": "Refresh notifications",
+  "notificationMarkAllReadAction": "Mark all as read",
+  "notificationClearAction": "Clear notifications",
+  "notificationDeviceUnavailableBody": "Push notifications are unavailable until Firebase app configuration is added for this build.",
+  "weeklyBulletinTitle": "Weekly bulletin",
+  "lifeSundayHeroEmptyBody": "Sunday worship information will appear here after church staff publish it.",
+  "lifeTabWeek": "This week",
+  "lifeTabEvents": "Events",
+  "lifeTabGroups": "Groups",
+  "lifeTabCourses": "Courses",
+  "lifeTabServing": "Serving",
+  "lifeTabPrayer": "Prayer",
+  "lifeTabWeekEmpty": "New church life cards will appear here when they are published.",
+  "lifeTabEventsEmpty": "No open event cards are available right now.",
+  "lifeTabMemberSignInBody": "Sign in from Mine to see member-only groups, courses, serving, and care cards.",
+  "lifeTabPrayerDisabled": "Prayer requests are not enabled for this build yet.",
+  "lifeOpenDetailAction": "View details",
+  "lifeUpdatesTitle": "Latest updates",
+  "lifeParticipationTitle": "My participation",
+  "lifeLoadErrorTitle": "Church life could not be loaded",
+  "lifeLoadErrorBody": "The app will fetch bulletin and life content from the backend again.",
+  "lifeSectionLoadError": "This section could not be loaded. Please try again.",
+  "lifeEmptyTitle": "No church life content yet",
+  "lifePostNoBody": "Details will be added soon.",
+  "lifePostVisibilityMembers": "Members",
+  "lifePostVisibilityGroup": "Group",
+  "lifePostVisibilityPrivate": "Private",
+  "lifePostTypeWeeklyBulletin": "Bulletin",
+  "lifePostTypeSunday": "Sunday",
+  "lifePostTypeAnnouncement": "Announcement",
+  "lifePostTypeEvent": "Event",
+  "lifePostTypeGroup": "Group",
+  "lifePostTypeFellowship": "Fellowship",
+  "lifePostTypeCourse": "Course",
+  "lifePostTypeServing": "Serving",
+  "lifePostTypePrayer": "Prayer",
+  "lifePostTypeGiving": "Giving",
+  "lifePostUnread": "Unread",
+  "lifePostActionOpen": "Open link",
+  "lifePostScheduleTbd": "Time to be announced",
+  "myEventRegistrationsTitle": "My registrations",
+  "groupsTitle": "Groups and fellowships",
+  "groupsEmptyBody": "No groups or fellowships are available right now.",
+  "groupApplyAction": "Apply to join",
+  "groupAlreadyMember": "You are a member",
+  "groupApplicationSubmitted": "Application submitted",
+  "groupApplicationSubmitSuccess": "Application submitted.",
+  "groupWithdrawAction": "Withdraw application",
+  "groupApplicationWithdrawSuccess": "Application withdrawn.",
+  "groupCapacityFull": "Group is full",
+  "groupMyGroupsTitle": "My groups",
+  "groupMyGroupsEmptyBody": "You are not currently in a group.",
+  "groupSignInToViewMineBody": "Sign in to view your groups across devices.",
+  "groupMemberCount": "{count, plural, =1{1 member} other{{count} members}}",
+  "@groupMemberCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupMemberCapacity": "{count}/{capacity} members",
+  "@groupMemberCapacity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "coursesTitle": "Courses and classes",
+  "coursesEmptyBody": "No courses are open right now.",
+  "courseMyCoursesTitle": "My courses",
+  "courseMyCoursesEmptyBody": "You do not have any course enrollments yet.",
+  "courseLessonsTitle": "Course lessons",
+  "courseLessonsEmptyBody": "No lessons have been published for this course yet.",
+  "courseSignInToEnrollBody": "Sign in to enroll and keep your course progress across devices.",
+  "courseSignInToViewMineBody": "Sign in to view your current and completed courses.",
+  "courseEnrollAction": "Enroll",
+  "courseSubmittedAction": "Submitted",
+  "courseEnrolledAction": "Enrolled",
+  "courseWaitlistedAction": "Waitlisted",
+  "courseCancelledAction": "Cancelled",
+  "courseCompletedAction": "Completed",
+  "courseEnrollmentSubmitSuccess": "Course enrollment submitted.",
+  "courseStatusDraft": "Draft",
+  "courseStatusOpen": "Open",
+  "courseStatusClosed": "Closed",
+  "courseStatusInProgress": "In progress",
+  "courseStatusCompleted": "Completed",
+  "courseStatusArchived": "Archived",
+  "courseLessonCount": "{count, plural, =1{1 lesson} other{{count} lessons}}",
+  "@courseLessonCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "courseCapacityOpen": "Open capacity",
+  "courseCapacityLabel": "{count}/{capacity} seats",
+  "@courseCapacityLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "courseProgressLabel": "{completed}/{total} lessons completed",
+  "@courseProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "servingTitle": "My serving",
+  "servingEmptyBody": "No serving assignments are scheduled right now.",
+  "servingConfirmAction": "Confirm",
+  "servingLeaveAction": "Request leave",
+  "servingConfirmSuccess": "Serving assignment confirmed.",
+  "servingLeaveSuccess": "Leave request submitted.",
+  "servingStatusScheduled": "Scheduled",
+  "servingStatusConfirmed": "Confirmed",
+  "servingStatusDeclined": "Leave requested",
+  "servingStatusSwapRequested": "Swap requested",
+  "servingStatusCovered": "Covered",
+  "servingStatusCancelled": "Cancelled",
+  "servingScheduleTab": "Schedule",
+  "servingAvailabilityTab": "Availability",
+  "servingAvailabilityEmptyBody": "No availability has been submitted yet.",
+  "servingAvailabilityAddAction": "Add availability",
+  "servingAvailabilitySheetTitle": "New availability",
+  "servingAvailabilityStatusLabel": "Availability status",
+  "servingAvailabilityStatusAvailable": "Available",
+  "servingAvailabilityStatusUnavailable": "Unavailable",
+  "servingAvailabilityStatusPreferred": "Preferred time",
+  "servingAvailabilityStartLabel": "Starts",
+  "servingAvailabilityEndLabel": "Ends",
+  "servingAvailabilityNoteHint": "Optional note",
+  "servingAvailabilitySaveAction": "Save availability",
+  "servingAvailabilityCreateSuccess": "Availability saved.",
+  "servingAvailabilityInvalidRange": "The end time must be later than the start time.",
+  "servingCheckInTitle": "Arrival status",
+  "servingCheckInAction": "Confirm arrival",
+  "servingCheckInSuccess": "Arrival confirmed.",
+  "servingCheckInNotRecorded": "Arrival has not been confirmed yet.",
+  "servingCheckInStatusPending": "Pending",
+  "servingCheckInStatusCheckedIn": "Arrived",
+  "servingCheckInStatusMissed": "Missed",
+  "servingAssignmentNoteTitle": "Serving note",
+  "servingResponseNoteTitle": "My response",
+  "eventRegistrationTitle": "Event registration",
+  "eventRegistrationRegisterAction": "Register",
+  "eventRegistrationUpdateAction": "Save changes",
+  "eventRegistrationCancelAction": "Cancel registration",
+  "eventRegistrationCheckInAction": "Check in",
+  "eventCheckInScanAction": "Scan onsite code",
+  "eventCheckInScanTitle": "Onsite check-in",
+  "eventCheckInScanPrompt": "Scan the event check-in QR printed by a leader.",
+  "eventCheckInScanSuccessTitle": "Checked in",
+  "eventCheckInScanViewEvent": "View event",
+  "eventCheckInScanAgain": "Scan another",
+  "eventCheckInScanSignInRequired": "Sign in before scanning an onsite check-in QR.",
+  "eventCheckInQrInvalid": "This check-in QR is invalid. Please scan again.",
+  "eventCheckInQrExpired": "This check-in QR has expired. Please ask a leader.",
+  "eventCheckInQrDisabled": "This check-in QR has been disabled. Please ask a leader.",
+  "eventCheckInQrRegistrationRequired": "We could not find your event registration. Please register first or ask a leader.",
+  "eventRegistrationRegistered": "You are registered",
+  "eventRegistrationCheckedIn": "You are checked in",
+  "eventRegistrationSignInBody": "Sign in to register for this event.",
+  "eventRegistrationFull": "Registration is full.",
+  "eventRegistrationClosed": "Registration is closed.",
+  "eventRegistrationUnavailable": "This event is no longer available.",
+  "eventRegistrationNotFound": "Your registration was not found. Refresh and try again.",
+  "eventRegistrationPartySizeInvalid": "Choose a smaller party size.",
+  "eventRegistrationCheckInLocked": "Checked-in registrations can only be changed by a leader.",
+  "eventRegistrationSuccess": "Registration confirmed.",
+  "eventRegistrationUpdateSuccess": "Registration updated.",
+  "eventRegistrationCancelSuccess": "Registration canceled.",
+  "eventRegistrationCheckInSuccess": "Checked in.",
+  "eventRegistrationCheckedInAt": "Checked in at {time}",
+  "@eventRegistrationCheckedInAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventRegistrationPartySizeLabel": "People attending",
+  "eventRegistrationPartySize": "{count, plural, =1{1 person} other{{count} people}}",
+  "@eventRegistrationPartySize": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationNoteLabel": "Note",
+  "eventRegistrationNoteHint": "Meal needs, arrival notes, or how you can help",
+  "eventRegistrationSpots": "{registered}/{capacity} registered",
+  "@eventRegistrationSpots": {
+    "placeholders": {
+      "registered": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationUnlimitedSpots": "{registered} registered",
+  "@eventRegistrationUnlimitedSpots": {
+    "placeholders": {
+      "registered": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationRemaining": "{remaining} spots left",
+  "@eventRegistrationRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "givingGuestBody": "Sign in to see your own giving history and annual statements.",
+  "givingHistoryTitle": "Giving history",
+  "givingTransactionsTitle": "Recent transactions",
+  "givingTransactionsEmptyBody": "No giving transactions are available yet.",
+  "givingSummaryYear": "Year {year}",
+  "@givingSummaryYear": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "givingSummaryAmount": "Total {amount}",
+  "@givingSummaryAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "givingSummaryCount": "{count} gifts",
+  "@givingSummaryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "givingStatementSectionTitle": "Annual statements",
+  "annualStatementsTitle": "Annual statements",
+  "annualStatementsEmptyBody": "No annual statements are available yet.",
+  "givingStatementLabel": "Statement {year}",
+  "@givingStatementLabel": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "prayerTitle": "Prayer",
+  "prayerEmptyBody": "No shared prayer requests yet.",
+  "prayerSubmitTitle": "Submit a prayer request",
+  "prayerSubmitAction": "Submit",
+  "prayerGuestSubmitBody": "You can submit as a guest. Private requests only go to the pastoral/admin team.",
+  "prayerMemberSubmitBody": "This request will be linked to your member profile so you can track its status.",
+  "prayerTitleLabel": "Title",
+  "prayerBodyLabel": "Prayer request",
+  "prayerNameLabel": "Name",
+  "prayerValidationError": "Please enter a title and prayer request.",
+  "prayerSubmittedMessage": "Prayer request submitted for review.",
+  "prayerMineLabel": "Mine",
+  "prayerVisibilityPrivate": "Private",
+  "prayerVisibilityPublic": "Public",
+  "prayerVisibilityMembers": "Members",
+  "prayerVisibilityGroup": "Group",
+  "prayerStatusPending": "Pending",
+  "prayerStatusApproved": "Approved",
+  "prayerStatusHidden": "Hidden",
+  "prayerStatusArchived": "Archived",
+  "careTitle": "Care",
+  "careEmptyBody": "No care requests yet.",
+  "careSubmitTitle": "Request pastoral care",
+  "careSubmitAction": "Request care",
+  "careSubmitBody": "Share what would help the pastoral team care for you. Internal follow-up notes stay private to authorized staff.",
+  "careSignInRequired": "Sign in as a member to request pastoral care.",
+  "careTitleLabel": "Title",
+  "careBodyLabel": "How can we care for you?",
+  "carePrivacyLabel": "Privacy",
+  "carePrivacyPastoralOnly": "Pastoral team only",
+  "carePrivacyAssignedTeam": "Assigned care team",
+  "carePrivacyAdminRestricted": "Restricted admins only",
+  "careValidationError": "Please enter a title and care request.",
+  "careSubmittedMessage": "Care request submitted.",
+  "careStatusSubmitted": "Submitted",
+  "careStatusAssigned": "Assigned",
+  "careStatusInProgress": "In progress",
+  "careStatusResolved": "Resolved",
+  "careStatusArchived": "Archived",
+  "careNextFollowUp": "Next follow-up {date}",
+  "@careNextFollowUp": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "givingTitle": "Giving",
+  "givingCardTitle": "Giving and annual statements",
+  "givingCardBody": "Give securely through Stripe, then return here to review confirmed gifts and annual statements.",
+  "givingCheckoutTitle": "Give now",
+  "givingCheckoutBody": "Your payment is processed by Stripe. The app never stores card or bank details.",
+  "givingAmountLabel": "Amount",
+  "givingFundLabel": "Giving fund",
+  "givingFundsLoading": "Loading giving funds...",
+  "givingFundsEmpty": "No giving funds are available right now.",
+  "givingCategoryOffering": "Offering",
+  "givingCategoryMissions": "Missions",
+  "givingCheckoutAction": "Continue to Stripe",
+  "givingAmountError": "Enter an amount from USD 1.00 to USD 100,000.00 with no more than two decimal places.",
+  "givingCheckoutOpenError": "Could not open the Stripe checkout page.",
+  "givingCheckoutReturnSuccess": "Stripe checkout finished. Your gift will appear after payment confirmation.",
+  "givingCheckoutReturnCancel": "Stripe checkout was canceled.",
+  "annualStatementTooltip": "Annual statement",
+  "annualStatementPreviewAction": "Preview CSV",
+  "annualStatementCopyCsvAction": "Copy CSV",
+  "annualStatementCopiedMessage": "Statement CSV copied.",
+  "annualStatementSavePdfAction": "Save PDF",
+  "annualStatementSharePdfAction": "Share PDF",
+  "annualStatementSharePdfText": "Annual giving statement",
+  "annualStatementPdfSharedMessage": "Statement PDF shared.",
+  "annualStatementPdfOpenedMessage": "Statement PDF saved and opened.",
+  "annualStatementPdfSavedMessage": "Statement PDF saved to {path}.",
+  "@annualStatementPdfSavedMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "copyPathAction": "Copy path",
+  "annualStatementExportTitle": "Statement export",
+  "annualStatementStatusPendingLabel": "Pending",
+  "annualStatementStatusReadyLabel": "Ready",
+  "annualStatementStatusSentLabel": "Sent",
+  "annualStatementStatusFailedLabel": "Failed",
+  "givingStatusPendingLabel": "Pending",
+  "givingStatusSucceededLabel": "Succeeded",
+  "givingStatusFailedLabel": "Failed",
+  "givingStatusRefundedLabel": "Refunded",
+  "bibleTtsReadyTitle": "Read aloud",
+  "bibleTtsCurrentVerse": "Reading verse {verse}",
+  "@bibleTtsCurrentVerse": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleTtsPausedVerse": "Paused at verse {verse}. Resume will reread this verse.",
+  "@bibleTtsPausedVerse": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleTtsRateLabel": "{rate}x",
+  "@bibleTtsRateLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "double",
+        "format": "compact"
+      }
+    }
+  },
+  "bibleTtsPlayTooltip": "Read aloud",
+  "bibleTtsPauseTooltip": "Pause reading",
+  "bibleTtsStopTooltip": "Stop reading",
+  "bibleTtsPreviousVerseTooltip": "Previous verse",
+  "bibleTtsNextVerseTooltip": "Next verse",
+  "bibleTtsErrorTextMissing": "This passage has no readable text.",
+  "bibleTtsErrorEngineUnavailable": "Text-to-speech is unavailable on this device. Check the system speech settings and try again.",
+  "bibleTtsErrorLanguageUnavailable": "The system voice for this Bible language is not installed.",
+  "bibleTtsErrorInterrupted": "Reading was interrupted. Tap play to continue from this verse.",
+  "bibleTtsErrorStartFailed": "Reading could not start. Check the device speech settings and try again.",
+  "newcomerCardTitle": "New here?",
+  "newcomerCardBody": "We would love to welcome you, answer questions, and help you connect with church life.",
+  "newcomerCardAction": "I'm new",
+  "newcomerSheetTitle": "Welcome to MBCG",
+  "newcomerSheetGuestBody": "Leave a few details and our church team will follow up with you.",
+  "newcomerSheetMemberBody": "You can also introduce yourself or ask our team to follow up with you.",
+  "newcomerNameLabel": "Name",
+  "newcomerEmailLabel": "Email",
+  "newcomerPhoneLabel": "Phone",
+  "newcomerInterestLabel": "What would you like to learn about?",
+  "newcomerSubmitAction": "Send to church team",
+  "newcomerNameValidationError": "Please enter your name.",
+  "newcomerContactValidationError": "Please leave an email or phone number.",
+  "newcomerEmailValidationError": "Please enter a valid email address.",
+  "newcomerSubmittedMessage": "Thank you. We received your information.",
+  "mineDiscipleshipTitle": "My discipleship journey",
+  "mineDiscipleshipBody": "Follow the next steps assigned by the church team.",
+  "mineDiscipleshipEmpty": "No discipleship journey is assigned yet.",
+  "mineDiscipleshipLoadError": "Could not load your discipleship journey.",
+  "mineDiscipleshipProgressChip": "{completed}/{total} tasks",
+  "@mineDiscipleshipProgressChip": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "discipleshipStatusNotStarted": "Not started",
+  "discipleshipStatusInProgress": "In progress",
+  "discipleshipStatusBlocked": "Blocked",
+  "discipleshipStatusCompleted": "Completed",
+  "discipleshipStatusPaused": "Paused",
+  "discipleshipStatusCancelled": "Cancelled"
+}

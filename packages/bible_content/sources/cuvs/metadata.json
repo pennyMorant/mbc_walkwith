@@ -1,0 +1,30 @@
+{
+  "versionId": "cuvs",
+  "sourceId": "cmn-cu89s",
+  "name": "Chinese Union Version, Simplified",
+  "language": "zh-Hans",
+  "languageName": "Chinese",
+  "bookSet": "66-book protocanon",
+  "format": "USFM",
+  "sourceProvider": "eBible.org",
+  "sourceUrl": "https://ebible.org/bible/details.php?all=1&id=cmn-cu89s",
+  "downloadUrl": "https://ebible.org/Scriptures/cmn-cu89s_usfm.zip",
+  "copyrightUrl": "https://eBible.org/cmn-cu89s/copyright.htm",
+  "edition": "New Punctuation Chinese Union Version, simplified script",
+  "sourceFilesDate": "2025-12-12",
+  "archivedAt": "2026-05-11",
+  "rawArchive": {
+    "path": "raw/cmn-cu89s_usfm.zip",
+    "sha256": "56f8c5a0fd8b170ec4f668ef64735599c0ab9f3f16df9a4a65c8bb2fb1ee9e40",
+    "fileCount": 70
+  },
+  "license": {
+    "status": "Public Domain",
+    "localHtml": "licenses/copyright.html"
+  },
+  "normalization": {
+    "books": "normalized/books.json",
+    "chapters": "normalized/chapters.jsonl",
+    "verses": "normalized/verses.jsonl"
+  }
+}

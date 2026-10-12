@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX "uq_giving_transactions_provider_transaction" ON "giving_transactions" USING btree ("provider","provider_transaction_id") WHERE "giving_transactions"."provider_transaction_id" is not null;--> statement-breakpoint
+CREATE UNIQUE INDEX "uq_giving_transactions_checkout_session" ON "giving_transactions" USING btree ("provider","provider_checkout_session_id") WHERE "giving_transactions"."provider_checkout_session_id" is not null;

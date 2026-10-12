@@ -1,0 +1,53 @@
+import '../domain/life_post.dart';
+
+final List<LifePost> lifePosts = [
+  LifePost(
+    id: 'mock-life-sunday',
+    type: '主日',
+    title: '本周主日崇拜',
+    body: '上午 10:00 在 Main Sanctuary 敬拜。儿童主日学同步进行。',
+    meta: '周日 10:00 AM',
+    iconName: 'church',
+    startsAt: DateTime.utc(2026, 5, 31, 17),
+    endsAt: DateTime.utc(2026, 5, 31, 18, 30),
+    imageUrl: 'https://images.unsplash.com/photo-1438032005730-c779502df39b',
+    displayWeight: 100,
+  ),
+  LifePost(
+    id: 'mock-life-fellowship',
+    type: '团契',
+    title: '周五家庭团契',
+    body: '本周查考罗马书第 8 章。请带一本圣经，并为新朋友预备简单晚餐。',
+    meta: '周五 7:30 PM',
+    iconName: 'groups',
+    startsAt: DateTime.utc(2026, 5, 30, 2, 30),
+    endsAt: DateTime.utc(2026, 5, 30, 4),
+    registrationEnabled: true,
+    registrationCapacity: 40,
+    registrationDeadline: DateTime.utc(2026, 5, 29, 2, 30),
+    registrationMaxPartySize: 6,
+    registrationSummary: EventRegistrationSummary(
+      enabled: true,
+      capacity: 40,
+      registeredCount: 12,
+      remainingCount: 28,
+    ),
+  ),
+  LifePost(
+    id: 'mock-life-prayer',
+    type: '代祷',
+    title: '本周代祷事项',
+    body: '为暑期短宣、病痛中的肢体、以及新一季儿童事工同工招募祷告。',
+    meta: '成员可见',
+    iconName: 'prayer',
+    visibility: 'members',
+  ),
+  LifePost(
+    id: 'mock-life-giving',
+    type: '奉献',
+    title: '奉献记录与年度报表',
+    body: '第一版先预留入口。后续接入安全支付、收据和年度 Tax-Deductible PDF。',
+    meta: '规划中',
+    iconName: 'giving',
+  ),
+];

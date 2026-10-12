@@ -1,0 +1,21 @@
+{
+  "name": "@mbc/api-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "echo 'No api-contracts build step; Bun consumes workspace source directly.'",
+    "typecheck": "bun run tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@mbc/shared-types": "workspace:*",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

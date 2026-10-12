@@ -1,0 +1,1165 @@
+[
+  {
+    "bookId": "gen",
+    "versionId": "cuvt",
+    "canonicalOrder": 1,
+    "usfmId": "GEN",
+    "osisId": "Gen",
+    "aliases": [
+      "gen",
+      "GEN",
+      "Gen",
+      "Genesis",
+      "genesis",
+      "创世记",
+      "创",
+      "1",
+      "01"
+    ]
+  },
+  {
+    "bookId": "exo",
+    "versionId": "cuvt",
+    "canonicalOrder": 2,
+    "usfmId": "EXO",
+    "osisId": "Exod",
+    "aliases": [
+      "exo",
+      "EXO",
+      "Exod",
+      "Exodus",
+      "exodus",
+      "exod",
+      "出埃及记",
+      "出",
+      "2",
+      "02"
+    ]
+  },
+  {
+    "bookId": "lev",
+    "versionId": "cuvt",
+    "canonicalOrder": 3,
+    "usfmId": "LEV",
+    "osisId": "Lev",
+    "aliases": [
+      "lev",
+      "LEV",
+      "Lev",
+      "Leviticus",
+      "leviticus",
+      "利未记",
+      "利",
+      "3",
+      "03"
+    ]
+  },
+  {
+    "bookId": "num",
+    "versionId": "cuvt",
+    "canonicalOrder": 4,
+    "usfmId": "NUM",
+    "osisId": "Num",
+    "aliases": [
+      "num",
+      "NUM",
+      "Num",
+      "Numbers",
+      "numbers",
+      "民数记",
+      "民",
+      "4",
+      "04"
+    ]
+  },
+  {
+    "bookId": "deu",
+    "versionId": "cuvt",
+    "canonicalOrder": 5,
+    "usfmId": "DEU",
+    "osisId": "Deut",
+    "aliases": [
+      "deu",
+      "DEU",
+      "Deut",
+      "Deuteronomy",
+      "deuteronomy",
+      "deut",
+      "申命记",
+      "申",
+      "5",
+      "05"
+    ]
+  },
+  {
+    "bookId": "jos",
+    "versionId": "cuvt",
+    "canonicalOrder": 6,
+    "usfmId": "JOS",
+    "osisId": "Josh",
+    "aliases": [
+      "jos",
+      "JOS",
+      "Josh",
+      "Joshua",
+      "joshua",
+      "josh",
+      "约书亚记",
+      "书",
+      "6",
+      "06"
+    ]
+  },
+  {
+    "bookId": "jdg",
+    "versionId": "cuvt",
+    "canonicalOrder": 7,
+    "usfmId": "JDG",
+    "osisId": "Judg",
+    "aliases": [
+      "jdg",
+      "JDG",
+      "Judg",
+      "Judges",
+      "judges",
+      "judg",
+      "士师记",
+      "士",
+      "7",
+      "07"
+    ]
+  },
+  {
+    "bookId": "rut",
+    "versionId": "cuvt",
+    "canonicalOrder": 8,
+    "usfmId": "RUT",
+    "osisId": "Ruth",
+    "aliases": [
+      "rut",
+      "RUT",
+      "Ruth",
+      "ruth",
+      "路得记",
+      "得",
+      "8",
+      "08"
+    ]
+  },
+  {
+    "bookId": "1sa",
+    "versionId": "cuvt",
+    "canonicalOrder": 9,
+    "usfmId": "1SA",
+    "osisId": "1Sam",
+    "aliases": [
+      "1sa",
+      "1SA",
+      "1Sam",
+      "1 Samuel",
+      "1 samuel",
+      "1 Sam",
+      "1 sam",
+      "撒母耳记上",
+      "撒上",
+      "9",
+      "09"
+    ]
+  },
+  {
+    "bookId": "2sa",
+    "versionId": "cuvt",
+    "canonicalOrder": 10,
+    "usfmId": "2SA",
+    "osisId": "2Sam",
+    "aliases": [
+      "2sa",
+      "2SA",
+      "2Sam",
+      "2 Samuel",
+      "2 samuel",
+      "2 Sam",
+      "2 sam",
+      "撒母耳记下",
+      "撒下",
+      "10"
+    ]
+  },
+  {
+    "bookId": "1ki",
+    "versionId": "cuvt",
+    "canonicalOrder": 11,
+    "usfmId": "1KI",
+    "osisId": "1Kgs",
+    "aliases": [
+      "1ki",
+      "1KI",
+      "1Kgs",
+      "1 Kings",
+      "1 kings",
+      "1 Kgs",
+      "1 kgs",
+      "列王纪上",
+      "王上",
+      "11"
+    ]
+  },
+  {
+    "bookId": "2ki",
+    "versionId": "cuvt",
+    "canonicalOrder": 12,
+    "usfmId": "2KI",
+    "osisId": "2Kgs",
+    "aliases": [
+      "2ki",
+      "2KI",
+      "2Kgs",
+      "2 Kings",
+      "2 kings",
+      "2 Kgs",
+      "2 kgs",
+      "列王纪下",
+      "王下",
+      "12"
+    ]
+  },
+  {
+    "bookId": "1ch",
+    "versionId": "cuvt",
+    "canonicalOrder": 13,
+    "usfmId": "1CH",
+    "osisId": "1Chr",
+    "aliases": [
+      "1ch",
+      "1CH",
+      "1Chr",
+      "1 Chronicles",
+      "1 chronicles",
+      "1 Chr",
+      "1 chr",
+      "历代志上",
+      "代上",
+      "13"
+    ]
+  },
+  {
+    "bookId": "2ch",
+    "versionId": "cuvt",
+    "canonicalOrder": 14,
+    "usfmId": "2CH",
+    "osisId": "2Chr",
+    "aliases": [
+      "2ch",
+      "2CH",
+      "2Chr",
+      "2 Chronicles",
+      "2 chronicles",
+      "2 Chr",
+      "2 chr",
+      "历代志下",
+      "代下",
+      "14"
+    ]
+  },
+  {
+    "bookId": "ezr",
+    "versionId": "cuvt",
+    "canonicalOrder": 15,
+    "usfmId": "EZR",
+    "osisId": "Ezra",
+    "aliases": [
+      "ezr",
+      "EZR",
+      "Ezra",
+      "ezra",
+      "以斯拉记",
+      "拉",
+      "15"
+    ]
+  },
+  {
+    "bookId": "neh",
+    "versionId": "cuvt",
+    "canonicalOrder": 16,
+    "usfmId": "NEH",
+    "osisId": "Neh",
+    "aliases": [
+      "neh",
+      "NEH",
+      "Neh",
+      "Nehemiah",
+      "nehemiah",
+      "尼希米记",
+      "尼",
+      "16"
+    ]
+  },
+  {
+    "bookId": "est",
+    "versionId": "cuvt",
+    "canonicalOrder": 17,
+    "usfmId": "EST",
+    "osisId": "Esth",
+    "aliases": [
+      "est",
+      "EST",
+      "Esth",
+      "Esther",
+      "esther",
+      "esth",
+      "以斯帖记",
+      "斯",
+      "17"
+    ]
+  },
+  {
+    "bookId": "job",
+    "versionId": "cuvt",
+    "canonicalOrder": 18,
+    "usfmId": "JOB",
+    "osisId": "Job",
+    "aliases": [
+      "job",
+      "JOB",
+      "Job",
+      "约伯记",
+      "伯",
+      "18"
+    ]
+  },
+  {
+    "bookId": "psa",
+    "versionId": "cuvt",
+    "canonicalOrder": 19,
+    "usfmId": "PSA",
+    "osisId": "Ps",
+    "aliases": [
+      "psa",
+      "PSA",
+      "Ps",
+      "Psalms",
+      "psalms",
+      "ps",
+      "诗篇",
+      "诗",
+      "19"
+    ]
+  },
+  {
+    "bookId": "pro",
+    "versionId": "cuvt",
+    "canonicalOrder": 20,
+    "usfmId": "PRO",
+    "osisId": "Prov",
+    "aliases": [
+      "pro",
+      "PRO",
+      "Prov",
+      "Proverbs",
+      "proverbs",
+      "prov",
+      "箴言",
+      "箴",
+      "20"
+    ]
+  },
+  {
+    "bookId": "ecc",
+    "versionId": "cuvt",
+    "canonicalOrder": 21,
+    "usfmId": "ECC",
+    "osisId": "Eccl",
+    "aliases": [
+      "ecc",
+      "ECC",
+      "Eccl",
+      "Ecclesiastes",
+      "ecclesiastes",
+      "eccl",
+      "传道书",
+      "传",
+      "21"
+    ]
+  },
+  {
+    "bookId": "sng",
+    "versionId": "cuvt",
+    "canonicalOrder": 22,
+    "usfmId": "SNG",
+    "osisId": "Song",
+    "aliases": [
+      "sng",
+      "SNG",
+      "Song",
+      "Song of Songs",
+      "song of songs",
+      "song",
+      "雅歌",
+      "歌",
+      "22"
+    ]
+  },
+  {
+    "bookId": "isa",
+    "versionId": "cuvt",
+    "canonicalOrder": 23,
+    "usfmId": "ISA",
+    "osisId": "Isa",
+    "aliases": [
+      "isa",
+      "ISA",
+      "Isa",
+      "Isaiah",
+      "isaiah",
+      "以赛亚书",
+      "赛",
+      "23"
+    ]
+  },
+  {
+    "bookId": "jer",
+    "versionId": "cuvt",
+    "canonicalOrder": 24,
+    "usfmId": "JER",
+    "osisId": "Jer",
+    "aliases": [
+      "jer",
+      "JER",
+      "Jer",
+      "Jeremiah",
+      "jeremiah",
+      "耶利米书",
+      "耶",
+      "24"
+    ]
+  },
+  {
+    "bookId": "lam",
+    "versionId": "cuvt",
+    "canonicalOrder": 25,
+    "usfmId": "LAM",
+    "osisId": "Lam",
+    "aliases": [
+      "lam",
+      "LAM",
+      "Lam",
+      "Lamentations",
+      "lamentations",
+      "耶利米哀歌",
+      "哀",
+      "25"
+    ]
+  },
+  {
+    "bookId": "ezk",
+    "versionId": "cuvt",
+    "canonicalOrder": 26,
+    "usfmId": "EZK",
+    "osisId": "Ezek",
+    "aliases": [
+      "ezk",
+      "EZK",
+      "Ezek",
+      "Ezekiel",
+      "ezekiel",
+      "ezek",
+      "以西结书",
+      "结",
+      "26"
+    ]
+  },
+  {
+    "bookId": "dan",
+    "versionId": "cuvt",
+    "canonicalOrder": 27,
+    "usfmId": "DAN",
+    "osisId": "Dan",
+    "aliases": [
+      "dan",
+      "DAN",
+      "Dan",
+      "Daniel",
+      "daniel",
+      "但以理书",
+      "但",
+      "27"
+    ]
+  },
+  {
+    "bookId": "hos",
+    "versionId": "cuvt",
+    "canonicalOrder": 28,
+    "usfmId": "HOS",
+    "osisId": "Hos",
+    "aliases": [
+      "hos",
+      "HOS",
+      "Hos",
+      "Hosea",
+      "hosea",
+      "何西阿书",
+      "何",
+      "28"
+    ]
+  },
+  {
+    "bookId": "jol",
+    "versionId": "cuvt",
+    "canonicalOrder": 29,
+    "usfmId": "JOL",
+    "osisId": "Joel",
+    "aliases": [
+      "jol",
+      "JOL",
+      "Joel",
+      "joel",
+      "约珥书",
+      "珥",
+      "29"
+    ]
+  },
+  {
+    "bookId": "amo",
+    "versionId": "cuvt",
+    "canonicalOrder": 30,
+    "usfmId": "AMO",
+    "osisId": "Amos",
+    "aliases": [
+      "amo",
+      "AMO",
+      "Amos",
+      "amos",
+      "阿摩司书",
+      "摩",
+      "30"
+    ]
+  },
+  {
+    "bookId": "oba",
+    "versionId": "cuvt",
+    "canonicalOrder": 31,
+    "usfmId": "OBA",
+    "osisId": "Obad",
+    "aliases": [
+      "oba",
+      "OBA",
+      "Obad",
+      "Obadiah",
+      "obadiah",
+      "obad",
+      "俄巴底亚书",
+      "俄",
+      "31"
+    ]
+  },
+  {
+    "bookId": "jon",
+    "versionId": "cuvt",
+    "canonicalOrder": 32,
+    "usfmId": "JON",
+    "osisId": "Jonah",
+    "aliases": [
+      "jon",
+      "JON",
+      "Jonah",
+      "jonah",
+      "约拿书",
+      "拿",
+      "32"
+    ]
+  },
+  {
+    "bookId": "mic",
+    "versionId": "cuvt",
+    "canonicalOrder": 33,
+    "usfmId": "MIC",
+    "osisId": "Mic",
+    "aliases": [
+      "mic",
+      "MIC",
+      "Mic",
+      "Micah",
+      "micah",
+      "弥迦书",
+      "弥",
+      "33"
+    ]
+  },
+  {
+    "bookId": "nam",
+    "versionId": "cuvt",
+    "canonicalOrder": 34,
+    "usfmId": "NAM",
+    "osisId": "Nah",
+    "aliases": [
+      "nam",
+      "NAM",
+      "Nah",
+      "Nahum",
+      "nahum",
+      "nah",
+      "那鸿书",
+      "鸿",
+      "34"
+    ]
+  },
+  {
+    "bookId": "hab",
+    "versionId": "cuvt",
+    "canonicalOrder": 35,
+    "usfmId": "HAB",
+    "osisId": "Hab",
+    "aliases": [
+      "hab",
+      "HAB",
+      "Hab",
+      "Habakkuk",
+      "habakkuk",
+      "哈巴谷书",
+      "哈",
+      "35"
+    ]
+  },
+  {
+    "bookId": "zep",
+    "versionId": "cuvt",
+    "canonicalOrder": 36,
+    "usfmId": "ZEP",
+    "osisId": "Zeph",
+    "aliases": [
+      "zep",
+      "ZEP",
+      "Zeph",
+      "Zephaniah",
+      "zephaniah",
+      "zeph",
+      "西番雅书",
+      "番",
+      "36"
+    ]
+  },
+  {
+    "bookId": "hag",
+    "versionId": "cuvt",
+    "canonicalOrder": 37,
+    "usfmId": "HAG",
+    "osisId": "Hag",
+    "aliases": [
+      "hag",
+      "HAG",
+      "Hag",
+      "Haggai",
+      "haggai",
+      "哈该书",
+      "该",
+      "37"
+    ]
+  },
+  {
+    "bookId": "zec",
+    "versionId": "cuvt",
+    "canonicalOrder": 38,
+    "usfmId": "ZEC",
+    "osisId": "Zech",
+    "aliases": [
+      "zec",
+      "ZEC",
+      "Zech",
+      "Zechariah",
+      "zechariah",
+      "zech",
+      "撒迦利亚书",
+      "亚",
+      "38"
+    ]
+  },
+  {
+    "bookId": "mal",
+    "versionId": "cuvt",
+    "canonicalOrder": 39,
+    "usfmId": "MAL",
+    "osisId": "Mal",
+    "aliases": [
+      "mal",
+      "MAL",
+      "Mal",
+      "Malachi",
+      "malachi",
+      "玛拉基书",
+      "玛",
+      "39"
+    ]
+  },
+  {
+    "bookId": "mat",
+    "versionId": "cuvt",
+    "canonicalOrder": 40,
+    "usfmId": "MAT",
+    "osisId": "Matt",
+    "aliases": [
+      "mat",
+      "MAT",
+      "Matt",
+      "Matthew",
+      "matthew",
+      "matt",
+      "马太福音",
+      "太",
+      "40"
+    ]
+  },
+  {
+    "bookId": "mrk",
+    "versionId": "cuvt",
+    "canonicalOrder": 41,
+    "usfmId": "MRK",
+    "osisId": "Mark",
+    "aliases": [
+      "mrk",
+      "MRK",
+      "Mark",
+      "mark",
+      "马可福音",
+      "可",
+      "41"
+    ]
+  },
+  {
+    "bookId": "luk",
+    "versionId": "cuvt",
+    "canonicalOrder": 42,
+    "usfmId": "LUK",
+    "osisId": "Luke",
+    "aliases": [
+      "luk",
+      "LUK",
+      "Luke",
+      "luke",
+      "路加福音",
+      "路",
+      "42"
+    ]
+  },
+  {
+    "bookId": "jhn",
+    "versionId": "cuvt",
+    "canonicalOrder": 43,
+    "usfmId": "JHN",
+    "osisId": "John",
+    "aliases": [
+      "jhn",
+      "JHN",
+      "John",
+      "john",
+      "约翰福音",
+      "约",
+      "43"
+    ]
+  },
+  {
+    "bookId": "act",
+    "versionId": "cuvt",
+    "canonicalOrder": 44,
+    "usfmId": "ACT",
+    "osisId": "Acts",
+    "aliases": [
+      "act",
+      "ACT",
+      "Acts",
+      "acts",
+      "使徒行传",
+      "徒",
+      "44"
+    ]
+  },
+  {
+    "bookId": "rom",
+    "versionId": "cuvt",
+    "canonicalOrder": 45,
+    "usfmId": "ROM",
+    "osisId": "Rom",
+    "aliases": [
+      "rom",
+      "ROM",
+      "Rom",
+      "Romans",
+      "romans",
+      "罗马书",
+      "罗",
+      "45"
+    ]
+  },
+  {
+    "bookId": "1co",
+    "versionId": "cuvt",
+    "canonicalOrder": 46,
+    "usfmId": "1CO",
+    "osisId": "1Cor",
+    "aliases": [
+      "1co",
+      "1CO",
+      "1Cor",
+      "1 Corinthians",
+      "1 corinthians",
+      "1 Cor",
+      "1 cor",
+      "哥林多前书",
+      "林前",
+      "46"
+    ]
+  },
+  {
+    "bookId": "2co",
+    "versionId": "cuvt",
+    "canonicalOrder": 47,
+    "usfmId": "2CO",
+    "osisId": "2Cor",
+    "aliases": [
+      "2co",
+      "2CO",
+      "2Cor",
+      "2 Corinthians",
+      "2 corinthians",
+      "2 Cor",
+      "2 cor",
+      "哥林多后书",
+      "林后",
+      "47"
+    ]
+  },
+  {
+    "bookId": "gal",
+    "versionId": "cuvt",
+    "canonicalOrder": 48,
+    "usfmId": "GAL",
+    "osisId": "Gal",
+    "aliases": [
+      "gal",
+      "GAL",
+      "Gal",
+      "Galatians",
+      "galatians",
+      "加拉太书",
+      "加",
+      "48"
+    ]
+  },
+  {
+    "bookId": "eph",
+    "versionId": "cuvt",
+    "canonicalOrder": 49,
+    "usfmId": "EPH",
+    "osisId": "Eph",
+    "aliases": [
+      "eph",
+      "EPH",
+      "Eph",
+      "Ephesians",
+      "ephesians",
+      "以弗所书",
+      "弗",
+      "49"
+    ]
+  },
+  {
+    "bookId": "php",
+    "versionId": "cuvt",
+    "canonicalOrder": 50,
+    "usfmId": "PHP",
+    "osisId": "Phil",
+    "aliases": [
+      "php",
+      "PHP",
+      "Phil",
+      "Philippians",
+      "philippians",
+      "phil",
+      "腓立比书",
+      "腓",
+      "50"
+    ]
+  },
+  {
+    "bookId": "col",
+    "versionId": "cuvt",
+    "canonicalOrder": 51,
+    "usfmId": "COL",
+    "osisId": "Col",
+    "aliases": [
+      "col",
+      "COL",
+      "Col",
+      "Colossians",
+      "colossians",
+      "歌罗西书",
+      "西",
+      "51"
+    ]
+  },
+  {
+    "bookId": "1th",
+    "versionId": "cuvt",
+    "canonicalOrder": 52,
+    "usfmId": "1TH",
+    "osisId": "1Thess",
+    "aliases": [
+      "1th",
+      "1TH",
+      "1Thess",
+      "1 Thessalonians",
+      "1 thessalonians",
+      "1 Thess",
+      "1 thess",
+      "帖撒罗尼迦前书",
+      "帖前",
+      "52"
+    ]
+  },
+  {
+    "bookId": "2th",
+    "versionId": "cuvt",
+    "canonicalOrder": 53,
+    "usfmId": "2TH",
+    "osisId": "2Thess",
+    "aliases": [
+      "2th",
+      "2TH",
+      "2Thess",
+      "2 Thessalonians",
+      "2 thessalonians",
+      "2 Thess",
+      "2 thess",
+      "帖撒罗尼迦后书",
+      "帖后",
+      "53"
+    ]
+  },
+  {
+    "bookId": "1ti",
+    "versionId": "cuvt",
+    "canonicalOrder": 54,
+    "usfmId": "1TI",
+    "osisId": "1Tim",
+    "aliases": [
+      "1ti",
+      "1TI",
+      "1Tim",
+      "1 Timothy",
+      "1 timothy",
+      "1 Tim",
+      "1 tim",
+      "提摩太前书",
+      "提前",
+      "54"
+    ]
+  },
+  {
+    "bookId": "2ti",
+    "versionId": "cuvt",
+    "canonicalOrder": 55,
+    "usfmId": "2TI",
+    "osisId": "2Tim",
+    "aliases": [
+      "2ti",
+      "2TI",
+      "2Tim",
+      "2 Timothy",
+      "2 timothy",
+      "2 Tim",
+      "2 tim",
+      "提摩太后书",
+      "提后",
+      "55"
+    ]
+  },
+  {
+    "bookId": "tit",
+    "versionId": "cuvt",
+    "canonicalOrder": 56,
+    "usfmId": "TIT",
+    "osisId": "Titus",
+    "aliases": [
+      "tit",
+      "TIT",
+      "Titus",
+      "titus",
+      "提多书",
+      "多",
+      "56"
+    ]
+  },
+  {
+    "bookId": "phm",
+    "versionId": "cuvt",
+    "canonicalOrder": 57,
+    "usfmId": "PHM",
+    "osisId": "Phlm",
+    "aliases": [
+      "phm",
+      "PHM",
+      "Phlm",
+      "Philemon",
+      "philemon",
+      "phlm",
+      "腓利门书",
+      "门",
+      "57"
+    ]
+  },
+  {
+    "bookId": "heb",
+    "versionId": "cuvt",
+    "canonicalOrder": 58,
+    "usfmId": "HEB",
+    "osisId": "Heb",
+    "aliases": [
+      "heb",
+      "HEB",
+      "Heb",
+      "Hebrews",
+      "hebrews",
+      "希伯来书",
+      "来",
+      "58"
+    ]
+  },
+  {
+    "bookId": "jas",
+    "versionId": "cuvt",
+    "canonicalOrder": 59,
+    "usfmId": "JAS",
+    "osisId": "Jas",
+    "aliases": [
+      "jas",
+      "JAS",
+      "Jas",
+      "James",
+      "james",
+      "雅各书",
+      "雅",
+      "59"
+    ]
+  },
+  {
+    "bookId": "1pe",
+    "versionId": "cuvt",
+    "canonicalOrder": 60,
+    "usfmId": "1PE",
+    "osisId": "1Pet",
+    "aliases": [
+      "1pe",
+      "1PE",
+      "1Pet",
+      "1 Peter",
+      "1 peter",
+      "1 Pet",
+      "1 pet",
+      "彼得前书",
+      "彼前",
+      "60"
+    ]
+  },
+  {
+    "bookId": "2pe",
+    "versionId": "cuvt",
+    "canonicalOrder": 61,
+    "usfmId": "2PE",
+    "osisId": "2Pet",
+    "aliases": [
+      "2pe",
+      "2PE",
+      "2Pet",
+      "2 Peter",
+      "2 peter",
+      "2 Pet",
+      "2 pet",
+      "彼得后书",
+      "彼后",
+      "61"
+    ]
+  },
+  {
+    "bookId": "1jn",
+    "versionId": "cuvt",
+    "canonicalOrder": 62,
+    "usfmId": "1JN",
+    "osisId": "1John",
+    "aliases": [
+      "1jn",
+      "1JN",
+      "1John",
+      "1 John",
+      "1 john",
+      "约翰一书",
+      "约一",
+      "62"
+    ]
+  },
+  {
+    "bookId": "2jn",
+    "versionId": "cuvt",
+    "canonicalOrder": 63,
+    "usfmId": "2JN",
+    "osisId": "2John",
+    "aliases": [
+      "2jn",
+      "2JN",
+      "2John",
+      "2 John",
+      "2 john",
+      "约翰二书",
+      "约二",
+      "63"
+    ]
+  },
+  {
+    "bookId": "3jn",
+    "versionId": "cuvt",
+    "canonicalOrder": 64,
+    "usfmId": "3JN",
+    "osisId": "3John",
+    "aliases": [
+      "3jn",
+      "3JN",
+      "3John",
+      "3 John",
+      "3 john",
+      "约翰三书",
+      "约三",
+      "64"
+    ]
+  },
+  {
+    "bookId": "jud",
+    "versionId": "cuvt",
+    "canonicalOrder": 65,
+    "usfmId": "JUD",
+    "osisId": "Jude",
+    "aliases": [
+      "jud",
+      "JUD",
+      "Jude",
+      "jude",
+      "犹大书",
+      "犹",
+      "65"
+    ]
+  },
+  {
+    "bookId": "rev",
+    "versionId": "cuvt",
+    "canonicalOrder": 66,
+    "usfmId": "REV",
+    "osisId": "Rev",
+    "aliases": [
+      "rev",
+      "REV",
+      "Rev",
+      "Revelation",
+      "revelation",
+      "启示录",
+      "启",
+      "66"
+    ]
+  }
+]

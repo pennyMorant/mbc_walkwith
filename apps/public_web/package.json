@@ -1,0 +1,28 @@
+{
+  "name": "@mbc/public-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run vite",
+    "preview": "bun run vite preview",
+    "build": "bun run vue-tsc -p tsconfig.json --noEmit && bun run vite build",
+    "typecheck": "bun run vue-tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@mbc/api-contracts": "workspace:*",
+    "@mbc/ui-tokens": "workspace:*",
+    "motion-v": "^1.7.1",
+    "vue": "^3.5.43",
+    "vuetify": "^3.13.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "sass": "^1.105.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.3",
+    "vite-plugin-vuetify": "^2.1.2",
+    "vue-tsc": "^2.2.0"
+  }
+}

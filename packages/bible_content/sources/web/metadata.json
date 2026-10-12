@@ -1,0 +1,32 @@
+{
+  "versionId": "web",
+  "sourceId": "engwebp",
+  "name": "World English Bible",
+  "language": "en",
+  "languageName": "English",
+  "bookSet": "66-book protocanon",
+  "format": "USFM",
+  "sourceProvider": "eBible.org",
+  "sourceUrl": "https://ebible.org/bible/details.php?all=1&id=engwebp",
+  "downloadUrl": "https://ebible.org/Scriptures/engwebp_usfm.zip",
+  "copyrightUrl": "https://ebible.org/engwebp/copyright.htm",
+  "edition": "2020 stable text edition",
+  "sourceFilesDate": "2026-04-23",
+  "downloadedAt": "2026-05-10",
+  "rawArchive": {
+    "path": "raw/engwebp_usfm.zip",
+    "sha256": "2c77e11f0d26863f7f4a507b40c58651d55399e6d760223b3550908331bc994f",
+    "fileCount": 72
+  },
+  "license": {
+    "status": "Public Domain",
+    "trademarkNotice": "\"World English Bible\" is a trademark of eBible.org.",
+    "localHtml": "licenses/copyright.html",
+    "localSummary": "licenses/license.md"
+  },
+  "normalization": {
+    "books": "normalized/books.json",
+    "chapters": "normalized/chapters.jsonl",
+    "verses": "normalized/verses.jsonl"
+  }
+}

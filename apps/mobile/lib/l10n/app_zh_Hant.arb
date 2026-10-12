@@ -1,0 +1,929 @@
+{
+  "@@locale": "zh_Hant",
+  "appTitle": "MBCG",
+  "commonStatusUnknownLabel": "未知狀態",
+  "commonVisibilityUnknownLabel": "未知可見性",
+  "commonPrivacyUnknownLabel": "未知隱私範圍",
+  "tabStudy": "讀經",
+  "tabSermons": "講道",
+  "tabLife": "生活",
+  "tabMine": "我的",
+  "mineTitle": "我的",
+  "memberOptionalSignInTitle": "可選登入",
+  "memberOptionalSignInBody": "你可以繼續以訪客使用；登入後可在後續同步讀經、禱告和奉獻記錄。",
+  "memberEmailLabel": "電郵",
+  "memberInvalidEmail": "請輸入有效的電子郵件地址。",
+  "memberShowPasswordTooltip": "顯示密碼",
+  "memberHidePasswordTooltip": "隱藏密碼",
+  "memberNameLabel": "姓名",
+  "memberPasswordLabel": "密碼",
+  "memberConfirmPasswordLabel": "確認密碼",
+  "memberCodeLabel": "驗證碼",
+  "memberVerifyEmailAction": "驗證電郵",
+  "memberSignInAction": "登入",
+  "memberContinueWithGoogle": "使用 Google 繼續",
+  "memberContinueWithApple": "使用 Apple 繼續",
+  "memberAuthAlternative": "或",
+  "memberFederatedSetupUnavailable": "Google 與 Apple 登入尚未完成設定。",
+  "memberFederatedSignInFailed": "登入未能完成，請重試。",
+  "memberLoginEmailTitle": "歡迎回來",
+  "memberLoginEmailBody": "登入後繼續參與教會生活。",
+  "memberNextAction": "下一步",
+  "memberCreateAccountAction": "建立帳號",
+  "memberPasswordTitle": "輸入密碼",
+  "memberForgotPasswordAction": "忘記密碼？",
+  "memberPasswordResetTitle": "重設密碼",
+  "memberPasswordResetRequestBody": "若此電子郵件可重設密碼，我們會寄送驗證碼。",
+  "memberPasswordResetCodeBody": "請輸入電子郵件中的驗證碼，然後設定新密碼。",
+  "memberPasswordResetAction": "重設密碼",
+  "memberPasswordResetComplete": "密碼已更新，請使用新密碼登入。",
+  "memberBackToSignInAction": "返回登入",
+  "memberRegisterAction": "註冊",
+  "memberChangeEmailAction": "更換電郵",
+  "memberPasswordMismatch": "兩次輸入的密碼不一致。",
+  "memberSignOutAction": "登出",
+  "memberRegistrationClosed": "會員註冊暫時關閉，請聯絡教會辦公室。",
+  "memberRegistrationPendingApproval": "註冊已收到，請等待教會審核。",
+  "memberProfileTitle": "我的資料",
+  "memberProfileEditTitle": "資料詳情",
+  "memberProfileSaveAction": "儲存資料",
+  "memberProfileSaved": "資料已儲存。",
+  "memberProfileOpenAction": "編輯資料",
+  "memberStatusLabel": "狀態",
+  "memberRoleLabel": "身份",
+  "memberGroupLabel": "小組",
+  "memberNoGroupLabel": "未加入小組",
+  "memberPhoneLabel": "電話",
+  "memberAddressLabel": "地址",
+  "memberFaithStartYearLabel": "信主年份",
+  "memberBaptizedYearLabel": "受洗年份",
+  "memberJoinedChurchAtLabel": "加入教會日期",
+  "memberEmergencyContactNameLabel": "緊急聯絡人",
+  "memberEmergencyContactPhoneLabel": "緊急聯絡人電話",
+  "mineGivingEntryTitle": "奉獻與年度證明",
+  "mineGivingEntryBody": "查看奉獻記錄、已確認資料和年度證明 PDF。",
+  "mineLifeOverviewTitle": "我的教會生活",
+  "mineLifeOverviewBody": "快速查看你的小組、課程、服事和關懷請求狀態。",
+  "mineLifeGroupsLabel": "小組",
+  "mineLifeCoursesLabel": "課程",
+  "mineLifeCoursesCountLabel": "{count} 門課程",
+  "@mineLifeCoursesCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeServingLabel": "服事",
+  "mineLifeServingCountLabel": "{count} 項服事",
+  "@mineLifeServingCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeCareLabel": "關懷",
+  "mineLifeOverviewMetricSemanticLabel": "{label}：{count}",
+  "@mineLifeOverviewMetricSemanticLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeOpenLifeAction": "打開生活",
+  "preferencesTitle": "偏好",
+  "appearanceTitle": "外觀",
+  "themeModeSystem": "跟隨系統",
+  "themeModeLight": "淺色",
+  "themeModeDark": "深色",
+  "textSizeTitle": "字體大小",
+  "textSizeBody": "讓讀經、敬拜和教會生活內容更容易閱讀。",
+  "textSizeSystem": "跟隨系統",
+  "textSizeStandard": "標準",
+  "textSizeLarge": "大",
+  "textSizeExtraLarge": "特大",
+  "notificationPermissionTitle": "通知權限",
+  "notificationPermissionEnabledBody": "系統已允許通知。需要關閉時，請透過開關進入系統設定。",
+  "notificationPermissionDisabledBody": "系統通知權限未開啟。打開開關後會請求系統權限。",
+  "aboutTitle": "關於",
+  "aboutChurchTitle": "關於教會",
+  "churchAddressTitle": "地址 / 地圖",
+  "churchPhoneTitle": "聯絡電話",
+  "churchEmailTitle": "聯絡電郵",
+  "privacyPolicyTitle": "隱私政策",
+  "termsOfUseTitle": "使用條款",
+  "appVersionTitle": "App 版本",
+  "appVersionValue": "版本 {version}",
+  "@appVersionValue": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "periodPickerTooltip": "選擇日期範圍",
+  "periodThisWeek": "本週",
+  "periodThisMonth": "本月",
+  "periodPreviousAction": "上一段",
+  "periodNextAction": "下一段",
+  "periodApplyAction": "套用",
+  "languageTitle": "語言",
+  "systemLanguageLabel": "系統語言",
+  "languageSystemBody": "App 預設跟隨系統語言。需要切換語言時，請在系統原生設定中修改此 App 的語言。",
+  "openSystemSettingsAction": "打開系統設定",
+  "bibleTranslationLabel": "聖經版本",
+  "studyTitle": "讀經",
+  "bibleSearchTooltip": "搜尋經文",
+  "bibleSearchTitle": "搜尋經文",
+  "bibleSearchHint": "輸入一句經文或關鍵詞",
+  "bibleSearchStartTitle": "搜尋整本聖經",
+  "bibleSearchStartBody": "可以輸入一句話、半句經文或幾個關鍵詞。搜尋會使用目前 App 語言對應的聖經版本。",
+  "bibleSearchNoResultsTitle": "沒有找到匹配經文",
+  "bibleSearchNoResultsBody": "可以減少關鍵詞，或換一種說法。搜尋會嘗試寬鬆匹配，但太短的詞可能會被忽略。",
+  "bibleSearchErrorTitle": "搜尋失敗",
+  "versePickerTooltip": "選擇經節",
+  "versePickerTitle": "選擇經節",
+  "readerSettingsTooltip": "閱讀設定",
+  "readerSettingsTitle": "閱讀設定",
+  "readerAssistsTitle": "閱讀輔助",
+  "chapterPeopleAssistTitle": "本章人物",
+  "chapterPeopleAssistBody": "在目前章節統一顯示本章出現的聖經人物入口，不在每節反覆標註。",
+  "chapterPlacesAssistTitle": "本章地名",
+  "chapterPlacesAssistBody": "在目前章節統一顯示本章出現的聖經地名入口，不在每節反覆標註。",
+  "lexiconAssistTitle": "原文詞彙",
+  "lexiconAssistBody": "經文有本地原文資料時，顯示詞彙解釋入口。",
+  "aiStudyHintsAssistTitle": "AI 解經提示",
+  "aiStudyHintsAssistBody": "啟用長按經文釋義和相關學習提示。",
+  "chapterPeopleTooltip": "本章人物",
+  "chapterPeopleTitle": "本章人物",
+  "chapterPlacesTooltip": "本章地名",
+  "chapterPlacesTitle": "本章地名",
+  "continueReadingTitle": "繼續閱讀",
+  "continueReadingAction": "繼續",
+  "defaultContinueReadingTitle": "羅馬書 8",
+  "defaultContinueReadingSubtitle": "從羅馬書 8 繼續",
+  "continueReadingChapterSubtitle": "從 {bookName} {chapter} 繼續",
+  "@continueReadingChapterSubtitle": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "continueReadingVerseSubtitle": "上次讀到 {chapter}:{verse} · {bookName}",
+  "@continueReadingVerseSubtitle": {
+    "placeholders": {
+      "chapter": {
+        "type": "int"
+      },
+      "verse": {
+        "type": "String"
+      },
+      "bookName": {
+        "type": "String"
+      }
+    }
+  },
+  "readingPlansTitle": "我的讀經計畫",
+  "readingPlansBody": "繼續目前的計畫，使用本地經文閱讀或朗讀。",
+  "readingPlanStartAction": "開始",
+  "readingPlanContinueAction": "繼續",
+  "readingPlanReadAction": "閱讀",
+  "readingPlanCompleteDayAction": "標記完成",
+  "readingPlanCompletedLabel": "已完成",
+  "readingPlanNoDaysBody": "這個計畫還沒有每日經文引用。",
+  "readingPlanLoadErrorTitle": "讀經計畫載入失敗",
+  "readingPlanLoadErrorBody": "請重新整理後再試一次。",
+  "readingPlanActionError": "讀經計畫更新失敗，請再試一次。",
+  "readingPlanDaysLabel": "{count} 天",
+  "@readingPlanDaysLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "readingPlanDayLabel": "第 {dayNumber} 天",
+  "@readingPlanDayLabel": {
+    "placeholders": {
+      "dayNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "readingPlanProgressLabel": "已完成 {completed}/{total}",
+  "@readingPlanProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mineReadingPlansTitle": "我的讀經計畫",
+  "mineReadingPlansBody": "查看我的讀經計畫和完成進度。",
+  "mineReadingPlansEmpty": "從讀經頁面開始一個計畫後，進度會顯示在這裡。",
+  "mineReadingPlansOpenStudyAction": "打開讀經",
+  "readingPlanCurrentTab": "進行中",
+  "readingPlanHistoryTab": "歷史",
+  "readingPlanCurrentEmpty": "目前沒有進行中的讀經計畫。",
+  "readingPlanHistoryEmpty": "已完成或已結束的計畫會顯示在這裡。",
+  "readingPlanViewAllAction": "查看計畫",
+  "readingPlanRestartAction": "重新開始",
+  "readingPlanLoadMoreAction": "載入更多",
+  "readingPlanPauseAction": "暫停",
+  "readingPlanResumeAction": "繼續",
+  "readingPlanAbandonAction": "結束計畫",
+  "readingPlanAbandonConfirmBody": "結束本次計畫並移入歷史嗎？已儲存的進度仍會保留。",
+  "readingPlanNotStartedLabel": "未開始",
+  "readingPlanActiveLabel": "進行中",
+  "readingPlanPausedLabel": "已暫停",
+  "readingPlanAbandonedLabel": "已結束",
+  "readingPlanAttemptLabel": "第 {attempt} 次",
+  "@readingPlanAttemptLabel": {"placeholders": {"attempt": {"type": "int"}}},
+  "readingPlanStartedOn": "開始於 {date}",
+  "@readingPlanStartedOn": {"placeholders": {"date": {"type": "String"}}},
+  "readingPlanEndedOn": "結束於 {date}",
+  "@readingPlanEndedOn": {"placeholders": {"date": {"type": "String"}}},
+  "readingPlanHistoryDetailTitle": "計畫詳情",
+  "readingPlanNoteLabel": "筆記",
+  "readingPlanRestartedMessage": "新的讀經計畫已開始。",
+  "mineReadingPlanProgressChip": "已完成 {completed}",
+  "@mineReadingPlanProgressChip": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      }
+    }
+  },
+  "oldTestamentLabel": "舊約",
+  "newTestamentLabel": "新約",
+  "bibleBookCountLabel": "{count} 卷",
+  "@bibleBookCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterCountLabel": "{count} 章",
+  "@bibleChapterCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterCountWithName": "{count} 章 · {bookName}",
+  "@bibleChapterCountWithName": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "bookName": {
+        "type": "String"
+      }
+    }
+  },
+  "bibleChapterReference": "{bookName} {chapter}",
+  "@bibleChapterReference": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterButtonSemanticLabel": "{bookName}第 {chapter} 章",
+  "@bibleChapterButtonSemanticLabel": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryLaw": "摩西五經",
+  "categoryOldTestamentHistory": "歷史書",
+  "categoryWisdom": "詩歌智慧書",
+  "categoryMajorProphets": "大先知書",
+  "categoryMinorProphets": "小先知書",
+  "categoryGospels": "福音書",
+  "categoryActs": "歷史書",
+  "categoryPaulineLetters": "保羅書信",
+  "categoryGeneralLetters": "普通書信",
+  "categoryApocalyptic": "啟示文學",
+  "studyLoadErrorTitle": "聖經目錄載入失敗",
+  "studyLoadErrorBody": "請稍後重試，或檢查本地聖經種子資料是否已正確打包。",
+  "readerFallbackTitle": "讀經",
+  "previousChapterTooltip": "上一章",
+  "nextChapterTooltip": "下一章",
+  "readerLoadErrorTitle": "章節載入失敗",
+  "readerLoadErrorBody": "請稍後重試，或檢查本地聖經資料是否完成匯入。",
+  "emptyChapterBody": "這一章暫時沒有可顯示的經文。",
+  "verseActionsTooltip": "筆記與高亮",
+  "verseActionsTitle": "經文工具",
+  "bookmarkVerseTitle": "收藏這一節",
+  "highlightTitle": "高亮",
+  "highlightNone": "無",
+  "highlightYellow": "金色",
+  "highlightGreen": "綠色",
+  "highlightBlue": "藍色",
+  "highlightRose": "玫瑰色",
+  "noteTitle": "筆記",
+  "noteHint": "寫下私人讀經筆記",
+  "saveNoteAction": "保存筆記",
+  "verseNotesMyNotesTab": "我的筆記",
+  "verseNotesChurchNotesTab": "教會心得",
+  "verseNotesPublishHint": "發布後，其他使用此 App 的人讀到這節經文時可以看到。",
+  "verseNotesDisplayNameHint": "訪客顯示名",
+  "verseNotesContentHint": "分享你對這節經文的心得",
+  "verseNotesPublishAction": "分享",
+  "verseNotesUpdateAction": "更新",
+  "verseNotesDeleteAction": "刪除",
+  "verseNotesYourReflectionTitle": "我的心得",
+  "verseNotesSharedTitle": "公開心得",
+  "verseNotesCountLabel": "{count} 則心得",
+  "@verseNotesCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verseNotesMineLabel": "我的",
+  "verseNotesEmptyState": "這節經文還沒有公開心得。",
+  "verseNotesEmptyError": "請先寫下心得。",
+  "verseNotesGenericError": "經文心得載入失敗。",
+  "studyChapterLabel": "羅馬書 8",
+  "translationLabel": "和合本",
+  "relatedSermonsLabel": "{count} 篇相關講道",
+  "@relatedSermonsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verseNumberLabel": "第 {verse} 節",
+  "@verseNumberLabel": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "explanationTitleSuffix": "{reference} 釋義",
+  "@explanationTitleSuffix": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceLabel": "依據來源",
+  "relatedVersesLabel": "相關經文",
+  "aiStudyDisclaimer": "AI 解釋供學習參考，重要神學或牧養問題請諮詢牧者。",
+  "aiStudySheetTitle": "AI 查經輔助",
+  "aiStudyQuestionLabel": "問題",
+  "aiStudyDefaultQuestion": "請幫助我按上下文理解這節經文。",
+  "aiStudyGenerateAction": "生成查經輔助",
+  "aiStudyRetryAction": "重新提問",
+  "aiStudyResultTitle": "學習回應",
+  "aiStudySignInTitle": "需要登入",
+  "aiStudySignInBody": "請先在「我的」頁面登入，再使用 AI 查經輔助。",
+  "aiStudyErrorTitle": "AI 查經輔助暫不可用",
+  "aiStudyProviderDisabled": "AI 服務還沒有配置完成，請等教會同工開啟後再試。",
+  "aiStudyProviderFailed": "AI 服務暫時沒有回應，請稍後重試。",
+  "aiStudyRateLimited": "AI 請求太頻繁了，請稍等後再試。",
+  "lexiconLoveTitle": "愛 / agape",
+  "lexiconGoodTitle": "益處 / agathon",
+  "lexiconLoveBody": "希臘文 ἀγάπη，常用於表達出於神主動、堅定、盟約性的愛。",
+  "lexiconGoodBody": "希臘文 ἀγαθόν，指良善、有益處的結果。羅馬書 8:28 的重點不是環境本身舒服，而是神最終成就的良善目的。",
+  "confirmKnown": "知道了",
+  "sermonsTitle": "講道",
+  "searchSermonsTooltip": "搜尋講道",
+  "sermonFilterTooltip": "篩選講道",
+  "sermonFilterTitle": "篩選講道",
+  "sermonFilterSpeakerLabel": "講員",
+  "sermonFilterSeriesLabel": "系列",
+  "sermonFilterTopicLabel": "主題",
+  "sermonFilterClearAction": "清除篩選",
+  "sermonFilterLoadError": "篩選條件暫時無法載入，請稍後重試。",
+  "sermonDetailTitle": "講道詳情",
+  "sermonContinueListeningTitle": "繼續收聽",
+  "sermonStudyNotesTitle": "講義",
+  "sermonSummaryTitle": "講道重點",
+  "sermonOpenDetailAction": "查看講道詳情",
+  "sermonOutlineTitle": "沉浸式講義",
+  "sermonReferencesTitle": "講道引用經文",
+  "sermonTranscriptTitle": "講道文本",
+  "sermonSectionNotesLabel": "講義",
+  "sermonSectionReferencesLabel": "經文",
+  "sermonSectionTranscriptLabel": "文稿",
+  "sermonPlaybackSpeedTitle": "播放速度",
+  "sermonTranscriptReadAction": "閱讀文本",
+  "sermonTranscriptCollapseAction": "收起",
+  "sermonAiAskAction": "詢問這篇講道",
+  "sermonDiscussionTitle": "講道討論包",
+  "sermonDiscussionPrivateLabel": "私密回應",
+  "sermonDiscussionQuestionsTitle": "討論問題",
+  "sermonDiscussionActionStepsTitle": "行動回應",
+  "sermonDiscussionPrayerTitle": "禱告方向",
+  "sermonDiscussionRespondAction": "寫回應",
+  "sermonDiscussionResponseTitle": "個人回應",
+  "sermonDiscussionResponseHint": "寫下你的心得或下一步行動",
+  "sermonDiscussionResponsePrivateNote": "你的回應預設只對自己可見。",
+  "sermonDiscussionSubmitAction": "提交",
+  "sermonDiscussionSubmitted": "回應已保存。",
+  "sermonDiscussionError": "回應保存失敗，請再試一次。",
+  "sermonDiscussionLoadError": "討論材料載入失敗。",
+  "sermonDiscussionObservationChip": "觀察",
+  "sermonDiscussionInterpretationChip": "解釋",
+  "sermonDiscussionApplicationChip": "應用",
+  "sermonDiscussionPrayerChip": "禱告",
+  "sermonDiscussionActionChip": "行動",
+  "sermonAiSheetTitle": "講道問答",
+  "sermonAiDefaultQuestion": "請幫助我理解這篇講道的重點。",
+  "sermonAiGenerateAction": "生成講道回答",
+  "relatedSermonsTitle": "相關講道",
+  "sermonLoadErrorTitle": "講道資料暫時無法載入",
+  "sermonLoadErrorBody": "稍後會從後端重新取得講道列表。",
+  "retryAction": "重試",
+  "sermonEmptyTitle": "暫無講道內容",
+  "sermonAudioMissing": "暫未上傳音訊",
+  "sermonAudioPreparing": "正在準備音訊",
+  "sermonAudioLoading": "正在載入音訊",
+  "sermonAudioReady": "可以播放",
+  "sermonAudioUnavailable": "音訊暫時無法載入",
+  "rewindTooltip": "後退 15 秒",
+  "playTooltip": "播放",
+  "forwardTooltip": "前進 30 秒",
+  "lifeTitle": "教會生活",
+  "notificationsTooltip": "通知",
+  "notificationsPageTitle": "通知",
+  "notificationInboxTitle": "最近通知",
+  "unreadCountSemanticLabel": "{label}，{count} 條未讀",
+  "@unreadCountSemanticLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationInboxEmptyTitle": "暫無通知",
+  "notificationInboxEmptyBody": "這台裝置收到新的教會更新後會顯示在這裡。",
+  "notificationRefreshAction": "重新整理通知",
+  "notificationMarkAllReadAction": "全部標為已讀",
+  "notificationClearAction": "清空通知",
+  "notificationDeviceUnavailableBody": "目前建置還沒有接入 Firebase 應用設定，暫時無法啟用推送。",
+  "weeklyBulletinTitle": "本週週報",
+  "lifeSundayHeroEmptyBody": "同工發佈本週主日資訊後，會顯示在這裡。",
+  "lifeTabWeek": "本週",
+  "lifeTabEvents": "活動",
+  "lifeTabGroups": "小組",
+  "lifeTabCourses": "課程",
+  "lifeTabServing": "服事",
+  "lifeTabPrayer": "代禱",
+  "lifeTabWeekEmpty": "新的教會生活卡片發佈後會顯示在這裡。",
+  "lifeTabEventsEmpty": "目前暫無開放的活動卡片。",
+  "lifeTabMemberSignInBody": "請到「我的」登入後查看會友專屬的小組、課程、服事和關懷卡片。",
+  "lifeTabPrayerDisabled": "目前建置暫未啟用代禱請求。",
+  "lifeOpenDetailAction": "查看詳情",
+  "lifeUpdatesTitle": "最新動態",
+  "lifeParticipationTitle": "我的參與",
+  "lifeLoadErrorTitle": "教會生活資料暫時無法載入",
+  "lifeLoadErrorBody": "稍後會從後端重新取得週報和生活資訊。",
+  "lifeSectionLoadError": "此區域暫時無法載入，請重試。",
+  "lifeEmptyTitle": "暫無教會生活內容",
+  "lifePostNoBody": "詳細內容會稍後補充。",
+  "lifePostVisibilityMembers": "會眾可見",
+  "lifePostVisibilityGroup": "小組可見",
+  "lifePostVisibilityPrivate": "私密",
+  "lifePostTypeWeeklyBulletin": "週報",
+  "lifePostTypeSunday": "主日",
+  "lifePostTypeAnnouncement": "公告",
+  "lifePostTypeEvent": "活動",
+  "lifePostTypeGroup": "小組",
+  "lifePostTypeFellowship": "團契",
+  "lifePostTypeCourse": "課程",
+  "lifePostTypeServing": "服事",
+  "lifePostTypePrayer": "代禱",
+  "lifePostTypeGiving": "奉獻",
+  "lifePostUnread": "未讀",
+  "lifePostActionOpen": "打開連結",
+  "lifePostScheduleTbd": "時間待定",
+  "myEventRegistrationsTitle": "我的報名",
+  "groupsTitle": "小組與團契",
+  "groupsEmptyBody": "目前暫無可加入的小組或團契。",
+  "groupApplyAction": "申請加入",
+  "groupAlreadyMember": "你已在小組中",
+  "groupApplicationSubmitted": "申請已提交",
+  "groupApplicationSubmitSuccess": "申請已提交。",
+  "groupWithdrawAction": "撤回申請",
+  "groupApplicationWithdrawSuccess": "申請已撤回。",
+  "groupCapacityFull": "小組已滿員",
+  "groupMyGroupsTitle": "我的小組",
+  "groupMyGroupsEmptyBody": "你目前還沒有加入小組。",
+  "groupSignInToViewMineBody": "登入後可在不同裝置查看你的小組。",
+  "groupMemberCount": "{count} 位成員",
+  "@groupMemberCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupMemberCapacity": "{count}/{capacity} 位成員",
+  "@groupMemberCapacity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "coursesTitle": "課程與學習",
+  "coursesEmptyBody": "目前暫無開放的課程。",
+  "courseMyCoursesTitle": "我的課程",
+  "courseMyCoursesEmptyBody": "你目前還沒有課程報名記錄。",
+  "courseLessonsTitle": "課程課次",
+  "courseLessonsEmptyBody": "這門課程尚未發布課次。",
+  "courseSignInToEnrollBody": "登入後可報名課程，並在不同裝置同步學習進度。",
+  "courseSignInToViewMineBody": "登入後可查看正在學習和已經完成的課程。",
+  "courseEnrollAction": "報名課程",
+  "courseSubmittedAction": "已提交",
+  "courseEnrolledAction": "已報名",
+  "courseWaitlistedAction": "候補中",
+  "courseCancelledAction": "已取消",
+  "courseCompletedAction": "已完成",
+  "courseEnrollmentSubmitSuccess": "課程報名已提交。",
+  "courseStatusDraft": "草稿",
+  "courseStatusOpen": "開放報名",
+  "courseStatusClosed": "已關閉",
+  "courseStatusInProgress": "進行中",
+  "courseStatusCompleted": "已完成",
+  "courseStatusArchived": "已歸檔",
+  "courseLessonCount": "{count} 個課次",
+  "@courseLessonCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "courseCapacityOpen": "名額開放",
+  "courseCapacityLabel": "{count}/{capacity} 個名額",
+  "@courseCapacityLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "courseProgressLabel": "已完成 {completed}/{total} 個課次",
+  "@courseProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "servingTitle": "我的服事",
+  "servingEmptyBody": "目前暫無服事安排。",
+  "servingConfirmAction": "確認服事",
+  "servingLeaveAction": "請假",
+  "servingConfirmSuccess": "服事已確認。",
+  "servingLeaveSuccess": "請假請求已提交。",
+  "servingStatusScheduled": "待確認",
+  "servingStatusConfirmed": "已確認",
+  "servingStatusDeclined": "已請假",
+  "servingStatusSwapRequested": "申請換班",
+  "servingStatusCovered": "已有替補",
+  "servingStatusCancelled": "已取消",
+  "servingScheduleTab": "排班",
+  "servingAvailabilityTab": "可用時間",
+  "servingAvailabilityEmptyBody": "尚未提交可用時間。",
+  "servingAvailabilityAddAction": "新增可用時間",
+  "servingAvailabilitySheetTitle": "新的可用時間",
+  "servingAvailabilityStatusLabel": "可用狀態",
+  "servingAvailabilityStatusAvailable": "可以服事",
+  "servingAvailabilityStatusUnavailable": "無法服事",
+  "servingAvailabilityStatusPreferred": "優先時段",
+  "servingAvailabilityStartLabel": "開始時間",
+  "servingAvailabilityEndLabel": "結束時間",
+  "servingAvailabilityNoteHint": "補充說明（可選）",
+  "servingAvailabilitySaveAction": "儲存可用時間",
+  "servingAvailabilityCreateSuccess": "可用時間已儲存。",
+  "servingAvailabilityInvalidRange": "結束時間必須晚於開始時間。",
+  "servingCheckInTitle": "到崗狀態",
+  "servingCheckInAction": "確認到崗",
+  "servingCheckInSuccess": "到崗已確認。",
+  "servingCheckInNotRecorded": "尚未確認到崗。",
+  "servingCheckInStatusPending": "待到崗",
+  "servingCheckInStatusCheckedIn": "已到崗",
+  "servingCheckInStatusMissed": "未到崗",
+  "servingAssignmentNoteTitle": "服事說明",
+  "servingResponseNoteTitle": "我的回覆",
+  "eventRegistrationTitle": "活動報名",
+  "eventRegistrationRegisterAction": "報名",
+  "eventRegistrationUpdateAction": "保存修改",
+  "eventRegistrationCancelAction": "取消報名",
+  "eventRegistrationCheckInAction": "簽到",
+  "eventCheckInScanAction": "掃描現場碼",
+  "eventCheckInScanTitle": "現場簽到",
+  "eventCheckInScanPrompt": "請掃描同工列印的活動簽到二維碼。",
+  "eventCheckInScanSuccessTitle": "簽到成功",
+  "eventCheckInScanViewEvent": "查看活動",
+  "eventCheckInScanAgain": "繼續掃描",
+  "eventCheckInScanSignInRequired": "請先登入，再掃描現場簽到二維碼。",
+  "eventCheckInQrInvalid": "這個簽到二維碼無效，請重新掃描。",
+  "eventCheckInQrExpired": "這個簽到二維碼已過期，請聯絡同工。",
+  "eventCheckInQrDisabled": "這個簽到二維碼已停用，請聯絡同工。",
+  "eventCheckInQrRegistrationRequired": "沒有找到你的活動報名，請先報名或聯絡同工。",
+  "eventRegistrationRegistered": "你已報名",
+  "eventRegistrationCheckedIn": "你已簽到",
+  "eventRegistrationSignInBody": "登入後即可報名參加這個活動。",
+  "eventRegistrationFull": "報名名額已滿。",
+  "eventRegistrationClosed": "報名已截止。",
+  "eventRegistrationUnavailable": "這個活動目前不可報名或不可查看。",
+  "eventRegistrationNotFound": "沒有找到你的報名記錄，請刷新後再試。",
+  "eventRegistrationPartySizeInvalid": "請選擇更少的參加人數。",
+  "eventRegistrationCheckInLocked": "已簽到的報名只能由同工修改。",
+  "eventRegistrationSuccess": "報名成功。",
+  "eventRegistrationUpdateSuccess": "報名資料已更新。",
+  "eventRegistrationCancelSuccess": "已取消報名。",
+  "eventRegistrationCheckInSuccess": "簽到成功。",
+  "eventRegistrationCheckedInAt": "簽到時間：{time}",
+  "@eventRegistrationCheckedInAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventRegistrationPartySizeLabel": "參加人數",
+  "eventRegistrationPartySize": "{count} 人",
+  "@eventRegistrationPartySize": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationNoteLabel": "備註",
+  "eventRegistrationNoteHint": "餐食需要、到達說明，或可協助事項",
+  "eventRegistrationSpots": "已報名 {registered}/{capacity}",
+  "@eventRegistrationSpots": {
+    "placeholders": {
+      "registered": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationUnlimitedSpots": "已報名 {registered}",
+  "@eventRegistrationUnlimitedSpots": {
+    "placeholders": {
+      "registered": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationRemaining": "剩餘 {remaining} 個名額",
+  "@eventRegistrationRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "givingGuestBody": "登入後可查看自己的奉獻記錄和年度證明。",
+  "givingHistoryTitle": "奉獻記錄",
+  "givingTransactionsTitle": "最近交易",
+  "givingTransactionsEmptyBody": "暫時還沒有奉獻記錄。",
+  "givingSummaryYear": "{year} 年",
+  "@givingSummaryYear": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "givingSummaryAmount": "總額 {amount}",
+  "@givingSummaryAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "givingSummaryCount": "{count} 筆奉獻",
+  "@givingSummaryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "givingStatementSectionTitle": "年度證明",
+  "annualStatementsTitle": "年度證明",
+  "annualStatementsEmptyBody": "暫時還沒有年度證明。",
+  "givingStatementLabel": "{year} 年證明",
+  "@givingStatementLabel": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "prayerTitle": "代禱",
+  "prayerEmptyBody": "暫無公開代禱事項。",
+  "prayerSubmitTitle": "提交代禱事項",
+  "prayerSubmitAction": "提交",
+  "prayerGuestSubmitBody": "可以訪客身份提交。私密事項只給牧者和後台同工查看。",
+  "prayerMemberSubmitBody": "這條代禱會關聯到你的會員資料，之後可以查看處理狀態。",
+  "prayerTitleLabel": "標題",
+  "prayerBodyLabel": "代禱內容",
+  "prayerNameLabel": "姓名",
+  "prayerValidationError": "請填寫標題和代禱內容。",
+  "prayerSubmittedMessage": "代禱事項已提交，等待審核。",
+  "prayerMineLabel": "我的",
+  "prayerVisibilityPrivate": "私密",
+  "prayerVisibilityPublic": "公開",
+  "prayerVisibilityMembers": "會眾",
+  "prayerVisibilityGroup": "小組",
+  "prayerStatusPending": "待審核",
+  "prayerStatusApproved": "已通過",
+  "prayerStatusHidden": "已隱藏",
+  "prayerStatusArchived": "已歸檔",
+  "careTitle": "關懷",
+  "careEmptyBody": "暫時還沒有關懷請求。",
+  "careSubmitTitle": "請求牧養關懷",
+  "careSubmitAction": "請求關懷",
+  "careSubmitBody": "請簡要說明你希望牧者或關懷同工如何跟進。內部跟進備註只給授權同工查看。",
+  "careSignInRequired": "請先以會友身份登入後再提交關懷請求。",
+  "careTitleLabel": "標題",
+  "careBodyLabel": "你希望我們如何關懷你？",
+  "carePrivacyLabel": "隱私範圍",
+  "carePrivacyPastoralOnly": "僅牧者團隊",
+  "carePrivacyAssignedTeam": "指定關懷團隊",
+  "carePrivacyAdminRestricted": "僅受限管理員",
+  "careValidationError": "請填寫標題和關懷內容。",
+  "careSubmittedMessage": "關懷請求已提交。",
+  "careStatusSubmitted": "已提交",
+  "careStatusAssigned": "已分配",
+  "careStatusInProgress": "跟進中",
+  "careStatusResolved": "已解決",
+  "careStatusArchived": "已歸檔",
+  "careNextFollowUp": "下次跟進 {date}",
+  "@careNextFollowUp": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "givingTitle": "奉獻",
+  "givingCardTitle": "奉獻與年度證明",
+  "givingCardBody": "透過 Stripe 安全奉獻，完成後可在這裡查看已確認的奉獻記錄和年度證明。",
+  "givingCheckoutTitle": "現在奉獻",
+  "givingCheckoutBody": "付款由 Stripe 處理，App 不保存銀行卡或銀行帳戶資訊。",
+  "givingAmountLabel": "金額",
+  "givingFundLabel": "奉獻項目",
+  "givingFundsLoading": "正在載入奉獻項目...",
+  "givingFundsEmpty": "目前沒有可用的奉獻項目。",
+  "givingCategoryOffering": "奉獻",
+  "givingCategoryMissions": "宣教",
+  "givingCheckoutAction": "前往 Stripe",
+  "givingAmountError": "請輸入 USD 1.00 至 USD 100,000.00 之間的金額，最多保留兩位小數。",
+  "givingCheckoutOpenError": "無法打開 Stripe 付款頁面。",
+  "givingCheckoutReturnSuccess": "Stripe 付款流程已完成。確認入帳後會顯示在奉獻記錄中。",
+  "givingCheckoutReturnCancel": "Stripe 付款已取消。",
+  "annualStatementTooltip": "年度證明",
+  "annualStatementPreviewAction": "預覽 CSV",
+  "annualStatementCopyCsvAction": "複製 CSV",
+  "annualStatementCopiedMessage": "證明 CSV 已複製。",
+  "annualStatementSavePdfAction": "保存 PDF",
+  "annualStatementSharePdfAction": "分享 PDF",
+  "annualStatementSharePdfText": "年度奉獻證明",
+  "annualStatementPdfSharedMessage": "年度證明 PDF 已分享。",
+  "annualStatementPdfOpenedMessage": "年度證明 PDF 已保存並打開。",
+  "annualStatementPdfSavedMessage": "年度證明 PDF 已保存到 {path}。",
+  "@annualStatementPdfSavedMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "copyPathAction": "複製路徑",
+  "annualStatementExportTitle": "證明匯出",
+  "annualStatementStatusPendingLabel": "處理中",
+  "annualStatementStatusReadyLabel": "可用",
+  "annualStatementStatusSentLabel": "已發送",
+  "annualStatementStatusFailedLabel": "失敗",
+  "givingStatusPendingLabel": "處理中",
+  "givingStatusSucceededLabel": "成功",
+  "givingStatusFailedLabel": "失敗",
+  "givingStatusRefundedLabel": "已退款",
+  "bibleTtsReadyTitle": "朗讀聖經",
+  "bibleTtsCurrentVerse": "正在朗讀第 {verse} 節",
+  "@bibleTtsCurrentVerse": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleTtsPausedVerse": "已暫停在第 {verse} 節，繼續會重讀本節。",
+  "@bibleTtsPausedVerse": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleTtsRateLabel": "{rate}x",
+  "@bibleTtsRateLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "double",
+        "format": "compact"
+      }
+    }
+  },
+  "bibleTtsPlayTooltip": "朗讀",
+  "bibleTtsPauseTooltip": "暫停朗讀",
+  "bibleTtsStopTooltip": "停止朗讀",
+  "bibleTtsPreviousVerseTooltip": "上一節",
+  "bibleTtsNextVerseTooltip": "下一節",
+  "bibleTtsErrorTextMissing": "這段經文沒有可朗讀的文字。",
+  "bibleTtsErrorEngineUnavailable": "此裝置暫時無法使用文字朗讀。請檢查系統語音設定後重試。",
+  "bibleTtsErrorLanguageUnavailable": "系統尚未安裝這個聖經語言的語音。",
+  "bibleTtsErrorInterrupted": "朗讀已中斷。點擊播放可從目前經節繼續。",
+  "bibleTtsErrorStartFailed": "無法開始朗讀。請檢查裝置語音設定後重試。",
+  "newcomerCardTitle": "第一次來嗎？",
+  "newcomerCardBody": "我們很願意歡迎你、回答問題，並幫助你認識教會生活。",
+  "newcomerCardAction": "我是新朋友",
+  "newcomerSheetTitle": "歡迎來到 MBCG",
+  "newcomerSheetGuestBody": "留下簡單資料，教會同工會與你聯繫。",
+  "newcomerSheetMemberBody": "你也可以介紹自己，或請同工與你聯繫。",
+  "newcomerNameLabel": "姓名",
+  "newcomerEmailLabel": "電郵",
+  "newcomerPhoneLabel": "電話",
+  "newcomerInterestLabel": "你想了解什麼？",
+  "newcomerSubmitAction": "發送給教會同工",
+  "newcomerNameValidationError": "請輸入姓名。",
+  "newcomerContactValidationError": "請至少留下電郵或電話。",
+  "newcomerEmailValidationError": "請輸入有效的電郵地址。",
+  "newcomerSubmittedMessage": "謝謝，我們已經收到你的資料。",
+  "mineDiscipleshipTitle": "我的門徒成長路徑",
+  "mineDiscipleshipBody": "查看教會同工為你安排的下一步成長操練。",
+  "mineDiscipleshipEmpty": "目前還沒有分配成長路徑。",
+  "mineDiscipleshipLoadError": "無法載入你的成長路徑。",
+  "mineDiscipleshipProgressChip": "{completed}/{total} 個任務",
+  "@mineDiscipleshipProgressChip": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "discipleshipStatusNotStarted": "未開始",
+  "discipleshipStatusInProgress": "進行中",
+  "discipleshipStatusBlocked": "受阻",
+  "discipleshipStatusCompleted": "已完成",
+  "discipleshipStatusPaused": "已暫停",
+  "discipleshipStatusCancelled": "已取消"
+}

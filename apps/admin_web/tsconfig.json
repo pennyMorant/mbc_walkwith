@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@mbc/api-contracts": ["../../packages/api_contracts/src/index.ts"],
+      "@mbc/shared-types": ["../../packages/shared_types/src/index.ts"],
+      "@mbc/ui-tokens": ["../../packages/ui_tokens/src/index.ts"]
+    },
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts", "env.d.ts"]
+}

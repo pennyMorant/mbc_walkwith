@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "idx_member_device_tokens_guest_installation" ON "member_device_tokens" USING btree ("installation_id") WHERE "member_device_tokens"."user_id" is null;

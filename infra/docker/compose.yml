@@ -1,0 +1,94 @@
+name: mbc_walkwith
+
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE:-postgres:16-alpine}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-mbc_walkwith}
+      POSTGRES_USER: ${POSTGRES_USER:-mbc_walkwith}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in compose.env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    networks:
+      - backend
+    logging: &default_logging
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  migrate:
+    image: ${MIGRATION_IMAGE:-mbc_walkwith_migration}:${IMAGE_TAG:-local}
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in compose.env}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    networks:
+      - backend
+    logging: *default_logging
+
+  api:
+    image: ${API_IMAGE:-mbc_walkwith_api}:${IMAGE_TAG:-local}
+    env_file:
+      - ${BACKEND_ENV_FILE:-./backend.env}
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3020
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in compose.env}
+      MEDIA_UPLOAD_DIR: /app/uploads
+    volumes:
+      - media_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "bun",
+          "-e",
+          "const r=await fetch('http://127.0.0.1:3020/v1/health');if(!r.ok)process.exit(1)"
+        ]
+      interval: 15s
+      timeout: 5s
+      start_period: 20s
+      retries: 5
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - backend
+    logging: *default_logging
+
+  web:
+    image: ${WEB_IMAGE:-mbc_walkwith_web}:${IMAGE_TAG:-local}
+    ports:
+      - "${WEB_BIND_ADDRESS:-127.0.0.1}:${WEB_PORT:-8080}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    networks:
+      - backend
+    logging: *default_logging
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  media_uploads:

@@ -1,0 +1,20 @@
+{
+  "versionId": "cuvs",
+  "sourceId": "cmn-cu89s",
+  "sourceArchive": "packages/bible_content/sources/cuvs/raw/cmn-cu89s_usfm.zip",
+  "bookCount": 66,
+  "chapterCount": 1189,
+  "verseCount": 31021,
+  "emptyVerseCount": 0,
+  "idPattern": {
+    "bookId": "rom",
+    "chapterId": "rom.8",
+    "verseId": "rom.8.28"
+  },
+  "outputs": {
+    "books": "books.json",
+    "bookMappings": "book_mappings.json",
+    "chapters": "chapters.jsonl",
+    "verses": "verses.jsonl"
+  }
+}

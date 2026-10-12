@@ -1,0 +1,516 @@
+[
+  {
+    "id": "bethlehem",
+    "nameEn": "Bethlehem",
+    "nameZhHans": "伯利恒",
+    "nameZhHant": "伯利恆",
+    "categoryEn": "Town in Judea",
+    "categoryZhHans": "犹太地区的城镇",
+    "categoryZhHant": "猶太地區的城鎮",
+    "descriptionEn": "Bethlehem was a town south of Jerusalem, associated with David's family line and the birth of Jesus in the Gospel narratives.",
+    "descriptionZhHans": "伯利恒是耶路撒冷以南的城镇，在圣经叙事中与大卫家系和耶稣降生密切相关。",
+    "descriptionZhHant": "伯利恆是耶路撒冷以南的城鎮，在聖經敘事中與大衛家系和耶穌降生密切相關。",
+    "summaryEn": "Bethlehem connects Jesus' birth with the Davidic promise. In Matthew 2 it becomes the place where royal expectation, Herod's fear, and God's protection of the child Jesus meet.",
+    "summaryZhHans": "伯利恒把耶稣的降生与大卫之约的盼望连在一起。马太福音 2 章中，它是君王应许、希律恐惧和神保护圣婴耶稣交汇的地点。",
+    "summaryZhHant": "伯利恆把耶穌的降生與大衛之約的盼望連在一起。馬太福音 2 章中，它是君王應許、希律恐懼和神保護聖嬰耶穌交匯的地點。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "When Bethlehem appears in the infancy narratives, the point is more than geography. The town signals continuity with David and with prophetic expectation, so the reader should notice how the Gospel connects Jesus' identity with Israel's story.",
+        "bodyZhHans": "伯利恒出现在耶稣降生叙事中时，重点不只是地理位置。这个城镇提示读者耶稣与大卫家系和先知盼望的连续性，因此阅读时要留意福音书怎样把耶稣的身份接到以色列故事之中。",
+        "bodyZhHant": "伯利恆出現在耶穌降生敘事中時，重點不只是地理位置。這個城鎮提示讀者耶穌與大衛家系和先知盼望的連續性，因此閱讀時要留意福音書怎樣把耶穌的身份接到以色列故事之中。"
+      },
+      {
+        "type": "theology",
+        "titleEn": "Theological Focus",
+        "titleZhHans": "神学重点",
+        "titleZhHant": "神學重點",
+        "bodyEn": "Mainstream Christian interpretation reads Bethlehem as part of God's providential fulfillment. A small town becomes the stage for God's promised king, contrasting divine purpose with the political anxiety of Herod's court.",
+        "bodyZhHans": "主流基督教解释会把伯利恒放在神护理和应许成就的框架中看。一个小城成为神所应许君王的舞台，也与希律宫廷的政治焦虑形成鲜明对照。",
+        "bodyZhHant": "主流基督教解釋會把伯利恆放在神護理和應許成就的框架中看。一個小城成為神所應許君王的舞台，也與希律宮廷的政治焦慮形成鮮明對照。"
+      }
+    ],
+    "aliases": {
+      "web": ["Bethlehem of Judea", "Bethlehem"],
+      "cuvs": ["犹太的伯利恒", "伯利恒"],
+      "cuvt": ["猶太的伯利恆", "伯利恆"]
+    }
+  },
+  {
+    "id": "jerusalem",
+    "nameEn": "Jerusalem",
+    "nameZhHans": "耶路撒冷",
+    "nameZhHant": "耶路撒冷",
+    "categoryEn": "City and temple center",
+    "categoryZhHans": "圣城与圣殿中心",
+    "categoryZhHant": "聖城與聖殿中心",
+    "descriptionEn": "Jerusalem was the central city of Jewish worship and public life in many New Testament passages.",
+    "descriptionZhHans": "耶路撒冷在许多新约经文中是犹太敬拜与公共生活的中心城市。",
+    "descriptionZhHant": "耶路撒冷在許多新約經文中是猶太敬拜與公共生活的中心城市。",
+    "summaryEn": "Jerusalem often marks the center of worship, conflict, judgment, and witness. The Gospels move toward Jerusalem, while Acts begins there and then moves outward.",
+    "summaryZhHans": "耶路撒冷常代表敬拜中心、冲突现场、审判焦点和见证起点。福音书走向耶路撒冷，使徒行传则从耶路撒冷向外展开。",
+    "summaryZhHant": "耶路撒冷常代表敬拜中心、衝突現場、審判焦點和見證起點。福音書走向耶路撒冷，使徒行傳則從耶路撒冷向外展開。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "In the Gospels, Jerusalem is where Jesus teaches, confronts leaders, suffers, dies, and rises. In Acts, Jerusalem is the first public setting of apostolic witness before the mission expands to Judea, Samaria, and the nations.",
+        "bodyZhHans": "在福音书中，耶路撒冷是耶稣教导、面对宗教领袖、受苦、受死和复活的地方。在使徒行传中，耶路撒冷是使徒公开见证的起点，然后福音扩展到犹太、撒玛利亚和万邦。",
+        "bodyZhHant": "在福音書中，耶路撒冷是耶穌教導、面對宗教領袖、受苦、受死和復活的地方。在使徒行傳中，耶路撒冷是使徒公開見證的起點，然後福音擴展到猶太、撒瑪利亞和萬邦。"
+      },
+      {
+        "type": "reading_note",
+        "titleEn": "Reading Note",
+        "titleZhHans": "阅读提示",
+        "titleZhHant": "閱讀提示",
+        "bodyEn": "Do not treat Jerusalem only as a backdrop. Ask whether the passage emphasizes worship, authority, opposition, fulfillment, or mission, because the city often carries a theological weight in the narrative.",
+        "bodyZhHans": "不要只把耶路撒冷当作背景。阅读时可以追问经文强调的是敬拜、权柄、抵挡、应验还是使命，因为这座城在叙事中常带有神学重量。",
+        "bodyZhHant": "不要只把耶路撒冷當作背景。閱讀時可以追問經文強調的是敬拜、權柄、抵擋、應驗還是使命，因為這座城在敘事中常帶有神學重量。"
+      }
+    ],
+    "aliases": {
+      "web": ["Jerusalem"],
+      "cuvs": ["耶路撒冷"],
+      "cuvt": ["耶路撒冷"]
+    }
+  },
+  {
+    "id": "judea",
+    "nameEn": "Judea",
+    "nameZhHans": "犹太",
+    "nameZhHant": "猶太",
+    "categoryEn": "Region",
+    "categoryZhHans": "地区",
+    "categoryZhHant": "地區",
+    "descriptionEn": "Judea was the region around Jerusalem and Bethlehem, prominent in the Gospels and Acts.",
+    "descriptionZhHans": "犹太是耶路撒冷和伯利恒所在的地区，在福音书和使徒行传中频繁出现。",
+    "descriptionZhHant": "猶太是耶路撒冷和伯利恆所在的地區，在福音書和使徒行傳中頻繁出現。",
+    "summaryEn": "Judea provides the regional setting for temple-centered Judaism, John the Baptist's ministry, Jesus' movement toward Jerusalem, and the early spread of the church.",
+    "summaryZhHans": "犹太为圣殿中心的犹太信仰、施洗约翰事工、耶稣走向耶路撒冷，以及初代教会扩展提供了地区背景。",
+    "summaryZhHant": "猶太為聖殿中心的猶太信仰、施洗約翰事工、耶穌走向耶路撒冷，以及初代教會擴展提供了地區背景。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "References to Judea often locate events near the religious and political center of Jewish life. This helps explain why questions of authority, purity, temple worship, and public opposition may become sharper in these scenes.",
+        "bodyZhHans": "经文提到犹太时，常把事件放在犹太宗教与政治中心附近。这有助于理解为什么权柄、洁净、圣殿敬拜和公开反对等议题在这些场景中更突出。",
+        "bodyZhHant": "經文提到猶太時，常把事件放在猶太宗教與政治中心附近。這有助於理解為什麼權柄、潔淨、聖殿敬拜和公開反對等議題在這些場景中更突出。"
+      }
+    ],
+    "aliases": {
+      "web": ["Judaea", "Judea"],
+      "cuvs": ["犹太地", "犹太"],
+      "cuvt": ["猶太地", "猶太"]
+    }
+  },
+  {
+    "id": "galilee",
+    "nameEn": "Galilee",
+    "nameZhHans": "加利利",
+    "nameZhHant": "加利利",
+    "categoryEn": "Northern region",
+    "categoryZhHans": "北部地区",
+    "categoryZhHant": "北部地區",
+    "descriptionEn": "Galilee was a northern region where much of Jesus' public ministry took place.",
+    "descriptionZhHans": "加利利是北部地区，耶稣公开事工的许多场景发生在那里。",
+    "descriptionZhHant": "加利利是北部地區，耶穌公開事工的許多場景發生在那裡。",
+    "summaryEn": "Galilee is closely tied to Jesus' teaching, healings, calling of disciples, and announcement of God's kingdom among ordinary villages and towns.",
+    "summaryZhHans": "加利利与耶稣的教导、医治、呼召门徒和宣告神国紧密相关，这些事常发生在普通村镇与民众生活中。",
+    "summaryZhHant": "加利利與耶穌的教導、醫治、呼召門徒和宣告神國緊密相關，這些事常發生在普通村鎮與民眾生活中。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "Galilee scenes often show Jesus among fishermen, villages, crowds, and the sick. The location supports the Gospel emphasis that God's kingdom comes near in daily life, not only inside formal religious spaces.",
+        "bodyZhHans": "加利利场景常呈现耶稣在渔夫、村镇、众人和病患中间。这个地点帮助读者看见，神国临近不是只发生在正式宗教空间中，也进入日常生活。",
+        "bodyZhHant": "加利利場景常呈現耶穌在漁夫、村鎮、眾人和病患中間。這個地點幫助讀者看見，神國臨近不是只發生在正式宗教空間中，也進入日常生活。"
+      }
+    ],
+    "aliases": {
+      "web": ["Sea of Galilee", "Galilee"],
+      "cuvs": ["加利利海", "加利利"],
+      "cuvt": ["加利利海", "加利利"]
+    }
+  },
+  {
+    "id": "nazareth",
+    "nameEn": "Nazareth",
+    "nameZhHans": "拿撒勒",
+    "nameZhHant": "拿撒勒",
+    "categoryEn": "Town in Galilee",
+    "categoryZhHans": "加利利的城镇",
+    "categoryZhHant": "加利利的城鎮",
+    "descriptionEn": "Nazareth was Jesus' hometown in Galilee and is used in the New Testament to identify him as Jesus of Nazareth.",
+    "descriptionZhHans": "拿撒勒是耶稣在加利利的家乡，新约常以“拿撒勒人耶稣”来称呼他。",
+    "descriptionZhHant": "拿撒勒是耶穌在加利利的家鄉，新約常以「拿撒勒人耶穌」來稱呼他。",
+    "summaryEn": "Nazareth highlights the humble and ordinary setting associated with Jesus' upbringing. It also becomes a public identifier for Jesus in the Gospels and Acts.",
+    "summaryZhHans": "拿撒勒凸显耶稣成长背景的卑微与日常，也成为福音书和使徒行传中识别耶稣的重要称呼。",
+    "summaryZhHant": "拿撒勒凸顯耶穌成長背景的卑微與日常，也成為福音書和使徒行傳中識別耶穌的重要稱呼。",
+    "sections": [
+      {
+        "type": "reading_note",
+        "titleEn": "Reading Note",
+        "titleZhHans": "阅读提示",
+        "titleZhHant": "閱讀提示",
+        "bodyEn": "When a passage says Jesus of Nazareth, it may simply identify him geographically, but it can also stress the surprising humility of the Messiah's public identity.",
+        "bodyZhHans": "经文说“拿撒勒人耶稣”时，可能只是地理身份说明，也可能强调弥赛亚公开身份中令人意外的卑微。",
+        "bodyZhHant": "經文說「拿撒勒人耶穌」時，可能只是地理身份說明，也可能強調彌賽亞公開身份中令人意外的卑微。"
+      }
+    ],
+    "aliases": {
+      "web": ["Jesus of Nazareth", "Nazareth"],
+      "cuvs": ["拿撒勒人耶稣", "拿撒勒"],
+      "cuvt": ["拿撒勒人耶穌", "拿撒勒"]
+    }
+  },
+  {
+    "id": "egypt",
+    "nameEn": "Egypt",
+    "nameZhHans": "埃及",
+    "nameZhHant": "埃及",
+    "categoryEn": "Nation and refuge setting",
+    "categoryZhHans": "国家与避难地点",
+    "categoryZhHant": "國家與避難地點",
+    "descriptionEn": "Egypt is remembered from Israel's exodus story and appears in Matthew's infancy narrative as a place of refuge for Jesus' family.",
+    "descriptionZhHans": "埃及承载以色列出埃及的记忆，也在马太福音的降生叙事中成为耶稣一家避难的地方。",
+    "descriptionZhHant": "埃及承載以色列出埃及的記憶，也在馬太福音的降生敘事中成為耶穌一家避難的地方。",
+    "summaryEn": "Egypt can recall both oppression and preservation. In Matthew 2, the flight to Egypt frames Jesus' story within Israel's earlier story while showing God's protection from Herod.",
+    "summaryZhHans": "埃及既能唤起受压迫的记忆，也能成为神保存生命的地点。马太福音 2 章中，逃往埃及把耶稣的故事放入以色列旧约历史，同时显明神保护他脱离希律。",
+    "summaryZhHant": "埃及既能喚起受壓迫的記憶，也能成為神保存生命的地點。馬太福音 2 章中，逃往埃及把耶穌的故事放入以色列舊約歷史，同時顯明神保護他脫離希律。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "The mention of Egypt often invites readers to remember the exodus pattern. Matthew uses that memory to show that Jesus' life is bound to Israel's story and that God's saving plan continues even under political threat.",
+        "bodyZhHans": "经文提到埃及时，常邀请读者想起出埃及模式。马太借这个记忆表明，耶稣的生命与以色列故事相连，并且神的救恩计划即使在政治威胁下仍继续推进。",
+        "bodyZhHant": "經文提到埃及時，常邀請讀者想起出埃及模式。馬太借這個記憶表明，耶穌的生命與以色列故事相連，並且神的救恩計劃即使在政治威脅下仍繼續推進。"
+      }
+    ],
+    "aliases": {
+      "web": ["Egypt"],
+      "cuvs": ["埃及"],
+      "cuvt": ["埃及"]
+    }
+  },
+  {
+    "id": "jordan",
+    "nameEn": "Jordan",
+    "nameZhHans": "约但河",
+    "nameZhHant": "約但河",
+    "categoryEn": "River and boundary",
+    "categoryZhHans": "河流与边界",
+    "categoryZhHant": "河流與邊界",
+    "descriptionEn": "The Jordan River is a major biblical boundary and is especially connected with John the Baptist's ministry and Jesus' baptism.",
+    "descriptionZhHans": "约但河是圣经中的重要边界，也特别与施洗约翰的事工和耶稣受洗相关。",
+    "descriptionZhHant": "約但河是聖經中的重要邊界，也特別與施洗約翰的事工和耶穌受洗相關。",
+    "summaryEn": "The Jordan often signals repentance, transition, and public identification. In the Gospels it is the setting where John calls Israel to repentance and Jesus is publicly revealed.",
+    "summaryZhHans": "约但河常象征悔改、转折和公开身份显明。在福音书中，施洗约翰在这里呼召以色列悔改，耶稣也在这里公开显明。",
+    "summaryZhHant": "約但河常象徵悔改、轉折和公開身份顯明。在福音書中，施洗約翰在這裡呼召以色列悔改，耶穌也在這裡公開顯明。",
+    "sections": [
+      {
+        "type": "theology",
+        "titleEn": "Theological Focus",
+        "titleZhHans": "神学重点",
+        "titleZhHant": "神學重點",
+        "bodyEn": "Jordan scenes often connect water, repentance, and God's new work. For Christian readers, Jesus' baptism at the Jordan is not merely a ritual note but a revelation of his obedience and mission.",
+        "bodyZhHans": "约但河场景常把水、悔改和神新的作为连在一起。对基督徒读者而言，耶稣在约但河受洗不只是仪式记录，而是显明他的顺服和使命。",
+        "bodyZhHant": "約但河場景常把水、悔改和神新的作為連在一起。對基督徒讀者而言，耶穌在約但河受洗不只是儀式記錄，而是顯明他的順服和使命。"
+      }
+    ],
+    "aliases": {
+      "web": ["Jordan River", "Jordan"],
+      "cuvs": ["约但河", "约旦河", "约但", "约旦"],
+      "cuvt": ["約但河", "約旦河", "約但", "約旦"]
+    }
+  },
+  {
+    "id": "capernaum",
+    "nameEn": "Capernaum",
+    "nameZhHans": "迦百农",
+    "nameZhHant": "迦百農",
+    "categoryEn": "Galilean town",
+    "categoryZhHans": "加利利城镇",
+    "categoryZhHant": "加利利城鎮",
+    "descriptionEn": "Capernaum was a Galilean town connected with Jesus' teaching, healings, and ministry around the Sea of Galilee.",
+    "descriptionZhHans": "迦百农是加利利城镇，与耶稣在加利利海一带的教导、医治和公开事工有关。",
+    "descriptionZhHant": "迦百農是加利利城鎮，與耶穌在加利利海一帶的教導、醫治和公開事工有關。",
+    "summaryEn": "Capernaum often functions as a ministry base in the Gospel narratives. It brings together synagogue teaching, healing authority, household scenes, and public response to Jesus.",
+    "summaryZhHans": "迦百农在福音书叙事中常像耶稣加利利事工的据点，把会堂教导、医治权柄、家庭场景和众人对耶稣的回应放在一起。",
+    "summaryZhHant": "迦百農在福音書敘事中常像耶穌加利利事工的據點，把會堂教導、醫治權柄、家庭場景和眾人對耶穌的回應放在一起。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "When Capernaum appears, look for how Jesus' authority is shown in concrete actions: teaching, casting out demons, healing, forgiving, and gathering disciples around ordinary homes and public spaces.",
+        "bodyZhHans": "读到迦百农时，可以留意耶稣的权柄如何通过具体行动显明：教导、赶鬼、医治、赦罪，并在普通家庭和公共空间中招聚门徒。",
+        "bodyZhHant": "讀到迦百農時，可以留意耶穌的權柄如何通過具體行動顯明：教導、趕鬼、醫治、赦罪，並在普通家庭和公共空間中招聚門徒。"
+      }
+    ],
+    "aliases": {
+      "web": ["Capernaum"],
+      "cuvs": ["迦百农"],
+      "cuvt": ["迦百農"]
+    }
+  },
+  {
+    "id": "samaria",
+    "nameEn": "Samaria",
+    "nameZhHans": "撒玛利亚",
+    "nameZhHant": "撒瑪利亞",
+    "categoryEn": "Region between Judea and Galilee",
+    "categoryZhHans": "犹太与加利利之间的地区",
+    "categoryZhHant": "猶太與加利利之間的地區",
+    "descriptionEn": "Samaria was a region associated with long-standing tension between Jews and Samaritans, and it becomes important in Jesus' ministry and Acts.",
+    "descriptionZhHans": "撒玛利亚是与犹太人和撒玛利亚人长期张力相关的地区，在耶稣事工和使徒行传中都很重要。",
+    "descriptionZhHant": "撒瑪利亞是與猶太人和撒瑪利亞人長期張力相關的地區，在耶穌事工和使徒行傳中都很重要。",
+    "summaryEn": "Samaria often highlights boundary crossing. Jesus' engagement with Samaritans and the mission in Acts show the Gospel moving beyond inherited social and ethnic divisions.",
+    "summaryZhHans": "撒玛利亚常强调跨越边界。耶稣与撒玛利亚人的接触，以及使徒行传中的宣教，显明福音超越既有的社会和族群隔阂。",
+    "summaryZhHant": "撒瑪利亞常強調跨越邊界。耶穌與撒瑪利亞人的接觸，以及使徒行傳中的宣教，顯明福音超越既有的社會和族群隔閡。",
+    "sections": [
+      {
+        "type": "theology",
+        "titleEn": "Theological Focus",
+        "titleZhHans": "神学重点",
+        "titleZhHant": "神學重點",
+        "bodyEn": "Samaria passages often challenge narrow boundaries of belonging. They help readers see how mercy, worship, and witness extend beyond the expected center.",
+        "bodyZhHans": "撒玛利亚相关经文常挑战狭窄的归属边界，帮助读者看见怜悯、敬拜和见证如何越过人以为理所当然的中心。",
+        "bodyZhHant": "撒瑪利亞相關經文常挑戰狹窄的歸屬邊界，幫助讀者看見憐憫、敬拜和見證如何越過人以為理所當然的中心。"
+      }
+    ],
+    "aliases": {
+      "web": ["Samaria"],
+      "cuvs": ["撒玛利亚"],
+      "cuvt": ["撒瑪利亞"]
+    }
+  },
+  {
+    "id": "bethany",
+    "nameEn": "Bethany",
+    "nameZhHans": "伯大尼",
+    "nameZhHant": "伯大尼",
+    "categoryEn": "Village near Jerusalem",
+    "categoryZhHans": "耶路撒冷附近村庄",
+    "categoryZhHant": "耶路撒冷附近村莊",
+    "descriptionEn": "Bethany was a village near Jerusalem, associated with Mary, Martha, Lazarus, and events near Jesus' final week.",
+    "descriptionZhHans": "伯大尼是耶路撒冷附近的村庄，与马利亚、马大、拉撒路，以及耶稣最后一周前后的事件有关。",
+    "descriptionZhHant": "伯大尼是耶路撒冷附近的村莊，與馬利亞、馬大、拉撒路，以及耶穌最後一週前後的事件有關。",
+    "summaryEn": "Bethany often brings together friendship, hospitality, grief, resurrection hope, and devotion to Jesus close to the shadow of the cross.",
+    "summaryZhHans": "伯大尼常把友谊、接待、哀伤、复活盼望和对耶稣的爱放在一起，并且这些场景靠近十字架的阴影。",
+    "summaryZhHant": "伯大尼常把友誼、接待、哀傷、復活盼望和對耶穌的愛放在一起，並且這些場景靠近十字架的陰影。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "Bethany scenes are often personal and relational, but they are not small in meaning. The raising of Lazarus and acts of devotion at Bethany point toward Jesus' death, resurrection, and worthiness.",
+        "bodyZhHans": "伯大尼的场景常显得私人而关系化，但意义并不小。拉撒路复活和伯大尼的奉献行动，都指向耶稣的死、复活和他配得敬拜。",
+        "bodyZhHant": "伯大尼的場景常顯得私人而關係化，但意義並不小。拉撒路復活和伯大尼的奉獻行動，都指向耶穌的死、復活和他配得敬拜。"
+      }
+    ],
+    "aliases": {
+      "web": ["Bethany"],
+      "cuvs": ["伯大尼"],
+      "cuvt": ["伯大尼"]
+    }
+  },
+  {
+    "id": "damascus",
+    "nameEn": "Damascus",
+    "nameZhHans": "大马士革",
+    "nameZhHant": "大馬色",
+    "categoryEn": "City in Syria",
+    "categoryZhHans": "叙利亚城市",
+    "categoryZhHant": "敘利亞城市",
+    "descriptionEn": "Damascus was the city Paul was approaching when he encountered the risen Jesus in Acts.",
+    "descriptionZhHans": "大马士革是保罗在使徒行传中遇见复活主时正要前往的城市。",
+    "descriptionZhHant": "大馬色是保羅在使徒行傳中遇見復活主時正要前往的城市。",
+    "summaryEn": "Damascus is strongly associated with Paul's conversion and calling. It marks a turning point from persecution of the church to apostolic mission.",
+    "summaryZhHans": "大马士革与保罗归主和蒙召密切相关，标志着他从逼迫教会转向使徒使命的关键转折。",
+    "summaryZhHant": "大馬色與保羅歸主和蒙召密切相關，標誌著他從逼迫教會轉向使徒使命的關鍵轉折。",
+    "sections": [
+      {
+        "type": "theology",
+        "titleEn": "Theological Focus",
+        "titleZhHans": "神学重点",
+        "titleZhHant": "神學重點",
+        "bodyEn": "The Damascus road is a narrative of grace and reversal. The persecutor is confronted by the risen Christ and redirected into service, showing that mission begins with divine initiative.",
+        "bodyZhHans": "大马士革路上的故事是恩典和反转的叙事。逼迫者被复活的基督拦阻并转向服事，显明使命首先出于神主动的呼召。",
+        "bodyZhHant": "大馬色路上的故事是恩典和反轉的敘事。逼迫者被復活的基督攔阻並轉向服事，顯明使命首先出於神主動的呼召。"
+      }
+    ],
+    "aliases": {
+      "web": ["Damascus"],
+      "cuvs": ["大马士革", "大马色"],
+      "cuvt": ["大馬士革", "大馬色"]
+    }
+  },
+  {
+    "id": "antioch",
+    "nameEn": "Antioch",
+    "nameZhHans": "安提阿",
+    "nameZhHant": "安提阿",
+    "categoryEn": "Mission center city",
+    "categoryZhHans": "宣教中心城市",
+    "categoryZhHant": "宣教中心城市",
+    "descriptionEn": "Antioch became an important early Christian center and a sending church for mission in Acts.",
+    "descriptionZhHans": "安提阿在使徒行传中成为早期基督徒的重要中心，也是差派宣教的教会。",
+    "descriptionZhHant": "安提阿在使徒行傳中成為早期基督徒的重要中心，也是差派宣教的教會。",
+    "summaryEn": "Antioch represents the church becoming visibly multiethnic and missionary. It is a key setting for Gentile inclusion and the sending of Barnabas and Paul.",
+    "summaryZhHans": "安提阿代表教会明显走向多族群和宣教导向，是外邦人被接纳、巴拿巴和保罗被差派的重要地点。",
+    "summaryZhHant": "安提阿代表教會明顯走向多族群和宣教導向，是外邦人被接納、巴拿巴和保羅被差派的重要地點。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "In Acts, Antioch helps the reader see the church moving from local survival to outward mission. Leadership, teaching, worship, and sending are all part of the Antioch story.",
+        "bodyZhHans": "在使徒行传中，安提阿帮助读者看见教会从本地生存走向外展宣教。领袖、教导、敬拜和差派都属于安提阿故事的一部分。",
+        "bodyZhHant": "在使徒行傳中，安提阿幫助讀者看見教會從本地生存走向外展宣教。領袖、教導、敬拜和差派都屬於安提阿故事的一部分。"
+      }
+    ],
+    "aliases": {
+      "web": ["Antioch"],
+      "cuvs": ["安提阿"],
+      "cuvt": ["安提阿"]
+    }
+  },
+  {
+    "id": "rome",
+    "nameEn": "Rome",
+    "nameZhHans": "罗马",
+    "nameZhHant": "羅馬",
+    "categoryEn": "Imperial capital",
+    "categoryZhHans": "帝国首都",
+    "categoryZhHant": "帝國首都",
+    "descriptionEn": "Rome was the capital of the Roman Empire and becomes important in Acts and the New Testament letters.",
+    "descriptionZhHans": "罗马是罗马帝国首都，在使徒行传和新约书信中具有重要地位。",
+    "descriptionZhHant": "羅馬是羅馬帝國首都，在使徒行傳和新約書信中具有重要地位。",
+    "summaryEn": "Rome represents the empire's political center and the outward reach of the Gospel. Paul's journey toward Rome shows witness moving into the heart of imperial power.",
+    "summaryZhHans": "罗马代表帝国政治中心，也代表福音向外扩展的范围。保罗前往罗马，显示见证进入帝国权力核心。",
+    "summaryZhHant": "羅馬代表帝國政治中心，也代表福音向外擴展的範圍。保羅前往羅馬，顯示見證進入帝國權力核心。",
+    "sections": [
+      {
+        "type": "reading_note",
+        "titleEn": "Reading Note",
+        "titleZhHans": "阅读提示",
+        "titleZhHant": "閱讀提示",
+        "bodyEn": "When Rome is mentioned, keep both politics and mission in view. The New Testament does not present the empire as ultimate; the Gospel is announced even within its reach.",
+        "bodyZhHans": "读到罗马时，要同时留意政治背景和宣教使命。新约并不把帝国呈现为终极权柄；福音甚至在帝国范围内被宣告。",
+        "bodyZhHant": "讀到羅馬時，要同時留意政治背景和宣教使命。新約並不把帝國呈現為終極權柄；福音甚至在帝國範圍內被宣告。"
+      }
+    ],
+    "aliases": {
+      "web": ["Rome"],
+      "cuvs": ["罗马"],
+      "cuvt": ["羅馬"]
+    }
+  },
+  {
+    "id": "corinth",
+    "nameEn": "Corinth",
+    "nameZhHans": "哥林多",
+    "nameZhHant": "哥林多",
+    "categoryEn": "Greek city and church setting",
+    "categoryZhHans": "希腊城市与教会处境",
+    "categoryZhHant": "希臘城市與教會處境",
+    "descriptionEn": "Corinth was a major Greek city where Paul ministered and to whose church New Testament letters were addressed.",
+    "descriptionZhHans": "哥林多是希腊重要城市，保罗曾在那里服事，新约中也有写给哥林多教会的书信。",
+    "descriptionZhHant": "哥林多是希臘重要城市，保羅曾在那裡服事，新約中也有寫給哥林多教會的書信。",
+    "summaryEn": "Corinth helps readers see Gospel formation in a complex urban church, including issues of unity, holiness, worship, spiritual gifts, love, and resurrection hope.",
+    "summaryZhHans": "哥林多帮助读者看见福音如何塑造复杂城市教会，包括合一、圣洁、敬拜、属灵恩赐、爱和复活盼望等议题。",
+    "summaryZhHant": "哥林多幫助讀者看見福音如何塑造複雜城市教會，包括合一、聖潔、敬拜、屬靈恩賜、愛和復活盼望等議題。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "Corinth passages often deal with a church learning how the Gospel reshapes public life, private ethics, community worship, and hope in the resurrection within a busy urban environment.",
+        "bodyZhHans": "哥林多相关经文常处理一个教会如何在繁忙城市处境中，让福音重塑公共生活、私人伦理、群体敬拜和复活盼望。",
+        "bodyZhHant": "哥林多相關經文常處理一個教會如何在繁忙城市處境中，讓福音重塑公共生活、私人倫理、群體敬拜和復活盼望。"
+      }
+    ],
+    "aliases": {
+      "web": ["Corinth"],
+      "cuvs": ["哥林多"],
+      "cuvt": ["哥林多"]
+    }
+  },
+  {
+    "id": "ephesus",
+    "nameEn": "Ephesus",
+    "nameZhHans": "以弗所",
+    "nameZhHant": "以弗所",
+    "categoryEn": "Asian city and church setting",
+    "categoryZhHans": "亚细亚城市与教会处境",
+    "categoryZhHant": "亞細亞城市與教會處境",
+    "descriptionEn": "Ephesus was an important city in Asia Minor and a major setting for Paul's ministry and later church instruction.",
+    "descriptionZhHans": "以弗所是小亚细亚重要城市，也是保罗事工和后续教会教导的重要处境。",
+    "descriptionZhHant": "以弗所是小亞細亞重要城市，也是保羅事工和後續教會教導的重要處境。",
+    "summaryEn": "Ephesus brings together public ministry, spiritual conflict, church formation, and teaching about the church as Christ's body.",
+    "summaryZhHans": "以弗所把公开事工、属灵争战、教会塑造，以及教会作为基督身体的教导连在一起。",
+    "summaryZhHant": "以弗所把公開事工、屬靈爭戰、教會塑造，以及教會作為基督身體的教導連在一起。",
+    "sections": [
+      {
+        "type": "theology",
+        "titleEn": "Theological Focus",
+        "titleZhHans": "神学重点",
+        "titleZhHant": "神學重點",
+        "bodyEn": "Ephesus scenes remind readers that the Gospel confronts idols and spiritual powers while forming a new community in Christ. The location is especially useful for connecting Acts with Ephesians and Revelation.",
+        "bodyZhHans": "以弗所场景提醒读者，福音既面对偶像和属灵权势，也在基督里塑造新的群体。这个地点特别适合把使徒行传、以弗所书和启示录联系起来阅读。",
+        "bodyZhHant": "以弗所場景提醒讀者，福音既面對偶像和屬靈權勢，也在基督裡塑造新的群體。這個地點特別適合把使徒行傳、以弗所書和啟示錄聯繫起來閱讀。"
+      }
+    ],
+    "aliases": {
+      "web": ["Ephesus"],
+      "cuvs": ["以弗所"],
+      "cuvt": ["以弗所"]
+    }
+  },
+  {
+    "id": "philippi",
+    "nameEn": "Philippi",
+    "nameZhHans": "腓立比",
+    "nameZhHant": "腓立比",
+    "categoryEn": "Roman colony and church setting",
+    "categoryZhHans": "罗马殖民城与教会处境",
+    "categoryZhHant": "羅馬殖民城與教會處境",
+    "descriptionEn": "Philippi was a Roman colony in Macedonia and the setting for Paul's ministry to Lydia, the jailer, and the church addressed in Philippians.",
+    "descriptionZhHans": "腓立比是马其顿的罗马殖民城，是保罗向吕底亚、禁卒传福音，并后来写信给腓立比教会的处境。",
+    "descriptionZhHant": "腓立比是馬其頓的羅馬殖民城，是保羅向呂底亞、禁卒傳福音，並後來寫信給腓立比教會的處境。",
+    "summaryEn": "Philippi is associated with joy, partnership, suffering, and faithful witness. Acts shows the church beginning through diverse conversions; Philippians shows Gospel partnership under pressure.",
+    "summaryZhHans": "腓立比与喜乐、同工、受苦和忠心见证相关。使徒行传呈现这间教会由不同背景的人归主而开始，腓立比书则显明压力中的福音伙伴关系。",
+    "summaryZhHant": "腓立比與喜樂、同工、受苦和忠心見證相關。使徒行傳呈現這間教會由不同背景的人歸主而開始，腓立比書則顯明壓力中的福音夥伴關係。",
+    "sections": [
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "In Philippi, the Gospel reaches a businesswoman, a household, prisoners, and a jailer. The city helps readers see how public witness and private faithfulness can grow into a resilient church.",
+        "bodyZhHans": "在腓立比，福音临到做生意的妇人、她的家、监牢中的人和禁卒。这座城帮助读者看见，公开见证和个人忠心如何形成坚韧的教会。",
+        "bodyZhHant": "在腓立比，福音臨到做生意的婦人、她的家、監牢中的人和禁卒。這座城幫助讀者看見，公開見證和個人忠心如何形成堅韌的教會。"
+      }
+    ],
+    "aliases": {
+      "web": ["Philippi"],
+      "cuvs": ["腓立比"],
+      "cuvt": ["腓立比"]
+    }
+  }
+]

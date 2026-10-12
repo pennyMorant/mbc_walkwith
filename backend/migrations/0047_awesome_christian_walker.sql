@@ -1,0 +1,1 @@
+ALTER TABLE "member_login_codes" ADD COLUMN "failed_attempts" integer DEFAULT 0 NOT NULL;

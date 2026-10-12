@@ -1,0 +1,929 @@
+{
+  "@@locale": "es",
+  "appTitle": "MBCG",
+  "commonStatusUnknownLabel": "Estado desconocido",
+  "commonVisibilityUnknownLabel": "Visibilidad desconocida",
+  "commonPrivacyUnknownLabel": "Privacidad desconocida",
+  "tabStudy": "Estudio",
+  "tabSermons": "Sermones",
+  "tabLife": "Vida",
+  "tabMine": "Mi perfil",
+  "mineTitle": "Mi perfil",
+  "memberOptionalSignInTitle": "Inicio de sesión opcional",
+  "memberOptionalSignInBody": "Sigue usando la app como invitado, o inicia sesión más adelante para sincronizar lectura, oración y registros de ofrendas.",
+  "memberEmailLabel": "Correo",
+  "memberInvalidEmail": "Ingresa un correo electrónico válido.",
+  "memberShowPasswordTooltip": "Mostrar contraseña",
+  "memberHidePasswordTooltip": "Ocultar contraseña",
+  "memberNameLabel": "Nombre",
+  "memberPasswordLabel": "Contraseña",
+  "memberConfirmPasswordLabel": "Confirmar contraseña",
+  "memberCodeLabel": "Código",
+  "memberVerifyEmailAction": "Verificar correo",
+  "memberSignInAction": "Iniciar sesión",
+  "memberContinueWithGoogle": "Continuar con Google",
+  "memberContinueWithApple": "Continuar con Apple",
+  "memberAuthAlternative": "o",
+  "memberFederatedSetupUnavailable": "El inicio con Google y Apple aún no está configurado.",
+  "memberFederatedSignInFailed": "No se pudo completar el inicio de sesión. Inténtalo de nuevo.",
+  "memberLoginEmailTitle": "Bienvenido de nuevo",
+  "memberLoginEmailBody": "Inicia sesión para continuar tu vida en la iglesia.",
+  "memberNextAction": "Siguiente",
+  "memberCreateAccountAction": "Crear cuenta",
+  "memberPasswordTitle": "Ingresa tu contraseña",
+  "memberForgotPasswordAction": "¿Olvidaste tu contraseña?",
+  "memberPasswordResetTitle": "Restablecer contraseña",
+  "memberPasswordResetRequestBody": "Enviaremos un código si este correo puede restablecer una contraseña.",
+  "memberPasswordResetCodeBody": "Ingresa el código de tu correo y elige una nueva contraseña.",
+  "memberPasswordResetAction": "Restablecer contraseña",
+  "memberPasswordResetComplete": "Contraseña actualizada. Inicia sesión con tu nueva contraseña.",
+  "memberBackToSignInAction": "Volver a iniciar sesión",
+  "memberRegisterAction": "Registrarse",
+  "memberChangeEmailAction": "Cambiar correo",
+  "memberPasswordMismatch": "Las contraseñas no coinciden.",
+  "memberSignOutAction": "Cerrar sesión",
+  "memberRegistrationClosed": "El registro de miembros está cerrado. Contacta a la oficina de la iglesia.",
+  "memberRegistrationPendingApproval": "Registro recibido. Espera la aprobación de la iglesia.",
+  "memberProfileTitle": "Mi perfil",
+  "memberProfileEditTitle": "Detalles del perfil",
+  "memberProfileSaveAction": "Guardar perfil",
+  "memberProfileSaved": "Perfil guardado.",
+  "memberProfileOpenAction": "Editar perfil",
+  "memberStatusLabel": "Estado",
+  "memberRoleLabel": "Rol",
+  "memberGroupLabel": "Grupo",
+  "memberNoGroupLabel": "Sin grupo",
+  "memberPhoneLabel": "Teléfono",
+  "memberAddressLabel": "Dirección",
+  "memberFaithStartYearLabel": "Año de fe",
+  "memberBaptizedYearLabel": "Año de bautismo",
+  "memberJoinedChurchAtLabel": "Fecha de ingreso",
+  "memberEmergencyContactNameLabel": "Contacto de emergencia",
+  "memberEmergencyContactPhoneLabel": "Teléfono de emergencia",
+  "mineGivingEntryTitle": "Ofrendas y comprobantes anuales",
+  "mineGivingEntryBody": "Abre historial de ofrendas, registros confirmados y PDFs anuales.",
+  "mineLifeOverviewTitle": "Mi vida de iglesia",
+  "mineLifeOverviewBody": "Estado rápido de tus grupos, clases, servicio y solicitudes de cuidado.",
+  "mineLifeGroupsLabel": "grupos",
+  "mineLifeCoursesLabel": "clases",
+  "mineLifeCoursesCountLabel": "{count, plural, =1{1 clase} other{{count} clases}}",
+  "@mineLifeCoursesCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeServingLabel": "servicio",
+  "mineLifeServingCountLabel": "{count, plural, =1{1 servicio} other{{count} servicios}}",
+  "@mineLifeServingCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeCareLabel": "cuidado",
+  "mineLifeOverviewMetricSemanticLabel": "{label}: {count}",
+  "@mineLifeOverviewMetricSemanticLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mineLifeOpenLifeAction": "Abrir Vida",
+  "preferencesTitle": "Preferencias",
+  "appearanceTitle": "Apariencia",
+  "themeModeSystem": "Sistema",
+  "themeModeLight": "Claro",
+  "themeModeDark": "Oscuro",
+  "textSizeTitle": "Tamaño del texto",
+  "textSizeBody": "Haz que el texto sea más fácil de leer para la adoración y la vida de la iglesia.",
+  "textSizeSystem": "Sistema",
+  "textSizeStandard": "Normal",
+  "textSizeLarge": "Grande",
+  "textSizeExtraLarge": "Muy grande",
+  "notificationPermissionTitle": "Permiso de notificaciones",
+  "notificationPermissionEnabledBody": "Las notificaciones están permitidas. Usa el interruptor para abrir la configuración del sistema si quieres desactivarlas.",
+  "notificationPermissionDisabledBody": "Las notificaciones están desactivadas. Activa esto para solicitar el permiso del sistema.",
+  "aboutTitle": "Acerca de",
+  "aboutChurchTitle": "Acerca de la iglesia",
+  "churchAddressTitle": "Dirección / mapa",
+  "churchPhoneTitle": "Teléfono",
+  "churchEmailTitle": "Correo de contacto",
+  "privacyPolicyTitle": "Política de privacidad",
+  "termsOfUseTitle": "Términos de uso",
+  "appVersionTitle": "Versión de la App",
+  "appVersionValue": "Versión {version}",
+  "@appVersionValue": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "periodPickerTooltip": "Elegir rango de fechas",
+  "periodThisWeek": "Esta semana",
+  "periodThisMonth": "Este mes",
+  "periodPreviousAction": "Anterior",
+  "periodNextAction": "Siguiente",
+  "periodApplyAction": "Aplicar",
+  "languageTitle": "Idioma",
+  "systemLanguageLabel": "Idioma del sistema",
+  "languageSystemBody": "La app sigue el idioma del sistema. Para cambiarlo, usa la configuración nativa de esta app.",
+  "openSystemSettingsAction": "Abrir configuración del sistema",
+  "bibleTranslationLabel": "Traducción bíblica",
+  "studyTitle": "Biblia",
+  "bibleSearchTooltip": "Buscar en la Biblia",
+  "bibleSearchTitle": "Buscar en la Biblia",
+  "bibleSearchHint": "Busca una frase o palabras clave",
+  "bibleSearchStartTitle": "Buscar la Biblia",
+  "bibleSearchStartBody": "Escribe una frase, parte de un versículo o palabras clave. Los resultados usan la traducción bíblica del idioma actual.",
+  "bibleSearchNoResultsTitle": "No hay versículos coincidentes",
+  "bibleSearchNoResultsBody": "Prueba con menos palabras u otra frase. La búsqueda permite coincidencias parciales, pero puede ignorar palabras muy cortas.",
+  "bibleSearchErrorTitle": "La búsqueda falló",
+  "versePickerTooltip": "Elegir versículo",
+  "versePickerTitle": "Elegir un versículo",
+  "readerSettingsTooltip": "Ajustes de lectura",
+  "readerSettingsTitle": "Ajustes de lectura",
+  "readerAssistsTitle": "Ayudas de lectura",
+  "chapterPeopleAssistTitle": "Personas del capítulo",
+  "chapterPeopleAssistBody": "Muestra una entrada del capítulo para figuras bíblicas encontradas en este capítulo.",
+  "chapterPlacesAssistTitle": "Lugares del capítulo",
+  "chapterPlacesAssistBody": "Muestra una entrada del capítulo para lugares bíblicos encontrados en este capítulo.",
+  "lexiconAssistTitle": "Palabras del idioma original",
+  "lexiconAssistBody": "Muestra información de palabras originales cuando un versículo tiene datos locales de léxico.",
+  "aiStudyHintsAssistTitle": "Ayudas de estudio con IA",
+  "aiStudyHintsAssistBody": "Activa explicaciones al mantener presionado un versículo y ayudas relacionadas.",
+  "chapterPeopleTooltip": "Personas en este capítulo",
+  "chapterPeopleTitle": "Personas en este capítulo",
+  "chapterPlacesTooltip": "Lugares en este capítulo",
+  "chapterPlacesTitle": "Lugares en este capítulo",
+  "continueReadingTitle": "Continuar leyendo",
+  "continueReadingAction": "Continuar",
+  "defaultContinueReadingTitle": "Romanos 8",
+  "defaultContinueReadingSubtitle": "Continuar desde Romanos 8",
+  "continueReadingChapterSubtitle": "Continuar desde {bookName} {chapter}",
+  "@continueReadingChapterSubtitle": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "continueReadingVerseSubtitle": "Última lectura {chapter}:{verse} · {bookName}",
+  "@continueReadingVerseSubtitle": {
+    "placeholders": {
+      "chapter": {
+        "type": "int"
+      },
+      "verse": {
+        "type": "String"
+      },
+      "bookName": {
+        "type": "String"
+      }
+    }
+  },
+  "readingPlansTitle": "Mi plan de lectura",
+  "readingPlansBody": "Continúa tu plan actual con el texto bíblico local y TTS.",
+  "readingPlanStartAction": "Comenzar",
+  "readingPlanContinueAction": "Continuar",
+  "readingPlanReadAction": "Leer",
+  "readingPlanCompleteDayAction": "Marcar completo",
+  "readingPlanCompletedLabel": "Completado",
+  "readingPlanNoDaysBody": "Este plan aún no tiene referencias diarias.",
+  "readingPlanLoadErrorTitle": "No se pudieron cargar los planes",
+  "readingPlanLoadErrorBody": "Actualiza e inténtalo de nuevo.",
+  "readingPlanActionError": "No se pudo actualizar el plan. Inténtalo de nuevo.",
+  "readingPlanDaysLabel": "{count, plural, =1{1 día} other{{count} días}}",
+  "@readingPlanDaysLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "readingPlanDayLabel": "Día {dayNumber}",
+  "@readingPlanDayLabel": {
+    "placeholders": {
+      "dayNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "readingPlanProgressLabel": "{completed}/{total} completados",
+  "@readingPlanProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "mineReadingPlansTitle": "Mis planes de lectura",
+  "mineReadingPlansBody": "Tus planes personales de lectura y su progreso.",
+  "mineReadingPlansEmpty": "Comienza un plan desde Estudio para ver tu progreso aquí.",
+  "mineReadingPlansOpenStudyAction": "Abrir Estudio",
+  "readingPlanCurrentTab": "Actuales",
+  "readingPlanHistoryTab": "Historial",
+  "readingPlanCurrentEmpty": "No hay ningún plan de lectura en curso.",
+  "readingPlanHistoryEmpty": "Los planes completados o finalizados aparecerán aquí.",
+  "readingPlanViewAllAction": "Ver planes",
+  "readingPlanRestartAction": "Comenzar de nuevo",
+  "readingPlanLoadMoreAction": "Cargar más",
+  "readingPlanPauseAction": "Pausar",
+  "readingPlanResumeAction": "Reanudar",
+  "readingPlanAbandonAction": "Finalizar plan",
+  "readingPlanAbandonConfirmBody": "¿Finalizar este intento y moverlo al historial? Su progreso seguirá disponible.",
+  "readingPlanNotStartedLabel": "Sin comenzar",
+  "readingPlanActiveLabel": "En curso",
+  "readingPlanPausedLabel": "En pausa",
+  "readingPlanAbandonedLabel": "Finalizado",
+  "readingPlanAttemptLabel": "Intento {attempt}",
+  "@readingPlanAttemptLabel": {"placeholders": {"attempt": {"type": "int"}}},
+  "readingPlanStartedOn": "Comenzado el {date}",
+  "@readingPlanStartedOn": {"placeholders": {"date": {"type": "String"}}},
+  "readingPlanEndedOn": "Finalizado el {date}",
+  "@readingPlanEndedOn": {"placeholders": {"date": {"type": "String"}}},
+  "readingPlanHistoryDetailTitle": "Detalles del plan",
+  "readingPlanNoteLabel": "Nota",
+  "readingPlanRestartedMessage": "Se inició un nuevo intento del plan de lectura.",
+  "mineReadingPlanProgressChip": "{completed} hechos",
+  "@mineReadingPlanProgressChip": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      }
+    }
+  },
+  "oldTestamentLabel": "Antiguo Testamento",
+  "newTestamentLabel": "Nuevo Testamento",
+  "bibleBookCountLabel": "{count, plural, =1{1 libro} other{{count} libros}}",
+  "@bibleBookCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterCountLabel": "{count, plural, =1{1 capítulo} other{{count} capítulos}}",
+  "@bibleChapterCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterCountWithName": "{count, plural, =1{1 capítulo} other{{count} capítulos}} · {bookName}",
+  "@bibleChapterCountWithName": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "bookName": {
+        "type": "String"
+      }
+    }
+  },
+  "bibleChapterReference": "{bookName} {chapter}",
+  "@bibleChapterReference": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleChapterButtonSemanticLabel": "{bookName}, capítulo {chapter}",
+  "@bibleChapterButtonSemanticLabel": {
+    "placeholders": {
+      "bookName": {
+        "type": "String"
+      },
+      "chapter": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryLaw": "Ley",
+  "categoryOldTestamentHistory": "Historia",
+  "categoryWisdom": "Poesía y sabiduría",
+  "categoryMajorProphets": "Profetas mayores",
+  "categoryMinorProphets": "Profetas menores",
+  "categoryGospels": "Evangelios",
+  "categoryActs": "Historia",
+  "categoryPaulineLetters": "Cartas paulinas",
+  "categoryGeneralLetters": "Cartas generales",
+  "categoryApocalyptic": "Apocalíptica",
+  "studyLoadErrorTitle": "No se pudo cargar el catálogo bíblico",
+  "studyLoadErrorBody": "Intenta de nuevo más tarde, o revisa que los datos bíblicos locales estén incluidos correctamente.",
+  "readerFallbackTitle": "Estudio",
+  "previousChapterTooltip": "Capítulo anterior",
+  "nextChapterTooltip": "Capítulo siguiente",
+  "readerLoadErrorTitle": "No se pudo cargar el capítulo",
+  "readerLoadErrorBody": "Intenta de nuevo más tarde, o revisa que los datos bíblicos locales hayan terminado de importarse.",
+  "emptyChapterBody": "Aún no hay versículos disponibles para este capítulo.",
+  "verseActionsTooltip": "Notas y resaltados",
+  "verseActionsTitle": "Herramientas del versículo",
+  "bookmarkVerseTitle": "Guardar este versículo",
+  "highlightTitle": "Resaltar",
+  "highlightNone": "Ninguno",
+  "highlightYellow": "Dorado",
+  "highlightGreen": "Verde",
+  "highlightBlue": "Azul",
+  "highlightRose": "Rosa",
+  "noteTitle": "Nota",
+  "noteHint": "Escribe una nota privada de estudio",
+  "saveNoteAction": "Guardar nota",
+  "verseNotesMyNotesTab": "Mis notas",
+  "verseNotesChurchNotesTab": "Notas de la iglesia",
+  "verseNotesPublishHint": "Las notas compartidas son visibles para otras personas que leen este versículo en la app.",
+  "verseNotesDisplayNameHint": "Nombre visible para visitantes",
+  "verseNotesContentHint": "Comparte una reflexión sobre este versículo",
+  "verseNotesPublishAction": "Compartir",
+  "verseNotesUpdateAction": "Actualizar",
+  "verseNotesDeleteAction": "Eliminar",
+  "verseNotesYourReflectionTitle": "Tu reflexión",
+  "verseNotesSharedTitle": "Reflexiones compartidas",
+  "verseNotesCountLabel": "{count, plural, =1{1 reflexión} other{{count} reflexiones}}",
+  "@verseNotesCountLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verseNotesMineLabel": "Mía",
+  "verseNotesEmptyState": "Aún no hay reflexiones compartidas.",
+  "verseNotesEmptyError": "Escribe una reflexión antes de compartir.",
+  "verseNotesGenericError": "No se pudieron cargar las notas del versículo.",
+  "studyChapterLabel": "Romanos 8",
+  "translationLabel": "RVR",
+  "relatedSermonsLabel": "{count, plural, =1{1 sermón relacionado} other{{count} sermones relacionados}}",
+  "@relatedSermonsLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "verseNumberLabel": "Versículo {verse}",
+  "@verseNumberLabel": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "explanationTitleSuffix": "Explicación de {reference}",
+  "@explanationTitleSuffix": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceLabel": "Fuentes",
+  "relatedVersesLabel": "Versículos relacionados",
+  "aiStudyDisclaimer": "Las explicaciones de IA son apoyo para el estudio. Consulta a líderes de la iglesia para preguntas teológicas o pastorales importantes.",
+  "aiStudySheetTitle": "Ayuda de estudio con IA",
+  "aiStudyQuestionLabel": "Pregunta",
+  "aiStudyDefaultQuestion": "Ayúdame a entender este versículo en contexto.",
+  "aiStudyGenerateAction": "Generar ayuda de estudio",
+  "aiStudyRetryAction": "Preguntar de nuevo",
+  "aiStudyResultTitle": "Respuesta de estudio",
+  "aiStudySignInTitle": "Inicio de sesión requerido",
+  "aiStudySignInBody": "Inicia sesión desde Mi perfil para usar la ayuda de estudio con IA.",
+  "aiStudyErrorTitle": "La ayuda de estudio con IA no está disponible",
+  "aiStudyProviderDisabled": "El proveedor de IA aún no está configurado. Intenta de nuevo cuando el equipo de la iglesia lo habilite.",
+  "aiStudyProviderFailed": "El proveedor de IA no respondió. Intenta de nuevo más tarde.",
+  "aiStudyRateLimited": "Demasiadas solicitudes de IA. Espera un momento e intenta de nuevo.",
+  "lexiconLoveTitle": "Amor / ágape",
+  "lexiconGoodTitle": "Bueno / agathon",
+  "lexiconLoveBody": "El griego ἀγάπη suele describir el amor activo, firme y de pacto de Dios.",
+  "lexiconGoodBody": "El griego ἀγαθόν se refiere a un resultado bueno o beneficioso. En Romanos 8:28, el enfoque no es que cada circunstancia se sienta bien, sino que Dios obra hacia su buen propósito.",
+  "confirmKnown": "Entendido",
+  "sermonsTitle": "Sermones",
+  "searchSermonsTooltip": "Buscar sermones",
+  "sermonFilterTooltip": "Filtrar sermones",
+  "sermonFilterTitle": "Filtrar sermones",
+  "sermonFilterSpeakerLabel": "Predicador",
+  "sermonFilterSeriesLabel": "Serie",
+  "sermonFilterTopicLabel": "Tema",
+  "sermonFilterClearAction": "Borrar filtros",
+  "sermonFilterLoadError": "No se pudieron cargar los filtros. Inténtalo de nuevo.",
+  "sermonDetailTitle": "Detalle del sermón",
+  "sermonContinueListeningTitle": "Continuar escuchando",
+  "sermonStudyNotesTitle": "Notas del sermón",
+  "sermonSummaryTitle": "Resumen",
+  "sermonOpenDetailAction": "Ver detalles del sermón",
+  "sermonOutlineTitle": "Bosquejo inmersivo",
+  "sermonReferencesTitle": "Escritura citada",
+  "sermonTranscriptTitle": "Transcripción",
+  "sermonSectionNotesLabel": "Notas",
+  "sermonSectionReferencesLabel": "Biblia",
+  "sermonSectionTranscriptLabel": "Texto",
+  "sermonPlaybackSpeedTitle": "Velocidad de reproducción",
+  "sermonTranscriptReadAction": "Leer transcripción",
+  "sermonTranscriptCollapseAction": "Mostrar menos",
+  "sermonAiAskAction": "Preguntar sobre este sermón",
+  "sermonDiscussionTitle": "Guía de discusión",
+  "sermonDiscussionPrivateLabel": "Respuesta privada",
+  "sermonDiscussionQuestionsTitle": "Preguntas de discusión",
+  "sermonDiscussionActionStepsTitle": "Pasos de acción",
+  "sermonDiscussionPrayerTitle": "Motivos de oración",
+  "sermonDiscussionRespondAction": "Escribir respuesta",
+  "sermonDiscussionResponseTitle": "Respuesta personal",
+  "sermonDiscussionResponseHint": "Escribe tu reflexión o próximo paso",
+  "sermonDiscussionResponsePrivateNote": "Tu respuesta es privada por defecto.",
+  "sermonDiscussionSubmitAction": "Enviar",
+  "sermonDiscussionSubmitted": "Respuesta guardada.",
+  "sermonDiscussionError": "No se pudo guardar la respuesta. Inténtalo de nuevo.",
+  "sermonDiscussionLoadError": "No se pudo cargar la guía de discusión.",
+  "sermonDiscussionObservationChip": "Observar",
+  "sermonDiscussionInterpretationChip": "Interpretar",
+  "sermonDiscussionApplicationChip": "Aplicar",
+  "sermonDiscussionPrayerChip": "Orar",
+  "sermonDiscussionActionChip": "Actuar",
+  "sermonAiSheetTitle": "Preguntas del sermón",
+  "sermonAiDefaultQuestion": "Ayúdame a entender el punto principal de este sermón.",
+  "sermonAiGenerateAction": "Hacer pregunta del sermón",
+  "relatedSermonsTitle": "Sermones relacionados",
+  "sermonLoadErrorTitle": "No se pudieron cargar los sermones",
+  "sermonLoadErrorBody": "La app volverá a pedir la lista de sermones al backend.",
+  "retryAction": "Reintentar",
+  "sermonEmptyTitle": "Aún no hay sermones",
+  "sermonAudioMissing": "Audio no subido aún",
+  "sermonAudioPreparing": "Preparando audio",
+  "sermonAudioLoading": "Cargando audio",
+  "sermonAudioReady": "Listo para reproducir",
+  "sermonAudioUnavailable": "No se pudo cargar el audio",
+  "rewindTooltip": "Retroceder 15 segundos",
+  "playTooltip": "Reproducir",
+  "forwardTooltip": "Avanzar 30 segundos",
+  "lifeTitle": "Vida de iglesia",
+  "notificationsTooltip": "Notificaciones",
+  "notificationsPageTitle": "Notificaciones",
+  "notificationInboxTitle": "Notificaciones recientes",
+  "unreadCountSemanticLabel": "{label}, {count, plural, =1{1 elemento sin leer} other{{count} elementos sin leer}}",
+  "@unreadCountSemanticLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationInboxEmptyTitle": "Aún no hay notificaciones",
+  "notificationInboxEmptyBody": "Las nuevas actualizaciones de la iglesia aparecerán aquí cuando este dispositivo las reciba.",
+  "notificationRefreshAction": "Actualizar notificaciones",
+  "notificationMarkAllReadAction": "Marcar todo como leído",
+  "notificationClearAction": "Borrar notificaciones",
+  "notificationDeviceUnavailableBody": "Las notificaciones push no están disponibles hasta agregar la configuración de Firebase para esta compilación.",
+  "weeklyBulletinTitle": "Boletín semanal",
+  "lifeSundayHeroEmptyBody": "La información del culto dominical aparecerá aquí cuando el equipo la publique.",
+  "lifeTabWeek": "Esta semana",
+  "lifeTabEvents": "Eventos",
+  "lifeTabGroups": "Grupos",
+  "lifeTabCourses": "Cursos",
+  "lifeTabServing": "Servicio",
+  "lifeTabPrayer": "Oración",
+  "lifeTabWeekEmpty": "Las nuevas tarjetas de vida de iglesia aparecerán aquí cuando se publiquen.",
+  "lifeTabEventsEmpty": "No hay tarjetas de eventos abiertas en este momento.",
+  "lifeTabMemberSignInBody": "Inicia sesión desde Mi perfil para ver grupos, cursos, servicio y cuidado para miembros.",
+  "lifeTabPrayerDisabled": "Las solicitudes de oración aún no están activadas en esta compilación.",
+  "lifeOpenDetailAction": "Ver detalles",
+  "lifeUpdatesTitle": "Actualizaciones",
+  "lifeParticipationTitle": "Mi participación",
+  "lifeLoadErrorTitle": "No se pudo cargar Vida",
+  "lifeLoadErrorBody": "La app volverá a pedir contenido de vida al backend.",
+  "lifeSectionLoadError": "No se pudo cargar esta sección. Inténtalo de nuevo.",
+  "lifeEmptyTitle": "Aún no hay contenido de vida",
+  "lifePostNoBody": "Sin contenido adicional.",
+  "lifePostVisibilityMembers": "Miembros",
+  "lifePostVisibilityGroup": "Grupo",
+  "lifePostVisibilityPrivate": "Privado",
+  "lifePostTypeWeeklyBulletin": "Boletín",
+  "lifePostTypeSunday": "Domingo",
+  "lifePostTypeAnnouncement": "Anuncio",
+  "lifePostTypeEvent": "Evento",
+  "lifePostTypeGroup": "Grupo",
+  "lifePostTypeFellowship": "Compañerismo",
+  "lifePostTypeCourse": "Curso",
+  "lifePostTypeServing": "Servicio",
+  "lifePostTypePrayer": "Oración",
+  "lifePostTypeGiving": "Ofrenda",
+  "lifePostUnread": "No leído",
+  "lifePostActionOpen": "Abrir",
+  "lifePostScheduleTbd": "Horario por definir",
+  "myEventRegistrationsTitle": "Mis inscripciones",
+  "groupsTitle": "Grupos",
+  "groupsEmptyBody": "No hay grupos disponibles ahora.",
+  "groupApplyAction": "Solicitar unirse",
+  "groupAlreadyMember": "Ya eres miembro",
+  "groupApplicationSubmitted": "Solicitud enviada",
+  "groupApplicationSubmitSuccess": "Solicitud de grupo enviada.",
+  "groupWithdrawAction": "Retirar solicitud",
+  "groupApplicationWithdrawSuccess": "Solicitud retirada.",
+  "groupCapacityFull": "El grupo está completo",
+  "groupMyGroupsTitle": "Mis grupos",
+  "groupMyGroupsEmptyBody": "Actualmente no perteneces a ningún grupo.",
+  "groupSignInToViewMineBody": "Inicia sesión para ver tus grupos en todos tus dispositivos.",
+  "groupMemberCount": "{count, plural, =1{1 miembro} other{{count} miembros}}",
+  "@groupMemberCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupMemberCapacity": "{count}/{capacity} miembros",
+  "@groupMemberCapacity": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "coursesTitle": "Cursos",
+  "coursesEmptyBody": "No hay cursos abiertos ahora.",
+  "courseMyCoursesTitle": "Mis cursos",
+  "courseMyCoursesEmptyBody": "Todavía no tienes inscripciones en cursos.",
+  "courseLessonsTitle": "Lecciones del curso",
+  "courseLessonsEmptyBody": "Todavía no se han publicado lecciones para este curso.",
+  "courseSignInToEnrollBody": "Inicia sesión para inscribirte y sincronizar tu progreso entre dispositivos.",
+  "courseSignInToViewMineBody": "Inicia sesión para ver tus cursos actuales y completados.",
+  "courseEnrollAction": "Inscribirse",
+  "courseSubmittedAction": "Enviada",
+  "courseEnrolledAction": "Inscrito",
+  "courseWaitlistedAction": "En lista de espera",
+  "courseCancelledAction": "Cancelada",
+  "courseCompletedAction": "Completado",
+  "courseEnrollmentSubmitSuccess": "Inscripción al curso enviada.",
+  "courseStatusDraft": "Borrador",
+  "courseStatusOpen": "Abierto",
+  "courseStatusClosed": "Cerrado",
+  "courseStatusInProgress": "En progreso",
+  "courseStatusCompleted": "Completado",
+  "courseStatusArchived": "Archivado",
+  "courseLessonCount": "{count, plural, =1{1 lección} other{{count} lecciones}}",
+  "@courseLessonCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "courseCapacityOpen": "Cupo abierto",
+  "courseCapacityLabel": "{count}/{capacity} inscritos",
+  "@courseCapacityLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "courseProgressLabel": "{completed}/{total} lecciones",
+  "@courseProgressLabel": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "servingTitle": "Servicio",
+  "servingEmptyBody": "No hay asignaciones de servicio programadas ahora.",
+  "servingConfirmAction": "Confirmar",
+  "servingLeaveAction": "Dejar",
+  "servingConfirmSuccess": "Servicio confirmado.",
+  "servingLeaveSuccess": "Se actualizó tu respuesta de servicio.",
+  "servingStatusScheduled": "Programado",
+  "servingStatusConfirmed": "Confirmado",
+  "servingStatusDeclined": "Rechazado",
+  "servingStatusSwapRequested": "Cambio solicitado",
+  "servingStatusCovered": "Con reemplazo",
+  "servingStatusCancelled": "Cancelado",
+  "servingScheduleTab": "Turnos",
+  "servingAvailabilityTab": "Disponibilidad",
+  "servingAvailabilityEmptyBody": "Aún no has indicado tu disponibilidad.",
+  "servingAvailabilityAddAction": "Agregar disponibilidad",
+  "servingAvailabilitySheetTitle": "Nueva disponibilidad",
+  "servingAvailabilityStatusLabel": "Estado de disponibilidad",
+  "servingAvailabilityStatusAvailable": "Disponible",
+  "servingAvailabilityStatusUnavailable": "No disponible",
+  "servingAvailabilityStatusPreferred": "Horario preferido",
+  "servingAvailabilityStartLabel": "Inicio",
+  "servingAvailabilityEndLabel": "Fin",
+  "servingAvailabilityNoteHint": "Nota opcional",
+  "servingAvailabilitySaveAction": "Guardar disponibilidad",
+  "servingAvailabilityCreateSuccess": "Disponibilidad guardada.",
+  "servingAvailabilityInvalidRange": "La hora de fin debe ser posterior a la hora de inicio.",
+  "servingCheckInTitle": "Estado de llegada",
+  "servingCheckInAction": "Confirmar llegada",
+  "servingCheckInSuccess": "Llegada confirmada.",
+  "servingCheckInNotRecorded": "La llegada aún no está confirmada.",
+  "servingCheckInStatusPending": "Pendiente",
+  "servingCheckInStatusCheckedIn": "Presente",
+  "servingCheckInStatusMissed": "Ausente",
+  "servingAssignmentNoteTitle": "Nota de servicio",
+  "servingResponseNoteTitle": "Mi respuesta",
+  "eventRegistrationTitle": "Inscripción al evento",
+  "eventRegistrationRegisterAction": "Inscribirse",
+  "eventRegistrationUpdateAction": "Actualizar inscripción",
+  "eventRegistrationCancelAction": "Cancelar inscripción",
+  "eventRegistrationCheckInAction": "Registrar llegada",
+  "eventCheckInScanAction": "Escanear codigo",
+  "eventCheckInScanTitle": "Registro presencial",
+  "eventCheckInScanPrompt": "Escanea el QR de asistencia impreso por un lider.",
+  "eventCheckInScanSuccessTitle": "Asistencia registrada",
+  "eventCheckInScanViewEvent": "Ver evento",
+  "eventCheckInScanAgain": "Escanear otro",
+  "eventCheckInScanSignInRequired": "Inicia sesion antes de escanear un QR de asistencia.",
+  "eventCheckInQrInvalid": "Este QR de asistencia no es valido. Escanealo de nuevo.",
+  "eventCheckInQrExpired": "Este QR de asistencia vencio. Consulta a un lider.",
+  "eventCheckInQrDisabled": "Este QR de asistencia fue desactivado. Consulta a un lider.",
+  "eventCheckInQrRegistrationRequired": "No encontramos tu registro del evento. Registrate primero o consulta a un lider.",
+  "eventRegistrationRegistered": "Inscrito",
+  "eventRegistrationCheckedIn": "Llegada registrada",
+  "eventRegistrationSignInBody": "Inicia sesión para administrar esta inscripción.",
+  "eventRegistrationFull": "El evento está lleno.",
+  "eventRegistrationClosed": "La inscripción está cerrada.",
+  "eventRegistrationUnavailable": "La inscripción no está disponible.",
+  "eventRegistrationNotFound": "No se encontró la inscripción.",
+  "eventRegistrationPartySizeInvalid": "El tamaño del grupo no es válido.",
+  "eventRegistrationCheckInLocked": "El registro de llegada aún no está abierto.",
+  "eventRegistrationSuccess": "Inscripción enviada.",
+  "eventRegistrationUpdateSuccess": "Inscripción actualizada.",
+  "eventRegistrationCancelSuccess": "Inscripción cancelada.",
+  "eventRegistrationCheckInSuccess": "Llegada registrada.",
+  "eventRegistrationCheckedInAt": "Registrado a las {time}",
+  "@eventRegistrationCheckedInAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eventRegistrationPartySizeLabel": "Tamaño del grupo",
+  "eventRegistrationPartySize": "{count, plural, =1{1 persona} other{{count} personas}}",
+  "@eventRegistrationPartySize": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationNoteLabel": "Nota",
+  "eventRegistrationNoteHint": "Comparte detalles útiles para el equipo.",
+  "eventRegistrationSpots": "{registered}/{capacity} inscritos",
+  "@eventRegistrationSpots": {
+    "placeholders": {
+      "registered": {
+        "type": "int"
+      },
+      "capacity": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationUnlimitedSpots": "{registered} inscritos · cupos sin límite",
+  "@eventRegistrationUnlimitedSpots": {
+    "placeholders": {
+      "registered": {
+        "type": "int"
+      }
+    }
+  },
+  "eventRegistrationRemaining": "{remaining} cupos restantes",
+  "@eventRegistrationRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "givingGuestBody": "Inicia sesión para ver historial de ofrendas y comprobantes anuales.",
+  "givingHistoryTitle": "Historial de ofrendas",
+  "givingTransactionsTitle": "Transacciones de ofrenda",
+  "givingTransactionsEmptyBody": "Aún no hay ofrendas confirmadas.",
+  "givingSummaryYear": "Año {year}",
+  "@givingSummaryYear": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "givingSummaryAmount": "Total {amount}",
+  "@givingSummaryAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "givingSummaryCount": "{count} ofrendas",
+  "@givingSummaryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "givingStatementSectionTitle": "Comprobantes anuales",
+  "annualStatementsTitle": "Comprobantes anuales",
+  "annualStatementsEmptyBody": "Aún no hay comprobantes anuales.",
+  "givingStatementLabel": "Comprobante de ofrenda {year}",
+  "@givingStatementLabel": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "prayerTitle": "Oración",
+  "prayerEmptyBody": "Aún no hay solicitudes de oración visibles.",
+  "prayerSubmitTitle": "Enviar solicitud de oración",
+  "prayerSubmitAction": "Enviar solicitud",
+  "prayerGuestSubmitBody": "Puedes enviar una solicitud de oración como invitado.",
+  "prayerMemberSubmitBody": "Tu solicitud se vinculará con tu cuenta de miembro.",
+  "prayerTitleLabel": "Título",
+  "prayerBodyLabel": "Solicitud",
+  "prayerNameLabel": "Nombre",
+  "prayerValidationError": "Agrega título y solicitud.",
+  "prayerSubmittedMessage": "Solicitud de oración enviada.",
+  "prayerMineLabel": "Mías",
+  "prayerVisibilityPrivate": "Privada",
+  "prayerVisibilityPublic": "Pública",
+  "prayerVisibilityMembers": "Miembros",
+  "prayerVisibilityGroup": "Grupo",
+  "prayerStatusPending": "Pendiente",
+  "prayerStatusApproved": "Aprobada",
+  "prayerStatusHidden": "Oculta",
+  "prayerStatusArchived": "Archivada",
+  "careTitle": "Cuidado",
+  "careEmptyBody": "Aún no hay solicitudes de cuidado.",
+  "careSubmitTitle": "Solicitar cuidado",
+  "careSubmitAction": "Enviar solicitud",
+  "careSubmitBody": "Comparte cómo el equipo puede acompañarte.",
+  "careSignInRequired": "Inicia sesión para enviar una solicitud de cuidado.",
+  "careTitleLabel": "Título",
+  "careBodyLabel": "Detalle",
+  "carePrivacyLabel": "Privacidad",
+  "carePrivacyPastoralOnly": "Solo pastoral",
+  "carePrivacyAssignedTeam": "Equipo asignado",
+  "carePrivacyAdminRestricted": "Administración restringida",
+  "careValidationError": "Agrega título y detalle.",
+  "careSubmittedMessage": "Solicitud de cuidado enviada.",
+  "careStatusSubmitted": "Enviada",
+  "careStatusAssigned": "Asignada",
+  "careStatusInProgress": "En progreso",
+  "careStatusResolved": "Resuelta",
+  "careStatusArchived": "Archivada",
+  "careNextFollowUp": "Próximo seguimiento {date}",
+  "@careNextFollowUp": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "givingTitle": "Ofrendas",
+  "givingCardTitle": "Ofrendar",
+  "givingCardBody": "Apoya la obra de la iglesia de forma segura.",
+  "givingCheckoutTitle": "Ofrenda en línea",
+  "givingCheckoutBody": "El pago se abre en una página segura.",
+  "givingAmountLabel": "Monto",
+  "givingFundLabel": "Fondo",
+  "givingFundsLoading": "Cargando fondos...",
+  "givingFundsEmpty": "No hay fondos disponibles.",
+  "givingCategoryOffering": "Ofrenda general",
+  "givingCategoryMissions": "Misiones",
+  "givingCheckoutAction": "Continuar a pago",
+  "givingAmountError": "Introduce un importe de USD 1,00 a USD 100.000,00 con un máximo de dos decimales.",
+  "givingCheckoutOpenError": "No se pudo abrir el pago.",
+  "givingCheckoutReturnSuccess": "Gracias. Tu ofrenda se está confirmando.",
+  "givingCheckoutReturnCancel": "El pago fue cancelado.",
+  "annualStatementTooltip": "Comprobante anual",
+  "annualStatementPreviewAction": "Vista previa",
+  "annualStatementCopyCsvAction": "Copiar CSV",
+  "annualStatementCopiedMessage": "CSV copiado.",
+  "annualStatementSavePdfAction": "Guardar PDF",
+  "annualStatementSharePdfAction": "Compartir PDF",
+  "annualStatementSharePdfText": "Comprobante anual de ofrendas",
+  "annualStatementPdfSharedMessage": "PDF compartido.",
+  "annualStatementPdfOpenedMessage": "PDF abierto.",
+  "annualStatementPdfSavedMessage": "PDF guardado en {path}.",
+  "@annualStatementPdfSavedMessage": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "copyPathAction": "Copiar ruta",
+  "annualStatementExportTitle": "Exportar comprobante",
+  "annualStatementStatusPendingLabel": "Pendiente",
+  "annualStatementStatusReadyLabel": "Listo",
+  "annualStatementStatusSentLabel": "Enviado",
+  "annualStatementStatusFailedLabel": "Falló",
+  "givingStatusPendingLabel": "Pendiente",
+  "givingStatusSucceededLabel": "Confirmada",
+  "givingStatusFailedLabel": "Fallida",
+  "givingStatusRefundedLabel": "Reembolsada",
+  "bibleTtsReadyTitle": "Lectura en voz alta lista",
+  "bibleTtsCurrentVerse": "Leyendo el versículo {verse}",
+  "@bibleTtsCurrentVerse": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleTtsPausedVerse": "Pausado en el versículo {verse}. Al continuar se volverá a leer este versículo.",
+  "@bibleTtsPausedVerse": {
+    "placeholders": {
+      "verse": {
+        "type": "int"
+      }
+    }
+  },
+  "bibleTtsRateLabel": "{rate}x",
+  "@bibleTtsRateLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "double",
+        "format": "compact"
+      }
+    }
+  },
+  "bibleTtsPlayTooltip": "Reproducir lectura",
+  "bibleTtsPauseTooltip": "Pausar lectura",
+  "bibleTtsStopTooltip": "Detener lectura",
+  "bibleTtsPreviousVerseTooltip": "Versículo anterior",
+  "bibleTtsNextVerseTooltip": "Versículo siguiente",
+  "bibleTtsErrorTextMissing": "Este pasaje no tiene texto disponible para leer.",
+  "bibleTtsErrorEngineUnavailable": "La lectura de texto no está disponible en este dispositivo. Revisa la configuración de voz del sistema e inténtalo de nuevo.",
+  "bibleTtsErrorLanguageUnavailable": "La voz del sistema para el idioma de esta Biblia no está instalada.",
+  "bibleTtsErrorInterrupted": "La lectura se interrumpió. Pulsa reproducir para continuar desde este versículo.",
+  "bibleTtsErrorStartFailed": "No se pudo iniciar la lectura. Revisa la configuración de voz del dispositivo e inténtalo de nuevo.",
+  "newcomerCardTitle": "¿Eres nuevo?",
+  "newcomerCardBody": "Queremos darte la bienvenida, responder preguntas y ayudarte a conectar con la vida de la iglesia.",
+  "newcomerCardAction": "Soy nuevo",
+  "newcomerSheetTitle": "Bienvenido a MBCG",
+  "newcomerSheetGuestBody": "Déjanos algunos datos y el equipo de la iglesia te contactará.",
+  "newcomerSheetMemberBody": "También puedes presentarte o pedir que nuestro equipo te contacte.",
+  "newcomerNameLabel": "Nombre",
+  "newcomerEmailLabel": "Correo",
+  "newcomerPhoneLabel": "Teléfono",
+  "newcomerInterestLabel": "¿Qué te gustaría conocer?",
+  "newcomerSubmitAction": "Enviar al equipo",
+  "newcomerNameValidationError": "Ingresa tu nombre.",
+  "newcomerContactValidationError": "Deja un correo o teléfono.",
+  "newcomerEmailValidationError": "Ingresa un correo válido.",
+  "newcomerSubmittedMessage": "Gracias. Recibimos tu información.",
+  "mineDiscipleshipTitle": "Mi camino de discipulado",
+  "mineDiscipleshipBody": "Sigue los próximos pasos asignados por el equipo de la iglesia.",
+  "mineDiscipleshipEmpty": "Aún no tienes un camino de discipulado asignado.",
+  "mineDiscipleshipLoadError": "No se pudo cargar tu camino de discipulado.",
+  "mineDiscipleshipProgressChip": "{completed}/{total} tareas",
+  "@mineDiscipleshipProgressChip": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "discipleshipStatusNotStarted": "No iniciado",
+  "discipleshipStatusInProgress": "En progreso",
+  "discipleshipStatusBlocked": "Bloqueado",
+  "discipleshipStatusCompleted": "Completado",
+  "discipleshipStatusPaused": "Pausado",
+  "discipleshipStatusCancelled": "Cancelado"
+}

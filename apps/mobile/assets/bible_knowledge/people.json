@@ -1,0 +1,2054 @@
+[
+  {
+    "id": "jesus",
+    "nameEn": "Jesus",
+    "nameZhHans": "耶稣",
+    "nameZhHant": "耶穌",
+    "roleEn": "Messiah and Son of God",
+    "roleZhHans": "弥赛亚，神的儿子",
+    "roleZhHant": "彌賽亞，神的兒子",
+    "descriptionEn": "Jesus Christ is the central person of the New Testament. Christians confess him as the Messiah, the Son of God, crucified and risen for salvation.",
+    "descriptionZhHans": "耶稣基督是新约的中心人物。基督徒承认他是弥赛亚、神的儿子，为救恩被钉十字架并复活。",
+    "descriptionZhHant": "耶穌基督是新約的中心人物。基督徒承認他是彌賽亞、神的兒子，為救恩被釘十字架並復活。",
+    "summaryEn": "Jesus is the center of the Gospel narratives and the confession of the church: the promised Messiah, the Son of God, crucified and risen.",
+    "summaryZhHans": "耶稣是福音书叙事和教会信仰告白的中心：他是应许中的弥赛亚、神的儿子，为救恩受死并复活。",
+    "summaryZhHant": "耶穌是福音書敘事和教會信仰告白的中心：他是應許中的彌賽亞、神的兒子，為救恩受死並復活。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "The New Testament presents Jesus as the Christ, the Son of God, the Lord, and the fulfillment of God's saving promises. He is not merely a teacher in the narrative; his words, works, death, and resurrection define the Gospel itself.",
+        "bodyZhHans": "新约呈现耶稣为基督、神的儿子、主，也是神救恩应许的成全者。在经文叙事中，他不只是教师；他的言语、作为、受死与复活共同构成福音的核心。",
+        "bodyZhHant": "新約呈現耶穌為基督、神的兒子、主，也是神救恩應許的成全者。在經文敘事中，他不只是教師；他的言語、作為、受死與復活共同構成福音的核心。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "When Jesus appears in a passage, notice what the text emphasizes: his authority, compassion, obedience to the Father, conflict with religious leaders, or movement toward the cross. These details often explain why the event matters in the chapter.",
+        "bodyZhHans": "读到耶稣出现时，可以留意经文强调的是他的权柄、怜悯、顺服父神、与宗教领袖的冲突，还是走向十字架的道路。这些重点通常说明该事件在本章中的意义。",
+        "bodyZhHant": "讀到耶穌出現時，可以留意經文強調的是他的權柄、憐憫、順服父神、與宗教領袖的衝突，還是走向十字架的道路。這些重點通常說明該事件在本章中的意義。"
+      },
+      {
+        "type": "theology",
+        "titleEn": "Theological Focus",
+        "titleZhHans": "神学重点",
+        "titleZhHant": "神學重點",
+        "bodyEn": "Mainstream Christian reading sees Jesus' identity and mission together: he reveals God, announces the kingdom, bears sin, conquers death, and gathers God's people. Interpretations should keep the immediate passage and the wider Gospel witness together.",
+        "bodyZhHans": "主流基督教阅读会把耶稣的身份与使命放在一起看：他启示神、宣告神国、担当罪、胜过死亡，并招聚神的子民。解释时应同时顾及当前经文和整本福音书的见证。",
+        "bodyZhHant": "主流基督教閱讀會把耶穌的身份與使命放在一起看：他啟示神、宣告神國、擔當罪、勝過死亡，並招聚神的子民。解釋時應同時顧及目前經文和整本福音書的見證。"
+      }
+    ],
+    "aliases": {
+      "web": ["Jesus Christ", "Christ Jesus", "Jesus", "Christ"],
+      "cuvs": ["耶稣基督", "基督耶稣", "主耶稣", "耶稣", "基督"],
+      "cuvt": ["耶穌基督", "基督耶穌", "主耶穌", "耶穌", "基督"]
+    },
+    "relatedVerseIds": ["jhn.3.16", "rom.8.1", "rom.8.11"]
+  },
+  {
+    "id": "paul",
+    "nameEn": "Paul",
+    "nameZhHans": "保罗",
+    "nameZhHant": "保羅",
+    "roleEn": "Apostle to the Gentiles",
+    "roleZhHans": "外邦人的使徒",
+    "roleZhHant": "外邦人的使徒",
+    "descriptionEn": "Paul was an apostle and missionary whose letters form a major part of the New Testament.",
+    "descriptionZhHans": "保罗是使徒和宣教者，他的书信构成新约的重要部分。",
+    "descriptionZhHant": "保羅是使徒和宣教者，他的書信構成新約的重要部分。",
+    "summaryEn": "Paul was called as an apostle to the Gentiles after encountering the risen Christ, and his mission and letters shaped much of the New Testament witness.",
+    "summaryZhHans": "保罗在遇见复活的基督后被呼召作外邦人的使徒，他的宣教和书信深刻塑造了新约见证。",
+    "summaryZhHant": "保羅在遇見復活的基督後被呼召作外邦人的使徒，他的宣教和書信深刻塑造了新約見證。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "Paul, also called Saul in Acts, was a Jewish Pharisee who became an apostle of Jesus Christ. His calling is especially connected with bringing the Gospel to Gentiles while still reasoning from Israel's Scriptures.",
+        "bodyZhHans": "保罗在使徒行传中也被称为扫罗，原是犹太法利赛人，后来成为耶稣基督的使徒。他的呼召特别与把福音传给外邦人有关，同时他仍不断从以色列的圣经来论证福音。",
+        "bodyZhHant": "保羅在使徒行傳中也被稱為掃羅，原是猶太法利賽人，後來成為耶穌基督的使徒。他的呼召特別與把福音傳給外邦人有關，同時他仍不斷從以色列的聖經來論證福音。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "In Acts, Paul is seen in conversion, mission, suffering, church planting, and legal defense. In his letters, he often writes as a pastor-theologian, applying the Gospel to doctrine, worship, ethics, church unity, and hope.",
+        "bodyZhHans": "在使徒行传中，保罗的脉络包括归主、宣教、受苦、建立教会和法庭申辩。在书信中，他常以牧者和神学家的身份，把福音应用到教义、敬拜、伦理、教会合一与盼望中。",
+        "bodyZhHant": "在使徒行傳中，保羅的脈絡包括歸主、宣教、受苦、建立教會和法庭申辯。在書信中，他常以牧者和神學家的身份，把福音應用到教義、敬拜、倫理、教會合一與盼望中。"
+      },
+      {
+        "type": "note",
+        "titleEn": "Name Note",
+        "titleZhHans": "名字说明",
+        "titleZhHant": "名字說明",
+        "bodyEn": "Acts uses Saul especially before and around his early mission, and Paul becomes the common name later. This app treats Saul in the relevant Acts passages as the same person unless a verse clearly refers to King Saul.",
+        "bodyZhHans": "使徒行传在保罗早期和初期宣教前后常使用“扫罗”，后来多称“保罗”。本 App 会在相关经文中把扫罗识别为同一人物，除非经文明显指旧约的扫罗王。",
+        "bodyZhHant": "使徒行傳在保羅早期和初期宣教前後常使用「掃羅」，後來多稱「保羅」。本 App 會在相關經文中把掃羅識別為同一人物，除非經文明顯指舊約的掃羅王。"
+      }
+    ],
+    "aliases": {
+      "web": ["Apostle Paul", "Paul"],
+      "cuvs": ["使徒保罗", "保罗"],
+      "cuvt": ["使徒保羅", "保羅"]
+    },
+    "verseAliases": {
+      "act.8.1": {"web": ["Saul"], "cuvs": ["扫罗"], "cuvt": ["掃羅"]},
+      "act.8.3": {"web": ["Saul"], "cuvs": ["扫罗"], "cuvt": ["掃羅"]},
+      "act.9.1": {"web": ["Saul"], "cuvs": ["扫罗"], "cuvt": ["掃羅"]},
+      "act.9.11": {"web": ["Saul"], "cuvs": ["扫罗"], "cuvt": ["掃羅"]},
+      "act.9.17": {"web": ["Saul"], "cuvs": ["扫罗"], "cuvt": ["掃羅"]},
+      "act.11.25": {"web": ["Saul"], "cuvs": ["扫罗"], "cuvt": ["掃羅"]},
+      "act.12.25": {"web": ["Saul"], "cuvs": ["扫罗"], "cuvt": ["掃羅"]},
+      "act.13.9": {"web": ["Saul"], "cuvs": ["扫罗"], "cuvt": ["掃羅"]}
+    },
+    "relatedVerseIds": ["act.9.1", "rom.1.1"]
+  },
+  {
+    "id": "peter",
+    "nameEn": "Peter",
+    "nameZhHans": "彼得",
+    "nameZhHant": "彼得",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "Peter was one of Jesus' twelve apostles and a leading witness in the early church.",
+    "descriptionZhHans": "彼得是耶稣十二使徒之一，也是初代教会重要的见证人。",
+    "descriptionZhHant": "彼得是耶穌十二使徒之一，也是初代教會重要的見證人。",
+    "summaryEn": "Peter was one of the twelve apostles, a close witness of Jesus' ministry, and a prominent leader in the earliest church.",
+    "summaryZhHans": "彼得是十二使徒之一，亲身见证耶稣的事工，并在初代教会中承担重要领袖角色。",
+    "summaryZhHant": "彼得是十二使徒之一，親身見證耶穌的事工，並在初代教會中承擔重要領袖角色。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "Peter was a fisherman called by Jesus and named among the twelve apostles. The Gospels often present him as outspoken, close to Jesus, and representative of the disciples' faith and weakness.",
+        "bodyZhHans": "彼得原是渔夫，被耶稣呼召，并列在十二使徒之中。福音书常把他呈现为率直、亲近耶稣，也代表门徒的信心与软弱。",
+        "bodyZhHant": "彼得原是漁夫，被耶穌呼召，並列在十二使徒之中。福音書常把他呈現為率直、親近耶穌，也代表門徒的信心與軟弱。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "Peter confesses Jesus as the Christ, fails during Jesus' arrest, is restored after the resurrection, and becomes a leading witness in Acts. His story often shows both human weakness and the restoring grace of Christ.",
+        "bodyZhHans": "彼得承认耶稣是基督，却也在耶稣被捕时跌倒；复活后主恢复他，使他在使徒行传中成为重要见证人。他的故事常同时显明人的软弱与基督恢复人的恩典。",
+        "bodyZhHant": "彼得承認耶穌是基督，卻也在耶穌被捕時跌倒；復活後主恢復他，使他在使徒行傳中成為重要見證人。他的故事常同時顯明人的軟弱與基督恢復人的恩典。"
+      },
+      {
+        "type": "note",
+        "titleEn": "Name Note",
+        "titleZhHans": "名字说明",
+        "titleZhHant": "名字說明",
+        "bodyEn": "Peter is also called Simon Peter and Cephas. These names refer to the same apostle in the New Testament and may appear differently depending on the passage and translation.",
+        "bodyZhHans": "彼得也被称为西门彼得、矶法。这些名字在新约中指同一位使徒，只是不同经文和译本中呈现方式不同。",
+        "bodyZhHant": "彼得也被稱為西門彼得、磯法。這些名字在新約中指同一位使徒，只是不同經文和譯本中呈現方式不同。"
+      }
+    ],
+    "aliases": {
+      "web": ["Simon Peter", "Cephas", "Peter"],
+      "cuvs": ["西门彼得", "矶法", "彼得"],
+      "cuvt": ["西門彼得", "磯法", "彼得"]
+    },
+    "relatedVerseIds": ["mat.16.16", "jhn.21.15"]
+  },
+  {
+    "id": "john",
+    "nameEn": "John",
+    "nameZhHans": "约翰",
+    "nameZhHant": "約翰",
+    "roleEn": "Apostle and witness of Jesus",
+    "roleZhHans": "使徒，耶稣的见证人",
+    "roleZhHant": "使徒，耶穌的見證人",
+    "descriptionEn": "John is traditionally understood as an apostle and a close witness of Jesus' ministry.",
+    "descriptionZhHans": "约翰传统上被理解为使徒，也是亲近见证耶稣事工的人。",
+    "descriptionZhHant": "約翰傳統上被理解為使徒，也是親近見證耶穌事工的人。",
+    "summaryEn": "John was one of the twelve apostles and a close witness of Jesus, traditionally associated with the Johannine writings.",
+    "summaryZhHans": "约翰是十二使徒之一，也是亲近见证耶稣的人，传统上与约翰著作群相关。",
+    "summaryZhHant": "約翰是十二使徒之一，也是親近見證耶穌的人，傳統上與約翰著作群相關。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "John, son of Zebedee, was one of the twelve apostles and brother of James. He appears among Jesus' close disciples in several Gospel scenes and is traditionally connected with the Gospel and letters of John and Revelation.",
+        "bodyZhHans": "西庇太的儿子约翰是十二使徒之一，也是雅各的兄弟。他在福音书多个场景中属于耶稣亲近的门徒，传统上也与约翰福音、约翰书信和启示录相关。",
+        "bodyZhHant": "西庇太的兒子約翰是十二使徒之一，也是雅各的兄弟。他在福音書多個場景中屬於耶穌親近的門徒，傳統上也與約翰福音、約翰書信和啟示錄相關。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "John appears in the calling of the disciples, the inner circle around Jesus, early Acts ministry with Peter, and the opening of Revelation. These passages often emphasize witness, fellowship with Jesus, and faithful testimony.",
+        "bodyZhHans": "约翰出现在门徒蒙召、耶稣亲近门徒圈、使徒行传早期与彼得同工，以及启示录开头等经文中。这些段落常强调见证、与耶稣的亲近和忠心作证。",
+        "bodyZhHant": "約翰出現在門徒蒙召、耶穌親近門徒圈、使徒行傳早期與彼得同工，以及啟示錄開頭等經文中。這些段落常強調見證、與耶穌的親近和忠心作證。"
+      },
+      {
+        "type": "note",
+        "titleEn": "Same-name Note",
+        "titleZhHans": "同名说明",
+        "titleZhHant": "同名說明",
+        "bodyEn": "This John should be distinguished from John the Baptist and John Mark. The app uses longer aliases and verse-specific matching to reduce confusion where the text simply says John.",
+        "bodyZhHans": "这位约翰需要与施洗约翰、约翰马可区分。本 App 会通过更长别名和经节级匹配，尽量减少经文只写“约翰”时的混淆。",
+        "bodyZhHant": "這位約翰需要與施洗約翰、約翰馬可區分。本 App 會通過更長別名和經節級匹配，盡量減少經文只寫「約翰」時的混淆。"
+      }
+    ],
+    "aliases": {
+      "web": ["John son of Zebedee", "Apostle John"],
+      "cuvs": ["西庇太的儿子约翰", "使徒约翰"],
+      "cuvt": ["西庇太的兒子約翰", "使徒約翰"]
+    },
+    "verseAliases": {
+      "mat.4.21": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "mat.10.2": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "act.3.1": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "act.4.13": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "rev.1.1": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "rev.1.9": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]}
+    },
+    "relatedVerseIds": ["mat.4.21", "rev.1.9"]
+  },
+  {
+    "id": "moses",
+    "nameEn": "Moses",
+    "nameZhHans": "摩西",
+    "nameZhHant": "摩西",
+    "roleEn": "Prophet and leader of Israel",
+    "roleZhHans": "先知，以色列的领袖",
+    "roleZhHant": "先知，以色列的領袖",
+    "descriptionEn": "Moses led Israel out of Egypt and received the Law at Sinai.",
+    "descriptionZhHans": "摩西带领以色列人出埃及，并在西奈山领受律法。",
+    "descriptionZhHant": "摩西帶領以色列人出埃及，並在西奈山領受律法。",
+    "aliases": {
+      "web": ["Moses"],
+      "cuvs": ["摩西"],
+      "cuvt": ["摩西"]
+    },
+    "relatedVerseIds": ["exo.3.4", "deu.34.10"]
+  },
+  {
+    "id": "abraham",
+    "nameEn": "Abraham",
+    "nameZhHans": "亚伯拉罕",
+    "nameZhHant": "亞伯拉罕",
+    "roleEn": "Patriarch of Israel",
+    "roleZhHans": "以色列先祖",
+    "roleZhHant": "以色列先祖",
+    "descriptionEn": "Abraham is the patriarch with whom God made covenant promises concerning descendants, land, and blessing.",
+    "descriptionZhHans": "亚伯拉罕是以色列先祖，神与他立约，赐下后裔、土地和祝福的应许。",
+    "descriptionZhHant": "亞伯拉罕是以色列先祖，神與他立約，賜下後裔、土地和祝福的應許。",
+    "aliases": {
+      "web": ["Abraham", "Abram"],
+      "cuvs": ["亚伯拉罕", "亚伯兰"],
+      "cuvt": ["亞伯拉罕", "亞伯蘭"]
+    },
+    "relatedVerseIds": ["gen.12.1", "rom.4.3"]
+  },
+  {
+    "id": "david",
+    "nameEn": "David",
+    "nameZhHans": "大卫",
+    "nameZhHant": "大衛",
+    "roleEn": "King of Israel",
+    "roleZhHans": "以色列王",
+    "roleZhHant": "以色列王",
+    "descriptionEn": "David was king of Israel and is remembered for God's covenant promise concerning his royal line.",
+    "descriptionZhHans": "大卫是以色列王，圣经记念神与他所立关于王室后裔的约。",
+    "descriptionZhHant": "大衛是以色列王，聖經記念神與他所立關於王室後裔的約。",
+    "aliases": {
+      "web": ["King David", "David"],
+      "cuvs": ["大卫王", "大卫"],
+      "cuvt": ["大衛王", "大衛"]
+    },
+    "relatedVerseIds": ["1sa.16.13", "2sa.7.12"]
+  },
+  {
+    "id": "mary_mother",
+    "nameEn": "Mary",
+    "nameZhHans": "马利亚",
+    "nameZhHant": "馬利亞",
+    "roleEn": "Mother of Jesus",
+    "roleZhHans": "耶稣的母亲",
+    "roleZhHant": "耶穌的母親",
+    "descriptionEn": "Mary was the mother of Jesus. Same-name Mary references are handled progressively through verse-specific aliases.",
+    "descriptionZhHans": "马利亚是耶稣的母亲。同名马利亚会逐步通过经节别名来区分。",
+    "descriptionZhHant": "馬利亞是耶穌的母親。同名馬利亞會逐步通過經節別名來區分。",
+    "summaryEn": "Mary, the mother of Jesus, appears in the birth narratives and at key moments in Jesus' life, showing humble reception of God's word.",
+    "summaryZhHans": "马利亚是耶稣的母亲，出现在耶稣降生叙事和他生平的重要时刻，显出谦卑领受神话语的姿态。",
+    "summaryZhHant": "馬利亞是耶穌的母親，出現在耶穌降生敘事和他生平的重要時刻，顯出謙卑領受神話語的姿態。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "Mary is identified in the Gospels as the mother of Jesus. Matthew and Luke connect her story with the miraculous conception and the fulfillment of God's promise, while John places her at moments that point toward Jesus' hour.",
+        "bodyZhHans": "福音书称马利亚为耶稣的母亲。马太和路加把她的故事与超自然的受孕和神应许的成就联系起来；约翰则在一些关键场景中提到她，指向耶稣的时候。",
+        "bodyZhHant": "福音書稱馬利亞為耶穌的母親。馬太和路加把她的故事與超自然的受孕和神應許的成就聯繫起來；約翰則在一些關鍵場景中提到她，指向耶穌的時候。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "Mary's passages often emphasize receiving God's word, pondering God's work, and remaining present through costly obedience. In birth narratives, the focus is not on Mary alone but on God's initiative in sending the Messiah.",
+        "bodyZhHans": "马利亚相关经文常强调领受神的话、反复思想神的作为，以及在代价中顺服。降生叙事的焦点不是马利亚本身，而是神主动差遣弥赛亚。",
+        "bodyZhHant": "馬利亞相關經文常強調領受神的話、反覆思想神的作為，以及在代價中順服。降生敘事的焦點不是馬利亞本身，而是神主動差遣彌賽亞。"
+      },
+      {
+        "type": "note",
+        "titleEn": "Same-name Note",
+        "titleZhHans": "同名说明",
+        "titleZhHant": "同名說明",
+        "bodyEn": "Several women named Mary appear in the New Testament, including Mary Magdalene and Mary of Bethany. This profile refers specifically to Mary, the mother of Jesus; verse-specific matching helps avoid confusing them.",
+        "bodyZhHans": "新约中有多位名叫马利亚的女子，包括抹大拉的马利亚、伯大尼的马利亚等。本资料特指耶稣的母亲马利亚；App 会逐步用经节级匹配减少混淆。",
+        "bodyZhHant": "新約中有多位名叫馬利亞的女子，包括抹大拉的馬利亞、伯大尼的馬利亞等。本資料特指耶穌的母親馬利亞；App 會逐步用經節級匹配減少混淆。"
+      }
+    ],
+    "aliases": {
+      "web": ["Mary mother of Jesus"],
+      "cuvs": ["耶稣的母亲马利亚"],
+      "cuvt": ["耶穌的母親馬利亞"]
+    },
+    "verseAliases": {
+      "mat.1.18": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "mat.1.20": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "mat.2.11": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "luk.1.27": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "luk.1.30": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "luk.2.16": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "jhn.19.25": {
+        "web": ["Jesus' mother"],
+        "cuvs": ["耶稣的母亲马利亚"],
+        "cuvt": ["耶穌的母親馬利亞"]
+      }
+    },
+    "relatedVerseIds": ["luk.1.30", "jhn.19.25"]
+  },
+  {
+    "id": "joseph_husband_mary",
+    "nameEn": "Joseph",
+    "nameZhHans": "约瑟",
+    "nameZhHant": "約瑟",
+    "roleEn": "Husband of Mary",
+    "roleZhHans": "马利亚的丈夫，耶稣地上的养父",
+    "roleZhHant": "馬利亞的丈夫，耶穌地上的養父",
+    "descriptionEn": "Joseph was Mary's husband and cared for Jesus in his childhood. Matthew presents him as obedient to God's direction through dreams.",
+    "descriptionZhHans": "约瑟是马利亚的丈夫，在耶稣幼年时照顾他。马太福音特别呈现他顺服神在梦中的指示。",
+    "descriptionZhHant": "約瑟是馬利亞的丈夫，在耶穌幼年時照顧他。馬太福音特別呈現他順服神在夢中的指示。",
+    "summaryEn": "Joseph, Mary's husband, cared for Jesus in childhood and is portrayed in Matthew as quietly obedient to God's direction.",
+    "summaryZhHans": "约瑟是马利亚的丈夫，在耶稣幼年时照顾他；马太福音特别呈现他安静而顺服神的指引。",
+    "summaryZhHant": "約瑟是馬利亞的丈夫，在耶穌幼年時照顧他；馬太福音特別呈現他安靜而順服神的指引。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "Joseph is introduced as Mary's husband and a descendant of David. In Matthew's birth narrative, his legal place in Jesus' family connects Jesus with David's line while preserving the emphasis on divine conception.",
+        "bodyZhHans": "约瑟被介绍为马利亚的丈夫，也是大卫的后裔。在马太的降生叙事中，他在耶稣家庭中的法律身份把耶稣与大卫谱系连接起来，同时保留经文对神圣受孕的强调。",
+        "bodyZhHant": "約瑟被介紹為馬利亞的丈夫，也是大衛的後裔。在馬太的降生敘事中，他在耶穌家庭中的法律身份把耶穌與大衛譜系連接起來，同時保留經文對神聖受孕的強調。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "Joseph's main actions in Matthew are responses to God's instruction: taking Mary as his wife, naming the child Jesus, fleeing to Egypt, and returning when instructed. His role is active but understated.",
+        "bodyZhHans": "约瑟在马太福音中的主要行动，都是回应神的指示：娶过马利亚来、给孩子起名叫耶稣、逃往埃及、按指示回来。他的角色主动，却并不张扬。",
+        "bodyZhHant": "約瑟在馬太福音中的主要行動，都是回應神的指示：娶過馬利亞來、給孩子起名叫耶穌、逃往埃及、按指示回來。他的角色主動，卻並不張揚。"
+      },
+      {
+        "type": "note",
+        "titleEn": "Same-name Note",
+        "titleZhHans": "同名说明",
+        "titleZhHant": "同名說明",
+        "bodyEn": "Several people named Joseph appear in Scripture, including Joseph of Arimathea and Joseph in Genesis. This profile refers to Joseph, husband of Mary, in the birth and childhood narratives of Jesus.",
+        "bodyZhHans": "圣经中有多位约瑟，包括亚利马太的约瑟和创世记中的约瑟。本资料特指马利亚的丈夫、耶稣降生与幼年叙事中的约瑟。",
+        "bodyZhHant": "聖經中有多位約瑟，包括亞利馬太的約瑟和創世記中的約瑟。本資料特指馬利亞的丈夫、耶穌降生與幼年敘事中的約瑟。"
+      }
+    ],
+    "aliases": {
+      "web": ["Joseph husband of Mary"],
+      "cuvs": ["马利亚的丈夫约瑟"],
+      "cuvt": ["馬利亞的丈夫約瑟"]
+    },
+    "verseAliases": {
+      "mat.1.19": {"web": ["Joseph"], "cuvs": ["约瑟"], "cuvt": ["約瑟"]},
+      "mat.1.20": {"web": ["Joseph"], "cuvs": ["约瑟"], "cuvt": ["約瑟"]},
+      "mat.1.24": {"web": ["Joseph"], "cuvs": ["约瑟"], "cuvt": ["約瑟"]},
+      "mat.2.13": {"web": ["Joseph"], "cuvs": ["约瑟"], "cuvt": ["約瑟"]},
+      "mat.2.19": {"web": ["Joseph"], "cuvs": ["约瑟"], "cuvt": ["約瑟"]},
+      "luk.2.16": {"web": ["Joseph"], "cuvs": ["约瑟"], "cuvt": ["約瑟"]}
+    },
+    "relatedVerseIds": ["mat.1.19", "mat.2.13"]
+  },
+  {
+    "id": "john_baptist",
+    "nameEn": "John the Baptist",
+    "nameZhHans": "施洗约翰",
+    "nameZhHant": "施洗約翰",
+    "roleEn": "Prophet who prepared the way for Jesus",
+    "roleZhHans": "为耶稣预备道路的先知",
+    "roleZhHant": "為耶穌預備道路的先知",
+    "descriptionEn": "John the Baptist called Israel to repentance and baptized Jesus. The Gospels present him as the forerunner who prepared the way for the Lord.",
+    "descriptionZhHans": "施洗约翰呼召以色列人悔改，并为耶稣施洗。福音书呈现他是为主预备道路的先锋。",
+    "descriptionZhHant": "施洗約翰呼召以色列人悔改，並為耶穌施洗。福音書呈現他是為主預備道路的先鋒。",
+    "summaryEn": "John the Baptist was the prophetic forerunner who called Israel to repentance and pointed beyond himself to Jesus.",
+    "summaryZhHans": "施洗约翰是为主预备道路的先知性先锋，呼召以色列悔改，并把人的注意力指向耶稣。",
+    "summaryZhHant": "施洗約翰是為主預備道路的先知性先鋒，呼召以色列悔改，並把人的注意力指向耶穌。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "John the Baptist is presented as a prophet who prepares the way for the Lord. His ministry stands at the threshold between the prophetic hope of Israel and the public appearing of Jesus.",
+        "bodyZhHans": "施洗约翰被呈现为为主预备道路的先知。他的事工站在以色列先知盼望和耶稣公开显现之间的门槛上。",
+        "bodyZhHant": "施洗約翰被呈現為為主預備道路的先知。他的事工站在以色列先知盼望和耶穌公開顯現之間的門檻上。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "John's preaching emphasizes repentance, judgment, and readiness for the coming one. When he baptizes Jesus or identifies him as the Lamb of God, the focus shifts from John's preparatory role to Jesus' saving mission.",
+        "bodyZhHans": "约翰的信息强调悔改、审判和预备迎接那将要来的。无论是为耶稣施洗，还是指出耶稣是神的羔羊，经文焦点都会从约翰的预备角色转向耶稣的救赎使命。",
+        "bodyZhHant": "約翰的信息強調悔改、審判和預備迎接那將要來的。無論是為耶穌施洗，還是指出耶穌是神的羔羊，經文焦點都會從約翰的預備角色轉向耶穌的救贖使命。"
+      },
+      {
+        "type": "note",
+        "titleEn": "Name Note",
+        "titleZhHans": "名字说明",
+        "titleZhHant": "名字說明",
+        "bodyEn": "Because several important New Testament figures are named John, this app uses verse-specific matching to distinguish John the Baptist from the apostle John where possible.",
+        "bodyZhHans": "新约中有几位重要人物名叫约翰，所以本 App 会尽量用经节级匹配，把施洗约翰和使徒约翰区分开。",
+        "bodyZhHant": "新約中有幾位重要人物名叫約翰，所以本 App 會盡量用經節級匹配，把施洗約翰和使徒約翰區分開。"
+      }
+    ],
+    "aliases": {
+      "web": ["John the Baptist"],
+      "cuvs": ["施洗的约翰", "施洗约翰"],
+      "cuvt": ["施洗的約翰", "施洗約翰"]
+    },
+    "verseAliases": {
+      "mat.3.1": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "mat.3.4": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "mat.3.13": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "mat.14.3": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "jhn.1.6": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "jhn.1.15": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "jhn.1.19": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "jhn.1.29": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]},
+      "jhn.3.23": {"web": ["John"], "cuvs": ["约翰"], "cuvt": ["約翰"]}
+    },
+    "relatedVerseIds": ["mat.3.1", "jhn.1.29"]
+  },
+  {
+    "id": "elizabeth",
+    "nameEn": "Elizabeth",
+    "nameZhHans": "以利沙伯",
+    "nameZhHant": "以利沙伯",
+    "roleEn": "Mother of John the Baptist",
+    "roleZhHans": "施洗约翰的母亲",
+    "roleZhHant": "施洗約翰的母親",
+    "descriptionEn": "Elizabeth was the wife of Zechariah and mother of John the Baptist. Luke describes her as righteous before God.",
+    "descriptionZhHans": "以利沙伯是撒迦利亚的妻子、施洗约翰的母亲。路加福音称她在神面前是义人。",
+    "descriptionZhHant": "以利沙伯是撒迦利亞的妻子、施洗約翰的母親。路加福音稱她在神面前是義人。",
+    "aliases": {
+      "web": ["Elizabeth"],
+      "cuvs": ["以利沙伯"],
+      "cuvt": ["以利沙伯"]
+    },
+    "relatedVerseIds": ["luk.1.5", "luk.1.41"]
+  },
+  {
+    "id": "zechariah_father_john",
+    "nameEn": "Zechariah",
+    "nameZhHans": "撒迦利亚",
+    "nameZhHant": "撒迦利亞",
+    "roleEn": "Priest and father of John the Baptist",
+    "roleZhHans": "祭司，施洗约翰的父亲",
+    "roleZhHant": "祭司，施洗約翰的父親",
+    "descriptionEn": "Zechariah was a priest, Elizabeth's husband, and the father of John the Baptist.",
+    "descriptionZhHans": "撒迦利亚是祭司，以利沙伯的丈夫，也是施洗约翰的父亲。",
+    "descriptionZhHant": "撒迦利亞是祭司，以利沙伯的丈夫，也是施洗約翰的父親。",
+    "aliases": {
+      "web": ["Zechariah", "Zacharias"],
+      "cuvs": ["撒迦利亚"],
+      "cuvt": ["撒迦利亞"]
+    },
+    "relatedVerseIds": ["luk.1.5", "luk.1.67"]
+  },
+  {
+    "id": "herod_general",
+    "nameEn": "Herod",
+    "nameZhHans": "希律",
+    "nameZhHant": "希律",
+    "roleEn": "Herodian ruler",
+    "roleZhHans": "希律王朝统治者",
+    "roleZhHant": "希律王朝統治者",
+    "descriptionEn": "Herod can refer to several rulers in the Herodian dynasty. In Matthew 2 it usually refers to Herod the Great; in other passages it may refer to another Herod.",
+    "descriptionZhHans": "“希律”可能指希律王朝中的多位统治者。马太福音2章通常指希律大帝；其他经文可能指不同的希律。",
+    "descriptionZhHant": "「希律」可能指希律王朝中的多位統治者。馬太福音2章通常指希律大帝；其他經文可能指不同的希律。",
+    "summaryEn": "Herod is a dynasty name in the New Testament, not always one person. Matthew 2 usually refers to Herod the Great, while later passages may refer to other Herodian rulers.",
+    "summaryZhHans": "“希律”在新约中常是王朝称号，不总是同一个人。马太福音2章通常指希律大帝，后续经文可能指其他希律王朝统治者。",
+    "summaryZhHant": "「希律」在新約中常是王朝稱號，不總是同一個人。馬太福音2章通常指希律大帝，後續經文可能指其他希律王朝統治者。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "The name Herod can refer to multiple rulers from the Herodian dynasty. They governed parts of Judea and surrounding regions under Roman power, and the Gospels often show them as politically anxious and morally compromised rulers.",
+        "bodyZhHans": "“希律”可能指希律王朝中的多位统治者。他们在罗马权力之下管理犹太及周边地区。福音书常呈现他们为政治上焦虑、道德上妥协的掌权者。",
+        "bodyZhHant": "「希律」可能指希律王朝中的多位統治者。他們在羅馬權力之下管理猶太及周邊地區。福音書常呈現他們為政治上焦慮、道德上妥協的掌權者。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Matthew 2 Context",
+        "titleZhHans": "马太福音2章脉络",
+        "titleZhHant": "馬太福音2章脈絡",
+        "bodyEn": "In Matthew 2, Herod's fear of the newborn king contrasts with the worship of the magi. The passage sets earthly power against God's promised Messiah and explains the danger surrounding Jesus' early childhood.",
+        "bodyZhHans": "在马太福音2章，希律惧怕新生王，与博士敬拜形成强烈对比。经文把地上的权力与神所应许的弥赛亚相对照，也解释了耶稣幼年所处的危险环境。",
+        "bodyZhHant": "在馬太福音2章，希律懼怕新生王，與博士敬拜形成強烈對比。經文把地上的權力與神所應許的彌賽亞相對照，也解釋了耶穌幼年所處的危險環境。"
+      },
+      {
+        "type": "note",
+        "titleEn": "Disambiguation",
+        "titleZhHans": "易混淆说明",
+        "titleZhHant": "易混淆說明",
+        "bodyEn": "Herod the Great, Herod Antipas, and Herod Agrippa are different figures. This first profile groups the dynasty under one entry; later data can split them by verse for more precise study.",
+        "bodyZhHans": "希律大帝、希律安提帕、希律亚基帕并不是同一个人。第一阶段先把希律王朝合并为一个资料入口；后续可以按经节拆分得更精确。",
+        "bodyZhHant": "希律大帝、希律安提帕、希律亞基帕並不是同一個人。第一階段先把希律王朝合併為一個資料入口；後續可以按經節拆分得更精確。"
+      }
+    ],
+    "aliases": {
+      "web": ["Herod the Great", "Herod Antipas", "Herod Agrippa", "Herod"],
+      "cuvs": ["希律王", "希律"],
+      "cuvt": ["希律王", "希律"]
+    },
+    "relatedVerseIds": ["mat.2.1", "luk.23.7", "act.12.1"]
+  },
+  {
+    "id": "pilate",
+    "nameEn": "Pontius Pilate",
+    "nameZhHans": "彼拉多",
+    "nameZhHant": "彼拉多",
+    "roleEn": "Roman governor of Judea",
+    "roleZhHans": "犹太地的罗马巡抚",
+    "roleZhHant": "猶太地的羅馬巡撫",
+    "descriptionEn": "Pontius Pilate was the Roman governor involved in Jesus' trial and crucifixion.",
+    "descriptionZhHans": "彼拉多是参与耶稣受审和被钉十字架事件的罗马巡抚。",
+    "descriptionZhHant": "彼拉多是參與耶穌受審和被釘十字架事件的羅馬巡撫。",
+    "summaryEn": "Pontius Pilate was the Roman governor who presided over Jesus' trial and handed him over to be crucified.",
+    "summaryZhHans": "彼拉多是罗马巡抚，在耶稣受审时主持审问，并最终把耶稣交去钉十字架。",
+    "summaryZhHant": "彼拉多是羅馬巡撫，在耶穌受審時主持審問，並最終把耶穌交去釘十字架。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "Pilate was the Roman prefect or governor of Judea. In the passion narratives, he represents Roman authority and becomes the official through whom Jesus is sentenced to crucifixion.",
+        "bodyZhHans": "彼拉多是犹太地的罗马总督或巡抚。在受难叙事中，他代表罗马政权，也成为耶稣被判钉十字架的官方执行者。",
+        "bodyZhHant": "彼拉多是猶太地的羅馬總督或巡撫。在受難敘事中，他代表羅馬政權，也成為耶穌被判釘十字架的官方執行者。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "Pilate's scenes often expose political pressure, public fear, and the irony of Jesus' kingship. The Gospels portray Jesus as innocent, while Pilate still yields to the demand for crucifixion.",
+        "bodyZhHans": "彼拉多相关场景常揭示政治压力、群众压力，以及耶稣王权的反讽。福音书呈现耶稣是无罪的，但彼拉多仍屈从于把耶稣钉十字架的要求。",
+        "bodyZhHant": "彼拉多相關場景常揭示政治壓力、群眾壓力，以及耶穌王權的反諷。福音書呈現耶穌是無罪的，但彼拉多仍屈從於把耶穌釘十字架的要求。"
+      },
+      {
+        "type": "theology",
+        "titleEn": "Theological Focus",
+        "titleZhHans": "神学重点",
+        "titleZhHant": "神學重點",
+        "bodyEn": "Pilate's role highlights that Jesus' death occurs under public, legal, and political conditions, not as a private accident. Christian interpretation reads this within God's saving purpose and human responsibility.",
+        "bodyZhHans": "彼拉多的角色凸显耶稣的死发生在公开、法律和政治处境中，并非私人意外。基督教解释通常同时看见神救赎计划的成就和人的责任。",
+        "bodyZhHant": "彼拉多的角色凸顯耶穌的死發生在公開、法律和政治處境中，並非私人意外。基督教解釋通常同時看見神救贖計畫的成就和人的責任。"
+      }
+    ],
+    "aliases": {
+      "web": ["Pontius Pilate", "Pilate"],
+      "cuvs": ["本丢彼拉多", "彼拉多"],
+      "cuvt": ["本丟彼拉多", "彼拉多"]
+    },
+    "relatedVerseIds": ["mat.27.2", "jhn.19.10"]
+  },
+  {
+    "id": "caiaphas",
+    "nameEn": "Caiaphas",
+    "nameZhHans": "该亚法",
+    "nameZhHant": "該亞法",
+    "roleEn": "High priest",
+    "roleZhHans": "大祭司",
+    "roleZhHant": "大祭司",
+    "descriptionEn": "Caiaphas was high priest during Jesus' trial before the Jewish council.",
+    "descriptionZhHans": "该亚法是在耶稣受审时期的大祭司，与公会审问耶稣有关。",
+    "descriptionZhHant": "該亞法是在耶穌受審時期的大祭司，與公會審問耶穌有關。",
+    "aliases": {
+      "web": ["Caiaphas"],
+      "cuvs": ["该亚法"],
+      "cuvt": ["該亞法"]
+    },
+    "relatedVerseIds": ["jhn.11.49", "mat.26.57"]
+  },
+  {
+    "id": "annas",
+    "nameEn": "Annas",
+    "nameZhHans": "亚那",
+    "nameZhHant": "亞那",
+    "roleEn": "Former high priest",
+    "roleZhHans": "前任大祭司",
+    "roleZhHant": "前任大祭司",
+    "descriptionEn": "Annas was a former high priest and an influential priestly figure in the period of Jesus and the apostles.",
+    "descriptionZhHans": "亚那是前任大祭司，也是耶稣和使徒时期有影响力的祭司人物。",
+    "descriptionZhHant": "亞那是前任大祭司，也是耶穌和使徒時期有影響力的祭司人物。",
+    "aliases": {
+      "web": ["Annas"],
+      "cuvs": ["亚那"],
+      "cuvt": ["亞那"]
+    },
+    "relatedVerseIds": ["luk.3.2", "jhn.18.13"]
+  },
+  {
+    "id": "andrew",
+    "nameEn": "Andrew",
+    "nameZhHans": "安得烈",
+    "nameZhHant": "安得烈",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "Andrew was one of the twelve apostles and Peter's brother.",
+    "descriptionZhHans": "安得烈是耶稣十二使徒之一，也是彼得的兄弟。",
+    "descriptionZhHant": "安得烈是耶穌十二使徒之一，也是彼得的兄弟。",
+    "aliases": {
+      "web": ["Andrew"],
+      "cuvs": ["安得烈"],
+      "cuvt": ["安得烈"]
+    },
+    "relatedVerseIds": ["mat.4.18", "jhn.1.40"]
+  },
+  {
+    "id": "james_zebedee",
+    "nameEn": "James son of Zebedee",
+    "nameZhHans": "西庇太的儿子雅各",
+    "nameZhHant": "西庇太的兒子雅各",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "James son of Zebedee was one of the twelve apostles and brother of John.",
+    "descriptionZhHans": "西庇太的儿子雅各是耶稣十二使徒之一，也是约翰的兄弟。",
+    "descriptionZhHant": "西庇太的兒子雅各是耶穌十二使徒之一，也是約翰的兄弟。",
+    "aliases": {
+      "web": ["James son of Zebedee", "John's brother James"],
+      "cuvs": ["西庇太的儿子雅各", "约翰的哥哥雅各"],
+      "cuvt": ["西庇太的兒子雅各", "約翰的哥哥雅各"]
+    },
+    "relatedVerseIds": ["mat.4.21", "act.12.2"]
+  },
+  {
+    "id": "philip_apostle",
+    "nameEn": "Philip the Apostle",
+    "nameZhHans": "腓力",
+    "nameZhHant": "腓力",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "Philip was one of the twelve apostles and appears in several scenes in John's Gospel.",
+    "descriptionZhHans": "腓力是耶稣十二使徒之一，在约翰福音中多次出现。",
+    "descriptionZhHant": "腓力是耶穌十二使徒之一，在約翰福音中多次出現。",
+    "aliases": {
+      "web": ["Philip the Apostle", "Philip"],
+      "cuvs": ["使徒腓力", "腓力"],
+      "cuvt": ["使徒腓力", "腓力"]
+    },
+    "relatedVerseIds": ["jhn.1.43", "jhn.14.8"]
+  },
+  {
+    "id": "bartholomew",
+    "nameEn": "Bartholomew",
+    "nameZhHans": "巴多罗买",
+    "nameZhHant": "巴多羅買",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "Bartholomew was one of the twelve apostles listed in the Synoptic Gospels and Acts.",
+    "descriptionZhHans": "巴多罗买是福音书和使徒行传列出的十二使徒之一。",
+    "descriptionZhHant": "巴多羅買是福音書和使徒行傳列出的十二使徒之一。",
+    "aliases": {
+      "web": ["Bartholomew"],
+      "cuvs": ["巴多罗买"],
+      "cuvt": ["巴多羅買"]
+    },
+    "relatedVerseIds": ["mat.10.3", "act.1.13"]
+  },
+  {
+    "id": "thomas",
+    "nameEn": "Thomas",
+    "nameZhHans": "多马",
+    "nameZhHant": "多馬",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "Thomas was one of the twelve apostles. John's Gospel records his confession, 'My Lord and my God.'",
+    "descriptionZhHans": "多马是耶稣十二使徒之一。约翰福音记载他承认复活的耶稣为“我的主，我的神”。",
+    "descriptionZhHant": "多馬是耶穌十二使徒之一。約翰福音記載他承認復活的耶穌為「我的主，我的神」。",
+    "aliases": {
+      "web": ["Didymus", "Thomas"],
+      "cuvs": ["低土马", "多马"],
+      "cuvt": ["低土馬", "多馬"]
+    },
+    "relatedVerseIds": ["jhn.20.24", "jhn.20.28"]
+  },
+  {
+    "id": "matthew_apostle",
+    "nameEn": "Matthew",
+    "nameZhHans": "马太",
+    "nameZhHant": "馬太",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "Matthew was one of the twelve apostles and is identified with the tax collector called by Jesus.",
+    "descriptionZhHans": "马太是耶稣十二使徒之一，传统上与耶稣呼召的税吏马太相关。",
+    "descriptionZhHant": "馬太是耶穌十二使徒之一，傳統上與耶穌呼召的稅吏馬太相關。",
+    "aliases": {
+      "web": ["Matthew", "Levi"],
+      "cuvs": ["马太", "利未"],
+      "cuvt": ["馬太", "利未"]
+    },
+    "relatedVerseIds": ["mat.9.9", "mat.10.3"]
+  },
+  {
+    "id": "james_alphaeus",
+    "nameEn": "James son of Alphaeus",
+    "nameZhHans": "亚勒腓的儿子雅各",
+    "nameZhHant": "亞勒腓的兒子雅各",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "James son of Alphaeus was one of the twelve apostles.",
+    "descriptionZhHans": "亚勒腓的儿子雅各是耶稣十二使徒之一。",
+    "descriptionZhHant": "亞勒腓的兒子雅各是耶穌十二使徒之一。",
+    "aliases": {
+      "web": ["James son of Alphaeus"],
+      "cuvs": ["亚勒腓的儿子雅各"],
+      "cuvt": ["亞勒腓的兒子雅各"]
+    },
+    "relatedVerseIds": ["mat.10.3", "act.1.13"]
+  },
+  {
+    "id": "simon_zealot",
+    "nameEn": "Simon the Zealot",
+    "nameZhHans": "奋锐党的西门",
+    "nameZhHant": "奮銳黨的西門",
+    "roleEn": "Apostle of Jesus",
+    "roleZhHans": "耶稣的使徒",
+    "roleZhHant": "耶穌的使徒",
+    "descriptionEn": "Simon the Zealot was one of the twelve apostles.",
+    "descriptionZhHans": "奋锐党的西门是耶稣十二使徒之一。",
+    "descriptionZhHant": "奮銳黨的西門是耶穌十二使徒之一。",
+    "aliases": {
+      "web": ["Simon the Zealot", "Simon the Canaanite"],
+      "cuvs": ["奋锐党的西门", "迦南人西门"],
+      "cuvt": ["奮銳黨的西門", "迦南人西門"]
+    },
+    "relatedVerseIds": ["luk.6.15", "act.1.13"]
+  },
+  {
+    "id": "judas_iscariot",
+    "nameEn": "Judas Iscariot",
+    "nameZhHans": "加略人犹大",
+    "nameZhHant": "加略人猶大",
+    "roleEn": "The disciple who betrayed Jesus",
+    "roleZhHans": "出卖耶稣的门徒",
+    "roleZhHant": "出賣耶穌的門徒",
+    "descriptionEn": "Judas Iscariot was one of the twelve disciples and betrayed Jesus.",
+    "descriptionZhHans": "加略人犹大是十二门徒之一，后来出卖耶稣。",
+    "descriptionZhHant": "加略人猶大是十二門徒之一，後來出賣耶穌。",
+    "aliases": {
+      "web": ["Judas Iscariot"],
+      "cuvs": ["加略人犹大"],
+      "cuvt": ["加略人猶大"]
+    },
+    "relatedVerseIds": ["mat.26.14", "jhn.13.2"]
+  },
+  {
+    "id": "matthias",
+    "nameEn": "Matthias",
+    "nameZhHans": "马提亚",
+    "nameZhHant": "馬提亞",
+    "roleEn": "Chosen to replace Judas Iscariot",
+    "roleZhHans": "补入使徒职分的人",
+    "roleZhHant": "補入使徒職分的人",
+    "descriptionEn": "Matthias was chosen in Acts 1 to take the place of Judas Iscariot among the apostles.",
+    "descriptionZhHans": "马提亚在使徒行传1章被拣选，补入加略人犹大留下的使徒职分。",
+    "descriptionZhHant": "馬提亞在使徒行傳1章被揀選，補入加略人猶大留下的使徒職分。",
+    "aliases": {
+      "web": ["Matthias"],
+      "cuvs": ["马提亚"],
+      "cuvt": ["馬提亞"]
+    },
+    "relatedVerseIds": ["act.1.26"]
+  },
+  {
+    "id": "mary_magdalene",
+    "nameEn": "Mary Magdalene",
+    "nameZhHans": "抹大拉的马利亚",
+    "nameZhHant": "抹大拉的馬利亞",
+    "roleEn": "Follower and resurrection witness",
+    "roleZhHans": "耶稣的跟随者，复活见证人",
+    "roleZhHant": "耶穌的跟隨者，復活見證人",
+    "descriptionEn": "Mary Magdalene followed Jesus and was among the first witnesses to the empty tomb.",
+    "descriptionZhHans": "抹大拉的马利亚跟随耶稣，并且是空坟墓最早的见证人之一。",
+    "descriptionZhHant": "抹大拉的馬利亞跟隨耶穌，並且是空墳墓最早的見證人之一。",
+    "summaryEn": "Mary Magdalene was a follower of Jesus and one of the earliest witnesses to the empty tomb and the resurrection announcement.",
+    "summaryZhHans": "抹大拉的马利亚是耶稣的跟随者，也是最早见证空坟墓和复活信息的人之一。",
+    "summaryZhHant": "抹大拉的馬利亞是耶穌的跟隨者，也是最早見證空墳墓和復活信息的人之一。",
+    "sections": [
+      {
+        "type": "identity",
+        "titleEn": "Identity",
+        "titleZhHans": "身份定位",
+        "titleZhHant": "身份定位",
+        "bodyEn": "Mary Magdalene is named among the women who followed Jesus. Luke notes that she had been delivered from severe oppression, and the resurrection narratives place her among the first witnesses of the empty tomb.",
+        "bodyZhHans": "抹大拉的马利亚被列在跟随耶稣的妇女中。路加提到她曾从严重捆绑中得释放；复活叙事则把她放在最早见证空坟墓的人之中。",
+        "bodyZhHant": "抹大拉的馬利亞被列在跟隨耶穌的婦女中。路加提到她曾從嚴重捆綁中得釋放；復活敘事則把她放在最早見證空墳墓的人之中。"
+      },
+      {
+        "type": "context",
+        "titleEn": "Reading Context",
+        "titleZhHans": "经文脉络",
+        "titleZhHant": "經文脈絡",
+        "bodyEn": "Her appearances draw attention to faithful discipleship, costly presence near Jesus' death, and the surprising first announcement of resurrection. The text highlights witness more than social status.",
+        "bodyZhHans": "她出现的经文强调忠心跟随、在耶稣受死前后的代价性陪伴，以及复活消息首先被宣告出来的惊人安排。经文强调的是见证，而不是社会地位。",
+        "bodyZhHant": "她出現的經文強調忠心跟隨、在耶穌受死前後的代價性陪伴，以及復活消息首先被宣告出來的驚人安排。經文強調的是見證，而不是社會地位。"
+      },
+      {
+        "type": "note",
+        "titleEn": "Same-name Note",
+        "titleZhHans": "同名说明",
+        "titleZhHant": "同名說明",
+        "bodyEn": "Mary Magdalene is not the same person as Mary the mother of Jesus or Mary of Bethany. The phrase Magdalene identifies her connection with Magdala and helps distinguish her from other women named Mary.",
+        "bodyZhHans": "抹大拉的马利亚不是耶稣的母亲马利亚，也不是伯大尼的马利亚。“抹大拉”表明她与抹大拉有关，也帮助区分新约中多位名叫马利亚的女子。",
+        "bodyZhHant": "抹大拉的馬利亞不是耶穌的母親馬利亞，也不是伯大尼的馬利亞。「抹大拉」表明她與抹大拉有關，也幫助區分新約中多位名叫馬利亞的女子。"
+      }
+    ],
+    "aliases": {
+      "web": ["Mary Magdalene"],
+      "cuvs": ["抹大拉的马利亚"],
+      "cuvt": ["抹大拉的馬利亞"]
+    },
+    "relatedVerseIds": ["luk.8.2", "jhn.20.1"]
+  },
+  {
+    "id": "martha",
+    "nameEn": "Martha",
+    "nameZhHans": "马大",
+    "nameZhHant": "馬大",
+    "roleEn": "Sister of Mary and Lazarus",
+    "roleZhHans": "马利亚和拉撒路的姊妹",
+    "roleZhHant": "馬利亞和拉撒路的姊妹",
+    "descriptionEn": "Martha was a woman of Bethany, sister of Mary and Lazarus, and a follower of Jesus.",
+    "descriptionZhHans": "马大是伯大尼人，马利亚和拉撒路的姊妹，也是耶稣的跟随者。",
+    "descriptionZhHant": "馬大是伯大尼人，馬利亞和拉撒路的姊妹，也是耶穌的跟隨者。",
+    "aliases": {
+      "web": ["Martha"],
+      "cuvs": ["马大"],
+      "cuvt": ["馬大"]
+    },
+    "relatedVerseIds": ["luk.10.38", "jhn.11.21"]
+  },
+  {
+    "id": "lazarus_bethany",
+    "nameEn": "Lazarus",
+    "nameZhHans": "拉撒路",
+    "nameZhHant": "拉撒路",
+    "roleEn": "Man raised by Jesus in John 11",
+    "roleZhHans": "约翰福音11章中被耶稣叫醒的人",
+    "roleZhHant": "約翰福音11章中被耶穌叫醒的人",
+    "descriptionEn": "Lazarus of Bethany was the brother of Martha and Mary. John records that Jesus raised him from the dead.",
+    "descriptionZhHans": "伯大尼的拉撒路是马大和马利亚的兄弟。约翰福音记载耶稣使他从死里复活。",
+    "descriptionZhHant": "伯大尼的拉撒路是馬大和馬利亞的兄弟。約翰福音記載耶穌使他從死裏復活。",
+    "aliases": {
+      "web": ["Lazarus"],
+      "cuvs": ["拉撒路"],
+      "cuvt": ["拉撒路"]
+    },
+    "relatedVerseIds": ["jhn.11.1", "jhn.11.43"]
+  },
+  {
+    "id": "nicodemus",
+    "nameEn": "Nicodemus",
+    "nameZhHans": "尼哥底母",
+    "nameZhHant": "尼哥底母",
+    "roleEn": "Pharisee and ruler of the Jews",
+    "roleZhHans": "法利赛人，犹太人的官",
+    "roleZhHant": "法利賽人，猶太人的官",
+    "descriptionEn": "Nicodemus was a Pharisee who came to Jesus by night and later helped prepare Jesus' body for burial.",
+    "descriptionZhHans": "尼哥底母是法利赛人，曾夜里来见耶稣，后来也参与安葬耶稣。",
+    "descriptionZhHant": "尼哥底母是法利賽人，曾夜裏來見耶穌，後來也參與安葬耶穌。",
+    "aliases": {
+      "web": ["Nicodemus"],
+      "cuvs": ["尼哥底母"],
+      "cuvt": ["尼哥底母"]
+    },
+    "relatedVerseIds": ["jhn.3.1", "jhn.19.39"]
+  },
+  {
+    "id": "joseph_arimathea",
+    "nameEn": "Joseph of Arimathea",
+    "nameZhHans": "亚利马太的约瑟",
+    "nameZhHant": "亞利馬太的約瑟",
+    "roleEn": "Disciple who buried Jesus",
+    "roleZhHans": "安葬耶稣的门徒",
+    "roleZhHant": "安葬耶穌的門徒",
+    "descriptionEn": "Joseph of Arimathea was a disciple who asked Pilate for Jesus' body and placed it in a tomb.",
+    "descriptionZhHans": "亚利马太的约瑟是耶稣的门徒，向彼拉多求耶稣的身体并安放在坟墓里。",
+    "descriptionZhHant": "亞利馬太的約瑟是耶穌的門徒，向彼拉多求耶穌的身體並安放在墳墓裏。",
+    "aliases": {
+      "web": ["Joseph of Arimathea"],
+      "cuvs": ["亚利马太的约瑟"],
+      "cuvt": ["亞利馬太的約瑟"]
+    },
+    "relatedVerseIds": ["mat.27.57", "jhn.19.38"]
+  },
+  {
+    "id": "barnabas",
+    "nameEn": "Barnabas",
+    "nameZhHans": "巴拿巴",
+    "nameZhHant": "巴拿巴",
+    "roleEn": "Early church leader and missionary",
+    "roleZhHans": "初代教会领袖和宣教同工",
+    "roleZhHant": "初代教會領袖和宣教同工",
+    "descriptionEn": "Barnabas encouraged the early church, helped receive Paul, and served in missionary work.",
+    "descriptionZhHans": "巴拿巴鼓励初代教会，接纳保罗，并参与宣教事工。",
+    "descriptionZhHant": "巴拿巴鼓勵初代教會，接納保羅，並參與宣教事工。",
+    "aliases": {
+      "web": ["Barnabas"],
+      "cuvs": ["巴拿巴"],
+      "cuvt": ["巴拿巴"]
+    },
+    "relatedVerseIds": ["act.4.36", "act.13.2"]
+  },
+  {
+    "id": "silas",
+    "nameEn": "Silas",
+    "nameZhHans": "西拉",
+    "nameZhHant": "西拉",
+    "roleEn": "Missionary coworker of Paul",
+    "roleZhHans": "保罗的宣教同工",
+    "roleZhHant": "保羅的宣教同工",
+    "descriptionEn": "Silas was a leader in the early church and traveled with Paul on missionary work.",
+    "descriptionZhHans": "西拉是初代教会领袖，也与保罗同行参与宣教。",
+    "descriptionZhHant": "西拉是初代教會領袖，也與保羅同行參與宣教。",
+    "aliases": {
+      "web": ["Silvanus", "Silas"],
+      "cuvs": ["西拉"],
+      "cuvt": ["西拉"]
+    },
+    "relatedVerseIds": ["act.15.22", "act.16.25"]
+  },
+  {
+    "id": "timothy",
+    "nameEn": "Timothy",
+    "nameZhHans": "提摩太",
+    "nameZhHant": "提摩太",
+    "roleEn": "Coworker of Paul",
+    "roleZhHans": "保罗的同工",
+    "roleZhHant": "保羅的同工",
+    "descriptionEn": "Timothy was a younger coworker of Paul and recipient of two New Testament letters.",
+    "descriptionZhHans": "提摩太是保罗年轻的同工，也是新约两封书信的收信人。",
+    "descriptionZhHant": "提摩太是保羅年輕的同工，也是新約兩封書信的收信人。",
+    "aliases": {
+      "web": ["Timothy"],
+      "cuvs": ["提摩太"],
+      "cuvt": ["提摩太"]
+    },
+    "relatedVerseIds": ["act.16.1", "1ti.1.2"]
+  },
+  {
+    "id": "titus",
+    "nameEn": "Titus",
+    "nameZhHans": "提多",
+    "nameZhHant": "提多",
+    "roleEn": "Coworker of Paul",
+    "roleZhHans": "保罗的同工",
+    "roleZhHant": "保羅的同工",
+    "descriptionEn": "Titus was Paul's coworker and the recipient of the New Testament letter to Titus.",
+    "descriptionZhHans": "提多是保罗的同工，也是新约提多书的收信人。",
+    "descriptionZhHant": "提多是保羅的同工，也是新約提多書的收信人。",
+    "aliases": {
+      "web": ["Titus"],
+      "cuvs": ["提多"],
+      "cuvt": ["提多"]
+    },
+    "relatedVerseIds": ["gal.2.1", "tit.1.4"]
+  },
+  {
+    "id": "luke",
+    "nameEn": "Luke",
+    "nameZhHans": "路加",
+    "nameZhHant": "路加",
+    "roleEn": "Coworker of Paul",
+    "roleZhHans": "保罗的同工",
+    "roleZhHant": "保羅的同工",
+    "descriptionEn": "Luke was a coworker of Paul and is traditionally associated with Luke and Acts.",
+    "descriptionZhHans": "路加是保罗的同工，传统上与路加福音和使徒行传相关。",
+    "descriptionZhHant": "路加是保羅的同工，傳統上與路加福音和使徒行傳相關。",
+    "aliases": {
+      "web": ["Luke"],
+      "cuvs": ["路加"],
+      "cuvt": ["路加"]
+    },
+    "relatedVerseIds": ["col.4.14", "2ti.4.11"]
+  },
+  {
+    "id": "mark",
+    "nameEn": "Mark",
+    "nameZhHans": "马可",
+    "nameZhHant": "馬可",
+    "roleEn": "Early Christian coworker",
+    "roleZhHans": "初代教会同工",
+    "roleZhHant": "初代教會同工",
+    "descriptionEn": "Mark, also called John Mark, was connected with Peter, Barnabas, and Paul in the early church.",
+    "descriptionZhHans": "马可又称约翰马可，在初代教会中与彼得、巴拿巴和保罗都有联系。",
+    "descriptionZhHant": "馬可又稱約翰馬可，在初代教會中與彼得、巴拿巴和保羅都有聯繫。",
+    "aliases": {
+      "web": ["John Mark", "Mark"],
+      "cuvs": ["称呼马可的约翰", "约翰马可", "马可"],
+      "cuvt": ["稱呼馬可的約翰", "約翰馬可", "馬可"]
+    },
+    "relatedVerseIds": ["act.12.12", "1pe.5.13"]
+  },
+  {
+    "id": "stephen",
+    "nameEn": "Stephen",
+    "nameZhHans": "司提反",
+    "nameZhHant": "司提反",
+    "roleEn": "Early church witness",
+    "roleZhHans": "初代教会见证人",
+    "roleZhHant": "初代教會見證人",
+    "descriptionEn": "Stephen was chosen to serve in Acts 6 and became an early Christian witness who was killed for his testimony.",
+    "descriptionZhHans": "司提反在使徒行传6章被选立服事，并成为为主作见证而殉道的早期信徒。",
+    "descriptionZhHant": "司提反在使徒行傳6章被選立服事，並成為為主作見證而殉道的早期信徒。",
+    "aliases": {
+      "web": ["Stephen"],
+      "cuvs": ["司提反"],
+      "cuvt": ["司提反"]
+    },
+    "relatedVerseIds": ["act.6.5", "act.7.59"]
+  },
+  {
+    "id": "philip_evangelist",
+    "nameEn": "Philip the Evangelist",
+    "nameZhHans": "腓利",
+    "nameZhHant": "腓利",
+    "roleEn": "Evangelist in Acts",
+    "roleZhHans": "使徒行传中的传福音者",
+    "roleZhHant": "使徒行傳中的傳福音者",
+    "descriptionEn": "Philip was one of the seven chosen in Acts 6 and preached the gospel in Samaria and to the Ethiopian official.",
+    "descriptionZhHans": "腓利是使徒行传6章被选出的七人之一，曾在撒马利亚和向埃塞俄比亚太监传福音。",
+    "descriptionZhHant": "腓利是使徒行傳6章被選出的七人之一，曾在撒馬利亞和向埃塞俄比亞太監傳福音。",
+    "aliases": {
+      "web": ["Philip the Evangelist"],
+      "cuvs": ["传福音的腓利", "腓利"],
+      "cuvt": ["傳福音的腓利", "腓利"]
+    },
+    "verseAliases": {
+      "act.6.5": {"web": ["Philip"], "cuvs": ["腓利"], "cuvt": ["腓利"]},
+      "act.8.5": {"web": ["Philip"], "cuvs": ["腓利"], "cuvt": ["腓利"]},
+      "act.8.26": {"web": ["Philip"], "cuvs": ["腓利"], "cuvt": ["腓利"]},
+      "act.8.29": {"web": ["Philip"], "cuvs": ["腓利"], "cuvt": ["腓利"]},
+      "act.8.35": {"web": ["Philip"], "cuvs": ["腓利"], "cuvt": ["腓利"]},
+      "act.8.40": {"web": ["Philip"], "cuvs": ["腓利"], "cuvt": ["腓利"]},
+      "act.21.8": {"web": ["Philip"], "cuvs": ["腓利"], "cuvt": ["腓利"]}
+    },
+    "relatedVerseIds": ["act.6.5", "act.8.5"]
+  },
+  {
+    "id": "cornelius",
+    "nameEn": "Cornelius",
+    "nameZhHans": "哥尼流",
+    "nameZhHant": "哥尼流",
+    "roleEn": "Roman centurion",
+    "roleZhHans": "罗马百夫长",
+    "roleZhHant": "羅馬百夫長",
+    "descriptionEn": "Cornelius was a Roman centurion in Acts 10. His household received Peter's message and the Holy Spirit.",
+    "descriptionZhHans": "哥尼流是使徒行传10章中的罗马百夫长。他和全家领受了彼得所传的信息，并经历圣灵降临。",
+    "descriptionZhHant": "哥尼流是使徒行傳10章中的羅馬百夫長。他和全家領受了彼得所傳的信息，並經歷聖靈降臨。",
+    "aliases": {
+      "web": ["Cornelius"],
+      "cuvs": ["哥尼流"],
+      "cuvt": ["哥尼流"]
+    },
+    "relatedVerseIds": ["act.10.1", "act.10.44"]
+  },
+  {
+    "id": "apollos",
+    "nameEn": "Apollos",
+    "nameZhHans": "亚波罗",
+    "nameZhHant": "亞波羅",
+    "roleEn": "Teacher in the early church",
+    "roleZhHans": "初代教会教师",
+    "roleZhHant": "初代教會教師",
+    "descriptionEn": "Apollos was an eloquent teacher from Alexandria who taught about Jesus and was helped by Priscilla and Aquila.",
+    "descriptionZhHans": "亚波罗是来自亚历山大的有口才的教师，百基拉和亚居拉曾更详细地向他讲解神的道。",
+    "descriptionZhHant": "亞波羅是來自亞歷山大的有口才的教師，百基拉和亞居拉曾更詳細地向他講解神的道。",
+    "aliases": {
+      "web": ["Apollos"],
+      "cuvs": ["亚波罗"],
+      "cuvt": ["亞波羅"]
+    },
+    "relatedVerseIds": ["act.18.24", "1co.3.6"]
+  },
+  {
+    "id": "aquila",
+    "nameEn": "Aquila",
+    "nameZhHans": "亚居拉",
+    "nameZhHant": "亞居拉",
+    "roleEn": "Coworker of Paul",
+    "roleZhHans": "保罗的同工",
+    "roleZhHant": "保羅的同工",
+    "descriptionEn": "Aquila, with Priscilla, was a coworker of Paul and helped instruct Apollos.",
+    "descriptionZhHans": "亚居拉与百基拉同为保罗的同工，也帮助亚波罗更详细明白神的道。",
+    "descriptionZhHant": "亞居拉與百基拉同為保羅的同工，也幫助亞波羅更詳細明白神的道。",
+    "aliases": {
+      "web": ["Aquila"],
+      "cuvs": ["亚居拉"],
+      "cuvt": ["亞居拉"]
+    },
+    "relatedVerseIds": ["act.18.2", "rom.16.3"]
+  },
+  {
+    "id": "priscilla",
+    "nameEn": "Priscilla",
+    "nameZhHans": "百基拉",
+    "nameZhHant": "百基拉",
+    "roleEn": "Coworker of Paul",
+    "roleZhHans": "保罗的同工",
+    "roleZhHant": "保羅的同工",
+    "descriptionEn": "Priscilla, with Aquila, was a coworker of Paul and helped instruct Apollos.",
+    "descriptionZhHans": "百基拉与亚居拉同为保罗的同工，也帮助亚波罗更详细明白神的道。",
+    "descriptionZhHant": "百基拉與亞居拉同為保羅的同工，也幫助亞波羅更詳細明白神的道。",
+    "aliases": {
+      "web": ["Prisca", "Priscilla"],
+      "cuvs": ["百基拉"],
+      "cuvt": ["百基拉"]
+    },
+    "relatedVerseIds": ["act.18.2", "rom.16.3"]
+  },
+  {
+    "id": "lydia",
+    "nameEn": "Lydia",
+    "nameZhHans": "吕底亚",
+    "nameZhHant": "呂底亞",
+    "roleEn": "Believer in Philippi",
+    "roleZhHans": "腓立比的信徒",
+    "roleZhHant": "腓立比的信徒",
+    "descriptionEn": "Lydia was a worshiper of God in Philippi who received Paul's message and hosted believers in her home.",
+    "descriptionZhHans": "吕底亚是在腓立比敬拜神的人，领受保罗的信息，并接待信徒到她家中。",
+    "descriptionZhHant": "呂底亞是在腓立比敬拜神的人，領受保羅的信息，並接待信徒到她家中。",
+    "aliases": {
+      "web": ["Lydia"],
+      "cuvs": ["吕底亚"],
+      "cuvt": ["呂底亞"]
+    },
+    "relatedVerseIds": ["act.16.14"]
+  },
+  {
+    "id": "phoebe",
+    "nameEn": "Phoebe",
+    "nameZhHans": "非比",
+    "nameZhHant": "非比",
+    "roleEn": "Servant of the church in Cenchreae",
+    "roleZhHans": "坚革哩教会的仆人",
+    "roleZhHant": "堅革哩教會的僕人",
+    "descriptionEn": "Phoebe is commended by Paul in Romans 16 as a servant of the church in Cenchreae.",
+    "descriptionZhHans": "非比在罗马书16章中被保罗推荐，是坚革哩教会的仆人。",
+    "descriptionZhHant": "非比在羅馬書16章中被保羅推薦，是堅革哩教會的僕人。",
+    "aliases": {
+      "web": ["Phoebe"],
+      "cuvs": ["非比"],
+      "cuvt": ["非比"]
+    },
+    "relatedVerseIds": ["rom.16.1"]
+  },
+  {
+    "id": "onesimus",
+    "nameEn": "Onesimus",
+    "nameZhHans": "阿尼西母",
+    "nameZhHant": "阿尼西母",
+    "roleEn": "Believer associated with Philemon",
+    "roleZhHans": "与腓利门书相关的信徒",
+    "roleZhHant": "與腓利門書相關的信徒",
+    "descriptionEn": "Onesimus is central to Paul's letter to Philemon, where Paul appeals for him as a beloved brother.",
+    "descriptionZhHans": "阿尼西母是腓利门书中的核心人物，保罗为他向腓利门求情，称他为亲爱的弟兄。",
+    "descriptionZhHant": "阿尼西母是腓利門書中的核心人物，保羅為他向腓利門求情，稱他為親愛的弟兄。",
+    "aliases": {
+      "web": ["Onesimus"],
+      "cuvs": ["阿尼西母"],
+      "cuvt": ["阿尼西母"]
+    },
+    "relatedVerseIds": ["phm.1.10", "col.4.9"]
+  },
+  {
+    "id": "philemon",
+    "nameEn": "Philemon",
+    "nameZhHans": "腓利门",
+    "nameZhHant": "腓利門",
+    "roleEn": "Recipient of Paul's letter",
+    "roleZhHans": "保罗书信的收信人",
+    "roleZhHant": "保羅書信的收信人",
+    "descriptionEn": "Philemon was a Christian addressed by Paul in the letter concerning Onesimus.",
+    "descriptionZhHans": "腓利门是保罗书信的收信人，与阿尼西母有关。",
+    "descriptionZhHant": "腓利門是保羅書信的收信人，與阿尼西母有關。",
+    "aliases": {
+      "web": ["Philemon"],
+      "cuvs": ["腓利门"],
+      "cuvt": ["腓利門"]
+    },
+    "relatedVerseIds": ["phm.1.1"]
+  },
+  {
+    "id": "james_lord_brother",
+    "nameEn": "James the Lord's brother",
+    "nameZhHans": "主的兄弟雅各",
+    "nameZhHant": "主的兄弟雅各",
+    "roleEn": "Leader in the Jerusalem church",
+    "roleZhHans": "耶路撒冷教会领袖",
+    "roleZhHant": "耶路撒冷教會領袖",
+    "descriptionEn": "James, the Lord's brother, was a leading figure in the Jerusalem church and is associated with the letter of James.",
+    "descriptionZhHans": "主的兄弟雅各是耶路撒冷教会的重要领袖，传统上与雅各书相关。",
+    "descriptionZhHant": "主的兄弟雅各是耶路撒冷教會的重要領袖，傳統上與雅各書相關。",
+    "aliases": {
+      "web": ["James the Lord's brother", "the Lord's brother James"],
+      "cuvs": ["主的兄弟雅各"],
+      "cuvt": ["主的兄弟雅各"]
+    },
+    "relatedVerseIds": ["gal.1.19", "act.15.13"]
+  },
+  {
+    "id": "jude_brother_james",
+    "nameEn": "Jude",
+    "nameZhHans": "犹大",
+    "nameZhHant": "猶大",
+    "roleEn": "Servant of Jesus Christ and brother of James",
+    "roleZhHans": "耶稣基督的仆人，雅各的弟兄",
+    "roleZhHant": "耶穌基督的僕人，雅各的弟兄",
+    "descriptionEn": "Jude identifies himself as a servant of Jesus Christ and brother of James.",
+    "descriptionZhHans": "犹大在犹大书中自称是耶稣基督的仆人、雅各的弟兄。",
+    "descriptionZhHant": "猶大在猶大書中自稱是耶穌基督的僕人、雅各的弟兄。",
+    "aliases": {
+      "web": ["Jude the brother of James"],
+      "cuvs": ["雅各的弟兄犹大"],
+      "cuvt": ["雅各的弟兄猶大"]
+    },
+    "relatedVerseIds": ["jud.1.1"]
+  },
+  {
+    "id": "gamaliel",
+    "nameEn": "Gamaliel",
+    "nameZhHans": "迦玛列",
+    "nameZhHant": "迦瑪列",
+    "roleEn": "Teacher of the law",
+    "roleZhHans": "律法教师",
+    "roleZhHant": "律法教師",
+    "descriptionEn": "Gamaliel was a respected teacher of the law mentioned in Acts.",
+    "descriptionZhHans": "迦玛列是使徒行传中受人尊重的律法教师。",
+    "descriptionZhHant": "迦瑪列是使徒行傳中受人尊重的律法教師。",
+    "aliases": {
+      "web": ["Gamaliel"],
+      "cuvs": ["迦玛列"],
+      "cuvt": ["迦瑪列"]
+    },
+    "relatedVerseIds": ["act.5.34", "act.22.3"]
+  },
+  {
+    "id": "felix",
+    "nameEn": "Felix",
+    "nameZhHans": "腓力斯",
+    "nameZhHant": "腓力斯",
+    "roleEn": "Roman governor",
+    "roleZhHans": "罗马巡抚",
+    "roleZhHant": "羅馬巡撫",
+    "descriptionEn": "Felix was a Roman governor who heard Paul's defense in Acts.",
+    "descriptionZhHans": "腓力斯是罗马巡抚，在使徒行传中听取保罗的申辩。",
+    "descriptionZhHant": "腓力斯是羅馬巡撫，在使徒行傳中聽取保羅的申辯。",
+    "aliases": {
+      "web": ["Felix"],
+      "cuvs": ["腓力斯"],
+      "cuvt": ["腓力斯"]
+    },
+    "relatedVerseIds": ["act.24.24"]
+  },
+  {
+    "id": "festus",
+    "nameEn": "Festus",
+    "nameZhHans": "非斯都",
+    "nameZhHant": "非斯都",
+    "roleEn": "Roman governor",
+    "roleZhHans": "罗马巡抚",
+    "roleZhHant": "羅馬巡撫",
+    "descriptionEn": "Festus was a Roman governor before whom Paul appealed to Caesar.",
+    "descriptionZhHans": "非斯都是罗马巡抚，保罗在他面前上诉于凯撒。",
+    "descriptionZhHant": "非斯都是羅馬巡撫，保羅在他面前上訴於凱撒。",
+    "aliases": {
+      "web": ["Festus"],
+      "cuvs": ["非斯都"],
+      "cuvt": ["非斯都"]
+    },
+    "relatedVerseIds": ["act.25.1", "act.25.11"]
+  },
+  {
+    "id": "agrippa",
+    "nameEn": "Agrippa",
+    "nameZhHans": "亚基帕",
+    "nameZhHant": "亞基帕",
+    "roleEn": "Herodian ruler",
+    "roleZhHans": "希律王朝统治者",
+    "roleZhHant": "希律王朝統治者",
+    "descriptionEn": "Agrippa in Acts 25-26 refers to Herod Agrippa II, before whom Paul gave a defense.",
+    "descriptionZhHans": "使徒行传25-26章中的亚基帕通常指希律亚基帕二世，保罗曾在他面前申辩。",
+    "descriptionZhHant": "使徒行傳25-26章中的亞基帕通常指希律亞基帕二世，保羅曾在他面前申辯。",
+    "aliases": {
+      "web": ["King Agrippa", "Agrippa"],
+      "cuvs": ["亚基帕王", "亚基帕"],
+      "cuvt": ["亞基帕王", "亞基帕"]
+    },
+    "relatedVerseIds": ["act.25.13", "act.26.1"]
+  },
+  {
+    "id": "zacchaeus",
+    "nameEn": "Zacchaeus",
+    "nameZhHans": "撒该",
+    "nameZhHant": "撒該",
+    "roleEn": "Chief tax collector",
+    "roleZhHans": "税吏长",
+    "roleZhHant": "稅吏長",
+    "descriptionEn": "Zacchaeus was a chief tax collector in Jericho who received Jesus joyfully.",
+    "descriptionZhHans": "撒该是耶利哥的税吏长，欢欢喜喜接待耶稣。",
+    "descriptionZhHant": "撒該是耶利哥的稅吏長，歡歡喜喜接待耶穌。",
+    "aliases": {
+      "web": ["Zacchaeus"],
+      "cuvs": ["撒该"],
+      "cuvt": ["撒該"]
+    },
+    "relatedVerseIds": ["luk.19.2"]
+  },
+  {
+    "id": "nathanael",
+    "nameEn": "Nathanael",
+    "nameZhHans": "拿但业",
+    "nameZhHant": "拿但業",
+    "roleEn": "Disciple who met Jesus through Philip",
+    "roleZhHans": "经腓力引见认识耶稣的门徒",
+    "roleZhHant": "經腓力引見認識耶穌的門徒",
+    "descriptionEn": "Nathanael appears in John's Gospel as a disciple brought to Jesus by Philip.",
+    "descriptionZhHans": "拿但业出现在约翰福音中，是经腓力引见来到耶稣面前的门徒。",
+    "descriptionZhHant": "拿但業出現在約翰福音中，是經腓力引見來到耶穌面前的門徒。",
+    "aliases": {
+      "web": ["Nathanael"],
+      "cuvs": ["拿但业"],
+      "cuvt": ["拿但業"]
+    },
+    "relatedVerseIds": ["jhn.1.45", "jhn.21.2"]
+  },
+  {
+    "id": "mary_bethany",
+    "nameEn": "Mary of Bethany",
+    "nameZhHans": "伯大尼的马利亚",
+    "nameZhHant": "伯大尼的馬利亞",
+    "roleEn": "Sister of Martha and Lazarus",
+    "roleZhHans": "马大和拉撒路的姊妹",
+    "roleZhHant": "馬大和拉撒路的姊妹",
+    "descriptionEn": "Mary of Bethany was the sister of Martha and Lazarus. She listened at Jesus' feet and appears in the Lazarus narrative.",
+    "descriptionZhHans": "伯大尼的马利亚是马大和拉撒路的姊妹。她曾坐在耶稣脚前听道，也出现在拉撒路复活的叙事中。",
+    "descriptionZhHant": "伯大尼的馬利亞是馬大和拉撒路的姊妹。她曾坐在耶穌腳前聽道，也出現在拉撒路復活的敘事中。",
+    "aliases": {
+      "web": ["Mary of Bethany"],
+      "cuvs": ["伯大尼的马利亚"],
+      "cuvt": ["伯大尼的馬利亞"]
+    },
+    "verseAliases": {
+      "luk.10.39": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "luk.10.42": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "jhn.11.1": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "jhn.11.2": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]},
+      "jhn.11.32": {"web": ["Mary"], "cuvs": ["马利亚"], "cuvt": ["馬利亞"]}
+    },
+    "relatedVerseIds": ["luk.10.39", "jhn.11.1"]
+  },
+  {
+    "id": "simeon_temple",
+    "nameEn": "Simeon",
+    "nameZhHans": "西面",
+    "nameZhHant": "西面",
+    "roleEn": "Righteous man who blessed the infant Jesus",
+    "roleZhHans": "为婴孩耶稣祝福的义人",
+    "roleZhHant": "為嬰孩耶穌祝福的義人",
+    "descriptionEn": "Simeon was a righteous and devout man in Jerusalem who recognized the infant Jesus as God's salvation.",
+    "descriptionZhHans": "西面是耶路撒冷又公义又虔诚的人，看见婴孩耶稣时称颂神的救恩。",
+    "descriptionZhHant": "西面是耶路撒冷又公義又虔誠的人，看見嬰孩耶穌時稱頌神的救恩。",
+    "aliases": {
+      "web": ["Simeon in the temple"],
+      "cuvs": ["圣殿中的西面"],
+      "cuvt": ["聖殿中的西面"]
+    },
+    "verseAliases": {
+      "luk.2.25": {"web": ["Simeon"], "cuvs": ["西面"], "cuvt": ["西面"]},
+      "luk.2.34": {"web": ["Simeon"], "cuvs": ["西面"], "cuvt": ["西面"]}
+    },
+    "relatedVerseIds": ["luk.2.25", "luk.2.34"]
+  },
+  {
+    "id": "anna_prophetess",
+    "nameEn": "Anna",
+    "nameZhHans": "女先知亚拿",
+    "nameZhHant": "女先知亞拿",
+    "roleEn": "Prophetess who gave thanks for Jesus",
+    "roleZhHans": "为耶稣称谢神的女先知",
+    "roleZhHant": "為耶穌稱謝神的女先知",
+    "descriptionEn": "Anna was a prophetess in the temple who gave thanks to God when she saw the infant Jesus.",
+    "descriptionZhHans": "亚拿是圣殿中的女先知，看见婴孩耶稣后称谢神，并向盼望救赎的人讲论他。",
+    "descriptionZhHant": "亞拿是聖殿中的女先知，看見嬰孩耶穌後稱謝神，並向盼望救贖的人講論他。",
+    "aliases": {
+      "web": ["Anna the prophetess"],
+      "cuvs": ["女先知亚拿"],
+      "cuvt": ["女先知亞拿"]
+    },
+    "verseAliases": {
+      "luk.2.36": {"web": ["Anna"], "cuvs": ["亚拿"], "cuvt": ["亞拿"]}
+    },
+    "relatedVerseIds": ["luk.2.36"]
+  },
+  {
+    "id": "jairus",
+    "nameEn": "Jairus",
+    "nameZhHans": "睚鲁",
+    "nameZhHant": "睚魯",
+    "roleEn": "Synagogue ruler helped by Jesus",
+    "roleZhHans": "蒙耶稣帮助的管会堂者",
+    "roleZhHant": "蒙耶穌幫助的管會堂者",
+    "descriptionEn": "Jairus was a synagogue ruler who pleaded with Jesus for his daughter.",
+    "descriptionZhHans": "睚鲁是管会堂的人，曾为自己的女儿来求耶稣。",
+    "descriptionZhHant": "睚魯是管會堂的人，曾為自己的女兒來求耶穌。",
+    "aliases": {
+      "web": ["Jairus"],
+      "cuvs": ["睚鲁"],
+      "cuvt": ["睚魯"]
+    },
+    "relatedVerseIds": ["mrk.5.22", "luk.8.41"]
+  },
+  {
+    "id": "bartimaeus",
+    "nameEn": "Bartimaeus",
+    "nameZhHans": "巴底买",
+    "nameZhHant": "巴底買",
+    "roleEn": "Blind man healed by Jesus",
+    "roleZhHans": "被耶稣医治的盲人",
+    "roleZhHant": "被耶穌醫治的盲人",
+    "descriptionEn": "Bartimaeus was a blind beggar near Jericho who called on Jesus, received sight, and followed him.",
+    "descriptionZhHans": "巴底买是在耶利哥附近的盲人讨饭者，他呼求耶稣，得见光明后跟随了耶稣。",
+    "descriptionZhHant": "巴底買是在耶利哥附近的盲人討飯者，他呼求耶穌，得見光明後跟隨了耶穌。",
+    "aliases": {
+      "web": ["Bartimaeus"],
+      "cuvs": ["巴底买"],
+      "cuvt": ["巴底買"]
+    },
+    "relatedVerseIds": ["mrk.10.46"]
+  },
+  {
+    "id": "barabbas",
+    "nameEn": "Barabbas",
+    "nameZhHans": "巴拉巴",
+    "nameZhHant": "巴拉巴",
+    "roleEn": "Prisoner released instead of Jesus",
+    "roleZhHans": "被释放替代耶稣受刑的囚犯",
+    "roleZhHant": "被釋放替代耶穌受刑的囚犯",
+    "descriptionEn": "Barabbas was the prisoner released by the crowd's request while Jesus was handed over to be crucified.",
+    "descriptionZhHans": "巴拉巴是众人要求释放的囚犯，而耶稣被交去钉十字架。",
+    "descriptionZhHant": "巴拉巴是眾人要求釋放的囚犯，而耶穌被交去釘十字架。",
+    "aliases": {
+      "web": ["Barabbas"],
+      "cuvs": ["巴拉巴"],
+      "cuvt": ["巴拉巴"]
+    },
+    "relatedVerseIds": ["mat.27.16", "jhn.18.40"]
+  },
+  {
+    "id": "simon_cyrene",
+    "nameEn": "Simon of Cyrene",
+    "nameZhHans": "古利奈人西门",
+    "nameZhHant": "古利奈人西門",
+    "roleEn": "Man compelled to carry Jesus' cross",
+    "roleZhHans": "被勉强背耶稣十字架的人",
+    "roleZhHant": "被勉強背耶穌十字架的人",
+    "descriptionEn": "Simon of Cyrene was compelled by the soldiers to carry Jesus' cross.",
+    "descriptionZhHans": "古利奈人西门被兵丁勉强背耶稣的十字架。",
+    "descriptionZhHant": "古利奈人西門被兵丁勉強背耶穌的十字架。",
+    "aliases": {
+      "web": ["Simon of Cyrene", "Simon from Cyrene"],
+      "cuvs": ["古利奈人西门"],
+      "cuvt": ["古利奈人西門"]
+    },
+    "relatedVerseIds": ["mat.27.32", "mrk.15.21"]
+  },
+  {
+    "id": "cleopas",
+    "nameEn": "Cleopas",
+    "nameZhHans": "革流巴",
+    "nameZhHant": "革流巴",
+    "roleEn": "Disciple on the road to Emmaus",
+    "roleZhHans": "以马忤斯路上的门徒",
+    "roleZhHant": "以馬忤斯路上的門徒",
+    "descriptionEn": "Cleopas was one of the two disciples who met the risen Jesus on the road to Emmaus.",
+    "descriptionZhHans": "革流巴是以马忤斯路上遇见复活耶稣的两个门徒之一。",
+    "descriptionZhHant": "革流巴是以馬忤斯路上遇見復活耶穌的兩個門徒之一。",
+    "aliases": {
+      "web": ["Cleopas"],
+      "cuvs": ["革流巴"],
+      "cuvt": ["革流巴"]
+    },
+    "relatedVerseIds": ["luk.24.18"]
+  },
+  {
+    "id": "joanna",
+    "nameEn": "Joanna",
+    "nameZhHans": "约亚拿",
+    "nameZhHant": "約亞拿",
+    "roleEn": "Follower and resurrection witness",
+    "roleZhHans": "耶稣的跟随者，复活见证人",
+    "roleZhHant": "耶穌的跟隨者，復活見證人",
+    "descriptionEn": "Joanna followed Jesus, helped support his ministry, and was among the women who reported the empty tomb.",
+    "descriptionZhHans": "约亚拿跟随耶稣并用自己的财物供给他的事工，也在妇女中见证空坟墓。",
+    "descriptionZhHant": "約亞拿跟隨耶穌並用自己的財物供給他的事工，也在婦女中見證空墳墓。",
+    "aliases": {
+      "web": ["Joanna"],
+      "cuvs": ["约亚拿"],
+      "cuvt": ["約亞拿"]
+    },
+    "relatedVerseIds": ["luk.8.3", "luk.24.10"]
+  },
+  {
+    "id": "susanna",
+    "nameEn": "Susanna",
+    "nameZhHans": "苏撒拿",
+    "nameZhHant": "蘇撒拿",
+    "roleEn": "Follower who supported Jesus' ministry",
+    "roleZhHans": "供给耶稣事工的跟随者",
+    "roleZhHant": "供給耶穌事工的跟隨者",
+    "descriptionEn": "Susanna is named in Luke among women who followed Jesus and supported his ministry.",
+    "descriptionZhHans": "苏撒拿在路加福音中被列为跟随耶稣并供给他事工的妇女之一。",
+    "descriptionZhHant": "蘇撒拿在路加福音中被列為跟隨耶穌並供給他事工的婦女之一。",
+    "aliases": {
+      "web": ["Susanna"],
+      "cuvs": ["苏撒拿"],
+      "cuvt": ["蘇撒拿"]
+    },
+    "relatedVerseIds": ["luk.8.3"]
+  },
+  {
+    "id": "herodias",
+    "nameEn": "Herodias",
+    "nameZhHans": "希罗底",
+    "nameZhHant": "希羅底",
+    "roleEn": "Herodian woman involved in John the Baptist's death",
+    "roleZhHans": "与施洗约翰之死有关的希律家族女子",
+    "roleZhHant": "與施洗約翰之死有關的希律家族女子",
+    "descriptionEn": "Herodias was connected with Herod Antipas and the execution of John the Baptist.",
+    "descriptionZhHans": "希罗底与希律安提帕和施洗约翰被杀的事件有关。",
+    "descriptionZhHant": "希羅底與希律安提帕和施洗約翰被殺的事件有關。",
+    "aliases": {
+      "web": ["Herodias"],
+      "cuvs": ["希罗底"],
+      "cuvt": ["希羅底"]
+    },
+    "relatedVerseIds": ["mat.14.3", "mrk.6.17"]
+  },
+  {
+    "id": "malchus",
+    "nameEn": "Malchus",
+    "nameZhHans": "马勒古",
+    "nameZhHant": "馬勒古",
+    "roleEn": "High priest's servant",
+    "roleZhHans": "大祭司的仆人",
+    "roleZhHant": "大祭司的僕人",
+    "descriptionEn": "Malchus was the high priest's servant whose ear was cut off during Jesus' arrest.",
+    "descriptionZhHans": "马勒古是大祭司的仆人，耶稣被捕时他的耳朵被削掉。",
+    "descriptionZhHant": "馬勒古是大祭司的僕人，耶穌被捕時他的耳朵被削掉。",
+    "aliases": {
+      "web": ["Malchus"],
+      "cuvs": ["马勒古"],
+      "cuvt": ["馬勒古"]
+    },
+    "relatedVerseIds": ["jhn.18.10"]
+  },
+  {
+    "id": "theophilus",
+    "nameEn": "Theophilus",
+    "nameZhHans": "提阿非罗",
+    "nameZhHant": "提阿非羅",
+    "roleEn": "Recipient addressed by Luke",
+    "roleZhHans": "路加著作的受书人",
+    "roleZhHant": "路加著作的受書人",
+    "descriptionEn": "Theophilus is the person addressed at the beginning of Luke and Acts.",
+    "descriptionZhHans": "提阿非罗是路加福音和使徒行传开头所称呼的受书人。",
+    "descriptionZhHant": "提阿非羅是路加福音和使徒行傳開頭所稱呼的受書人。",
+    "aliases": {
+      "web": ["Theophilus"],
+      "cuvs": ["提阿非罗"],
+      "cuvt": ["提阿非羅"]
+    },
+    "relatedVerseIds": ["luk.1.3", "act.1.1"]
+  },
+  {
+    "id": "tabitha",
+    "nameEn": "Tabitha",
+    "nameZhHans": "大比大",
+    "nameZhHant": "大比大",
+    "roleEn": "Disciple raised through Peter's prayer",
+    "roleZhHans": "经彼得祷告复活的女门徒",
+    "roleZhHant": "經彼得禱告復活的女門徒",
+    "descriptionEn": "Tabitha, also called Dorcas, was a disciple in Joppa known for good works and acts of mercy.",
+    "descriptionZhHans": "大比大又名多加，是约帕的女门徒，广行善事，多施周济。",
+    "descriptionZhHant": "大比大又名多加，是約帕的女門徒，廣行善事，多施賙濟。",
+    "aliases": {
+      "web": ["Tabitha", "Dorcas"],
+      "cuvs": ["大比大", "多加"],
+      "cuvt": ["大比大", "多加"]
+    },
+    "relatedVerseIds": ["act.9.36", "act.9.40"]
+  },
+  {
+    "id": "ananias_damascus",
+    "nameEn": "Ananias of Damascus",
+    "nameZhHans": "大马士革的亚拿尼亚",
+    "nameZhHant": "大馬士革的亞拿尼亞",
+    "roleEn": "Disciple sent to Saul",
+    "roleZhHans": "被主差往扫罗那里的门徒",
+    "roleZhHant": "被主差往掃羅那裏的門徒",
+    "descriptionEn": "Ananias of Damascus was a disciple whom the Lord sent to Saul after Saul's vision on the road.",
+    "descriptionZhHans": "大马士革的亚拿尼亚是主差去见扫罗的门徒，按手使扫罗能看见。",
+    "descriptionZhHant": "大馬士革的亞拿尼亞是主差去見掃羅的門徒，按手使掃羅能看見。",
+    "aliases": {
+      "web": ["Ananias of Damascus"],
+      "cuvs": ["大马士革的亚拿尼亚"],
+      "cuvt": ["大馬士革的亞拿尼亞"]
+    },
+    "verseAliases": {
+      "act.9.10": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]},
+      "act.9.12": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]},
+      "act.9.17": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]},
+      "act.22.12": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]}
+    },
+    "relatedVerseIds": ["act.9.10", "act.22.12"]
+  },
+  {
+    "id": "ananias_sapphira",
+    "nameEn": "Ananias",
+    "nameZhHans": "亚拿尼亚",
+    "nameZhHant": "亞拿尼亞",
+    "roleEn": "Husband of Sapphira in Acts 5",
+    "roleZhHans": "使徒行传5章中撒非喇的丈夫",
+    "roleZhHant": "使徒行傳5章中撒非喇的丈夫",
+    "descriptionEn": "Ananias, with Sapphira, lied about the proceeds of a sale in Acts 5.",
+    "descriptionZhHans": "亚拿尼亚与撒非喇在使徒行传5章中隐瞒卖地价银并说谎。",
+    "descriptionZhHant": "亞拿尼亞與撒非喇在使徒行傳5章中隱瞞賣地價銀並說謊。",
+    "aliases": {
+      "web": ["Ananias husband of Sapphira"],
+      "cuvs": ["撒非喇的丈夫亚拿尼亚"],
+      "cuvt": ["撒非喇的丈夫亞拿尼亞"]
+    },
+    "verseAliases": {
+      "act.5.1": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]},
+      "act.5.3": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]},
+      "act.5.5": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]}
+    },
+    "relatedVerseIds": ["act.5.1"]
+  },
+  {
+    "id": "sapphira",
+    "nameEn": "Sapphira",
+    "nameZhHans": "撒非喇",
+    "nameZhHant": "撒非喇",
+    "roleEn": "Wife of Ananias in Acts 5",
+    "roleZhHans": "使徒行传5章中亚拿尼亚的妻子",
+    "roleZhHant": "使徒行傳5章中亞拿尼亞的妻子",
+    "descriptionEn": "Sapphira, with her husband Ananias, lied about the proceeds of a sale in Acts 5.",
+    "descriptionZhHans": "撒非喇与丈夫亚拿尼亚在使徒行传5章中隐瞒卖地价银并说谎。",
+    "descriptionZhHant": "撒非喇與丈夫亞拿尼亞在使徒行傳5章中隱瞞賣地價銀並說謊。",
+    "aliases": {
+      "web": ["Sapphira"],
+      "cuvs": ["撒非喇"],
+      "cuvt": ["撒非喇"]
+    },
+    "relatedVerseIds": ["act.5.1"]
+  },
+  {
+    "id": "ananias_high_priest",
+    "nameEn": "Ananias the high priest",
+    "nameZhHans": "大祭司亚拿尼亚",
+    "nameZhHant": "大祭司亞拿尼亞",
+    "roleEn": "High priest in Paul's trial",
+    "roleZhHans": "保罗受审时期的大祭司",
+    "roleZhHant": "保羅受審時期的大祭司",
+    "descriptionEn": "Ananias the high priest appears in Acts during Paul's defense before Jewish leaders.",
+    "descriptionZhHans": "大祭司亚拿尼亚出现在使徒行传中，与保罗在犹太领袖前的申辩有关。",
+    "descriptionZhHant": "大祭司亞拿尼亞出現在使徒行傳中，與保羅在猶太領袖前的申辯有關。",
+    "aliases": {
+      "web": ["Ananias the high priest"],
+      "cuvs": ["大祭司亚拿尼亚"],
+      "cuvt": ["大祭司亞拿尼亞"]
+    },
+    "verseAliases": {
+      "act.23.2": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]},
+      "act.24.1": {"web": ["Ananias"], "cuvs": ["亚拿尼亚"], "cuvt": ["亞拿尼亞"]}
+    },
+    "relatedVerseIds": ["act.23.2", "act.24.1"]
+  },
+  {
+    "id": "simon_magus",
+    "nameEn": "Simon the magician",
+    "nameZhHans": "行邪术的西门",
+    "nameZhHant": "行邪術的西門",
+    "roleEn": "Magician in Samaria",
+    "roleZhHans": "撒马利亚行邪术的人",
+    "roleZhHant": "撒馬利亞行邪術的人",
+    "descriptionEn": "Simon was a magician in Samaria who believed Philip's message but later tried to buy spiritual authority.",
+    "descriptionZhHans": "西门是在撒马利亚行邪术的人，听见腓利传道后信了，后来试图用钱买属灵权柄。",
+    "descriptionZhHant": "西門是在撒馬利亞行邪術的人，聽見腓利傳道後信了，後來試圖用錢買屬靈權柄。",
+    "aliases": {
+      "web": ["Simon the magician", "Simon Magus"],
+      "cuvs": ["行邪术的西门"],
+      "cuvt": ["行邪術的西門"]
+    },
+    "verseAliases": {
+      "act.8.9": {"web": ["Simon"], "cuvs": ["西门"], "cuvt": ["西門"]},
+      "act.8.13": {"web": ["Simon"], "cuvs": ["西门"], "cuvt": ["西門"]},
+      "act.8.18": {"web": ["Simon"], "cuvs": ["西门"], "cuvt": ["西門"]},
+      "act.8.20": {"web": ["Simon"], "cuvs": ["西门"], "cuvt": ["西門"]}
+    },
+    "relatedVerseIds": ["act.8.9", "act.8.18"]
+  },
+  {
+    "id": "sergius_paulus",
+    "nameEn": "Sergius Paulus",
+    "nameZhHans": "士求保罗",
+    "nameZhHant": "士求保羅",
+    "roleEn": "Proconsul of Cyprus",
+    "roleZhHans": "塞浦路斯方伯",
+    "roleZhHant": "塞浦路斯方伯",
+    "descriptionEn": "Sergius Paulus was the proconsul in Cyprus who wanted to hear the word of God from Barnabas and Saul.",
+    "descriptionZhHans": "士求保罗是塞浦路斯的方伯，曾请巴拿巴和扫罗来听神的道。",
+    "descriptionZhHant": "士求保羅是塞浦路斯的方伯，曾請巴拿巴和掃羅來聽上帝的道。",
+    "aliases": {
+      "web": ["Sergius Paulus"],
+      "cuvs": ["士求·保罗", "士求保罗"],
+      "cuvt": ["士求‧保羅", "士求保羅"]
+    },
+    "relatedVerseIds": ["act.13.7"]
+  },
+  {
+    "id": "elymas",
+    "nameEn": "Elymas",
+    "nameZhHans": "以吕马",
+    "nameZhHant": "以呂馬",
+    "roleEn": "Sorcerer who opposed Paul",
+    "roleZhHans": "敌挡保罗的行法术者",
+    "roleZhHant": "敵擋保羅的行法術者",
+    "descriptionEn": "Elymas, also called Bar-Jesus, opposed Barnabas and Saul before Sergius Paulus.",
+    "descriptionZhHans": "以吕马又称巴耶稣，在士求保罗面前敌挡巴拿巴和扫罗。",
+    "descriptionZhHant": "以呂馬又稱巴耶穌，在士求保羅面前敵擋巴拿巴和掃羅。",
+    "aliases": {
+      "web": ["Elymas", "Bar-Jesus"],
+      "cuvs": ["以吕马", "巴耶稣"],
+      "cuvt": ["以呂馬", "巴耶穌"]
+    },
+    "relatedVerseIds": ["act.13.6", "act.13.8"]
+  },
+  {
+    "id": "tychicus",
+    "nameEn": "Tychicus",
+    "nameZhHans": "推基古",
+    "nameZhHant": "推基古",
+    "roleEn": "Coworker and messenger of Paul",
+    "roleZhHans": "保罗的同工和送信人",
+    "roleZhHant": "保羅的同工和送信人",
+    "descriptionEn": "Tychicus was a beloved brother and faithful servant who carried news and letters for Paul.",
+    "descriptionZhHans": "推基古是保罗所称亲爱、忠心事奉主的弟兄，常为保罗传递消息和书信。",
+    "descriptionZhHant": "推基古是保羅所稱親愛、忠心事奉主的弟兄，常為保羅傳遞消息和書信。",
+    "aliases": {
+      "web": ["Tychicus"],
+      "cuvs": ["推基古"],
+      "cuvt": ["推基古"]
+    },
+    "relatedVerseIds": ["eph.6.21", "col.4.7"]
+  },
+  {
+    "id": "epaphroditus",
+    "nameEn": "Epaphroditus",
+    "nameZhHans": "以巴弗提",
+    "nameZhHant": "以巴弗提",
+    "roleEn": "Messenger from the Philippian church",
+    "roleZhHans": "腓立比教会差遣的同工",
+    "roleZhHant": "腓立比教會差遣的同工",
+    "descriptionEn": "Epaphroditus was a coworker of Paul and messenger from the Philippian church.",
+    "descriptionZhHans": "以巴弗提是保罗的同工，也是腓立比教会差来供给保罗需用的人。",
+    "descriptionZhHant": "以巴弗提是保羅的同工，也是腓立比教會差來供給保羅需用的人。",
+    "aliases": {
+      "web": ["Epaphroditus"],
+      "cuvs": ["以巴弗提"],
+      "cuvt": ["以巴弗提"]
+    },
+    "relatedVerseIds": ["php.2.25", "php.4.18"]
+  },
+  {
+    "id": "epaphras",
+    "nameEn": "Epaphras",
+    "nameZhHans": "以巴弗",
+    "nameZhHant": "以巴弗",
+    "roleEn": "Servant of Christ from Colossae",
+    "roleZhHans": "歌罗西教会相关的基督仆人",
+    "roleZhHant": "歌羅西教會相關的基督僕人",
+    "descriptionEn": "Epaphras was a servant of Christ associated with Colossae and commended for prayerful labor.",
+    "descriptionZhHans": "以巴弗是与歌罗西教会有关的基督仆人，保罗称赞他常为信徒竭力祷告。",
+    "descriptionZhHant": "以巴弗是與歌羅西教會有關的基督僕人，保羅稱讚他常為信徒竭力禱告。",
+    "aliases": {
+      "web": ["Epaphras"],
+      "cuvs": ["以巴弗"],
+      "cuvt": ["以巴弗"]
+    },
+    "relatedVerseIds": ["col.1.7", "col.4.12"]
+  },
+  {
+    "id": "trophimus",
+    "nameEn": "Trophimus",
+    "nameZhHans": "特罗非摩",
+    "nameZhHant": "特羅非摩",
+    "roleEn": "Coworker of Paul from Asia",
+    "roleZhHans": "来自亚细亚的保罗同工",
+    "roleZhHant": "來自亞細亞的保羅同工",
+    "descriptionEn": "Trophimus was a coworker of Paul from Asia and is mentioned in Acts and 2 Timothy.",
+    "descriptionZhHans": "特罗非摩是来自亚细亚的保罗同工，在使徒行传和提摩太后书中被提及。",
+    "descriptionZhHant": "特羅非摩是來自亞細亞的保羅同工，在使徒行傳和提摩太後書中被提及。",
+    "aliases": {
+      "web": ["Trophimus"],
+      "cuvs": ["特罗非摩"],
+      "cuvt": ["特羅非摩"]
+    },
+    "relatedVerseIds": ["act.20.4", "2ti.4.20"]
+  },
+  {
+    "id": "aristarchus",
+    "nameEn": "Aristarchus",
+    "nameZhHans": "亚里达古",
+    "nameZhHant": "亞里達古",
+    "roleEn": "Traveling companion of Paul",
+    "roleZhHans": "与保罗同行的同工",
+    "roleZhHant": "與保羅同行的同工",
+    "descriptionEn": "Aristarchus traveled with Paul and is named among his coworkers.",
+    "descriptionZhHans": "亚里达古曾与保罗同行，也在保罗同工名单中被提及。",
+    "descriptionZhHant": "亞里達古曾與保羅同行，也在保羅同工名單中被提及。",
+    "aliases": {
+      "web": ["Aristarchus"],
+      "cuvs": ["亚里达古"],
+      "cuvt": ["亞里達古"]
+    },
+    "relatedVerseIds": ["act.19.29", "col.4.10"]
+  },
+  {
+    "id": "gaius",
+    "nameEn": "Gaius",
+    "nameZhHans": "该犹",
+    "nameZhHant": "該猶",
+    "roleEn": "Christian associated with Paul and John",
+    "roleZhHans": "与保罗和约翰书信相关的信徒",
+    "roleZhHant": "與保羅和約翰書信相關的信徒",
+    "descriptionEn": "Gaius is the name of several New Testament believers; this first profile groups the major references for local reading.",
+    "descriptionZhHans": "该犹在新约中可能指几位信徒。第一阶段先将主要经文归为一个本地人物资料。",
+    "descriptionZhHant": "該猶在新約中可能指幾位信徒。第一階段先將主要經文歸為一個本地人物資料。",
+    "aliases": {
+      "web": ["Gaius"],
+      "cuvs": ["该犹"],
+      "cuvt": ["該猶"]
+    },
+    "relatedVerseIds": ["act.19.29", "3jn.1.1"]
+  },
+  {
+    "id": "erastus",
+    "nameEn": "Erastus",
+    "nameZhHans": "以拉都",
+    "nameZhHant": "以拉都",
+    "roleEn": "Coworker associated with Paul",
+    "roleZhHans": "与保罗相关的同工",
+    "roleZhHant": "與保羅相關的同工",
+    "descriptionEn": "Erastus is mentioned among Paul's coworkers and greetings.",
+    "descriptionZhHans": "以拉都在保罗的同工和问安名单中出现。",
+    "descriptionZhHant": "以拉都在保羅的同工和問安名單中出現。",
+    "aliases": {
+      "web": ["Erastus"],
+      "cuvs": ["以拉都"],
+      "cuvt": ["以拉都"]
+    },
+    "relatedVerseIds": ["act.19.22", "rom.16.23"]
+  },
+  {
+    "id": "sosthenes",
+    "nameEn": "Sosthenes",
+    "nameZhHans": "所提尼",
+    "nameZhHant": "所提尼",
+    "roleEn": "Synagogue ruler and brother in 1 Corinthians",
+    "roleZhHans": "会堂管理者，也是哥林多前书中的弟兄",
+    "roleZhHant": "會堂管理者，也是哥林多前書中的弟兄",
+    "descriptionEn": "Sosthenes appears in Acts as a synagogue ruler and in 1 Corinthians as a brother associated with Paul.",
+    "descriptionZhHans": "所提尼在使徒行传中是管会堂的人，也在哥林多前书开头与保罗一同被提及。",
+    "descriptionZhHant": "所提尼在使徒行傳中是管會堂的人，也在哥林多前書開頭與保羅一同被提及。",
+    "aliases": {
+      "web": ["Sosthenes"],
+      "cuvs": ["所提尼"],
+      "cuvt": ["所提尼"]
+    },
+    "relatedVerseIds": ["act.18.17", "1co.1.1"]
+  },
+  {
+    "id": "crispus",
+    "nameEn": "Crispus",
+    "nameZhHans": "基利司布",
+    "nameZhHant": "基利司布",
+    "roleEn": "Synagogue ruler in Corinth",
+    "roleZhHans": "哥林多管会堂的人",
+    "roleZhHant": "哥林多管會堂的人",
+    "descriptionEn": "Crispus was a ruler of the synagogue in Corinth who believed in the Lord with his household.",
+    "descriptionZhHans": "基利司布是哥林多管会堂的人，他和全家都信了主。",
+    "descriptionZhHant": "基利司布是哥林多管會堂的人，他和全家都信了主。",
+    "aliases": {
+      "web": ["Crispus"],
+      "cuvs": ["基利司布"],
+      "cuvt": ["基利司布"]
+    },
+    "relatedVerseIds": ["act.18.8", "1co.1.14"]
+  },
+  {
+    "id": "lois",
+    "nameEn": "Lois",
+    "nameZhHans": "罗以",
+    "nameZhHant": "羅以",
+    "roleEn": "Grandmother of Timothy",
+    "roleZhHans": "提摩太的外祖母",
+    "roleZhHant": "提摩太的外祖母",
+    "descriptionEn": "Lois was Timothy's grandmother, remembered by Paul for sincere faith.",
+    "descriptionZhHans": "罗以是提摩太的外祖母，保罗提到她心里无伪的信。",
+    "descriptionZhHant": "羅以是提摩太的外祖母，保羅提到她心裏無偽的信。",
+    "aliases": {
+      "web": ["Lois"],
+      "cuvs": ["罗以"],
+      "cuvt": ["羅以"]
+    },
+    "relatedVerseIds": ["2ti.1.5"]
+  },
+  {
+    "id": "eunice",
+    "nameEn": "Eunice",
+    "nameZhHans": "友妮基",
+    "nameZhHant": "友妮基",
+    "roleEn": "Mother of Timothy",
+    "roleZhHans": "提摩太的母亲",
+    "roleZhHant": "提摩太的母親",
+    "descriptionEn": "Eunice was Timothy's mother, remembered by Paul for sincere faith.",
+    "descriptionZhHans": "友妮基是提摩太的母亲，保罗提到她心里无伪的信。",
+    "descriptionZhHant": "友妮基是提摩太的母親，保羅提到她心裏無偽的信。",
+    "aliases": {
+      "web": ["Eunice"],
+      "cuvs": ["友妮基"],
+      "cuvt": ["友妮基"]
+    },
+    "relatedVerseIds": ["2ti.1.5"]
+  },
+  {
+    "id": "onesiphorus",
+    "nameEn": "Onesiphorus",
+    "nameZhHans": "阿尼色弗",
+    "nameZhHant": "阿尼色弗",
+    "roleEn": "Supporter of Paul",
+    "roleZhHans": "支持保罗的信徒",
+    "roleZhHant": "支持保羅的信徒",
+    "descriptionEn": "Onesiphorus refreshed Paul and was not ashamed of Paul's chains.",
+    "descriptionZhHans": "阿尼色弗曾屡次使保罗畅快，也不以保罗的锁链为耻。",
+    "descriptionZhHant": "阿尼色弗曾屢次使保羅暢快，也不以保羅的鎖鍊為恥。",
+    "aliases": {
+      "web": ["Onesiphorus"],
+      "cuvs": ["阿尼色弗"],
+      "cuvt": ["阿尼色弗"]
+    },
+    "relatedVerseIds": ["2ti.1.16", "2ti.4.19"]
+  },
+  {
+    "id": "demas",
+    "nameEn": "Demas",
+    "nameZhHans": "底马",
+    "nameZhHant": "底馬",
+    "roleEn": "Coworker who later left Paul",
+    "roleZhHans": "后来离开保罗的同工",
+    "roleZhHant": "後來離開保羅的同工",
+    "descriptionEn": "Demas is first named among Paul's coworkers but later is described as having left Paul.",
+    "descriptionZhHans": "底马起初列在保罗同工名单中，后来保罗说他贪爱现今的世界而离开。",
+    "descriptionZhHant": "底馬起初列在保羅同工名單中，後來保羅說他貪愛現今的世界而離開。",
+    "aliases": {
+      "web": ["Demas"],
+      "cuvs": ["底马"],
+      "cuvt": ["底馬"]
+    },
+    "relatedVerseIds": ["col.4.14", "2ti.4.10"]
+  },
+  {
+    "id": "bernice",
+    "nameEn": "Bernice",
+    "nameZhHans": "百尼基",
+    "nameZhHant": "百尼基",
+    "roleEn": "Herodian woman present at Paul's defense",
+    "roleZhHans": "保罗申辩时在场的希律家族女子",
+    "roleZhHant": "保羅申辯時在場的希律家族女子",
+    "descriptionEn": "Bernice came with King Agrippa and was present when Paul gave his defense in Acts.",
+    "descriptionZhHans": "百尼基与亚基帕王同来，并在使徒行传中保罗申辩时在场。",
+    "descriptionZhHant": "百尼基與亞基帕王同來，並在使徒行傳中保羅申辯時在場。",
+    "aliases": {
+      "web": ["Bernice"],
+      "cuvs": ["百尼基"],
+      "cuvt": ["百尼基"]
+    },
+    "relatedVerseIds": ["act.25.13", "act.25.23"]
+  },
+  {
+    "id": "drusilla",
+    "nameEn": "Drusilla",
+    "nameZhHans": "土西拉",
+    "nameZhHant": "土西拉",
+    "roleEn": "Wife of Felix",
+    "roleZhHans": "腓力斯的妻子",
+    "roleZhHant": "腓力斯的妻子",
+    "descriptionEn": "Drusilla was Felix's wife and heard Paul speak about faith in Christ Jesus.",
+    "descriptionZhHans": "土西拉是腓力斯的妻子，曾与腓力斯一同听保罗讲论信基督耶稣的道。",
+    "descriptionZhHant": "土西拉是腓力斯的妻子，曾與腓力斯一同聽保羅講論信基督耶穌的道。",
+    "aliases": {
+      "web": ["Drusilla"],
+      "cuvs": ["土西拉"],
+      "cuvt": ["土西拉"]
+    },
+    "relatedVerseIds": ["act.24.24"]
+  }
+]

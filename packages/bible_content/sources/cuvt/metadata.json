@@ -1,0 +1,30 @@
+{
+  "versionId": "cuvt",
+  "sourceId": "cmn-cu89t",
+  "name": "Chinese Union Version, Traditional",
+  "language": "zh-Hant",
+  "languageName": "Chinese",
+  "bookSet": "66-book protocanon",
+  "format": "USFM",
+  "sourceProvider": "eBible.org",
+  "sourceUrl": "https://ebible.org/bible/details.php?all=1&id=cmn-cu89t",
+  "downloadUrl": "https://ebible.org/Scriptures/cmn-cu89t_usfm.zip",
+  "copyrightUrl": "https://eBible.org/cmn-cu89t/copyright.htm",
+  "edition": "New Punctuation Chinese Union Version, traditional script",
+  "sourceFilesDate": "2025-12-12",
+  "archivedAt": "2026-05-11",
+  "rawArchive": {
+    "path": "raw/cmn-cu89t_usfm.zip",
+    "sha256": "4757c8e7abbc78c8bc37e888b0e1faedc8d3f52f89a64be14a9b73445a27b268",
+    "fileCount": 70
+  },
+  "license": {
+    "status": "Public Domain",
+    "localHtml": "licenses/copyright.html"
+  },
+  "normalization": {
+    "books": "normalized/books.json",
+    "chapters": "normalized/chapters.jsonl",
+    "verses": "normalized/verses.jsonl"
+  }
+}

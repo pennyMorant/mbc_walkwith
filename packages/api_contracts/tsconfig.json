@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@mbc/shared-types": ["../shared_types/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}
