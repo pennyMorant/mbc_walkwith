@@ -97,7 +97,7 @@ These are the minimum gates before calling the backend production-ready.
 - `bun run db:migrate` succeeds
 - `bun run check` succeeds
 - API runs as the only backend service process
-- `/v1/health` reports expected mode
+- `/v1/health` reports the expected mode and `databaseReady=true`
 
 ### Gate B: Secrets and Identity
 

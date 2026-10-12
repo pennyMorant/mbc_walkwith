@@ -36,6 +36,7 @@ describe("backend core and auth routes", () => {
     expect(health.ok).toBe(true);
     expect(health.data.mode).toBe("mock");
     expect(health.data.databaseConfigured).toBe(false);
+    expect(health.data.databaseReady).toBe(true);
     await harness.close();
   });
 

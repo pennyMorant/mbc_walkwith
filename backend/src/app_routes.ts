@@ -68,6 +68,7 @@ type AppRouteDependencies = {
   discipleshipService: Parameters<typeof registerDiscipleshipRoutes>[1];
   givingService: Parameters<typeof registerMemberGivingRoutes>[1];
   groupService: Parameters<typeof registerGroupRoutes>[1];
+  healthDatabaseProbe: Parameters<typeof registerHealthRoutes>[2];
   jobService: Parameters<typeof registerAdminJobRoutes>[1];
   lifePostImageStorageService: Parameters<typeof registerLifeRoutes>[2];
   lifePostService: Parameters<typeof registerLifeRoutes>[1];
@@ -101,7 +102,7 @@ export async function registerAppRoutes(
   const adminPermission = (permission: AdminPermission) =>
     requirePermission(dependencies.adminAuthService, permission);
 
-  await registerHealthRoutes(app, config);
+  await registerHealthRoutes(app, config, dependencies.healthDatabaseProbe);
   await registerPublicLandingRoutes(app, dependencies.settingsService);
   await registerSermonRoutes(
     app,

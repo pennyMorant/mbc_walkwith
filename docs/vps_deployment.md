@@ -104,10 +104,16 @@ bash tools/scripts/vps/mbc_walkwith.sh --interactive
 Install:
 
 ```sh
-bash tools/scripts/vps/mbc_walkwith.sh install \
-  --repo-url <git-url> \
-  --git-ref main
+bash tools/scripts/vps/mbc_walkwith.sh install --git-ref main
 ```
+
+The installer pulls the public repository by default:
+
+```text
+https://github.com/pennyMorant/mbc_walkwith.git
+```
+
+Use `--repo-url` only when deploying a maintained fork or mirror.
 
 Deploy:
 
@@ -247,16 +253,16 @@ backend/.env.production.example
 `deploy` performs these steps:
 
 1. refresh `source/`
-2. create a timestamped release directory
+2. create an isolated pending release directory
 3. extract source into that release
 4. run `bun install --frozen-lockfile`
 5. optionally run `bun run check`
 6. run `bun run build` to produce the admin and public web bundles
 7. run database migrations
-8. switch the `current` symlink
+8. finalize the prepared release and switch the `current` symlink
 9. restart API
-10. run a local `/v1/health` check
-11. clean old releases
+10. run a local `/v1/health` check backed by a real PostgreSQL query
+11. mark the release complete and clean old releases
 
 If the final health check fails and a previous release exists, the script
 attempts to repoint `current` back to the previous release and restart
@@ -274,16 +280,16 @@ Before build and migrate, deploy also validates key production settings in
 It performs these steps:
 
 1. validate `/etc/mbc_walkwith/backend.env`
-2. create a timestamped release directory
+2. extract into an isolated pending release directory
 3. extract the uploaded local-built tarball
-4. validate `release-manifest.json` requires `target=linux-x64` and
-   `runtime=bun`
+4. validate `release-manifest.json` requires `target=linux-x64`, `runtime=bun`,
+   and matching API/admin build-time values
 5. run Drizzle Kit migrations from `backend/drizzle.config.ts`
-6. switch the `current` symlink
+6. finalize the prepared release and switch the `current` symlink
 7. rewrite the API systemd service so it can run `backend_dist/main.js`
 8. restart API
-9. run a local `/v1/health` check
-10. clean old releases
+9. run a local `/v1/health` check backed by PostgreSQL
+10. mark the release complete and clean old releases
 
 This path does not run `bun install`, `bun run check`, or `bun run build` on
 the VPS. The uploaded archive carries a minimal Drizzle Kit migration runtime
@@ -304,6 +310,11 @@ The `ssl` command:
 - reloads nginx
 - supports Certbot install methods: `auto`, `snap`, `venv`, `apt`, or `none`
 
+Vite embeds the API URL and admin base path at build time. Before running
+`ssl` against an existing release, deploy source or a prebuilt package using
+the final HTTPS origins. The command refuses to configure mismatched assets
+instead of leaving the browser pointed at an old or localhost API URL.
+
 Current assumption:
 
 - one admin origin
@@ -320,6 +331,12 @@ Origins are the primary external configuration inputs:
 The generated `backend.env` defaults to:
 
 - `USE_MOCK_DATA=false`
+- `MEDIA_STORAGE_DRIVER=local`
+- `MEDIA_UPLOAD_DIR=/var/lib/mbc_walkwith/uploads`
+
+The local upload directory belongs to the API service user and lives outside
+timestamped releases, so deployments and release cleanup cannot remove sermon
+audio or images. Production may switch to a private R2/S3 bucket.
 
 The VPS backend has no sermon transcription, outline generation, or Scripture
 extraction provider configuration. Run those steps locally and upload the

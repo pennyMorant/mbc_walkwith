@@ -31,7 +31,8 @@ db_user="mbc_walkwith"
 service_user="${MBC_WALKWITH_SERVICE_USER:-mbcwalkwith}"
 service_home="${MBC_WALKWITH_SERVICE_HOME:-}"
 service_cache_dir="${MBC_WALKWITH_SERVICE_CACHE_DIR:-}"
-repo_url="${MBC_WALKWITH_REPO_URL:-}"
+public_repo_url="https://github.com/pennyMorant/mbc_walkwith.git"
+repo_url="${MBC_WALKWITH_REPO_URL:-$public_repo_url}"
 git_ref="${MBC_WALKWITH_GIT_REF:-main}"
 admin_origin=""
 api_origin=""
@@ -46,6 +47,14 @@ skip_healthcheck="false"
 keep_releases="5"
 remove_database="false"
 remove_ssl="false"
+app_dir_from_cli="false"
+api_port_from_cli="false"
+repo_url_from_cli="false"
+git_ref_from_cli="false"
+admin_origin_from_cli="false"
+api_origin_from_cli="false"
+public_origin_from_cli="false"
+service_user_from_cli="false"
 declare -a positional_args=()
 
 usage() {
@@ -73,7 +82,7 @@ Commands:
   uninstall               Remove services, config, and release directories.
 
 Common options:
-  --repo-url URL          Git repository URL.
+  --repo-url URL          Git repository URL. Defaults to the public MBC WalkWith repository.
   --git-ref REF           Git branch, tag, or ref. Default: main.
   --app-dir PATH          Install root. Default: /opt/mbc_walkwith.
   --api-port PORT         Local API port. Default: 3020.
@@ -153,42 +162,52 @@ parse_options() {
     case "$1" in
       --repo-url)
         repo_url="${2:-}"
+        repo_url_from_cli="true"
         shift 2
         ;;
       --git-ref|--branch|--ref)
         git_ref="${2:-}"
+        git_ref_from_cli="true"
         shift 2
         ;;
       --app-dir)
         app_dir="${2:-}"
+        app_dir_from_cli="true"
         shift 2
         ;;
       --api-port)
         api_port="${2:-}"
+        api_port_from_cli="true"
         shift 2
         ;;
       --admin-origin)
         admin_origin="${2:-}"
+        admin_origin_from_cli="true"
         shift 2
         ;;
       --api-origin)
         api_origin="${2:-}"
+        api_origin_from_cli="true"
         shift 2
         ;;
       --public-origin)
         public_origin="${2:-}"
+        public_origin_from_cli="true"
         shift 2
         ;;
       --admin-domain)
         admin_origin="$(domain_to_https_origin "${2:-}")"
+        admin_origin_from_cli="true"
         shift 2
         ;;
       --api-domain)
         api_origin="$(domain_to_https_origin "${2:-}")"
+        api_origin_from_cli="true"
         shift 2
         ;;
       --public-domain)
         public_origin="$(domain_to_https_origin "${2:-}")"
+        public_origin_from_cli="true"
         shift 2
         ;;
       --email)
@@ -201,6 +220,7 @@ parse_options() {
         ;;
       --service-user)
         service_user="${2:-}"
+        service_user_from_cli="true"
         shift 2
         ;;
       --db-name)
@@ -322,11 +342,14 @@ origin_to_domain() {
 validate_managed_directory() {
   local label="$1"
   local value="$2"
+  local canonical
   [[ -n "$value" ]] || die "${label} cannot be empty."
   [[ "$value" == /* ]] || die "${label} must be an absolute path."
-  case "$value" in
+  canonical="$(realpath -m -- "$value")"
+  [[ "$value" == "$canonical" ]] || die "${label} must be a canonical path without symlinks, dot segments, or duplicate separators: ${canonical}"
+  case "$canonical" in
     /|/bin|/boot|/dev|/etc|/home|/lib|/lib64|/opt|/proc|/root|/run|/sbin|/sys|/tmp|/usr|/var)
-      die "${label} points to a system directory: ${value}"
+      die "${label} points to a system directory: ${canonical}"
       ;;
   esac
 }
@@ -342,6 +365,34 @@ admin_web_base_path() {
   else
     printf '/'
   fi
+}
+
+current_web_build_matches_origins() {
+  local current_release expected_api_base_url expected_admin_base_path
+  current_release="$(readlink -f "${app_dir}/current" 2>/dev/null || true)"
+  [[ -z "$current_release" || ! -d "$current_release" ]] && return 0
+  expected_api_base_url="$(api_base_url_from_origin "$api_origin")"
+  [[ -n "$expected_api_base_url" ]] || expected_api_base_url="http://127.0.0.1:${api_port}/v1"
+  expected_admin_base_path="$(admin_web_base_path)"
+
+  if [[ -f "${current_release}/release-manifest.json" ]]; then
+    python3 - "${current_release}/release-manifest.json" "$expected_api_base_url" "$expected_admin_base_path" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], "r", encoding="utf-8") as handle:
+    manifest = json.load(handle)
+raise SystemExit(0 if (
+    manifest.get("apiBaseUrl") == sys.argv[2]
+    and manifest.get("adminBasePath") == sys.argv[3]
+) else 1)
+PY
+    return
+  fi
+
+  [[ -f "${current_release}/.web-build-env" ]] || return 1
+  grep -Fqx "API_BASE_URL=${expected_api_base_url}" "${current_release}/.web-build-env" \
+    && grep -Fqx "ADMIN_BASE_PATH=${expected_admin_base_path}" "${current_release}/.web-build-env"
 }
 
 validate_tarball_entries() {
@@ -370,11 +421,11 @@ validate_backend_env_file() {
   [[ -f "$env_file" ]] || die "Missing ${env_file}. Run install first."
 
   local database_url media_driver admin_secret member_secret use_mock_data
-  database_url="$(grep '^DATABASE_URL=' "$env_file" | cut -d= -f2- || true)"
-  media_driver="$(grep '^MEDIA_STORAGE_DRIVER=' "$env_file" | cut -d= -f2- || true)"
-  admin_secret="$(grep '^auth_secret=' "$env_file" | cut -d= -f2- || true)"
-  member_secret="$(grep '^app_user_auth_secret=' "$env_file" | cut -d= -f2- || true)"
-  use_mock_data="$(grep '^USE_MOCK_DATA=' "$env_file" | cut -d= -f2- || true)"
+  database_url="$(read_env_value "$env_file" "DATABASE_URL")"
+  media_driver="$(read_env_value "$env_file" "MEDIA_STORAGE_DRIVER")"
+  admin_secret="$(read_env_value "$env_file" "auth_secret")"
+  member_secret="$(read_env_value "$env_file" "app_user_auth_secret")"
+  use_mock_data="$(read_env_value "$env_file" "USE_MOCK_DATA")"
 
   [[ -n "$database_url" ]] || die "DATABASE_URL must be set in ${env_file}."
   [[ "$use_mock_data" != "true" ]] || die "USE_MOCK_DATA=true is not allowed for VPS deployment."
@@ -383,9 +434,9 @@ validate_backend_env_file() {
 
   if [[ "$media_driver" == "s3" ]]; then
     local s3_bucket s3_access_key s3_secret
-    s3_bucket="$(grep '^S3_BUCKET=' "$env_file" | cut -d= -f2- || true)"
-    s3_access_key="$(grep '^S3_ACCESS_KEY_ID=' "$env_file" | cut -d= -f2- || true)"
-    s3_secret="$(grep '^S3_SECRET_ACCESS_KEY=' "$env_file" | cut -d= -f2- || true)"
+    s3_bucket="$(read_env_value "$env_file" "S3_BUCKET")"
+    s3_access_key="$(read_env_value "$env_file" "S3_ACCESS_KEY_ID")"
+    s3_secret="$(read_env_value "$env_file" "S3_SECRET_ACCESS_KEY")"
     [[ -n "$s3_bucket" ]] || die "S3_BUCKET must be set when MEDIA_STORAGE_DRIVER=s3."
     [[ -n "$s3_access_key" ]] || die "S3_ACCESS_KEY_ID must be set when MEDIA_STORAGE_DRIVER=s3."
     [[ -n "$s3_secret" ]] || die "S3_SECRET_ACCESS_KEY must be set when MEDIA_STORAGE_DRIVER=s3."
@@ -477,15 +528,15 @@ run_release_shell_with_env() {
   printf -v quoted_env '%q' "$env_file"
   local shell_cmd="set -a && source ${quoted_env} && set +a && cd ${quoted_cwd} && ${cmd}"
 
-  if [[ "$(id -un)" == "$deploy_user" ]]; then
-    env HOME="$deploy_home" \
+  if [[ "$(id -un)" == "$service_user" ]]; then
+    env HOME="$service_home" \
       XDG_CACHE_HOME="$service_cache_dir" \
       BUN_INSTALL="$BUN_INSTALL" \
       PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
       bash -lc "$shell_cmd"
   else
-    "${SUDO[@]}" -u "$deploy_user" \
-      env HOME="$deploy_home" \
+    "${SUDO[@]}" -u "$service_user" \
+      env HOME="$service_home" \
       XDG_CACHE_HOME="$service_cache_dir" \
       BUN_INSTALL="$BUN_INSTALL" \
       PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
@@ -550,18 +601,18 @@ sync_source() {
 
   local source_dir="${app_dir}/source"
   log "Syncing managed source checkout"
-  "${SUDO[@]}" install -d -m 0755 "$app_dir"
-  "${SUDO[@]}" chown -R "${deploy_user}:${deploy_user}" "$app_dir"
+  "${SUDO[@]}" install -d -m 0755 -o "$deploy_user" -g "$deploy_user" "$app_dir"
 
   if [[ ! -d "${source_dir}/.git" ]]; then
     rm -rf "$source_dir"
-    run_as_deploy_user git clone "$repo_url" "$source_dir"
+    run_as_deploy_user git clone --no-checkout "$repo_url" "$source_dir"
   else
-    run_shell_as_deploy_user "$source_dir" "git remote set-url origin $(shell_quote "$repo_url") && git fetch --prune --tags origin"
+    "${SUDO[@]}" chown -R "${deploy_user}:${deploy_user}" "$source_dir"
+    run_shell_as_deploy_user "$source_dir" "git remote set-url origin $(shell_quote "$repo_url")"
   fi
 
-  run_shell_as_deploy_user "$source_dir" "git checkout $(shell_quote "$git_ref")"
-  run_shell_as_deploy_user "$source_dir" "git pull --ff-only origin $(shell_quote "$git_ref") || true"
+  run_shell_as_deploy_user "$source_dir" "git fetch --prune --tags origin $(shell_quote "$git_ref")"
+  run_shell_as_deploy_user "$source_dir" "git checkout --detach FETCH_HEAD"
   [[ -f "${source_dir}/tools/scripts/vps/mbc_walkwith.sh" ]] || die "Managed source checkout is missing tools/scripts/vps/mbc_walkwith.sh"
 }
 
@@ -581,11 +632,11 @@ write_installed_command() {
 
 prepare_app_dirs() {
   log "Preparing application directories"
-  "${SUDO[@]}" install -d -m 0755 "$app_dir"
-  "${SUDO[@]}" install -d -m 0755 "${app_dir}/releases"
-  "${SUDO[@]}" chown -R "${deploy_user}:${deploy_user}" "$app_dir"
+  "${SUDO[@]}" install -d -m 0755 -o "$deploy_user" -g "$deploy_user" "$app_dir"
+  "${SUDO[@]}" install -d -m 0755 -o "$deploy_user" -g "$deploy_user" "${app_dir}/releases"
   "${SUDO[@]}" install -d -m 0750 -o "$service_user" -g "$service_group" "$service_home"
   "${SUDO[@]}" install -d -m 0750 -o "$service_user" -g "$service_group" "$service_cache_dir"
+  "${SUDO[@]}" install -d -m 0750 -o "$service_user" -g "$service_group" /var/lib/mbc_walkwith/uploads
   "${SUDO[@]}" install -d -m 0750 -o root -g "$service_group" /etc/mbc_walkwith
 }
 
@@ -628,6 +679,12 @@ update_env_value() {
   fi
 }
 
+read_env_value() {
+  local file="$1"
+  local key="$2"
+  "${SUDO[@]}" awk -F= -v key="$key" '$1 == key { sub(/^[^=]*=/, ""); print; exit }' "$file" 2>/dev/null || true
+}
+
 write_env_files() {
   log "Writing environment files"
   local db_password_file="/etc/mbc_walkwith/db-password"
@@ -655,7 +712,7 @@ DATABASE_URL=postgres://${db_user}:${db_password}@127.0.0.1:5432/${db_name}
 REDIS_URL=
 
 MEDIA_STORAGE_DRIVER=local
-MEDIA_UPLOAD_DIR=uploads
+MEDIA_UPLOAD_DIR=/var/lib/mbc_walkwith/uploads
 S3_ENDPOINT=
 S3_REGION=auto
 S3_BUCKET=
@@ -696,6 +753,12 @@ EOF
   update_env_value "$backend_env" "ADMIN_WEB_ORIGIN" "$runtime_admin_origin"
   update_env_value "$backend_env" "USE_MOCK_DATA" "false"
   update_env_value "$backend_env" "DATABASE_URL" "postgres://${db_user}:${db_password}@127.0.0.1:5432/${db_name}"
+  local configured_media_driver configured_media_upload_dir
+  configured_media_driver="$(read_env_value "$backend_env" "MEDIA_STORAGE_DRIVER")"
+  configured_media_upload_dir="$(read_env_value "$backend_env" "MEDIA_UPLOAD_DIR")"
+  if [[ "$configured_media_driver" == "local" && ( -z "$configured_media_upload_dir" || "$configured_media_upload_dir" == "uploads" ) ]]; then
+    update_env_value "$backend_env" "MEDIA_UPLOAD_DIR" "/var/lib/mbc_walkwith/uploads"
+  fi
 
   local deploy_env="/etc/mbc_walkwith/deploy.env"
   cat > /tmp/mbcwalkwith-deploy.env <<EOF
@@ -954,17 +1017,18 @@ load_deploy_env() {
   local deploy_env="/etc/mbc_walkwith/deploy.env"
   [[ -f "$deploy_env" ]] || return 0
   set -a
+  # deploy.env is generated by this script and remains root-owned.
   # shellcheck disable=SC1090
-  . "$deploy_env"
+  . <("${SUDO[@]}" cat "$deploy_env")
   set +a
-  app_dir="${MBC_WALKWITH_APP_DIR:-$app_dir}"
-  api_port="${MBC_WALKWITH_API_PORT:-$api_port}"
-  repo_url="${MBC_WALKWITH_REPO_URL:-$repo_url}"
-  git_ref="${MBC_WALKWITH_GIT_REF:-$git_ref}"
-  admin_origin="${MBC_WALKWITH_ADMIN_ORIGIN:-$admin_origin}"
-  api_origin="${MBC_WALKWITH_API_ORIGIN:-$api_origin}"
-  public_origin="${MBC_WALKWITH_PUBLIC_ORIGIN:-$public_origin}"
-  service_user="${MBC_WALKWITH_SERVICE_USER:-$service_user}"
+  [[ "$app_dir_from_cli" == "true" ]] || app_dir="${MBC_WALKWITH_APP_DIR:-$app_dir}"
+  [[ "$api_port_from_cli" == "true" ]] || api_port="${MBC_WALKWITH_API_PORT:-$api_port}"
+  [[ "$repo_url_from_cli" == "true" ]] || repo_url="${MBC_WALKWITH_REPO_URL:-$repo_url}"
+  [[ "$git_ref_from_cli" == "true" ]] || git_ref="${MBC_WALKWITH_GIT_REF:-$git_ref}"
+  [[ "$admin_origin_from_cli" == "true" ]] || admin_origin="${MBC_WALKWITH_ADMIN_ORIGIN:-$admin_origin}"
+  [[ "$api_origin_from_cli" == "true" ]] || api_origin="${MBC_WALKWITH_API_ORIGIN:-$api_origin}"
+  [[ "$public_origin_from_cli" == "true" ]] || public_origin="${MBC_WALKWITH_PUBLIC_ORIGIN:-$public_origin}"
+  [[ "$service_user_from_cli" == "true" ]] || service_user="${MBC_WALKWITH_SERVICE_USER:-$service_user}"
   service_home="${MBC_WALKWITH_SERVICE_HOME:-$service_home}"
   service_cache_dir="${MBC_WALKWITH_SERVICE_CACHE_DIR:-$service_cache_dir}"
   export BUN_INSTALL="${MBC_WALKWITH_BUN_INSTALL:-$BUN_INSTALL}"
@@ -978,11 +1042,11 @@ load_deploy_env() {
   local backend_env="/etc/mbc_walkwith/backend.env"
   if [[ -f "$backend_env" ]]; then
     if [[ -z "$admin_origin" ]]; then
-      admin_origin="$(grep '^ADMIN_WEB_ORIGIN=' "$backend_env" | cut -d= -f2- || true)"
+      admin_origin="$(read_env_value "$backend_env" "ADMIN_WEB_ORIGIN")"
     fi
     if [[ -z "$api_origin" ]]; then
       local api_base_url
-      api_base_url="$(grep '^PUBLIC_API_BASE_URL=' "$backend_env" | cut -d= -f2- || true)"
+      api_base_url="$(read_env_value "$backend_env" "PUBLIC_API_BASE_URL")"
       api_origin="${api_base_url%/v1}"
     fi
   fi
@@ -998,6 +1062,7 @@ data = payload.get("data", {})
 inner = data.get("data", {})
 assert data.get("ok") is True, "health ok=false"
 assert inner.get("databaseConfigured") is True, "databaseConfigured=false"
+assert inner.get("databaseReady") is True, "databaseReady=false"
 '
 }
 
@@ -1024,28 +1089,44 @@ run_release_migrations() {
   fi
 }
 
+mark_release_prepared() {
+  local release_dir="$1"
+  run_as_deploy_user touch "${release_dir}/.release-prepared"
+}
+
+mark_release_complete() {
+  local release_dir="$1"
+  run_as_deploy_user touch "${release_dir}/.release-complete"
+}
+
+is_complete_release() {
+  local release_dir="$1"
+  [[ -d "$release_dir" && -f "${release_dir}/.release-complete" ]]
+}
+
 deploy_app() {
   load_deploy_env
   local source_dir="${app_dir}/source"
   [[ -d "${source_dir}/.git" ]] || sync_source
   sync_source
 
-  local timestamp release_dir current_link previous_release
+  local timestamp staging_dir release_dir current_link previous_release
   timestamp="$(date +%Y%m%d-%H%M%S)"
+  staging_dir="${app_dir}/releases/.pending-${timestamp}"
   release_dir="${app_dir}/releases/${timestamp}"
   current_link="${app_dir}/current"
   previous_release="$(readlink -f "$current_link" 2>/dev/null || true)"
 
-  log "Creating release ${release_dir}"
-  run_shell_as_deploy_user "$source_dir" "mkdir -p $(shell_quote "$release_dir") && git archive --format=tar HEAD | tar -x -C $(shell_quote "$release_dir")"
-  "${SUDO[@]}" chown -R "${deploy_user}:${service_group}" "$release_dir"
+  log "Preparing release ${release_dir}"
+  run_shell_as_deploy_user "$source_dir" "mkdir -p $(shell_quote "$staging_dir") && git archive --format=tar HEAD | tar -x -C $(shell_quote "$staging_dir")"
+  "${SUDO[@]}" chown -R "${deploy_user}:${service_group}" "$staging_dir"
 
   log "Installing dependencies"
-  run_shell_as_deploy_user "$release_dir" "${BUN_INSTALL}/bin/bun install --frozen-lockfile"
+  run_shell_as_deploy_user "$staging_dir" "${BUN_INSTALL}/bin/bun install --frozen-lockfile"
 
   if [[ "$run_check" == "true" ]]; then
     log "Running workspace checks"
-    run_shell_as_deploy_user "$release_dir" "${BUN_INSTALL}/bin/bun run check"
+    run_shell_as_deploy_user "$staging_dir" "${BUN_INSTALL}/bin/bun run check"
   fi
 
   validate_backend_env_file
@@ -1059,13 +1140,22 @@ deploy_app() {
     fi
 
     log "Building web assets"
-    run_shell_as_deploy_user "$release_dir" "VITE_API_BASE_URL=$(shell_quote "$build_api_base_url") VITE_ADMIN_BASE_PATH=$(shell_quote "$build_admin_base_path") ${BUN_INSTALL}/bin/bun run build"
+    run_shell_as_deploy_user "$staging_dir" "VITE_API_BASE_URL=$(shell_quote "$build_api_base_url") VITE_ADMIN_BASE_PATH=$(shell_quote "$build_admin_base_path") ${BUN_INSTALL}/bin/bun run build"
+    cat > /tmp/mbcwalkwith-web-build-env <<EOF
+API_BASE_URL=${build_api_base_url}
+ADMIN_BASE_PATH=${build_admin_base_path}
+EOF
+    "${SUDO[@]}" install -m 0644 -o "$deploy_user" -g "$service_group" /tmp/mbcwalkwith-web-build-env "${staging_dir}/.web-build-env"
+    rm -f /tmp/mbcwalkwith-web-build-env
   fi
 
   if [[ "$skip_migrate" != "true" ]]; then
     log "Running database migrations"
-    run_release_migrations "$release_dir"
+    run_release_migrations "$staging_dir"
   fi
+
+  mark_release_prepared "$staging_dir"
+  run_as_deploy_user mv "$staging_dir" "$release_dir"
 
   ln -sfn "$release_dir" "$current_link"
 
@@ -1084,6 +1174,7 @@ deploy_app() {
     fi
   fi
 
+  mark_release_complete "$release_dir"
   cleanup_releases
   echo "Deploy complete. Current release: $(readlink -f "$current_link")"
 }
@@ -1096,27 +1187,31 @@ deploy_prebuilt_app() {
 
   validate_backend_env_file
 
-  local timestamp release_dir current_link previous_release
+  local timestamp staging_dir release_dir current_link previous_release
   timestamp="$(date +%Y%m%d-%H%M%S)"
+  staging_dir="${app_dir}/releases/.pending-${timestamp}"
   release_dir="${app_dir}/releases/${timestamp}"
   current_link="${app_dir}/current"
   previous_release="$(readlink -f "$current_link" 2>/dev/null || true)"
 
-  log "Creating prebuilt release ${release_dir}"
-  "${SUDO[@]}" install -d -m 0755 -o "$deploy_user" -g "$service_group" "$release_dir"
+  log "Preparing prebuilt release ${release_dir}"
+  "${SUDO[@]}" install -d -m 0755 -o "$deploy_user" -g "$service_group" "$staging_dir"
   validate_tarball_entries "$artifact_path"
-  run_as_deploy_user tar --no-same-owner -xzf "$artifact_path" -C "$release_dir"
-  "${SUDO[@]}" chown -R "${deploy_user}:${service_group}" "$release_dir"
+  run_as_deploy_user tar --no-same-owner -xzf "$artifact_path" -C "$staging_dir"
+  "${SUDO[@]}" chown -R "${deploy_user}:${service_group}" "$staging_dir"
 
-  [[ -f "${release_dir}/release-manifest.json" ]] || die "Prebuilt release is missing release-manifest.json."
-  local expected_admin_base_path
+  [[ -f "${staging_dir}/release-manifest.json" ]] || die "Prebuilt release is missing release-manifest.json."
+  local expected_admin_base_path expected_api_base_url
   expected_admin_base_path="$(admin_web_base_path)"
-  python3 - "$release_dir/release-manifest.json" "$expected_admin_base_path" <<'PY'
+  expected_api_base_url="$(api_base_url_from_origin "$api_origin")"
+  [[ -n "$expected_api_base_url" ]] || expected_api_base_url="http://127.0.0.1:${api_port}/v1"
+  python3 - "$staging_dir/release-manifest.json" "$expected_admin_base_path" "$expected_api_base_url" <<'PY'
 import json
 import sys
 
 manifest_path = sys.argv[1]
 expected_admin_base_path = sys.argv[2]
+expected_api_base_url = sys.argv[3]
 with open(manifest_path, "r", encoding="utf-8") as handle:
     manifest = json.load(handle)
 
@@ -1125,6 +1220,7 @@ runtime = manifest.get("runtime")
 api_entry = manifest.get("apiEntry")
 admin_web_dist = manifest.get("adminWebDist")
 admin_base_path = manifest.get("adminBasePath")
+api_base_url = manifest.get("apiBaseUrl")
 public_web_dist = manifest.get("publicWebDist")
 
 if target != "linux-x64":
@@ -1140,21 +1236,29 @@ if admin_base_path != expected_admin_base_path:
         f"Expected adminBasePath {expected_admin_base_path!r}, got {admin_base_path!r}. "
         "Rebuild the prebuilt package with VITE_ADMIN_BASE_PATH set for this deployment topology."
     )
+if api_base_url != expected_api_base_url:
+    raise SystemExit(
+        f"Expected apiBaseUrl {expected_api_base_url!r}, got {api_base_url!r}. "
+        "Rebuild the prebuilt package with VITE_API_BASE_URL set for this deployment."
+    )
 if public_web_dist != "apps/public_web/dist":
     raise SystemExit(f"Unexpected publicWebDist: {public_web_dist!r}.")
 PY
-  [[ -f "${release_dir}/backend_dist/main.js" ]] || die "Prebuilt release is missing backend_dist/main.js."
-  [[ -f "${release_dir}/backend/drizzle.config.ts" ]] || die "Prebuilt release is missing backend/drizzle.config.ts."
-  [[ -f "${release_dir}/backend/src/shared/db/schema.ts" ]] || die "Prebuilt release is missing backend/src/shared/db/schema.ts."
-  [[ -x "${release_dir}/backend/node_modules/.bin/drizzle-kit" ]] || die "Prebuilt release is missing backend/node_modules/.bin/drizzle-kit."
-  [[ -d "${release_dir}/backend/migrations" ]] || die "Prebuilt release is missing backend/migrations."
-  [[ -f "${release_dir}/apps/admin_web/dist/index.html" ]] || die "Prebuilt release is missing admin web dist."
-  [[ -f "${release_dir}/apps/public_web/dist/index.html" ]] || die "Prebuilt release is missing public web dist."
+  [[ -f "${staging_dir}/backend_dist/main.js" ]] || die "Prebuilt release is missing backend_dist/main.js."
+  [[ -f "${staging_dir}/backend/drizzle.config.ts" ]] || die "Prebuilt release is missing backend/drizzle.config.ts."
+  [[ -f "${staging_dir}/backend/src/shared/db/schema.ts" ]] || die "Prebuilt release is missing backend/src/shared/db/schema.ts."
+  [[ -x "${staging_dir}/backend/node_modules/.bin/drizzle-kit" ]] || die "Prebuilt release is missing backend/node_modules/.bin/drizzle-kit."
+  [[ -d "${staging_dir}/backend/migrations" ]] || die "Prebuilt release is missing backend/migrations."
+  [[ -f "${staging_dir}/apps/admin_web/dist/index.html" ]] || die "Prebuilt release is missing admin web dist."
+  [[ -f "${staging_dir}/apps/public_web/dist/index.html" ]] || die "Prebuilt release is missing public web dist."
 
   if [[ "$skip_migrate" != "true" ]]; then
     log "Running database migrations"
-    run_release_migrations "$release_dir"
+    run_release_migrations "$staging_dir"
   fi
+
+  mark_release_prepared "$staging_dir"
+  run_as_deploy_user mv "$staging_dir" "$release_dir"
 
   ln -sfn "$release_dir" "$current_link"
 
@@ -1176,6 +1280,7 @@ PY
     fi
   fi
 
+  mark_release_complete "$release_dir"
   cleanup_releases
   echo "Prebuilt deploy complete. Current release: $(readlink -f "$current_link")"
 }
@@ -1196,7 +1301,7 @@ rollback_app() {
       target_release="${releases_dir}/${requested}"
     fi
   else
-    mapfile -t releases < <(find "$releases_dir" -mindepth 1 -maxdepth 1 -type d | sort -r)
+    mapfile -t releases < <(find "$releases_dir" -mindepth 1 -maxdepth 1 -type d -exec test -f '{}/.release-complete' \; -print | sort -r)
     target_release=""
     for release in "${releases[@]}"; do
       if [[ "$release" != "$current_release" ]]; then
@@ -1207,6 +1312,9 @@ rollback_app() {
   fi
 
   [[ -n "$target_release" && -d "$target_release" ]] || die "No rollback release found."
+  target_release="$(realpath -m -- "$target_release")"
+  [[ "$target_release" == "${releases_dir}/"* ]] || die "Rollback target must be inside ${releases_dir}."
+  is_complete_release "$target_release" || die "Rollback target is not a completed, health-checked release: ${target_release}"
   log "Rolling back to ${target_release}"
   ln -sfn "$target_release" "$current_link"
   "${SUDO[@]}" systemctl restart mbcwalkwith-api
@@ -1714,11 +1822,11 @@ configure_ssl() {
     [[ -n "$certbot_email" ]] || die "--email is required."
   fi
 
+  write_env_files
+  current_web_build_matches_origins || die "The current web release was built for different origins. Deploy source again, or upload a prebuilt package built with VITE_API_BASE_URL=$(api_base_url_from_origin "$api_origin") and VITE_ADMIN_BASE_PATH=$(admin_web_base_path), before running ssl."
+
   log "Writing initial HTTP nginx config"
   write_nginx_http_config
-
-  update_env_value "/etc/mbc_walkwith/backend.env" "ADMIN_WEB_ORIGIN" "$(normalize_origin "$admin_origin")"
-  update_env_value "/etc/mbc_walkwith/backend.env" "PUBLIC_API_BASE_URL" "$(api_base_url_from_origin "$api_origin")"
 
   if [[ "$certbot_method" == "none" ]]; then
     "${SUDO[@]}" systemctl restart mbcwalkwith-api || true
@@ -1823,14 +1931,15 @@ cleanup_releases() {
   [[ -d "$releases_dir" ]] || return 0
   current_release="$(readlink -f "${app_dir}/current" 2>/dev/null || true)"
 
-  mapfile -t all_releases < <(find "$releases_dir" -mindepth 1 -maxdepth 1 -type d | sort -r)
+  find "$releases_dir" -mindepth 1 -maxdepth 1 -type d -name '.pending-*' -mtime +0 -exec "${SUDO[@]}" rm -rf -- {} + 2>/dev/null || true
+  mapfile -t all_releases < <(find "$releases_dir" -mindepth 1 -maxdepth 1 -type d -exec test -f '{}/.release-complete' \; -print | sort -r)
   local index=0
   for release in "${all_releases[@]}"; do
-    if [[ -n "$current_release" && "$release" == "$current_release" ]]; then
-      continue
-    fi
     if [[ "$index" -lt "$keep_releases" ]]; then
       ((index+=1))
+      continue
+    fi
+    if [[ -n "$current_release" && "$release" == "$current_release" ]]; then
       continue
     fi
     log "Removing old release ${release}"

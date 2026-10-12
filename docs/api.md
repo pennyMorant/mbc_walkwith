@@ -2634,11 +2634,24 @@ Response:
 
 ```json
 {
-  "status": "ok",
-  "service": "mbc-walkwith-api",
-  "time": "2026-05-10T18:30:00Z"
+  "data": {
+    "ok": true,
+    "service": "mbc-walkwith-backend",
+    "data": {
+      "mode": "postgres",
+      "databaseConfigured": true,
+      "databaseReady": true
+    },
+    "timestamp": "2026-05-10T18:30:00Z"
+  },
+  "meta": {}
 }
 ```
+
+Postgres mode performs a lightweight database query for every health request.
+An unreachable database returns HTTP `503`, `ok=false`, and
+`databaseReady=false`; deployment scripts must not treat configuration alone as
+readiness. Mock mode reports `databaseReady=true` without a database query.
 
 ## 14. Production Hardening Decisions
 

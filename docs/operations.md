@@ -60,6 +60,11 @@ VITE_ADMIN_BASE_PATH=/admin/ \
 bun run build:prebuilt
 ```
 
+On macOS, ARM Linux, or another non-linux-x64 host, this command automatically
+uses Docker with `--platform linux/amd64`. Docker must be running. The migration
+runtime is therefore installed for the same platform used by the VPS; native
+builds remain available on Linux x86_64.
+
 Start the production API with Bun running the TypeScript sources:
 
 ```sh
@@ -163,8 +168,11 @@ Local file storage:
 
 ```sh
 MEDIA_STORAGE_DRIVER=local
-MEDIA_UPLOAD_DIR=uploads
+MEDIA_UPLOAD_DIR=/var/lib/mbc_walkwith/uploads
 ```
+
+Native VPS deployments keep this directory outside timestamped releases.
+Local development may continue to use a repository-relative `uploads` path.
 
 Cloudflare R2 or other S3-compatible storage:
 

@@ -112,8 +112,8 @@ sudo mbcwalkwith backup-status
 | Restore verification | 每月 1 日 04:00 | 恢复最新快照至临时数据库，检查关键表后删除临时库 |
 
 每日 dump 成功后保留：每日 30 份、每周 12 份、每月 12 份。每周执行 `forget`，每月执行
-`prune`。原始 dump 只短暂写入 VPS 的 root-only staging 目录，正常上传后删除；失败文件
-最多保留三天供排查。
+`prune`。原始 dump 只短暂写入 VPS 的受限 staging 目录。目录只允许 root 与本机
+`postgres` 用户进入，以便 `pg_dump` 写入；正常上传后删除，失败文件最多保留三天供排查。
 
 ## 6. Operator Commands
 

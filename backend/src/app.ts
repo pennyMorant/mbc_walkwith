@@ -1,6 +1,7 @@
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
 import sensible from "@fastify/sensible";
+import { sql } from "drizzle-orm";
 import Fastify from "fastify";
 
 import { registerAppRoutes } from "./app_routes.js";
@@ -404,6 +405,11 @@ export async function buildApp(config: AppConfig) {
     discipleshipService,
     givingService,
     groupService,
+    healthDatabaseProbe: async () => {
+      if (db) {
+        await db.execute(sql`select 1`);
+      }
+    },
     jobService,
     lifePostImageStorageService,
     lifePostService,

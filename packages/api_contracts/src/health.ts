@@ -5,7 +5,8 @@ export const healthResponseSchema = z.object({
   service: z.string(),
   data: z.object({
     mode: z.enum(["mock", "postgres"]),
-    databaseConfigured: z.boolean()
+    databaseConfigured: z.boolean(),
+    databaseReady: z.boolean()
   }),
   timestamp: z.string()
 });

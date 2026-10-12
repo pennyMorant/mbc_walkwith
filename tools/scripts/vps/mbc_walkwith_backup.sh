@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 backup_env="/etc/mbc_walkwith/backup.env"
 state_dir="/var/lib/mbc_walkwith/backup"
+dump_dir="${state_dir}/dumps"
 restore_dir="/var/lib/mbc_walkwith/restore"
 lock_file="/run/lock/mbcwalkwith_backup.lock"
 latest_state_file="${state_dir}/latest.env"
@@ -53,7 +54,9 @@ validate_config() {
 }
 
 prepare_dirs() {
-  install -d -m 0700 "$state_dir" "$restore_dir" "$RESTIC_CACHE_DIR"
+  install -d -m 0710 -o root -g postgres "$state_dir" "$restore_dir"
+  install -d -m 0700 -o root -g root "$RESTIC_CACHE_DIR"
+  install -d -m 0700 -o postgres -g postgres "$dump_dir"
 }
 
 with_lock() {
@@ -124,7 +127,7 @@ EOF
 }
 
 cleanup_stale_dumps() {
-  find "$state_dir" -maxdepth 1 -type f -name '*.dump' -mtime +3 -delete
+  find "$dump_dir" -maxdepth 1 -type f -name '*.dump' -mtime +3 -delete
 }
 
 retention_due() {
@@ -155,7 +158,7 @@ run_backup() (
   local success_message
   started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   dump_name="${BACKUP_DATABASE_NAME}_$(date -u +%Y-%m-%dT%H-%M-%SZ).dump"
-  dump_path="${state_dir}/${dump_name}"
+  dump_path="${dump_dir}/${dump_name}"
 
   trap 'rm -f "$dump_path"' EXIT
   log "Creating PostgreSQL dump for ${BACKUP_DATABASE_NAME}."
@@ -226,6 +229,8 @@ restore_verify() (
   trap 'runuser -u postgres -- dropdb --if-exists "$temp_database" >/dev/null 2>&1 || true; rm -rf "$work_dir"' EXIT
   log "Restoring snapshot ${snapshot_id} into a temporary verification directory."
   restic_command restore "$snapshot_id" --target "$work_dir" >/dev/null || die "Restic snapshot restore failed."
+  chown -R postgres:postgres "$work_dir"
+  chmod 0700 "$work_dir"
   restored_dump="$(find "$work_dir" -type f -name '*.dump' -print -quit)"
   [[ -n "$restored_dump" ]] || die "No PostgreSQL dump was found in restored snapshot ${snapshot_id}."
   pg_restore --list "$restored_dump" >/dev/null || die "Restored PostgreSQL dump is unreadable."
