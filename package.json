@@ -11,6 +11,13 @@
     "packages/ui_tokens"
   ],
   "scripts": {
+    "local:init": "bash tools/scripts/local/local_environment.sh init",
+    "local:check": "bash tools/scripts/local/local_environment.sh check",
+    "local:api": "bash tools/scripts/local/local_environment.sh api",
+    "local:admin": "bash tools/scripts/local/local_environment.sh admin",
+    "local:public": "bash tools/scripts/local/local_environment.sh public",
+    "local:web": "bash tools/scripts/local/local_environment.sh web",
+    "local:mobile": "bash tools/scripts/local/local_environment.sh mobile",
     "dev:api": "bun run dev:backend",
     "dev:web": "bun run dev:admin",
     "dev:backend": "cd backend && bun --watch src/main.ts",

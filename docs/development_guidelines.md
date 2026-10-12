@@ -15,6 +15,8 @@ Related documents:
 - [testing.md](testing.md): test strategy.
 - [open_source_release.md](open_source_release.md): public repository,
   licensing, private data, and self-hosting boundaries.
+- [local_environment.md](local_environment.md): ignored local configuration,
+  validation, and unified development startup commands.
 
 ## 1. Core Direction
 

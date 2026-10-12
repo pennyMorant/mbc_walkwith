@@ -53,6 +53,7 @@ Start with:
 - [docs/backend_release_checklist.md](docs/backend_release_checklist.md)
 - [docs/local_sermon_processing.md](docs/local_sermon_processing.md)
 - [docs/operations.md](docs/operations.md)
+- [docs/local_environment.md](docs/local_environment.md)
 - [docs/vps_deployment.md](docs/vps_deployment.md)
 - [docs/docker_deployment.md](docs/docker_deployment.md)
 - [docs/development_guidelines.md](docs/development_guidelines.md)
@@ -62,6 +63,16 @@ Flutter debug builds default to `http://localhost:3020/v1`. Use
 `--dart-define=USE_MOCK_REMOTE_DATA=true` for offline mock sermon/life data, or
 set `--dart-define=API_BASE_URL=...` for a test or production backend. Do not
 commit a private server address into App configuration.
+
+Initialize and validate private local configuration with:
+
+```sh
+bun run local:init
+bun run local:check
+```
+
+See [Local Private Environment](docs/local_environment.md) for the unified API,
+Web, and Flutter startup commands.
 
 For Android emulator local API testing:
 

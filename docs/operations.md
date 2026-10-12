@@ -87,6 +87,18 @@ bun run check
 
 ## Local Development Modes
 
+Initialize the ignored local configuration and run the complete Web stack:
+
+```sh
+bun run local:init
+bun run local:check
+bun run local:web
+```
+
+See [local_environment.md](local_environment.md) for individual API, Web, and
+Flutter commands. The inline commands below remain useful for temporary
+overrides and CI diagnostics.
+
 Fast mock mode:
 
 ```sh

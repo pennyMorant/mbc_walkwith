@@ -62,6 +62,10 @@ local, untracked environment file. Configure your own domains, Postgres,
 object storage, Firebase, email, Stripe, and AI providers. Do not reuse MBCG
 production credentials or data.
 
+Contributors can run `bun run local:init` to create the ignored
+`private/local/` files and `bun run local:check` to validate them without
+printing secrets. See `docs/local_environment.md`.
+
 The native VPS path is documented in `docs/vps_deployment.md`; optional Docker
 support is documented in `docs/docker_deployment.md`. Both paths deploy the same
 backend and Web contracts and neither bundles production secrets.
