@@ -542,10 +542,18 @@ init_runtime() {
 }
 
 run_as_deploy_user() {
-  if [[ "$(id -un)" == "$deploy_user" ]]; then
+  run_as_user "$deploy_user" "$@"
+}
+
+run_as_user() {
+  local target_user="$1"
+  shift
+  if [[ "$(id -un)" == "$target_user" ]]; then
     "$@"
+  elif [[ "$(id -u)" -eq 0 ]]; then
+    runuser -u "$target_user" -- "$@"
   else
-    "${SUDO[@]}" -u "$deploy_user" "$@"
+    "${SUDO[@]}" -u "$target_user" -- "$@"
   fi
 }
 
@@ -556,20 +564,12 @@ run_shell_as_deploy_user() {
   printf -v quoted_cwd '%q' "$cwd"
   local shell_cmd="cd ${quoted_cwd} && ${cmd}"
 
-  if [[ "$(id -un)" == "$deploy_user" ]]; then
-    env HOME="$deploy_home" \
-      XDG_CACHE_HOME="$service_cache_dir" \
-      BUN_INSTALL="$BUN_INSTALL" \
-      PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
-      bash -lc "$shell_cmd"
-  else
-    "${SUDO[@]}" -u "$deploy_user" \
-      env HOME="$deploy_home" \
-      XDG_CACHE_HOME="$service_cache_dir" \
-      BUN_INSTALL="$BUN_INSTALL" \
-      PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
-      bash -lc "$shell_cmd"
-  fi
+  run_as_user "$deploy_user" env \
+    HOME="$deploy_home" \
+    XDG_CACHE_HOME="$service_cache_dir" \
+    BUN_INSTALL="$BUN_INSTALL" \
+    PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
+    bash -lc "$shell_cmd"
 }
 
 run_release_shell_with_env() {
@@ -581,20 +581,12 @@ run_release_shell_with_env() {
   printf -v quoted_env '%q' "$env_file"
   local shell_cmd="set -a && source ${quoted_env} && set +a && cd ${quoted_cwd} && ${cmd}"
 
-  if [[ "$(id -un)" == "$service_user" ]]; then
-    env HOME="$service_home" \
-      XDG_CACHE_HOME="$service_cache_dir" \
-      BUN_INSTALL="$BUN_INSTALL" \
-      PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
-      bash -lc "$shell_cmd"
-  else
-    "${SUDO[@]}" -u "$service_user" \
-      env HOME="$service_home" \
-      XDG_CACHE_HOME="$service_cache_dir" \
-      BUN_INSTALL="$BUN_INSTALL" \
-      PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
-      bash -lc "$shell_cmd"
-  fi
+  run_as_user "$service_user" env \
+    HOME="$service_home" \
+    XDG_CACHE_HOME="$service_cache_dir" \
+    BUN_INSTALL="$BUN_INSTALL" \
+    PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
+    bash -lc "$shell_cmd"
 }
 
 as_postgres() {
