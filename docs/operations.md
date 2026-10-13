@@ -65,6 +65,12 @@ uses Docker with `--platform linux/amd64`. Docker must be running. The migration
 runtime is therefore installed for the same platform used by the VPS; native
 builds remain available on Linux x86_64.
 
+The normal VPS artifact is built by
+`.github/workflows/prebuilt_release.yml`. Configure repository variables
+`DEPLOY_API_BASE_URL` and `DEPLOY_ADMIN_BASE_PATH`; every successful `main`
+build updates the `deployment-latest` prerelease with a stable archive name and
+SHA-256 checksum.
+
 Start the production API with Bun running the TypeScript sources:
 
 ```sh
@@ -139,10 +145,11 @@ Source deploy order:
 
 Small VPS prebuilt order:
 
-1. Build locally with `VITE_API_BASE_URL=<api-origin>/v1 VITE_ADMIN_BASE_PATH=/admin/ bun run build:prebuilt`.
-2. Upload the generated `dist/prebuilt/mbc_walkwith_linux_x64_*.tar.gz`.
-3. Run `mbcwalkwith deploy-prebuilt /tmp/<release>.tar.gz` on the VPS.
-4. The VPS validates the release manifest, runs Drizzle Kit migrations, switches
+1. Push the reviewed commit to `main` or run the GitHub workflow manually.
+2. GitHub Actions verifies and builds the complete linux-x64 release.
+3. Run `mbcwalkwith deploy-release` on the VPS.
+4. The VPS downloads only the archive and checksum, validates the release
+   manifest, runs Drizzle Kit migrations, switches
    `current`, restarts `mbcwalkwith-api`, and checks `/v1/health`.
 
 For a one-IP test server, the expected HTTP layout is:
@@ -154,7 +161,7 @@ For a one-IP test server, the expected HTTP layout is:
 ```
 
 The prebuilt path does not run `bun install` or frontend/backend build on the
-VPS. The local prebuilt archive includes a minimal Drizzle Kit migration runtime
+VPS. The GitHub-built archive includes a minimal Drizzle Kit migration runtime
 under `backend/node_modules`, and the server uses the Bun runtime to execute
 `backend_dist/main.js`.
 

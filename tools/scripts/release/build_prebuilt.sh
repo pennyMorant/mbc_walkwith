@@ -89,7 +89,8 @@ mkdir -p \
   "$staging_dir/backend/migrations" \
   "$staging_dir/backend/src/shared/db" \
   "$staging_dir/apps/admin_web" \
-  "$staging_dir/apps/public_web"
+  "$staging_dir/apps/public_web" \
+  "$staging_dir/deployment"
 
 cd "$repo_root"
 
@@ -103,6 +104,11 @@ bun build \
 cp -R backend/migrations/. "$staging_dir/backend/migrations/"
 cp backend/drizzle.config.ts "$staging_dir/backend/drizzle.config.ts"
 cp backend/src/shared/db/schema.ts "$staging_dir/backend/src/shared/db/schema.ts"
+cp tools/scripts/vps/mbc_walkwith.sh "$staging_dir/deployment/mbcwalkwith"
+cp tools/scripts/vps/mbc_walkwith_backup.sh "$staging_dir/deployment/mbcwalkwith_backup"
+chmod 0755 \
+  "$staging_dir/deployment/mbcwalkwith" \
+  "$staging_dir/deployment/mbcwalkwith_backup"
 
 cat > "$staging_dir/backend/package.json" <<'EOF'
 {

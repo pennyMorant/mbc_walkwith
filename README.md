@@ -153,15 +153,16 @@ backend receives reviewed local packages through the admin API.
 Production build/start commands are documented in
 [docs/operations.md](docs/operations.md).
 
-For a small test VPS, build locally and deploy the prebuilt Bun/admin bundle:
+For a small VPS, configure the GitHub deployment variables and let Actions
+build the linux-x64 API, Admin Web, and Landing Web bundle. The VPS downloads
+only the verified release artifact:
 
 ```sh
-VITE_API_BASE_URL=http://<server-ip>/v1 \
-VITE_ADMIN_BASE_PATH=/admin/ \
-bun run build:prebuilt
-scp dist/prebuilt/mbc_walkwith_linux_x64_*.tar.gz root@<server-ip>:/tmp/
-mbcwalkwith deploy-prebuilt /tmp/mbc_walkwith_linux_x64_<timestamp>.tar.gz
+mbcwalkwith deploy-release
 ```
+
+Local `bun run build:prebuilt` and `deploy-prebuilt FILE` remain available as a
+recovery path. See [VPS Deployment](docs/vps_deployment.md).
 
 With one test IP, nginx serves the public landing page at `/`, the admin web
 at `/admin/`, and the API at `/v1/`.

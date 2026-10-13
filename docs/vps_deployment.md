@@ -118,8 +118,22 @@ Use `--repo-url` only when deploying a maintained fork or mirror.
 Deploy:
 
 ```sh
-mbcwalkwith deploy --check
+mbcwalkwith deploy-release
 ```
+
+This is the recommended update path. GitHub Actions builds the backend, admin
+Web, public Web, and linux-x64 migration runtime. The VPS downloads the rolling
+release archive and checksum; it does not clone source or compile the workspace.
+
+Configure these GitHub repository variables before the workflow runs:
+
+```text
+DEPLOY_API_BASE_URL=https://api.example.com/v1
+DEPLOY_ADMIN_BASE_PATH=/
+```
+
+Use `/admin/` only when Admin Web shares a host with the public site or API. A
+separate Admin domain uses `/`.
 
 Build locally and deploy a prebuilt linux-x64 release:
 
@@ -130,6 +144,9 @@ bun run build:prebuilt
 scp dist/prebuilt/mbc_walkwith_linux_x64_*.tar.gz root@<server-ip>:/tmp/
 mbcwalkwith deploy-prebuilt /tmp/mbc_walkwith_linux_x64_<timestamp>.tar.gz
 ```
+
+The local-build path and `mbcwalkwith deploy --check` source path remain
+available for recovery, but they are not the normal small-VPS update path.
 
 For a one-IP test server, use the same host for admin, public, and API origins.
 Nginx then serves:
@@ -296,6 +313,12 @@ the VPS. The uploaded archive carries a minimal Drizzle Kit migration runtime
 under `backend/node_modules` and executes migrations from the bundled
 `backend/migrations/` directory. Build and type/test checks must happen locally
 before upload.
+
+`deploy-release [URL]` downloads the rolling GitHub Release archive and its
+adjacent `.sha256` file over HTTPS, verifies the checksum, and executes the same
+prebuilt validation, migration, rollback, and health-check chain. A successful
+release also updates the installed deployment and backup commands from the
+validated archive, so future updates do not depend on a source checkout.
 
 ## 7. nginx and SSL
 

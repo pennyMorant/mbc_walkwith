@@ -1,0 +1,112 @@
+name: Build deployable release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: API base URL embedded in both Web builds
+        required: false
+        type: string
+      admin_base_path:
+        description: Admin Web base path, such as / or /admin/
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deployment-release
+  cancel-in-progress: false
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    env:
+      VITE_API_BASE_URL: ${{ inputs.api_base_url || vars.DEPLOY_API_BASE_URL }}
+      VITE_ADMIN_BASE_PATH: ${{ inputs.admin_base_path || vars.DEPLOY_ADMIN_BASE_PATH }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate deployment variables
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ "$VITE_API_BASE_URL" =~ ^https?://[^[:space:]]+/v1$ ]] || {
+            echo "Set repository variable DEPLOY_API_BASE_URL to an HTTP(S) URL ending in /v1." >&2
+            exit 1
+          }
+          [[ "$VITE_ADMIN_BASE_PATH" =~ ^/.*/$ || "$VITE_ADMIN_BASE_PATH" == "/" ]] || {
+            echo "Set repository variable DEPLOY_ADMIN_BASE_PATH to / or a path with leading and trailing slashes." >&2
+            exit 1
+          }
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Verify repository
+        run: bun run check
+
+      - name: Build linux-x64 release
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          export MBC_WALKWITH_RELEASE_NAME="mbc_walkwith_linux_x64_${GITHUB_SHA::12}"
+          bun run build:prebuilt
+          mkdir -p dist/github-release
+          cp "dist/prebuilt/${MBC_WALKWITH_RELEASE_NAME}.tar.gz" \
+            dist/github-release/mbc_walkwith_linux_x64.tar.gz
+          (
+            cd dist/github-release
+            sha256sum mbc_walkwith_linux_x64.tar.gz \
+              > mbc_walkwith_linux_x64.tar.gz.sha256
+          )
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mbc-walkwith-linux-x64-${{ github.sha }}
+          path: |
+            dist/github-release/mbc_walkwith_linux_x64.tar.gz
+            dist/github-release/mbc_walkwith_linux_x64.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish rolling deployment release
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -Eeuo pipefail
+          git tag --force deployment-latest "$GITHUB_SHA"
+          git push origin refs/tags/deployment-latest --force
+
+          if gh release view deployment-latest >/dev/null 2>&1; then
+            gh release edit deployment-latest \
+              --title "Latest deployable release" \
+              --notes "Automated linux-x64 deployment artifact for commit ${GITHUB_SHA}." \
+              --prerelease
+          else
+            gh release create deployment-latest \
+              --title "Latest deployable release" \
+              --notes "Automated linux-x64 deployment artifact for commit ${GITHUB_SHA}." \
+              --prerelease
+          fi
+
+          gh release upload deployment-latest \
+            dist/github-release/mbc_walkwith_linux_x64.tar.gz \
+            dist/github-release/mbc_walkwith_linux_x64.tar.gz.sha256 \
+            --clobber

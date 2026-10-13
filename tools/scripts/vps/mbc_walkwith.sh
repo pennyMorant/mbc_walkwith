@@ -32,6 +32,7 @@ service_user="${MBC_WALKWITH_SERVICE_USER:-mbcwalkwith}"
 service_home="${MBC_WALKWITH_SERVICE_HOME:-}"
 service_cache_dir="${MBC_WALKWITH_SERVICE_CACHE_DIR:-}"
 public_repo_url="https://github.com/pennyMorant/mbc_walkwith.git"
+public_release_url="https://github.com/pennyMorant/mbc_walkwith/releases/download/deployment-latest/mbc_walkwith_linux_x64.tar.gz"
 repo_url="${MBC_WALKWITH_REPO_URL:-$public_repo_url}"
 git_ref="${MBC_WALKWITH_GIT_REF:-main}"
 admin_origin=""
@@ -67,6 +68,7 @@ Commands:
   install                 Install runtime dependencies, config, and services.
   deploy                  Deploy or update the application from Git.
   deploy-prebuilt FILE    Deploy a local-built linux-x64 release tarball.
+  deploy-release [URL]    Download, verify, and deploy a GitHub release artifact.
   rollback                Roll back current to the previous or specified release.
   status                  Show service, release, and health status.
   logs TARGET             Show journal logs for api or nginx.
@@ -110,8 +112,8 @@ Common options:
 Notes:
   - This script currently supports Debian/Ubuntu only.
   - It manages API, admin web static files, and public landing static files.
-  - Use deploy-prebuilt for small VPS instances; build the release locally with
-    bun run build:prebuilt, upload the tarball, then deploy it on the server.
+  - Use deploy-release for small VPS instances. GitHub Actions builds the API,
+    admin Web, public Web, and migration runtime; the VPS downloads no source.
   - It does not deploy or manage the local sermon processing workstation.
   - Database backups require /etc/mbc_walkwith/backup.env to be configured
     with an independent private R2 bucket before running backup-init.
@@ -406,6 +408,57 @@ validate_tarball_entries() {
   done
 }
 
+deploy_release_artifact() {
+  local artifact_url="${positional_args[0]:-$public_release_url}"
+  [[ "$artifact_url" == https://* ]] || die "deploy-release requires an HTTPS artifact URL."
+
+  local download_dir archive_path checksum_path quoted_download_dir
+  download_dir="$(mktemp -d /tmp/mbcwalkwith-release.XXXXXX)"
+  printf -v quoted_download_dir '%q' "$download_dir"
+  trap "rm -rf ${quoted_download_dir}" EXIT INT TERM
+  archive_path="${download_dir}/mbc_walkwith_linux_x64.tar.gz"
+  checksum_path="${archive_path}.sha256"
+
+  log "Downloading prebuilt release"
+  if ! curl \
+    --fail \
+    --location \
+    --proto '=https' \
+    --retry 3 \
+    --retry-all-errors \
+    --silent \
+    --show-error \
+    --output "$archive_path" \
+    "$artifact_url"; then
+    die "Failed to download release artifact."
+  fi
+  if ! curl \
+    --fail \
+    --location \
+    --proto '=https' \
+    --retry 3 \
+    --retry-all-errors \
+    --silent \
+    --show-error \
+    --output "$checksum_path" \
+    "${artifact_url}.sha256"; then
+    die "Failed to download release checksum."
+  fi
+
+  log "Verifying release checksum"
+  if ! grep -Eq '^[0-9a-fA-F]{64}  mbc_walkwith_linux_x64\.tar\.gz$' "$checksum_path"; then
+    die "Release checksum file has an unexpected format."
+  fi
+  if ! (cd "$download_dir" && sha256sum --check "$(basename "$checksum_path")"); then
+    die "Release checksum verification failed."
+  fi
+
+  positional_args=("$archive_path")
+  deploy_prebuilt_app
+  rm -rf "$download_dir"
+  trap - EXIT INT TERM
+}
+
 api_base_url_from_origin() {
   local origin
   origin="$(normalize_origin "$1")"
@@ -628,6 +681,19 @@ write_installed_command() {
   "${SUDO[@]}" install -m 0755 "$source_script" "$target_script"
   "${SUDO[@]}" install -d -m 0755 /usr/local/libexec
   "${SUDO[@]}" install -m 0755 "$source_backup_script" "$target_backup_script"
+}
+
+install_packaged_commands() {
+  local release_dir="$1"
+  local packaged_command="${release_dir}/deployment/mbcwalkwith"
+  local packaged_backup="${release_dir}/deployment/mbcwalkwith_backup"
+
+  [[ -x "$packaged_command" ]] || die "Release is missing deployment/mbcwalkwith."
+  [[ -x "$packaged_backup" ]] || die "Release is missing deployment/mbcwalkwith_backup."
+  log "Updating installed deployment commands"
+  "${SUDO[@]}" install -m 0755 "$packaged_command" "/usr/local/bin/${installed_command_name}"
+  "${SUDO[@]}" install -d -m 0755 /usr/local/libexec
+  "${SUDO[@]}" install -m 0755 "$packaged_backup" /usr/local/libexec/mbcwalkwith_backup
 }
 
 prepare_app_dirs() {
@@ -1251,6 +1317,8 @@ PY
   [[ -d "${staging_dir}/backend/migrations" ]] || die "Prebuilt release is missing backend/migrations."
   [[ -f "${staging_dir}/apps/admin_web/dist/index.html" ]] || die "Prebuilt release is missing admin web dist."
   [[ -f "${staging_dir}/apps/public_web/dist/index.html" ]] || die "Prebuilt release is missing public web dist."
+  [[ -x "${staging_dir}/deployment/mbcwalkwith" ]] || die "Prebuilt release is missing deployment/mbcwalkwith."
+  [[ -x "${staging_dir}/deployment/mbcwalkwith_backup" ]] || die "Prebuilt release is missing deployment/mbcwalkwith_backup."
 
   if [[ "$skip_migrate" != "true" ]]; then
     log "Running database migrations"
@@ -1281,6 +1349,7 @@ PY
   fi
 
   mark_release_complete "$release_dir"
+  install_packaged_commands "$release_dir"
   cleanup_releases
   echo "Prebuilt deploy complete. Current release: $(readlink -f "$current_link")"
 }
@@ -2016,7 +2085,7 @@ menu() {
 MBC WalkWith VPS Manager
 1) Install environment and services
 2) Configure nginx + SSL
-3) Deploy/update application
+3) Deploy latest GitHub release
 4) Roll back to previous release
 5) Show status
 6) Show API logs
@@ -2035,7 +2104,7 @@ EOF
     case "$choice" in
       1) install_all ;;
       2) configure_ssl ;;
-      3) deploy_app ;;
+      3) deploy_release_artifact ;;
       4) rollback_app ;;
       5) status_app ;;
       6) logs_cmd api ;;
@@ -2069,8 +2138,9 @@ install_all() {
   write_installed_command
   echo "Installation complete."
   echo "Review /etc/mbc_walkwith/backend.env before the first deploy."
-    echo "Deploy from Git with: ${installed_command_name} deploy --check"
-    echo "Deploy local prebuilt with: ${installed_command_name} deploy-prebuilt /tmp/mbc_walkwith_linux_x64.tar.gz"
+  echo "Deploy latest GitHub release with: ${installed_command_name} deploy-release"
+  echo "Recovery source deploy: ${installed_command_name} deploy --check"
+  echo "Recovery local artifact deploy: ${installed_command_name} deploy-prebuilt /tmp/mbc_walkwith_linux_x64.tar.gz"
 }
 
 parse_options "$@"
@@ -2099,6 +2169,9 @@ case "$command" in
     ;;
   deploy-prebuilt)
     deploy_prebuilt_app
+    ;;
+  deploy-release)
+    deploy_release_artifact
     ;;
   rollback)
     rollback_app
