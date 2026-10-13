@@ -334,6 +334,8 @@ The `ssl` command:
 - restarts API
 - reloads nginx
 - supports Certbot install methods: `auto`, `snap`, `venv`, `apt`, or `none`
+- enables `mbcwalkwith-certbot-renew.timer` to check renewal twice daily and
+  reload nginx after a successful renewal command
 
 Vite embeds the API URL and admin base path at build time. Before running
 `ssl` against an existing release, deploy source or a prebuilt package using

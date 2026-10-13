@@ -1832,6 +1832,39 @@ install_certbot_apt() {
   "${SUDO[@]}" apt-get install -y certbot python3-certbot-nginx
 }
 
+install_certbot_renewal_timer() {
+  cat > /tmp/mbcwalkwith-certbot-renew.service <<'EOF'
+[Unit]
+Description=Renew MBC WalkWith TLS certificates
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/certbot renew --quiet
+ExecStartPost=/bin/systemctl reload nginx
+EOF
+
+  cat > /tmp/mbcwalkwith-certbot-renew.timer <<'EOF'
+[Unit]
+Description=Check MBC WalkWith TLS certificate renewal twice daily
+
+[Timer]
+OnCalendar=*-*-* 03,15:00:00
+RandomizedDelaySec=3600
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+  "${SUDO[@]}" install -m 0644 /tmp/mbcwalkwith-certbot-renew.service /etc/systemd/system/mbcwalkwith-certbot-renew.service
+  "${SUDO[@]}" install -m 0644 /tmp/mbcwalkwith-certbot-renew.timer /etc/systemd/system/mbcwalkwith-certbot-renew.timer
+  rm -f /tmp/mbcwalkwith-certbot-renew.service /tmp/mbcwalkwith-certbot-renew.timer
+  "${SUDO[@]}" systemctl daemon-reload
+  "${SUDO[@]}" systemctl enable --now mbcwalkwith-certbot-renew.timer
+}
+
 install_or_upgrade_certbot() {
   [[ "$certbot_method" != "none" ]] || return 0
 
@@ -1859,6 +1892,7 @@ install_or_upgrade_certbot() {
       install_certbot_apt
       ;;
   esac
+  install_certbot_renewal_timer
 }
 
 configure_ssl() {
