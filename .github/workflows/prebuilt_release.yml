@@ -25,9 +25,24 @@ concurrency:
 jobs:
   build-release:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: mbc_walkwith_ci
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d mbc_walkwith_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       VITE_API_BASE_URL: ${{ inputs.api_base_url || vars.DEPLOY_API_BASE_URL }}
       VITE_ADMIN_BASE_PATH: ${{ inputs.admin_base_path || vars.DEPLOY_ADMIN_BASE_PATH }}
+      DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/mbc_walkwith_ci
 
     steps:
       - name: Check out repository
@@ -58,6 +73,11 @@ jobs:
 
       - name: Verify repository
         run: bun run check
+
+      - name: Verify migrations on an empty PostgreSQL database
+        run: |
+          bun run db:migrate
+          bun run db:migrate
 
       - name: Build linux-x64 release
         shell: bash

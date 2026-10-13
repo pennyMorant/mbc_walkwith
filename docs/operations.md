@@ -69,7 +69,8 @@ The normal VPS artifact is built by
 `.github/workflows/prebuilt_release.yml`. Configure repository variables
 `DEPLOY_API_BASE_URL` and `DEPLOY_ADMIN_BASE_PATH`; every successful `main`
 build updates the `deployment-latest` prerelease with a stable archive name and
-SHA-256 checksum.
+SHA-256 checksum. The workflow starts an empty PostgreSQL service and runs the
+complete Drizzle migration chain twice before it publishes an artifact.
 
 Start the production API with Bun running the TypeScript sources:
 

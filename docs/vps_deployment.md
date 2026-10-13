@@ -124,6 +124,8 @@ mbcwalkwith deploy-release
 This is the recommended update path. GitHub Actions builds the backend, admin
 Web, public Web, and linux-x64 migration runtime. The VPS downloads the rolling
 release archive and checksum; it does not clone source or compile the workspace.
+The workflow validates the full migration chain against an empty PostgreSQL
+database before publishing the release.
 
 Configure these GitHub repository variables before the workflow runs:
 
