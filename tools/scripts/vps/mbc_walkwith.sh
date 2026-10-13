@@ -569,7 +569,7 @@ run_shell_as_deploy_user() {
     XDG_CACHE_HOME="$service_cache_dir" \
     BUN_INSTALL="$BUN_INSTALL" \
     PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
-    bash -lc "$shell_cmd"
+    bash -c "$shell_cmd"
 }
 
 run_release_shell_with_env() {
@@ -586,7 +586,7 @@ run_release_shell_with_env() {
     XDG_CACHE_HOME="$service_cache_dir" \
     BUN_INSTALL="$BUN_INSTALL" \
     PATH="${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin" \
-    bash -lc "$shell_cmd"
+    bash -c "$shell_cmd"
 }
 
 as_postgres() {
@@ -891,7 +891,7 @@ EnvironmentFile=${backend_env}
 Environment=HOME=${service_home}
 Environment=XDG_CACHE_HOME=${service_cache_dir}
 Environment=PATH=${BUN_INSTALL}/bin:/usr/local/bin:/usr/bin:/bin
-ExecStart=/bin/bash -lc 'cd ${app_dir}/current && if [[ -f backend_dist/main.js ]]; then exec ${bun_bin} backend_dist/main.js; fi; exec ${bun_bin} run start:api'
+ExecStart=/bin/bash -c 'cd ${app_dir}/current && if [[ -f backend_dist/main.js ]]; then exec ${bun_bin} backend_dist/main.js; fi; exec ${bun_bin} run start:api'
 Restart=always
 RestartSec=3
 NoNewPrivileges=true
@@ -1305,7 +1305,7 @@ PY
   [[ -f "${staging_dir}/backend_dist/main.js" ]] || die "Prebuilt release is missing backend_dist/main.js."
   [[ -f "${staging_dir}/backend/drizzle.config.ts" ]] || die "Prebuilt release is missing backend/drizzle.config.ts."
   [[ -f "${staging_dir}/backend/src/shared/db/schema.ts" ]] || die "Prebuilt release is missing backend/src/shared/db/schema.ts."
-  [[ -x "${staging_dir}/backend/node_modules/.bin/drizzle-kit" ]] || die "Prebuilt release is missing backend/node_modules/.bin/drizzle-kit."
+  [[ -f "${staging_dir}/backend/node_modules/drizzle-kit/bin.cjs" ]] || die "Prebuilt release is missing the Drizzle Kit Bun entrypoint."
   [[ -d "${staging_dir}/backend/migrations" ]] || die "Prebuilt release is missing backend/migrations."
   [[ -f "${staging_dir}/apps/admin_web/dist/index.html" ]] || die "Prebuilt release is missing admin web dist."
   [[ -f "${staging_dir}/apps/public_web/dist/index.html" ]] || die "Prebuilt release is missing public web dist."

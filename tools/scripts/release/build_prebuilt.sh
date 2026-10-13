@@ -116,7 +116,7 @@ cat > "$staging_dir/backend/package.json" <<'EOF'
   "private": true,
   "type": "module",
   "scripts": {
-    "db:migrate": "test -n \"$DATABASE_URL\" || (echo 'DATABASE_URL is required to run Drizzle Kit migrations.' >&2; exit 1); drizzle-kit migrate --config drizzle.config.ts"
+    "db:migrate": "test -n \"$DATABASE_URL\" || (echo 'DATABASE_URL is required to run Drizzle Kit migrations.' >&2; exit 1); bun ./node_modules/drizzle-kit/bin.cjs migrate --config drizzle.config.ts"
   },
   "dependencies": {
     "drizzle-kit": "^0.30.2",
