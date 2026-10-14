@@ -3,9 +3,12 @@ import {
   publicLandingAppSectionSchema,
   publicLandingContactSectionSchema,
   publicLandingEntranceSectionSchema,
+  publicLandingEventsConfigSchema,
   publicLandingHeroSchema,
   publicLandingIdentitySchema,
   publicLandingMissionSectionSchema,
+  publicLandingPeopleSectionSchema,
+  publicLandingScheduleSectionSchema,
   publicLandingServiceSectionSchema
 } from "@mbc/api-contracts";
 import { z } from "zod";
@@ -30,6 +33,9 @@ export const publicLandingSettingSchemaById = new Map<
   ["hero", publicLandingHeroSchema],
   ["mission", publicLandingMissionSectionSchema],
   ["service", publicLandingServiceSectionSchema],
+  ["schedule", publicLandingScheduleSectionSchema],
+  ["people", publicLandingPeopleSectionSchema],
+  ["events", publicLandingEventsConfigSchema],
   ["entrance", publicLandingEntranceSectionSchema],
   ["app", publicLandingAppSectionSchema],
   ["contact", publicLandingContactSectionSchema],

@@ -45,6 +45,7 @@ bun run check:sdk-boundaries
 - [AI SDK](sdk/ai.md)
 - [Growth SDK](sdk/growth.md)
 - [Errors and Transport](sdk/errors.md)
+- [Public Web SDK](sdk/public_web.md)
 
 ## Shared Client Rules
 

@@ -5,7 +5,10 @@ import ContactFooter from "@/components/ContactFooter.vue";
 import HeroSection from "@/components/HeroSection.vue";
 import MissionSection from "@/components/MissionSection.vue";
 import OpeningIntro from "@/components/OpeningIntro.vue";
+import PeopleSection from "@/components/PeopleSection.vue";
+import ScheduleSection from "@/components/ScheduleSection.vue";
 import ServiceInfoSection from "@/components/ServiceInfoSection.vue";
+import UpcomingEventsSection from "@/components/UpcomingEventsSection.vue";
 import { useLandingContent } from "@/composables/use_landing_content";
 import { usePublicLocale } from "@/core/locale";
 import { computed, ref, watch } from "vue";
@@ -102,6 +105,9 @@ function setIconLink(rel: string, href: string, type?: string) {
         <HeroSection :identity="content.identity" :hero="content.hero" />
         <MissionSection :mission="content.mission" />
         <ServiceInfoSection :service="content.service" />
+        <ScheduleSection :schedule="content.schedule" />
+        <UpcomingEventsSection :events="content.events" :locale="content.locale" />
+        <PeopleSection :people="content.people" />
         <ChurchEntranceSection :entrance="content.entrance" />
         <AppInvitationSection :app="content.app" />
         <ContactFooter

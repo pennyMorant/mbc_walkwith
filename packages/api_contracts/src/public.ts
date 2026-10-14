@@ -100,6 +100,62 @@ export const publicLandingContactSectionSchema = z.object({
   copyright: z.string()
 });
 
+export const publicLandingScheduleItemSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  dayLabel: z.string(),
+  timeLabel: z.string(),
+  location: z.string(),
+  detail: z.string().default(""),
+  iconName: z.string().default("mdi-calendar-heart")
+});
+
+export const publicLandingScheduleSectionSchema = z.object({
+  eyebrow: z.string(),
+  title: z.string(),
+  body: z.string(),
+  items: z.array(publicLandingScheduleItemSchema)
+});
+
+export const publicLandingPersonSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  role: z.string(),
+  summary: z.string(),
+  imageUrl: z.string().default("")
+});
+
+export const publicLandingPeopleSectionSchema = z.object({
+  eyebrow: z.string(),
+  title: z.string(),
+  body: z.string(),
+  items: z.array(publicLandingPersonSchema)
+});
+
+export const publicLandingEventsConfigSchema = z.object({
+  eyebrow: z.string(),
+  title: z.string(),
+  body: z.string(),
+  emptyText: z.string(),
+  maxItems: z.number().int().min(1).max(12).default(6)
+});
+
+export const publicLandingEventSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  summary: z.string(),
+  startsAt: z.string().datetime().nullable(),
+  endsAt: z.string().datetime().nullable(),
+  imageUrl: z.string().nullable(),
+  ctaLabel: z.string().nullable(),
+  ctaUrl: z.string().nullable()
+});
+
+export const publicLandingEventsSectionSchema =
+  publicLandingEventsConfigSchema.extend({
+    items: z.array(publicLandingEventSchema)
+  });
+
 export const publicLandingContentSchema = z.object({
   locale: supportedLocaleSchema,
   identity: publicLandingIdentitySchema,
@@ -110,6 +166,9 @@ export const publicLandingContentSchema = z.object({
   hero: publicLandingHeroSchema,
   mission: publicLandingMissionSectionSchema,
   service: publicLandingServiceSectionSchema,
+  schedule: publicLandingScheduleSectionSchema,
+  people: publicLandingPeopleSectionSchema,
+  events: publicLandingEventsSectionSchema,
   entrance: publicLandingEntranceSectionSchema,
   app: publicLandingAppSectionSchema,
   contact: publicLandingContactSectionSchema,
@@ -146,5 +205,22 @@ export type PublicLandingAppSection = z.infer<
 >;
 export type PublicLandingContactSection = z.infer<
   typeof publicLandingContactSectionSchema
+>;
+export type PublicLandingScheduleItem = z.infer<
+  typeof publicLandingScheduleItemSchema
+>;
+export type PublicLandingScheduleSection = z.infer<
+  typeof publicLandingScheduleSectionSchema
+>;
+export type PublicLandingPerson = z.infer<typeof publicLandingPersonSchema>;
+export type PublicLandingPeopleSection = z.infer<
+  typeof publicLandingPeopleSectionSchema
+>;
+export type PublicLandingEventsConfig = z.infer<
+  typeof publicLandingEventsConfigSchema
+>;
+export type PublicLandingEvent = z.infer<typeof publicLandingEventSchema>;
+export type PublicLandingEventsSection = z.infer<
+  typeof publicLandingEventsSectionSchema
 >;
 export type PublicLandingResponse = z.infer<typeof publicLandingResponseSchema>;

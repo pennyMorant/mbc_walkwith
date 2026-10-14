@@ -103,7 +103,12 @@ export async function registerAppRoutes(
     requirePermission(dependencies.adminAuthService, permission);
 
   await registerHealthRoutes(app, config, dependencies.healthDatabaseProbe);
-  await registerPublicLandingRoutes(app, dependencies.settingsService);
+  await registerPublicLandingRoutes(
+    app,
+    dependencies.settingsService,
+    dependencies.lifePostService,
+    dependencies.contentLocalizationService
+  );
   await registerSermonRoutes(
     app,
     dependencies.sermonService,

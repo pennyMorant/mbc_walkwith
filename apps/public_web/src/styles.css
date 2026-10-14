@@ -817,6 +817,170 @@ a {
   gap: 12px;
 }
 
+.schedule-section,
+.people-section,
+.events-section {
+  padding-top: 96px;
+  padding-bottom: 96px;
+}
+
+.schedule-grid,
+.people-grid,
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 36px;
+}
+
+.schedule-card,
+.person-card,
+.event-card {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04)),
+    rgba(8, 18, 13, 0.56);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.schedule-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  min-height: 190px;
+  padding: 24px;
+}
+
+.schedule-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: rgba(246, 223, 159, 0.12);
+  color: #f6df9f;
+}
+
+.schedule-card h3,
+.person-card h3,
+.event-card h3 {
+  margin: 0;
+  color: #fff8e8;
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.schedule-time,
+.person-role,
+.event-date {
+  margin: 10px 0 0;
+  color: #f6df9f;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.schedule-location,
+.schedule-detail,
+.person-copy > p:last-child,
+.event-summary {
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.65;
+}
+
+.schedule-location {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 800;
+}
+
+.schedule-detail {
+  margin: 8px 0 0;
+}
+
+.person-card {
+  display: grid;
+  grid-template-rows: 230px auto;
+}
+
+.person-photo {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(246, 223, 159, 0.22), transparent 42%),
+    rgba(49, 95, 69, 0.34);
+  color: #f6df9f;
+}
+
+.person-photo img,
+.event-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.person-copy,
+.event-copy {
+  padding: 24px;
+}
+
+.person-role {
+  margin: 0 0 8px;
+}
+
+.person-copy > p:last-child {
+  margin: 14px 0 0;
+}
+
+.events-section {
+  width: 100%;
+  max-width: none;
+  padding-inline: max(16px, calc((100vw - 1120px) / 2));
+  background:
+    radial-gradient(circle at 78% 16%, rgba(246, 223, 159, 0.12), transparent 30%),
+    linear-gradient(180deg, rgba(6, 15, 10, 0.16), rgba(11, 27, 18, 0.72));
+}
+
+.events-section .section-heading,
+.events-grid {
+  width: min(1120px, 100%);
+  margin-inline: auto;
+}
+
+.event-card {
+  display: grid;
+  grid-template-rows: 210px auto;
+}
+
+.event-card:not(:has(.event-image)) {
+  grid-template-rows: auto;
+}
+
+.event-image {
+  overflow: hidden;
+  background: rgba(49, 95, 69, 0.32);
+}
+
+.event-date {
+  margin: 0 0 9px;
+}
+
+.event-summary {
+  margin: 14px 0 20px;
+}
+
+.event-copy .v-btn {
+  border-radius: 999px;
+}
+
 .entrance-section {
   width: 100%;
   max-width: none;
@@ -1043,10 +1207,13 @@ a {
   .hero-quick-actions,
   .mission-grid,
   .entrance-grid,
-  .service-section,
-  .app-section,
-  .service-facts,
-  .footer-links {
+    .service-section,
+    .app-section,
+    .service-facts,
+    .schedule-grid,
+    .people-grid,
+    .events-grid,
+    .footer-links {
     grid-template-columns: 1fr;
   }
 
@@ -1192,6 +1359,16 @@ a {
 
   .highlight-grid {
     grid-template-columns: 1fr;
+  }
+
+  .schedule-card {
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .person-card,
+  .event-card {
+    grid-template-rows: 200px auto;
   }
 
   .footer-bottom {

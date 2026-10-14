@@ -21,6 +21,9 @@ export const publicLandingSettingIds = [
   "hero",
   "mission",
   "service",
+  "schedule",
+  "people",
+  "events",
   "entrance",
   "app",
   "contact",
@@ -148,6 +151,26 @@ const zhHansDefaultContent = publicLandingContentSchema.parse({
         "mdi-message-text-outline"
       )
     ]
+  },
+  schedule: {
+    eyebrow: "固定聚会",
+    title: "一周中的教会生活",
+    body: "聚会时间与地点由教会同工在后台维护，请在来访前查看最新安排。",
+    items: []
+  },
+  people: {
+    eyebrow: "认识我们",
+    title: "牧者与同工",
+    body: "认识服事教会与社区的牧者和同工。",
+    items: []
+  },
+  events: {
+    eyebrow: "近期活动",
+    title: "一起参与教会生活",
+    body: "查看已公开发布并仍在进行中的近期活动。",
+    emptyText: "目前没有已发布的近期活动。",
+    maxItems: 6,
+    items: []
   },
   entrance: {
     eyebrow: "教会入口",
@@ -277,6 +300,22 @@ const zhHantDefaultContent = localizePublicLandingContent("zh-Hant", {
     body: "我們期待與你一同敬拜、認識真道，也在聚會後繼續彼此扶持、同行。",
     facts: []
   },
+  schedule: {
+    eyebrow: "固定聚會",
+    title: "一週中的教會生活",
+    body: "聚會時間與地點由教會同工在後台維護，請在來訪前查看最新安排。"
+  },
+  people: {
+    eyebrow: "認識我們",
+    title: "牧者與同工",
+    body: "認識服事教會與社區的牧者和同工。"
+  },
+  events: {
+    eyebrow: "近期活動",
+    title: "一起參與教會生活",
+    body: "查看已公開發布並仍在進行中的近期活動。",
+    emptyText: "目前沒有已發布的近期活動。"
+  },
   entrance: {
     eyebrow: "教會入口",
     title: "從這裡開始認識我們",
@@ -364,6 +403,22 @@ const enDefaultContent = localizePublicLandingContent("en", {
     title: "You are welcome to join us this Sunday",
     body: "We look forward to worshiping with you, learning God's Word together, and continuing in fellowship after the service.",
     facts: []
+  },
+  schedule: {
+    eyebrow: "Weekly gatherings",
+    title: "Church life throughout the week",
+    body: "Service times and locations are maintained by church staff. Please review the latest schedule before visiting."
+  },
+  people: {
+    eyebrow: "Meet us",
+    title: "Pastors and ministry team",
+    body: "Meet the pastors and ministry team serving our church and community."
+  },
+  events: {
+    eyebrow: "Upcoming events",
+    title: "Take part in church life",
+    body: "Explore upcoming activities that have been reviewed and published by the church.",
+    emptyText: "There are no published upcoming events right now."
   },
   entrance: {
     eyebrow: "Church entrances",
@@ -456,6 +511,22 @@ const esDefaultContent = localizePublicLandingContent("es", {
     body: "Esperamos adorar contigo, aprender juntos la Palabra de Dios y seguir en comunión después del servicio.",
     facts: []
   },
+  schedule: {
+    eyebrow: "Reuniones semanales",
+    title: "Vida de iglesia durante la semana",
+    body: "El equipo de la iglesia mantiene los horarios y lugares. Revisa la información más reciente antes de visitarnos."
+  },
+  people: {
+    eyebrow: "Conócenos",
+    title: "Pastores y equipo ministerial",
+    body: "Conoce a los pastores y servidores que acompañan a nuestra iglesia y comunidad."
+  },
+  events: {
+    eyebrow: "Próximos eventos",
+    title: "Participa en la vida de la iglesia",
+    body: "Explora las próximas actividades revisadas y publicadas por la iglesia.",
+    emptyText: "No hay próximos eventos publicados en este momento."
+  },
   entrance: {
     eyebrow: "Entradas de la iglesia",
     title: "Comienza aquí para conocernos",
@@ -502,9 +573,21 @@ export const publicLandingDefaultContent =
 export const publicLandingDefaultSettings: AppSetting[] = supportedLocales.flatMap(
   (locale) =>
     publicLandingSettingIds.map((id) =>
-      setting(locale, id, publicLandingDefaultContentByLocale[locale][id])
+      setting(locale, id, defaultSettingValue(locale, id))
     )
 );
+
+function defaultSettingValue(
+  locale: SupportedLocale,
+  id: PublicLandingSettingId
+) {
+  if (id !== "events") {
+    return publicLandingDefaultContentByLocale[locale][id];
+  }
+  const { items: _items, ...config } =
+    publicLandingDefaultContentByLocale[locale].events;
+  return config;
+}
 
 export function publicLandingSettingKey(
   locale: SupportedLocale,
@@ -564,6 +647,9 @@ function sectionLabel(id: PublicLandingSettingId) {
     hero: "官网首屏内容",
     mission: "教会宗旨区块",
     service: "聚会时间、地址与地图入口",
+    schedule: "教会固定日程",
+    people: "牧者与同工介绍",
+    events: "近期活动区块",
     entrance: "新朋友和公开入口",
     app: "App 下载与引导入口",
     contact: "联系方式和社交媒体",
@@ -635,6 +721,19 @@ function localizePublicLandingContent(
       actions: base.service.actions.map((item) =>
         localizeAction(item, text.actions[item.id])
       )
+    },
+    schedule: {
+      ...base.schedule,
+      ...text.schedule
+    },
+    people: {
+      ...base.people,
+      ...text.people
+    },
+    events: {
+      ...base.events,
+      ...text.events,
+      items: []
     },
     entrance: {
       ...base.entrance,
@@ -728,6 +827,22 @@ type LocalizedLandingText = {
     title: string;
     body: string;
     facts: string[];
+  };
+  schedule: {
+    eyebrow: string;
+    title: string;
+    body: string;
+  };
+  people: {
+    eyebrow: string;
+    title: string;
+    body: string;
+  };
+  events: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    emptyText: string;
   };
   entrance: {
     eyebrow: string;

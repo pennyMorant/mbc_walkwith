@@ -44,16 +44,20 @@ Public Web does not own:
 第一版使用：
 
 - `GET /v1/public/landing?locale=...` 读取官网身份、首屏、宗旨、聚会信息、教会入口、App 引导、联系信息和 CTA action。
+- 同一聚合响应读取固定日程、公开人员介绍，并投影公开、已发布、尚未结束的近期活动。
 - `public_landing` 分类下的 `app_settings` 是官网可变资源的后端 source of truth。
 - 管理员通过管理 Web 的 Settings 页面维护官网导航、新朋友入口、地图链接、联系方式、社交媒体和 App 下载入口。
 - 官网不调用 `GET /v1/sermons` 作为内容列表。
-- 官网不调用 `GET /v1/life/posts` 作为活动流或内容流。
+- 官网不直接调用 `GET /v1/life/posts`；Landing 后端聚合层只读取 canonical Life event 投影。
 - 官网不展开 App 内业务模块清单，只保留公开介绍和入口。
 - API 不可用时显示明确错误状态，不用本地硬编码内容冒充业务记录。
 
-聚会时间、地址、社媒、App 下载链接等资源保持 `GET /v1/public/landing?locale=...`
+聚会时间、固定日程、人员介绍、地址、社媒、App 下载链接等资源保持 `GET /v1/public/landing?locale=...`
 作为 public web 聚合入口，由后端从 settings 组合返回，不在 public Web
 写死业务规则。
+
+近期活动不是 Landing setting。活动仍由 Life feature 创建、审核和发布；聚合层只返回
+`type=event`、`visibility=public`、`status=published` 且尚未结束的记录。
 
 开源源码默认不包含真实聚会时间、地址、电话、地图、社交媒体、App 下载地址或
 外部宣传图片。全新部署必须由管理员在 Settings 中填写；未配置时 API 返回空列表或

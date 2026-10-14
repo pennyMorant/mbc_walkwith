@@ -51,8 +51,9 @@ This document covers admin Web API helper structure and admin-facing SDK rules.
 - Audit logs: `apps/admin_web/src/core/api/audit_logs.ts`
 - Settings: `apps/admin_web/src/core/api/settings.ts`
   - `public_landing` category owns public website identity, navigation,
-    new-friend links, contact links, social media, map links, and App download
-    actions.
+    new-friend links, recurring schedules, public people profiles, contact
+    links, social media, map links, App download actions, and events section
+    copy. Event records remain owned by the Life feature.
 - AI management: `apps/admin_web/src/core/api/ai.ts`
 - Content localization: `apps/admin_web/src/core/api/content_localizations.ts`
   - Hand-written translations and auto-translation use the same typed client boundary.

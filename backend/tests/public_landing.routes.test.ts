@@ -1,6 +1,7 @@
 import {
   appSettingListResponseSchema,
   appSettingSchema,
+  lifePostSchema,
   publicLandingResponseSchema
 } from "@mbc/api-contracts";
 import { describe, expect, it } from "vitest";
@@ -31,6 +32,9 @@ describe("public landing routes", () => {
     expect(landing.hero.imageUrl).toBe("");
     expect(landing.service.imageUrl).toBe("");
     expect(landing.service.facts).toEqual([]);
+    expect(landing.schedule.items).toEqual([]);
+    expect(landing.people.items).toEqual([]);
+    expect(landing.events.items).toEqual([]);
     expect(landing.contact.links).toEqual([]);
     expect(landing.entrance.actions.every((action) => action.kind === "anchor"))
       .toBe(true);
@@ -47,6 +51,77 @@ describe("public landing routes", () => {
     ]);
     expect(landing.footerActions.map((action) => action.href)).toEqual(["#top"]);
     expect(landing.entrance.actions.length).toBeGreaterThan(0);
+    await harness.close();
+  });
+
+  it("projects upcoming published events from the life feature", async () => {
+    const harness = await buildTestApp();
+    const { app } = harness;
+    const { accessToken } = await login(app);
+
+    const createResponse = await app.inject({
+      method: "POST",
+      url: "/v1/admin/life-posts",
+      headers: { authorization: `Bearer ${accessToken}` },
+      payload: {
+        type: "event",
+        title: "Community welcome lunch",
+        body: "Meet church families and ministry leaders after worship.",
+        meta: "Fellowship Hall",
+        startsAt: "2099-06-20T20:30:00.000Z",
+        endsAt: "2099-06-20T22:00:00.000Z",
+        visibility: "private",
+        ctaLabel: "Event details",
+        ctaUrl: "https://example.com/events/welcome-lunch"
+      }
+    });
+    expect(createResponse.statusCode).toBe(200);
+    const created = expectResponseData(
+      createResponse,
+      lifePostSchema,
+      "landing event create"
+    );
+
+    const reviewResponse = await app.inject({
+      method: "POST",
+      url: `/v1/admin/life-posts/${created.id}/submit-review`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "x-life-post-revision": String(created.revision)
+      }
+    });
+    const reviewed = expectResponseData(
+      reviewResponse,
+      lifePostSchema,
+      "landing event review"
+    );
+    const publishResponse = await app.inject({
+      method: "POST",
+      url: `/v1/admin/life-posts/${created.id}/publish`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "x-life-post-revision": String(reviewed.revision)
+      }
+    });
+    expect(publishResponse.statusCode).toBe(200);
+
+    const landingResponse = await app.inject({
+      method: "GET",
+      url: "/v1/public/landing?locale=en"
+    });
+    const landing = expectResponseData(
+      landingResponse,
+      publicLandingResponseSchema,
+      "public landing with events"
+    );
+    expect(landing.events.items).toEqual([
+      expect.objectContaining({
+        id: created.id,
+        title: "Community welcome lunch",
+        summary: "Fellowship Hall",
+        ctaLabel: "Event details"
+      })
+    ]);
     await harness.close();
   });
 
@@ -108,6 +183,15 @@ describe("public landing routes", () => {
     );
     expect(settings.items.map((setting) => setting.key)).toContain(
       "publicLanding.contact"
+    );
+    expect(settings.items.map((setting) => setting.key)).toContain(
+      "publicLanding.schedule"
+    );
+    expect(settings.items.map((setting) => setting.key)).toContain(
+      "publicLanding.people"
+    );
+    expect(settings.items.map((setting) => setting.key)).toContain(
+      "publicLanding.events"
     );
     expect(settings.items.map((setting) => setting.key)).toContain(
       "publicLanding.es.contact"

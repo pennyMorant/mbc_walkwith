@@ -37,6 +37,7 @@ feature 文档顶部 `状态` 行为准；跨 feature 是否达到上线测试�
 - [ai_content_assist.md](ai_content_assist.md)：后台 AI 内容草稿辅助闭环。
 - [ai_bible_study.md](ai_bible_study.md)：会友 AI 查经辅助闭环。
 - [content_localization.md](content_localization.md)：教会内容手工与 AI 翻译、版本校验和公开读取投影闭环。
+- [public_landing_publishing.md](public_landing_publishing.md)：官网配置、固定日程、人员介绍和近期活动聚合闭环。
 
 ## 3. Stage Two Feature Catalog
 

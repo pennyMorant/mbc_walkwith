@@ -87,6 +87,7 @@ Feature release map 只定义业务闭环的边界和阶段，不替代 `docs/fe
 
 - [sermon_discovery.md](../features/sermon_discovery.md)：讲道搜索、系列、讲员、主题和经文关联闭环。
 - [church_life_publishing.md](../features/church_life_publishing.md)：公告、周报、生活内容的草稿、审核、发布和归档闭环。
+- [public_landing_publishing.md](../features/public_landing_publishing.md)：官网配置、固定日程、人员介绍和近期活动聚合闭环。
 - [event_attendance.md](../features/event_attendance.md)：活动签到、手动补签、出席状态和导出闭环。
 - [group_ministry.md](../features/group_ministry.md)：小组/团契资料、申请、成员、可见性和归档闭环。
 - [serving_schedule.md](../features/serving_schedule.md)：服事岗位、排班、确认、请假、换班和提醒闭环。

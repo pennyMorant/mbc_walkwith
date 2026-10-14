@@ -4,11 +4,15 @@ import {
   publicLandingContactSectionSchema,
   publicLandingContentSchema,
   publicLandingEntranceSectionSchema,
+  publicLandingEventsConfigSchema,
   publicLandingHeroSchema,
   publicLandingIdentitySchema,
   publicLandingMissionSectionSchema,
+  publicLandingPeopleSectionSchema,
+  publicLandingScheduleSectionSchema,
   publicLandingServiceSectionSchema,
   type AppSetting,
+  type PublicLandingEvent,
   type SupportedLocale
 } from "@mbc/api-contracts";
 import { z, type ZodType } from "zod";
@@ -27,7 +31,8 @@ const actionListSchema = z.array(publicLandingActionSchema);
 
 export async function getPublicLandingContent(
   settingsService: SettingsService,
-  locale: SupportedLocale = publicLandingDefaultLocale
+  locale: SupportedLocale = publicLandingDefaultLocale,
+  events: PublicLandingEvent[] = []
 ) {
   const fallbackContent =
     publicLandingDefaultContentByLocale[locale] ?? publicLandingDefaultContent;
@@ -36,6 +41,14 @@ export async function getPublicLandingContent(
     limit: 300
   });
   const settingByKey = new Map(settings.map((setting) => [setting.key, setting]));
+  const { items: _fallbackEventItems, ...fallbackEventsConfig } =
+    fallbackContent.events;
+  const eventsConfig = settingValue(
+    settingByKey,
+    publicLandingSettingKey(locale, "events"),
+    publicLandingEventsConfigSchema,
+    fallbackEventsConfig
+  );
 
   const content = publicLandingContentSchema.parse({
     locale,
@@ -87,6 +100,22 @@ export async function getPublicLandingContent(
       publicLandingServiceSectionSchema,
       fallbackContent.service
     ),
+    schedule: settingValue(
+      settingByKey,
+      publicLandingSettingKey(locale, "schedule"),
+      publicLandingScheduleSectionSchema,
+      fallbackContent.schedule
+    ),
+    people: settingValue(
+      settingByKey,
+      publicLandingSettingKey(locale, "people"),
+      publicLandingPeopleSectionSchema,
+      fallbackContent.people
+    ),
+    events: {
+      ...eventsConfig,
+      items: events.slice(0, eventsConfig.maxItems)
+    },
     entrance: settingValue(
       settingByKey,
       publicLandingSettingKey(locale, "entrance"),

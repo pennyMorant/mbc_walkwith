@@ -51,7 +51,7 @@ export const apiRouteContractRegistry = [
     surface: "public",
     owner: "public-web",
     contractFile: "packages/api_contracts/src/public.ts",
-    sdkDocs: ["docs/surfaces/public_web.md"],
+    sdkDocs: ["docs/sdk/public_web.md", "docs/surfaces/public_web.md"],
     backendRouteFiles: ["backend/src/modules/public/public_landing.routes.ts"],
     clientFiles: [
       "apps/public_web/src/core/api/client.ts",
@@ -59,7 +59,7 @@ export const apiRouteContractRegistry = [
     ],
     routes: ["GET /v1/public/landing"],
     notes:
-      "Public website landing resources and CTA actions. Sermon consumption remains owned by the mobile App."
+      "Public website configuration, recurring schedules, people profiles, CTA actions, and canonical upcoming Life event projections. Sermon consumption remains owned by the mobile App."
   },
   {
     featureId: "admin_auth",

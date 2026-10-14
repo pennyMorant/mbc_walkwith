@@ -129,8 +129,9 @@ Surface rule:
   fresh/stale 快照和 drill-down；Admin 只负责本地化和格式化，不自行推算指标。
   趋势和统计导出尚未接入。
 - Public landing settings：Settings 页面维护官网身份、导航、新朋友入口、
-  聚会地图链接、联系方式、社交媒体和 App 下载入口；公开官网只读取后端聚合
-  后的 `/v1/public/landing?locale=...`。简体中文保留基础 key，例如
+  固定日程、公开人员介绍、聚会地图链接、联系方式、社交媒体和 App 下载入口；
+  近期活动由 Life 中已发布的公开活动动态投影，不在 Settings 重复维护。公开官网只
+  读取后端聚合后的 `/v1/public/landing?locale=...`。简体中文保留基础 key，例如
   `publicLanding.contact`；其他语言使用 locale key，例如
   `publicLanding.es.contact` 和 `publicLanding.zh-Hant.contact`。
 

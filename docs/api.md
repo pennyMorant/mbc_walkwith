@@ -77,9 +77,12 @@ snapshots, or notification provider callbacks as source of truth. Sermon
 discovery currently queries canonical sermon data directly and has no reindex
 route or index lifecycle.
 Public Web must not hardcode visitor resources such as new-friend actions,
-contact links, map links, social media, or App download URLs. Those values are
+contact links, recurring schedules, public people profiles, map links, social
+media, or App download URLs. Those values are
 admin-managed settings under the `public_landing` category and are exposed to
 the website through `GET /v1/public/landing?locale=...`.
+The same response projects upcoming public events from canonical Life posts;
+Landing settings own only the events section copy and display limit.
 
 Supported locale values across public resources are `en`, `es`, `zh-Hans`, and
 `zh-Hant`. Client surfaces should default to the browser or device system locale
