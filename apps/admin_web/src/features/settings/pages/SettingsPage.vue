@@ -9,6 +9,8 @@ import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n, type AppLocale } from "@/core/i18n/i18n";
 import SettingsFiltersCard from "../components/SettingsFiltersCard.vue";
 import SettingsPageHeader from "../components/SettingsPageHeader.vue";
+import PublicLandingStructuredEditor from "../components/PublicLandingStructuredEditor.vue";
+import { cloneLandingSettingValue, isPublicLandingStructuredSetting } from "../public_landing_editor";
 import {
   baseSettingCategories,
   categoryColor,
@@ -20,7 +22,7 @@ import {
   settingTitle
 } from "../settings_presenters";
 
-type SettingEditorType = "boolean" | "number" | "select" | "string" | "json";
+type SettingEditorType = "boolean" | "number" | "select" | "string" | "json" | "landing";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -31,6 +33,7 @@ const drawer = ref(false);
 const valueText = ref("");
 const valueBoolean = ref(false);
 const valueNumber = ref<number | null>(null);
+const structuredValue = ref<unknown>(null);
 const parseError = ref("");
 
 const filters = reactive({
@@ -127,6 +130,7 @@ const errorMessage = computed(
 );
 
 function settingEditorType(setting: AppSetting): SettingEditorType {
+  if (isPublicLandingStructuredSetting(setting.key)) return "landing";
   if (
     setting.key === "app.defaultLocale" ||
     setting.key === "church.timezone" ||
@@ -233,6 +237,9 @@ function openSetting(setting: AppSetting) {
     typeof setting.value === "boolean" ? setting.value : false;
   valueNumber.value = typeof setting.value === "number" ? setting.value : null;
   parseError.value = "";
+  structuredValue.value = isPublicLandingStructuredSetting(setting.key)
+    ? cloneLandingSettingValue(setting.value)
+    : null;
   drawer.value = true;
 }
 
@@ -251,6 +258,8 @@ function saveSetting() {
       return;
     }
     value = valueNumber.value;
+  } else if (editorType === "landing") {
+    value = structuredValue.value;
   } else if (editorType === "json") {
     try {
       value = JSON.parse(valueText.value);
@@ -461,6 +470,11 @@ function currentSelectItems() {
             :label="t('settings.value')"
             density="comfortable"
             variant="outlined"
+          />
+          <PublicLandingStructuredEditor
+            v-else-if="currentEditorType() === 'landing'"
+            v-model="structuredValue"
+            :setting-key="selectedSetting.key"
           />
           <v-textarea
             v-else

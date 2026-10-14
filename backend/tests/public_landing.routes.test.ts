@@ -394,4 +394,43 @@ describe("public landing routes", () => {
     });
     await harness.close();
   });
+
+  it("rejects blank required fields in structured landing items", async () => {
+    const harness = await buildTestApp();
+    const { app } = harness;
+    const { accessToken } = await login(app);
+
+    const invalidResponse = await app.inject({
+      method: "PATCH",
+      url: "/v1/admin/settings/publicLanding.schedule",
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      },
+      payload: {
+        value: {
+          eyebrow: "Gather",
+          title: "Weekly schedule",
+          body: "Join us throughout the week.",
+          items: [
+            {
+              id: "schedule-sunday",
+              title: "   ",
+              dayLabel: "Sunday",
+              timeLabel: "10:00 AM",
+              location: "Main sanctuary"
+            }
+          ]
+        }
+      }
+    });
+
+    expect(invalidResponse.statusCode).toBe(400);
+    expect(invalidResponse.json().error).toMatchObject({
+      code: "setting_value_invalid",
+      evidence: {
+        settingKey: "publicLanding.schedule"
+      }
+    });
+    await harness.close();
+  });
 });

@@ -3687,6 +3687,107 @@ Object.assign(messages.es, { "localization.generateMissing": "Generar faltantes"
 Object.assign(messages["zh-Hans"], { "localization.generateMissing": "生成缺失语言", "localization.failed": "失败", "localization.generationFailed": "翻译生成失败，请重试该语言。", "localization.someGenerationFailed": "部分翻译失败，请重试已标记的语言。" });
 Object.assign(messages["zh-Hant"], { "localization.generateMissing": "生成缺失語言", "localization.failed": "失敗", "localization.generationFailed": "翻譯生成失敗，請重試該語言。", "localization.someGenerationFailed": "部分翻譯失敗，請重試已標記的語言。" });
 
+Object.assign(messages.en, {
+  "settings.landing.eyebrow": "Section label",
+  "settings.landing.sectionTitle": "Section title",
+  "settings.landing.sectionBody": "Section introduction",
+  "settings.landing.scheduleItems": "Recurring schedule",
+  "settings.landing.addSchedule": "Add schedule",
+  "settings.landing.emptySchedule": "No recurring schedule is configured.",
+  "settings.landing.peopleItems": "Public people profiles",
+  "settings.landing.addPerson": "Add person",
+  "settings.landing.emptyPeople": "No public people profiles are configured.",
+  "settings.landing.untitledItem": "Untitled item",
+  "settings.landing.removeItem": "Remove item",
+  "settings.landing.name": "Name",
+  "settings.landing.day": "Day label",
+  "settings.landing.time": "Time label",
+  "settings.landing.location": "Location",
+  "settings.landing.detail": "Additional detail",
+  "settings.landing.role": "Role",
+  "settings.landing.imageUrl": "Public image URL",
+  "settings.landing.summary": "Introduction",
+  "settings.landing.emptyText": "Empty-state message",
+  "settings.landing.maxItems": "Maximum events",
+  "settings.landing.eventsManagedInLife":
+    "Event records are created, reviewed, and published in Life Posts. This setting only controls section copy and display count."
+});
+Object.assign(messages.es, {
+  "settings.landing.eyebrow": "Etiqueta de sección",
+  "settings.landing.sectionTitle": "Título de sección",
+  "settings.landing.sectionBody": "Introducción de sección",
+  "settings.landing.scheduleItems": "Horario recurrente",
+  "settings.landing.addSchedule": "Agregar horario",
+  "settings.landing.emptySchedule": "No hay horarios recurrentes configurados.",
+  "settings.landing.peopleItems": "Perfiles públicos",
+  "settings.landing.addPerson": "Agregar persona",
+  "settings.landing.emptyPeople": "No hay perfiles públicos configurados.",
+  "settings.landing.untitledItem": "Elemento sin título",
+  "settings.landing.removeItem": "Eliminar elemento",
+  "settings.landing.name": "Nombre",
+  "settings.landing.day": "Día",
+  "settings.landing.time": "Hora",
+  "settings.landing.location": "Ubicación",
+  "settings.landing.detail": "Detalle adicional",
+  "settings.landing.role": "Cargo",
+  "settings.landing.imageUrl": "URL de imagen pública",
+  "settings.landing.summary": "Presentación",
+  "settings.landing.emptyText": "Mensaje sin eventos",
+  "settings.landing.maxItems": "Máximo de eventos",
+  "settings.landing.eventsManagedInLife":
+    "Los eventos se crean, revisan y publican en Contenido de vida. Aquí solo se configura el texto de la sección y la cantidad mostrada."
+});
+Object.assign(messages["zh-Hans"], {
+  "settings.landing.eyebrow": "区块标签",
+  "settings.landing.sectionTitle": "区块标题",
+  "settings.landing.sectionBody": "区块介绍",
+  "settings.landing.scheduleItems": "固定日程",
+  "settings.landing.addSchedule": "添加日程",
+  "settings.landing.emptySchedule": "尚未配置固定日程。",
+  "settings.landing.peopleItems": "公开人员介绍",
+  "settings.landing.addPerson": "添加人员",
+  "settings.landing.emptyPeople": "尚未配置公开人员介绍。",
+  "settings.landing.untitledItem": "未命名项目",
+  "settings.landing.removeItem": "删除项目",
+  "settings.landing.name": "名称",
+  "settings.landing.day": "日期说明",
+  "settings.landing.time": "时间说明",
+  "settings.landing.location": "地点",
+  "settings.landing.detail": "补充说明",
+  "settings.landing.role": "职分",
+  "settings.landing.imageUrl": "公开图片链接",
+  "settings.landing.summary": "人员介绍",
+  "settings.landing.emptyText": "无活动提示",
+  "settings.landing.maxItems": "最多显示活动数",
+  "settings.landing.eventsManagedInLife":
+    "活动资料在生活内容中创建、审核和发布。这里仅设置区块文案和显示数量。"
+});
+Object.assign(messages["zh-Hant"], {
+  "settings.landing.eyebrow": "區塊標籤",
+  "settings.landing.sectionTitle": "區塊標題",
+  "settings.landing.sectionBody": "區塊介紹",
+  "settings.landing.scheduleItems": "固定日程",
+  "settings.landing.addSchedule": "新增日程",
+  "settings.landing.emptySchedule": "尚未配置固定日程。",
+  "settings.landing.peopleItems": "公開人員介紹",
+  "settings.landing.addPerson": "新增人員",
+  "settings.landing.emptyPeople": "尚未配置公開人員介紹。",
+  "settings.landing.untitledItem": "未命名項目",
+  "settings.landing.removeItem": "刪除項目",
+  "settings.landing.name": "名稱",
+  "settings.landing.day": "日期說明",
+  "settings.landing.time": "時間說明",
+  "settings.landing.location": "地點",
+  "settings.landing.detail": "補充說明",
+  "settings.landing.role": "職分",
+  "settings.landing.imageUrl": "公開圖片連結",
+  "settings.landing.summary": "人員介紹",
+  "settings.landing.emptyText": "無活動提示",
+  "settings.landing.maxItems": "最多顯示活動數",
+  "settings.landing.eventsManagedInLife":
+    "活動資料在生活內容中建立、審核和發佈。這裡只設定區塊文案和顯示數量。"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });

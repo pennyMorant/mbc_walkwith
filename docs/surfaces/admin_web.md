@@ -134,6 +134,8 @@ Surface rule:
   读取后端聚合后的 `/v1/public/landing?locale=...`。简体中文保留基础 key，例如
   `publicLanding.contact`；其他语言使用 locale key，例如
   `publicLanding.es.contact` 和 `publicLanding.zh-Hant.contact`。
+  固定日程、公开人员和活动区文案使用结构化表单；其他低频配置保留高级 JSON
+  编辑器。两种编辑方式都通过同一 Settings API 保存，并由后端契约最终校验。
 
 ## Verification
 

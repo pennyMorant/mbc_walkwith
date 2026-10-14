@@ -54,6 +54,9 @@ This document covers admin Web API helper structure and admin-facing SDK rules.
     new-friend links, recurring schedules, public people profiles, contact
     links, social media, map links, App download actions, and events section
     copy. Event records remain owned by the Life feature.
+  - Recurring schedules, public people profiles, and events section copy use
+    typed structured editors. Other settings retain the advanced JSON editor;
+    both paths save through the same Settings API and backend contract.
 - AI management: `apps/admin_web/src/core/api/ai.ts`
 - Content localization: `apps/admin_web/src/core/api/content_localizations.ts`
   - Hand-written translations and auto-translation use the same typed client boundary.

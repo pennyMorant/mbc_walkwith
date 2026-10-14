@@ -101,10 +101,10 @@ export const publicLandingContactSectionSchema = z.object({
 });
 
 export const publicLandingScheduleItemSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  dayLabel: z.string(),
-  timeLabel: z.string(),
+  id: z.string().trim().min(1),
+  title: z.string().trim().min(1),
+  dayLabel: z.string().trim().min(1),
+  timeLabel: z.string().trim().min(1),
   location: z.string(),
   detail: z.string().default(""),
   iconName: z.string().default("mdi-calendar-heart")
@@ -118,9 +118,9 @@ export const publicLandingScheduleSectionSchema = z.object({
 });
 
 export const publicLandingPersonSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  role: z.string(),
+  id: z.string().trim().min(1),
+  name: z.string().trim().min(1),
+  role: z.string().trim().min(1),
   summary: z.string(),
   imageUrl: z.string().default("")
 });
