@@ -9,6 +9,7 @@ import { motion } from "motion-v";
 const props = defineProps<{
   events: PublicLandingEventsSection;
   locale: SupportedLocale;
+  timeZone: string;
 }>();
 
 const dateLocales: Record<SupportedLocale, string> = {
@@ -25,7 +26,8 @@ function eventDate(event: PublicLandingEvent) {
     day: "numeric",
     weekday: "short",
     hour: "numeric",
-    minute: "2-digit"
+    minute: "2-digit",
+    timeZone: props.timeZone
   }).format(new Date(event.startsAt));
 }
 </script>

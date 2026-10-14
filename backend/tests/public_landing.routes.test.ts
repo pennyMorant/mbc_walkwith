@@ -162,6 +162,83 @@ describe("public landing routes", () => {
     await harness.close();
   });
 
+  it("uses church timezone and falls back to source items", async () => {
+    const harness = await buildTestApp();
+    const { app } = harness;
+    const { accessToken } = await login(app);
+    const headers = { authorization: `Bearer ${accessToken}` };
+
+    const timezoneResponse = await app.inject({
+      method: "PATCH",
+      url: "/v1/admin/settings/church.timezone",
+      headers,
+      payload: { value: "America/New_York" }
+    });
+    expect(timezoneResponse.statusCode).toBe(200);
+    const scheduleResponse = await app.inject({
+      method: "PATCH",
+      url: "/v1/admin/settings/publicLanding.schedule",
+      headers,
+      payload: {
+        value: {
+          eyebrow: "固定聚会",
+          title: "一周中的教会生活",
+          body: "最新聚会安排",
+          items: [
+            {
+              id: "sunday-worship",
+              title: "国语主日崇拜",
+              dayLabel: "每周日",
+              timeLabel: "1:00 PM",
+              location: "Main Sanctuary",
+              detail: "",
+              iconName: "mdi-church"
+            }
+          ]
+        }
+      }
+    });
+    expect(scheduleResponse.statusCode).toBe(200);
+    const peopleResponse = await app.inject({
+      method: "PATCH",
+      url: "/v1/admin/settings/publicLanding.people",
+      headers,
+      payload: {
+        value: {
+          eyebrow: "认识我们",
+          title: "牧者与同工",
+          body: "服事团队",
+          items: [
+            {
+              id: "lead-pastor",
+              name: "示例牧者",
+              role: "主任牧师",
+              summary: "讲道与牧养",
+              imageUrl: ""
+            }
+          ]
+        }
+      }
+    });
+    expect(peopleResponse.statusCode).toBe(200);
+
+    const landingResponse = await app.inject({
+      method: "GET",
+      url: "/v1/public/landing?locale=en"
+    });
+    const landing = expectResponseData(
+      landingResponse,
+      publicLandingResponseSchema,
+      "landing source fallback"
+    );
+    expect(landing.timeZone).toBe("America/New_York");
+    expect(landing.schedule.title).toBe("Church life throughout the week");
+    expect(landing.schedule.items[0]?.title).toBe("国语主日崇拜");
+    expect(landing.people.title).toBe("Pastors and ministry team");
+    expect(landing.people.items[0]?.name).toBe("示例牧者");
+    await harness.close();
+  });
+
   it("uses admin settings as public landing resource source of truth", async () => {
     const harness = await buildTestApp();
     const { app } = harness;

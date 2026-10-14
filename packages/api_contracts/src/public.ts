@@ -158,6 +158,7 @@ export const publicLandingEventsSectionSchema =
 
 export const publicLandingContentSchema = z.object({
   locale: supportedLocaleSchema,
+  timeZone: z.string().min(1),
   identity: publicLandingIdentitySchema,
   brandAction: publicLandingActionSchema,
   navigation: z.array(publicLandingActionSchema),

@@ -38,6 +38,7 @@ async function listLandingEvents(
   const posts = await lifePostService.list({
     limit: 12,
     type: "event",
+    sort: "starts_at_asc",
     from: new Date().toISOString(),
     visibility: "public",
     status: "published"
@@ -54,22 +55,16 @@ async function listLandingEvents(
       )
     )
   );
-  return localizedPosts
-    .sort((left, right) => eventTimestamp(left.startsAt) - eventTimestamp(right.startsAt))
-    .map((post) => ({
-      id: post.id,
-      title: post.title,
-      summary: eventSummary(post.meta, post.body),
-      startsAt: post.startsAt,
-      endsAt: post.endsAt,
-      imageUrl: post.imageUrl,
-      ctaLabel: post.ctaLabel,
-      ctaUrl: post.ctaUrl
-    }));
-}
-
-function eventTimestamp(value: string | null) {
-  return value ? new Date(value).getTime() : Number.MAX_SAFE_INTEGER;
+  return localizedPosts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    summary: eventSummary(post.meta, post.body),
+    startsAt: post.startsAt,
+    endsAt: post.endsAt,
+    imageUrl: post.imageUrl,
+    ctaLabel: post.ctaLabel,
+    ctaUrl: post.ctaUrl
+  }));
 }
 
 function eventSummary(meta: string, body: string) {

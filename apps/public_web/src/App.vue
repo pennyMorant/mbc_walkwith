@@ -106,7 +106,11 @@ function setIconLink(rel: string, href: string, type?: string) {
         <MissionSection :mission="content.mission" />
         <ServiceInfoSection :service="content.service" />
         <ScheduleSection :schedule="content.schedule" />
-        <UpcomingEventsSection :events="content.events" :locale="content.locale" />
+        <UpcomingEventsSection
+          :events="content.events"
+          :locale="content.locale"
+          :time-zone="content.timeZone"
+        />
         <PeopleSection :people="content.people" />
         <ChurchEntranceSection :entrance="content.entrance" />
         <AppInvitationSection :app="content.app" />

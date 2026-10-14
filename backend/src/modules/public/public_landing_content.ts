@@ -36,11 +36,38 @@ export async function getPublicLandingContent(
 ) {
   const fallbackContent =
     publicLandingDefaultContentByLocale[locale] ?? publicLandingDefaultContent;
-  const settings = await settingsService.list({
-    category: publicLandingSettingCategory,
-    limit: 300
-  });
+  const [settings, timeZoneSetting] = await Promise.all([
+    settingsService.list({
+      category: publicLandingSettingCategory,
+      limit: 300
+    }),
+    settingsService.getByKey("church.timezone")
+  ]);
   const settingByKey = new Map(settings.map((setting) => [setting.key, setting]));
+  const sourceSchedule = settingValue(
+    settingByKey,
+    publicLandingSettingKey(publicLandingDefaultLocale, "schedule"),
+    publicLandingScheduleSectionSchema,
+    publicLandingDefaultContent.schedule
+  );
+  const sourcePeople = settingValue(
+    settingByKey,
+    publicLandingSettingKey(publicLandingDefaultLocale, "people"),
+    publicLandingPeopleSectionSchema,
+    publicLandingDefaultContent.people
+  );
+  const localizedSchedule = settingValue(
+    settingByKey,
+    publicLandingSettingKey(locale, "schedule"),
+    publicLandingScheduleSectionSchema,
+    fallbackContent.schedule
+  );
+  const localizedPeople = settingValue(
+    settingByKey,
+    publicLandingSettingKey(locale, "people"),
+    publicLandingPeopleSectionSchema,
+    fallbackContent.people
+  );
   const { items: _fallbackEventItems, ...fallbackEventsConfig } =
     fallbackContent.events;
   const eventsConfig = settingValue(
@@ -52,6 +79,7 @@ export async function getPublicLandingContent(
 
   const content = publicLandingContentSchema.parse({
     locale,
+    timeZone: settingString(timeZoneSetting, "America/Los_Angeles"),
     identity: settingValue(
       settingByKey,
       publicLandingSettingKey(locale, "identity"),
@@ -100,18 +128,8 @@ export async function getPublicLandingContent(
       publicLandingServiceSectionSchema,
       fallbackContent.service
     ),
-    schedule: settingValue(
-      settingByKey,
-      publicLandingSettingKey(locale, "schedule"),
-      publicLandingScheduleSectionSchema,
-      fallbackContent.schedule
-    ),
-    people: settingValue(
-      settingByKey,
-      publicLandingSettingKey(locale, "people"),
-      publicLandingPeopleSectionSchema,
-      fallbackContent.people
-    ),
+    schedule: withSourceItems(localizedSchedule, sourceSchedule),
+    people: withSourceItems(localizedPeople, sourcePeople),
     events: {
       ...eventsConfig,
       items: events.slice(0, eventsConfig.maxItems)
@@ -140,10 +158,28 @@ export async function getPublicLandingContent(
       actionListSchema,
       fallbackContent.footerActions
     ),
-    updatedAt: latestUpdatedAt(settings, fallbackContent.updatedAt)
+    updatedAt: latestUpdatedAt(
+      timeZoneSetting ? [...settings, timeZoneSetting] : settings,
+      fallbackContent.updatedAt
+    )
   });
 
   return content;
+}
+
+function withSourceItems<T extends { items: unknown[] }>(
+  localized: T,
+  source: T
+): T {
+  return localized.items.length > 0
+    ? localized
+    : { ...localized, items: source.items };
+}
+
+function settingString(setting: AppSetting | null, fallback: string) {
+  return typeof setting?.value === "string" && setting.value.trim()
+    ? setting.value.trim()
+    : fallback;
 }
 
 function settingValue<T>(

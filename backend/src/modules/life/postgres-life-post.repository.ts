@@ -70,15 +70,23 @@ export class PostgresLifePostRepository implements LifePostRepository {
           )
         : undefined
     ].filter((filter) => filter !== undefined);
+    const ordering =
+      query.sort === "starts_at_asc"
+        ? [
+            sql`${publicPosts.startsAt} asc nulls last`,
+            desc(publicPosts.displayWeight),
+            desc(publicPosts.updatedAt)
+          ]
+        : [
+            desc(publicPosts.displayWeight),
+            sql`${publicPosts.startsAt} desc nulls last`,
+            desc(publicPosts.updatedAt)
+          ];
     const rows = await this.db
       .select()
       .from(publicPosts)
       .where(filters.length > 0 ? and(...filters) : undefined)
-      .orderBy(
-        desc(publicPosts.displayWeight),
-        sql`${publicPosts.startsAt} desc nulls last`,
-        desc(publicPosts.updatedAt)
-      )
+      .orderBy(...ordering)
       .limit(query.limit);
     return rows.map(postFromRow);
   }

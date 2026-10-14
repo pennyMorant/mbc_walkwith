@@ -82,7 +82,10 @@ media, or App download URLs. Those values are
 admin-managed settings under the `public_landing` category and are exposed to
 the website through `GET /v1/public/landing?locale=...`.
 The same response projects upcoming public events from canonical Life posts;
-Landing settings own only the events section copy and display limit.
+Landing settings own only the events section copy and display limit. The
+response includes `timeZone` from `church.timezone`; public event dates must be
+formatted in that timezone. Empty target-locale schedule or people lists fall
+back to the `zh-Hans` source items while retaining localized section copy.
 
 Supported locale values across public resources are `en`, `es`, `zh-Hans`, and
 `zh-Hant`. Client surfaces should default to the browser or device system locale
@@ -1382,13 +1385,13 @@ means that no public guide is available.
 ### 7.1 List Life Posts
 
 ```text
-GET /v1/life/posts?limit=20&visibility=&type=&query=&from=&to=
+GET /v1/life/posts?limit=20&visibility=&type=&query=&sort=&from=&to=
 ```
 
 Member-aware lists use the same query contract:
 
 ```text
-GET /v1/member/life/posts?limit=20&type=&query=&from=&to=
+GET /v1/member/life/posts?limit=20&type=&query=&sort=&from=&to=
 ```
 
 `from` and `to` are optional ISO 8601 UTC timestamps. Public and member life
@@ -1423,7 +1426,9 @@ Response:
 
 Life post lists are ordered by backend display strategy: higher
 `displayWeight` first, then scheduled time, then update time. `displayWeight`
-is an admin-owned ordering field, not a user-facing App label.
+is an admin-owned ordering field, not a user-facing App label. Callers that
+need the nearest upcoming records, such as Public Landing aggregation, use
+`sort=starts_at_asc`; the default remains `priority_desc`.
 
 Post types:
 

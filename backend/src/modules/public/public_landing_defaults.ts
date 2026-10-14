@@ -41,6 +41,7 @@ export const publicLandingSettingKeys = Object.fromEntries(
 
 const zhHansDefaultContent = publicLandingContentSchema.parse({
   locale: "zh-Hans",
+  timeZone: "America/Los_Angeles",
   identity: {
     name: "格兰朵拉国语浸信会",
     englishName: "Mandarin Baptist Church of Glendora",

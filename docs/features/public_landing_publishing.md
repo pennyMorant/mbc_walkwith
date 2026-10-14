@@ -27,7 +27,7 @@
 
 ## 5. State Model
 
-配置区块按 locale 独立保存并通过 schema 校验。近期活动只有 Life feature 的草稿、审核、发布、下架和归档状态；Landing 只读取 `published + public` 投影。
+配置区块按 locale 独立保存并通过 schema 校验。日程或人员的目标语言列表为空时，保留目标语言区块文案并回退简体中文源列表。近期活动只有 Life feature 的草稿、审核、发布、下架和归档状态；Landing 只读取 `published + public` 投影。
 
 ## 6. Capability Contracts
 
@@ -41,7 +41,7 @@
 
 ## 8. Admin Web Surface Boundary
 
-Settings 页面编辑 Landing JSON 配置并显示后端校验错误。活动继续在 Life 内容页面创建、审核和发布，不在 Settings 中重复录入。
+Settings 页面为固定日程、人员介绍和近期活动区块提供结构化编辑器，其他高级 Landing 配置继续显示后端校验错误。活动继续在 Life 内容页面创建、审核和发布，不在 Settings 中重复录入。
 
 ## 9. Backend Service Boundary
 
@@ -86,6 +86,8 @@ Settings 页面编辑 Landing JSON 配置并显示后端校验错误。活动继
 - Settings 可校验 schedule、people 和 events 配置。
 - 只有公开、已发布、未结束的 event 被聚合。
 - 活动按开始时间排序并受 `maxItems` 限制。
+- 活动时间固定使用 `church.timezone`，不随访客设备时区改变。
+- 日程和人员缺少目标语言条目时回退源语言条目。
 - Public Web 在空数据时不显示空区块。
 - 桌面和移动布局无溢出。
 

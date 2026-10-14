@@ -59,7 +59,11 @@ export class InMemoryLifePostRepository implements LifePostRepository {
         }
         return true;
       })
-      .sort(compareLifePosts)
+      .sort(
+        query.sort === "starts_at_asc"
+          ? compareLifePostsByStartAsc
+          : compareLifePosts
+      )
       .slice(0, query.limit);
   }
 
@@ -337,6 +341,27 @@ function compareLifePosts(a: LifePost, b: LifePost) {
     return startComparison;
   }
   return b.updatedAt.localeCompare(a.updatedAt);
+}
+
+function compareLifePostsByStartAsc(a: LifePost, b: LifePost) {
+  const startComparison = compareNullableIsoAsc(a.startsAt, b.startsAt);
+  if (startComparison !== 0) {
+    return startComparison;
+  }
+  if (a.displayWeight !== b.displayWeight) {
+    return b.displayWeight - a.displayWeight;
+  }
+  return b.updatedAt.localeCompare(a.updatedAt);
+}
+
+function compareNullableIsoAsc(
+  a: string | null | undefined,
+  b: string | null | undefined
+) {
+  if (!a && !b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+  return a.localeCompare(b);
 }
 
 function compareNullableIsoDesc(

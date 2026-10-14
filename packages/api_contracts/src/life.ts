@@ -72,12 +72,18 @@ export const lifePostSchema = z.object({
 
 export const publicLifePostSchema = lifePostSchema.omit({ revision: true });
 
+export const lifePostSortSchema = z.enum([
+  "priority_desc",
+  "starts_at_asc"
+]);
+
 export const lifePostListQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).default(20),
   visibility: lifePostVisibilitySchema.optional(),
   status: lifePostStatusSchema.optional(),
   query: z.string().optional(),
   type: z.string().optional(),
+  sort: lifePostSortSchema.optional(),
   from: z.string().datetime().optional(),
   to: z.string().datetime().optional()
 });
@@ -248,6 +254,7 @@ export type EventRegistrationSummary = z.infer<
 export type LifePost = z.infer<typeof lifePostSchema>;
 export type PublicLifePost = z.infer<typeof publicLifePostSchema>;
 export type LifePostListQuery = z.infer<typeof lifePostListQuerySchema>;
+export type LifePostSort = z.infer<typeof lifePostSortSchema>;
 export type LifePostUpsertRequest = z.infer<
   typeof lifePostUpsertRequestSchema
 >;
