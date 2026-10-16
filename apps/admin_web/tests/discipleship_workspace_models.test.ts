@@ -4,7 +4,7 @@ import {
   buildDiscipleshipAssignmentPayload,
   buildDiscipleshipProgressPayload,
   createDiscipleshipAssignmentForm,
-  normalizeDiscipleshipSort,
+  normalizeDiscipleshipPosition,
   resetDiscipleshipAssignmentForm
 } from "../src/features/discipleship/discipleship_workspace_models";
 
@@ -31,12 +31,12 @@ describe("discipleship workspace models", () => {
     expect(form).toEqual(createDiscipleshipAssignmentForm("journey_2"));
   });
 
-  it("keeps progress time backend-owned and normalizes sort order", () => {
+  it("keeps progress time backend-owned and normalizes position", () => {
     expect(buildDiscipleshipProgressPayload({
       status: "completed",
       note: "  reviewed  "
     })).toEqual({ status: "completed", note: "reviewed" });
-    expect(normalizeDiscipleshipSort(3.9)).toBe(3);
-    expect(normalizeDiscipleshipSort(Number.NaN)).toBe(0);
+    expect(normalizeDiscipleshipPosition(3.9)).toBe(3);
+    expect(normalizeDiscipleshipPosition(Number.NaN)).toBe(0);
   });
 });

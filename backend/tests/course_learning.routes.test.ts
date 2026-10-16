@@ -106,13 +106,28 @@ describe("course learning routes", () => {
           description: "Membership and fellowship.",
           startsAt: "2026-06-28T16:00:00.000Z",
           status: "published",
-          sort: 1
+          position: 1
         }
       }),
       courseLessonSchema,
       "admin course lesson create"
     );
     expect(lesson).toMatchObject({ courseId, status: "published" });
+
+    const firstLesson = expectResponseData(
+      await app.inject({
+        method: "POST",
+        url: `/v1/admin/courses/${courseId}/lessons`,
+        headers: { authorization: `Bearer ${accessToken}` },
+        payload: {
+          title: "Gospel Foundations",
+          status: "published",
+          position: 0
+        }
+      }),
+      courseLessonSchema,
+      "admin first course lesson create"
+    );
 
     const memberCatalog = expectResponseData(
       await app.inject({
@@ -124,6 +139,11 @@ describe("course learning routes", () => {
       "member course catalog"
     );
     expect(memberCatalog.items.map((item) => item.id)).toContain(courseId);
+    expect(
+      memberCatalog.items
+        .find((item) => item.id === courseId)
+        ?.lessons.map((item) => item.id)
+    ).toEqual([firstLesson.id, lesson.id]);
 
     const enrollment = expectResponseData(
       await app.inject({
@@ -234,12 +254,12 @@ describe("course learning routes", () => {
       method: "PATCH",
       url: `/v1/admin/courses/${courseId}/enrollments/${enrollment.id}`,
       headers: { authorization: `Bearer ${accessToken}` },
-      payload: { completedLessonCount: 2 }
+      payload: { completedLessonCount: 3 }
     });
     expect(invalidProgress.statusCode).toBe(409);
     expect(invalidProgress.json().error).toMatchObject({
       code: "course_progress_out_of_range",
-      evidence: { completedLessonCount: 2, lessonCount: 1 }
+      evidence: { completedLessonCount: 3, lessonCount: 2 }
     });
 
     const progress = expectResponseData(
@@ -281,7 +301,7 @@ describe("course learning routes", () => {
     expect(myCourses.items.find((item) => item.id === courseId)).toMatchObject({
       myEnrollmentStatus: "completed",
       myCompletedLessonCount: 1,
-      lessonCount: 1
+      lessonCount: 2
     });
 
     const completedCourse = expectResponseData(
@@ -387,7 +407,7 @@ describe("course learning routes", () => {
         method: "POST",
         url: `/v1/admin/courses/${course.id}/lessons`,
         headers: { authorization: `Bearer ${accessToken}` },
-        payload: { title: "Lesson one", status: "published", sort: 0 }
+        payload: { title: "Lesson one", status: "published", position: 0 }
       }),
       courseLessonSchema,
       "course cancellation lesson"

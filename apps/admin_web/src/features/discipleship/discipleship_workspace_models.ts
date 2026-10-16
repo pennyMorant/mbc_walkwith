@@ -12,7 +12,7 @@ import type {
 export type DiscipleshipStageForm = {
   title: string;
   description: string;
-  sort: number;
+  position: number;
 };
 
 export type DiscipleshipTaskForm = {
@@ -22,7 +22,7 @@ export type DiscipleshipTaskForm = {
   referenceType: DiscipleshipTaskReferenceType;
   referenceId: string;
   required: boolean;
-  sort: number;
+  position: number;
 };
 
 export function createDiscipleshipJourneyForm(): DiscipleshipJourneyCreateRequest {
@@ -30,7 +30,7 @@ export function createDiscipleshipJourneyForm(): DiscipleshipJourneyCreateReques
 }
 
 export function createDiscipleshipStageForm(): DiscipleshipStageForm {
-  return { title: "", description: "", sort: 0 };
+  return { title: "", description: "", position: 0 };
 }
 
 export function createDiscipleshipTaskForm(): DiscipleshipTaskForm {
@@ -41,7 +41,7 @@ export function createDiscipleshipTaskForm(): DiscipleshipTaskForm {
     referenceType: "manual_review",
     referenceId: "",
     required: true,
-    sort: 0
+    position: 0
   };
 }
 
@@ -89,7 +89,7 @@ export function buildDiscipleshipStagePayload(
   return {
     title: form.title.trim(),
     description: form.description.trim(),
-    sort: normalizeDiscipleshipSort(form.sort)
+    position: normalizeDiscipleshipPosition(form.position)
   };
 }
 
@@ -103,7 +103,7 @@ export function buildDiscipleshipTaskPayload(
     referenceType: form.referenceType,
     referenceId: form.referenceId.trim(),
     required: form.required,
-    sort: normalizeDiscipleshipSort(form.sort)
+    position: normalizeDiscipleshipPosition(form.position)
   };
 }
 
@@ -129,7 +129,7 @@ export function buildDiscipleshipProgressPayload(input: {
   return { status: input.status, note: input.note.trim() };
 }
 
-export function normalizeDiscipleshipSort(value: number) {
+export function normalizeDiscipleshipPosition(value: number) {
   return Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : 0;
 }
 

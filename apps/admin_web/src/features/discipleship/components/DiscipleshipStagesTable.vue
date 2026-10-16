@@ -14,7 +14,7 @@ const { t } = useI18n();
   <v-table class="mt-3" density="compact">
     <thead>
       <tr>
-        <th>{{ t("common.sort") }}</th>
+        <th>{{ t("Order") }}</th>
         <th>{{ t("Stage") }}</th>
         <th>{{ t("Description") }}</th>
       </tr>
@@ -24,7 +24,7 @@ const { t } = useI18n();
         <td colspan="3">{{ t("No stages yet.") }}</td>
       </tr>
       <tr v-for="stage in stages" :key="stage.id">
-        <td>{{ stage.sort }}</td>
+        <td>{{ stage.position + 1 }}</td>
         <td>
           <div class="font-weight-medium">{{ stage.title }}</div>
           <div class="text-caption text-medium-emphasis">{{ stage.id }}</div>

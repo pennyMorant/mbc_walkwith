@@ -56,7 +56,7 @@ describe("discipleship journey routes", () => {
       },
       payload: {
         title: "Gospel Foundations",
-        sort: 10
+        position: 10
       }
     });
     expect(stageResponse.statusCode).toBe(200);
@@ -85,10 +85,21 @@ describe("discipleship journey routes", () => {
     expect(stageAudit.items[0]?.afterJson).toMatchObject({
       id: stage.id,
       journeyId: journey.id,
-      sort: 10
+      position: 10
     });
     expect(JSON.stringify(stageAuditResponse.json())).not.toContain(
       "Gospel Foundations"
+    );
+
+    const firstStage = expectResponseData(
+      await app.inject({
+        method: "POST",
+        url: `/v1/admin/discipleship/journeys/${journey.id}/stages`,
+        headers: { authorization: `Bearer ${adminToken}` },
+        payload: { title: "Welcome", position: 0 }
+      }),
+      discipleshipStageSchema,
+      "first discipleship stage create"
     );
 
     const stageListResponse = await app.inject({
@@ -104,7 +115,10 @@ describe("discipleship journey routes", () => {
       discipleshipStageListResponseSchema,
       "discipleship stage list"
     );
-    expect(stages.items.map((item) => item.id)).toEqual([stage.id]);
+    expect(stages.items.map((item) => item.id)).toEqual([
+      firstStage.id,
+      stage.id
+    ]);
 
     const otherJourneyResponse = await app.inject({
       method: "POST",
@@ -148,7 +162,7 @@ describe("discipleship journey routes", () => {
         stageId: stage.id,
         title: "Read assigned sermon",
         referenceType: "sermon",
-        sort: 15
+        position: 15
       }
     });
     expect(missingReferenceTaskResponse.statusCode).toBe(409);
@@ -187,7 +201,7 @@ describe("discipleship journey routes", () => {
         title: "Read John 1",
         referenceType: "manual_review",
         referenceId: "john-1",
-        sort: 20
+        position: 20
       }
     });
     expect(taskResponse.statusCode).toBe(200);
@@ -225,7 +239,7 @@ describe("discipleship journey routes", () => {
       referenceType: "manual_review",
       hasReferenceId: true,
       required: true,
-      sort: 20
+      position: 20
     });
     expect(JSON.stringify(taskAuditResponse.json())).not.toContain(
       "Read John 1"

@@ -49,6 +49,11 @@ describeIfDatabase("Postgres integration", () => {
 
     const updated = await repository.update(sermon.id, {
       status: "published",
+      outline: [
+        { title: "Opening", summary: "Introduction", startSeconds: 0 },
+        { title: "Gospel", summary: "Main point", startSeconds: 600 },
+        { title: "Response", summary: "Application", startSeconds: 1200 }
+      ],
       transcript: {
         text: "Integration transcript about persevering hope.",
         source: "integration-test",
@@ -65,6 +70,11 @@ describeIfDatabase("Postgres integration", () => {
     });
 
     expect(updated?.status).toBe("published");
+    expect(updated?.outline.map((item) => item.title)).toEqual([
+      "Opening",
+      "Gospel",
+      "Response"
+    ]);
 
     const listed = await repository.list({ limit: 20, bookId: "rom" });
     expect(listed.sermons.map((row) => row.id)).toContain(sermon.id);

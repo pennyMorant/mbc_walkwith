@@ -171,6 +171,16 @@ describe("InMemorySermonRepository", () => {
           title: "Opening",
           startSeconds: 0,
           summary: "Introduction"
+        },
+        {
+          title: "Gospel",
+          startSeconds: 600,
+          summary: "Main point"
+        },
+        {
+          title: "Response",
+          startSeconds: 1200,
+          summary: "Application"
         }
       ],
       references: [
@@ -193,7 +203,11 @@ describe("InMemorySermonRepository", () => {
       }
     });
 
-    expect(updated?.outline).toHaveLength(1);
+    expect(updated?.outline.map((item) => item.title)).toEqual([
+      "Opening",
+      "Gospel",
+      "Response"
+    ]);
     expect(updated?.references[0]?.verseId).toBe("rom.8.28");
     expect(updated?.transcript?.text).toBe("Transcript body");
     expect(updated?.reviewMarkdown).toContain("# Reviewed Sermon");

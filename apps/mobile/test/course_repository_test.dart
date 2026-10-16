@@ -113,7 +113,7 @@ void main() {
     final malformedLesson = Map<String, Object?>.from(
       (_courseJson['lessons']! as List<Object?>).single!
           as Map<String, Object?>,
-    )..['sort'] = -1;
+    )..['position'] = -1;
     final malformed = Map<String, Object?>.from(_courseJson)
       ..['lessons'] = [malformedLesson];
     final dio = _CourseDio(
@@ -218,7 +218,7 @@ const _courseJson = <String, Object?>{
       'description': 'The heart of the Christian faith.',
       'startsAt': '2026-07-05T17:00:00.000Z',
       'status': 'published',
-      'sort': 1,
+      'position': 0,
       'createdAt': '2026-07-01T12:00:00.000Z',
       'updatedAt': '2026-07-02T12:00:00.000Z',
     },

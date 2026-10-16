@@ -48,6 +48,8 @@ App 课程目录和普通详情只展示 `open` 与 `in_progress` 课程；`draf
 
 后台维护课程、课次、报名名单和学习进度；每次 mutation 后重新读取 canonical course、lesson 或 enrollment 状态。课程切换会使旧页面操作上下文失效，迟到结果只刷新其资源缓存，不能覆盖当前课程表单或错误状态。资料、逐课次出勤、结课导出在后续阶段接入。
 
+课次使用 `position` 表达课程内固定顺序，从 `0` 开始并按升序返回；它不是展示优先级，不能使用高值优先的 `sort` 规则。
+
 ## Backend Service Boundary
 
 后端负责报名规则、资料授权、出勤、进度、权限和审计。

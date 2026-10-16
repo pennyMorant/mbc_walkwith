@@ -11,6 +11,11 @@ Repositories own this ordering and must add a stable tie-breaker. Do not reuse
 `sort` for canonical order, user activity, financial records, registrations,
 progress, or audit history.
 
+Canonical arrays and workflows use `position`: integer, default `0`,
+non-negative, lower values first. Course lessons, discipleship stages/tasks,
+and sermon outlines preserve this position across API, repository, database,
+and cache boundaries.
+
 Related documents:
 
 - [roadmap.md](roadmap.md): phased implementation plan.

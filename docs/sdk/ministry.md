@@ -23,6 +23,8 @@ This document covers event attendance, group ministry, course learning, and serv
   Mine providers together.
 - Course SDK lives under `apps/mobile/lib/features/life/data/course_repository.dart`
   and maps course DTOs into App domain objects with enrollment progress.
+- Course lesson DTOs use ascending `position` for canonical lesson order;
+  clients must not reinterpret it as descending display priority.
 - Course catalog and detail use optional member identity through `/v1/courses`
   and `/v1/courses/:courseId`; `/v1/me/courses` always requires the member
   bearer and is the only source for Mine enrollment history.

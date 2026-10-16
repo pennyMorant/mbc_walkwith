@@ -330,7 +330,7 @@ export class PostgresSermonRepository implements SermonRepository {
           .from(sermonOutlines)
           .where(eq(sermonOutlines.sermonId, row.id))
           .orderBy(
-            desc(sermonOutlines.sort),
+            asc(sermonOutlines.position),
             asc(sermonOutlines.startSeconds),
             asc(sermonOutlines.id)
           ),

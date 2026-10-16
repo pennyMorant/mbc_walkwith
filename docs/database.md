@@ -17,6 +17,11 @@ This contract does not apply to canonical sequence fields such as Bible book
 `sort_order`, or to operational/history records such as transactions,
 registrations, assignments, progress, read state, and audit logs.
 
+Canonical sequence fields use `position`, start at `0`, and are ordered
+ascending. Repositories add a stable ID tie-breaker. Current owners include
+course lessons, discipleship stages/tasks, and sermon outlines; these records
+must never reuse display-priority `sort`.
+
 Local app database:
 
 ```text

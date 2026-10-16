@@ -27,6 +27,8 @@
 
 路径模板、阶段、任务引用、成员路径分配、任务进度、负责人和状态流转以后端 discipleship journey repository 为准。
 
+阶段和任务使用 `position` 表达路径中的固定顺序，从 `0` 开始并按升序返回；调整顺序不能改变任务引用或成员进度的 owner。
+
 App 和 Admin Web 展示的任务总数与已完成数以后端 assignment summary 为准：
 
 - `taskTotalCount` 来自当前 journey 下的任务数量。

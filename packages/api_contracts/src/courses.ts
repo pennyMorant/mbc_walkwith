@@ -1,6 +1,6 @@
 import { visibilityLevels } from "@mbc/shared-types";
 import { z } from "zod";
-import { sortValueSchema } from "./sort.js";
+import { positionValueSchema } from "./position.js";
 
 export const courseStatusSchema = z.enum([
   "draft",
@@ -32,7 +32,7 @@ export const courseLessonSchema = z.object({
   description: z.string(),
   startsAt: z.string().datetime().nullable(),
   status: courseLessonStatusSchema,
-  sort: sortValueSchema,
+  position: positionValueSchema,
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime()
 });
@@ -119,7 +119,7 @@ export const courseLessonUpsertRequestSchema = z.object({
   description: z.string().trim().max(2000).default(""),
   startsAt: z.string().datetime().nullable().optional(),
   status: courseLessonStatusSchema.default("scheduled"),
-  sort: sortValueSchema
+  position: positionValueSchema
 });
 
 export const courseLessonUpdateRequestSchema =

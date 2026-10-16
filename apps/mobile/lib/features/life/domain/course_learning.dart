@@ -6,7 +6,7 @@ class CourseLesson {
     required this.description,
     required this.startsAt,
     required this.status,
-    required this.sort,
+    required this.position,
   });
 
   final String id;
@@ -15,7 +15,7 @@ class CourseLesson {
   final String description;
   final DateTime? startsAt;
   final String status;
-  final int sort;
+  final int position;
 }
 
 class CourseLearning {

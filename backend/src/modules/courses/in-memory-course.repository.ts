@@ -166,7 +166,7 @@ export class InMemoryCourseRepository implements CourseRepository {
       description: input.description?.trim() ?? "",
       startsAt: input.startsAt ?? null,
       status: input.status,
-      sort: input.sort,
+      position: input.position,
       createdAt: now,
       updatedAt: now
     };
@@ -196,7 +196,7 @@ export class InMemoryCourseRepository implements CourseRepository {
       startsAt:
         input.startsAt === undefined ? existing.startsAt : input.startsAt,
       status: input.status ?? existing.status,
-      sort: input.sort ?? existing.sort,
+      position: input.position ?? existing.position,
       updatedAt: new Date().toISOString()
     };
     this.lessons.set(lessonId, updated);
@@ -385,8 +385,8 @@ export class InMemoryCourseRepository implements CourseRepository {
       .filter((lesson) => lesson.courseId === courseId)
       .sort(
         (a, b) =>
-          b.sort - a.sort ||
-          a.title.localeCompare(b.title) ||
+          a.position - b.position ||
+          a.createdAt.localeCompare(b.createdAt) ||
           a.id.localeCompare(b.id)
       );
   }
@@ -434,7 +434,7 @@ const seedLessons: CourseLesson[] = [
     description: "The heart of the Christian faith.",
     startsAt: "2026-06-07T17:00:00.000Z",
     status: "published",
-    sort: 1,
+    position: 0,
     createdAt: "2026-05-01T18:00:00.000Z",
     updatedAt: "2026-05-01T18:00:00.000Z"
   },
@@ -445,7 +445,7 @@ const seedLessons: CourseLesson[] = [
     description: "Membership, fellowship, and service.",
     startsAt: "2026-06-14T17:00:00.000Z",
     status: "scheduled",
-    sort: 2,
+    position: 1,
     createdAt: "2026-05-01T18:00:00.000Z",
     updatedAt: "2026-05-01T18:00:00.000Z"
   }

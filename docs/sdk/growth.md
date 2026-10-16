@@ -110,6 +110,8 @@ Mobile App repository and surface：
   away from `completed`.
 - Task progress audit payloads store `hasNote`, not the raw note body.
 - App and Admin clients must parse schemas from `packages/api_contracts/src/discipleship.ts`.
+- Discipleship stage and task DTOs use ascending `position` for canonical
+  journey order. `sort` remains reserved for independent display priority.
 
 ## Reading Plan Routes
 

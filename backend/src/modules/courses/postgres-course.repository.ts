@@ -218,8 +218,8 @@ export class PostgresCourseRepository implements CourseRepository {
       .from(courseLessons)
       .where(eq(courseLessons.courseId, courseId))
       .orderBy(
-        desc(courseLessons.sort),
-        asc(courseLessons.title),
+        asc(courseLessons.position),
+        asc(courseLessons.createdAt),
         asc(courseLessons.id)
       );
     return rows.map(courseLessonFromRow);
@@ -237,7 +237,7 @@ export class PostgresCourseRepository implements CourseRepository {
         description: input.description?.trim() ?? "",
         startsAt: input.startsAt ? new Date(input.startsAt) : null,
         status: input.status,
-        sort: input.sort,
+        position: input.position,
         updatedAt: new Date()
       })
       .returning();
@@ -285,7 +285,7 @@ export class PostgresCourseRepository implements CourseRepository {
                 ? new Date(input.startsAt)
                 : null,
           status: input.status ?? existing.status,
-          sort: input.sort ?? existing.sort,
+          position: input.position ?? existing.position,
           updatedAt: new Date()
         })
         .where(

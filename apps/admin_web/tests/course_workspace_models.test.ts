@@ -19,7 +19,7 @@ describe("course workspace models", () => {
     expect(emptyLessonForm(4)).toMatchObject({
       title: "",
       status: "scheduled",
-      sort: 4
+      position: 4
     });
   });
 

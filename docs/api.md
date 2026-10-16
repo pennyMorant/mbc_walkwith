@@ -2310,6 +2310,11 @@ contract does not replace canonical order fields such as Bible book
 `sortOrder`, and does not apply to transactions, registrations, audit rows, or
 other operational history.
 
+Ordered workflow children use `position` instead. `position` is a non-negative
+integer, starts at `0`, and is returned in ascending order. It currently
+applies to course lessons and discipleship stages/tasks. Sermon outline order
+is represented by its array order and persisted with the same position rule.
+
 ```json
 {
   "visibility": "members",

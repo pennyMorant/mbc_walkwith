@@ -113,7 +113,7 @@ export class PostgresDiscipleshipRepository
         journeyId,
         title: input.title.trim(),
         description: input.description.trim(),
-        sort: input.sort,
+        position: input.position,
         updatedAt: new Date()
       })
       .returning();
@@ -138,7 +138,7 @@ export class PostgresDiscipleshipRepository
       .from(discipleshipStages)
       .where(eq(discipleshipStages.journeyId, journeyId))
       .orderBy(
-        desc(discipleshipStages.sort),
+        asc(discipleshipStages.position),
         asc(discipleshipStages.createdAt),
         asc(discipleshipStages.id)
       );
@@ -159,7 +159,7 @@ export class PostgresDiscipleshipRepository
         referenceType: input.referenceType,
         referenceId: input.referenceId.trim(),
         required: input.required,
-        sort: input.sort,
+        position: input.position,
         updatedAt: new Date()
       })
       .returning();
@@ -184,7 +184,7 @@ export class PostgresDiscipleshipRepository
       .from(discipleshipTasks)
       .where(eq(discipleshipTasks.journeyId, journeyId))
       .orderBy(
-        desc(discipleshipTasks.sort),
+        asc(discipleshipTasks.position),
         asc(discipleshipTasks.createdAt),
         asc(discipleshipTasks.id)
       );
@@ -374,7 +374,7 @@ function stageFromRow(
     journeyId: row.journeyId,
     title: row.title,
     description: row.description,
-    sort: row.sort,
+    position: row.position,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString()
   };
@@ -392,7 +392,7 @@ function taskFromRow(
     referenceType: row.referenceType,
     referenceId: row.referenceId,
     required: row.required,
-    sort: row.sort,
+    position: row.position,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString()
   };

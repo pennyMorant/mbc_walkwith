@@ -208,12 +208,12 @@ export const sermonOutlines = pgTable(
     title: text("title").notNull(),
     summary: text("summary").notNull(),
     startSeconds: integer("start_seconds").notNull(),
-    sort: integer("sort").notNull()
+    position: integer("position").notNull()
   },
   (table) => ({
-    sermonSortIdx: index("idx_sermon_outlines_sermon_sort").on(
+    sermonPositionIdx: index("idx_sermon_outlines_sermon_position").on(
       table.sermonId,
-      table.sort
+      table.position
     )
   })
 );
@@ -949,7 +949,7 @@ export const courseLessons = pgTable(
     status: text("status", { enum: ["scheduled", "published", "completed"] })
       .notNull()
       .default("scheduled"),
-    sort: integer("sort").notNull().default(0),
+    position: integer("position").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -958,9 +958,9 @@ export const courseLessons = pgTable(
       .defaultNow()
   },
   (table) => ({
-    courseSortIdx: index("idx_course_lessons_course_sort").on(
+    coursePositionIdx: index("idx_course_lessons_course_position").on(
       table.courseId,
-      table.sort
+      table.position
     ),
     statusIdx: index("idx_course_lessons_status").on(table.status)
   })
@@ -1282,7 +1282,7 @@ export const discipleshipStages = pgTable(
       .references(() => discipleshipJourneys.id, { onDelete: "cascade" }),
     title: text("title").notNull(),
     description: text("description").notNull().default(""),
-    sort: integer("sort").notNull().default(0),
+    position: integer("position").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -1291,9 +1291,9 @@ export const discipleshipStages = pgTable(
       .defaultNow()
   },
   (table) => ({
-    journeySortIdx: index("idx_discipleship_stages_journey_sort").on(
+    journeyPositionIdx: index("idx_discipleship_stages_journey_position").on(
       table.journeyId,
-      table.sort
+      table.position
     )
   })
 );
@@ -1325,7 +1325,7 @@ export const discipleshipTasks = pgTable(
     }).notNull(),
     referenceId: text("reference_id").notNull().default(""),
     required: boolean("required").notNull().default(true),
-    sort: integer("sort").notNull().default(0),
+    position: integer("position").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -1334,9 +1334,9 @@ export const discipleshipTasks = pgTable(
       .defaultNow()
   },
   (table) => ({
-    journeySortIdx: index("idx_discipleship_tasks_journey_sort").on(
+    journeyPositionIdx: index("idx_discipleship_tasks_journey_position").on(
       table.journeyId,
-      table.sort
+      table.position
     ),
     stageIdx: index("idx_discipleship_tasks_stage").on(table.stageId)
   })
