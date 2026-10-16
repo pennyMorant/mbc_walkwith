@@ -25,3 +25,4 @@ Rules:
 - Events are read-only projections of canonical published Life posts.
 - Components do not infer visibility, publication state, date eligibility, or translation fallback.
 - API failure produces an explicit page error; there is no client-owned content fallback.
+- Landing 活动按 `sort` 高值优先，相同值按 `startsAt` 升序和稳定 ID 排序；Public Web 不在客户端重新排序。

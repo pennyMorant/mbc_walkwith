@@ -199,7 +199,7 @@ function orderLandingContent(
     },
     events: {
       ...content.events,
-      items: byDisplayPriority(content.events.items).slice(
+      items: orderLandingEvents(content.events.items).slice(
         0,
         content.events.maxItems
       )
@@ -221,6 +221,17 @@ function orderLandingContent(
   };
 }
 
+export function orderLandingEvents(
+  events: PublicLandingEvent[]
+): PublicLandingEvent[] {
+  return [...events].sort(
+    (left, right) =>
+      right.sort - left.sort ||
+      nullableDateValue(left.startsAt) - nullableDateValue(right.startsAt) ||
+      left.id.localeCompare(right.id)
+  );
+}
+
 function byDisplayPriority<T extends { sort: number }>(items: T[]): T[] {
   return items
     .map((item, sourceIndex) => ({ item, sourceIndex }))
@@ -230,6 +241,10 @@ function byDisplayPriority<T extends { sort: number }>(items: T[]): T[] {
         left.sourceIndex - right.sourceIndex
     )
     .map(({ item }) => item);
+}
+
+function nullableDateValue(value: string | null) {
+  return value === null ? Number.MAX_SAFE_INTEGER : Date.parse(value);
 }
 
 function withSourceItems<T extends { items: unknown[] }>(

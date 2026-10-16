@@ -8,8 +8,48 @@ import { describe, expect, it } from "vitest";
 
 import { expectResponseData } from "./contract_assertions.js";
 import { buildTestApp, login } from "./route_test_harness.js";
+import { orderLandingEvents } from "../src/modules/public/public_landing_content.js";
 
 describe("public landing routes", () => {
+  it("orders events by display priority then start time", () => {
+    const base = {
+      summary: "",
+      endsAt: null,
+      imageUrl: null,
+      ctaLabel: null,
+      ctaUrl: null
+    };
+    const events = orderLandingEvents([
+      {
+        ...base,
+        id: "later-normal",
+        title: "Later normal",
+        startsAt: "2099-06-20T20:30:00.000Z",
+        sort: 0
+      },
+      {
+        ...base,
+        id: "earlier-normal",
+        title: "Earlier normal",
+        startsAt: "2099-06-10T20:30:00.000Z",
+        sort: 0
+      },
+      {
+        ...base,
+        id: "important",
+        title: "Important",
+        startsAt: "2099-07-01T20:30:00.000Z",
+        sort: 100
+      }
+    ]);
+
+    expect(events.map((event) => event.id)).toEqual([
+      "important",
+      "earlier-normal",
+      "later-normal"
+    ]);
+  });
+
   it("returns public landing resources without sermon content", async () => {
     const harness = await buildTestApp();
     const { app } = harness;

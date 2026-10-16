@@ -87,7 +87,7 @@ Settings 页面为固定日程、人员介绍和近期活动区块提供结构�
 - 四种 locale 均返回完整 Landing contract。
 - Settings 可校验 schedule、people 和 events 配置。
 - 只有公开、已发布、未结束的 event 被聚合。
-- 活动按开始时间排序并受 `maxItems` 限制。
+- 活动按 `sort` 高值优先；相同优先级按开始时间升序、再按稳定 ID 排序，并受 `maxItems` 限制。
 - 活动时间固定使用 `church.timezone`，不随访客设备时区改变。
 - 日程和人员缺少目标语言条目时回退源语言条目。
 - Public Web 在空数据时不显示空区块。
