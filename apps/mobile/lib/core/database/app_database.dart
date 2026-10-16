@@ -38,7 +38,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? openDatabaseConnection());
 
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => 17;
 
   @override
   MigrationStrategy get migration {
@@ -194,6 +194,23 @@ class AppDatabase extends _$AppDatabase {
             'DROP INDEX IF EXISTS idx_local_life_posts_weight_starts_at',
           );
         }
+        if (from < 17) {
+          await customStatement('DELETE FROM local_sermon_outlines');
+          await customStatement('DELETE FROM local_sermon_topics');
+          await _renameColumnIfPresent(
+            'local_sermon_outlines',
+            'sort',
+            'position',
+          );
+          await _renameColumnIfPresent(
+            'local_sermon_topics',
+            'sort',
+            'position',
+          );
+          await customStatement(
+            'DROP INDEX IF EXISTS idx_local_sermon_outlines_sermon_sort',
+          );
+        }
       },
     );
   }
@@ -278,8 +295,8 @@ class AppDatabase extends _$AppDatabase {
       'ON local_sermons(sermon_date)',
     );
     await customStatement(
-      'CREATE INDEX IF NOT EXISTS idx_local_sermon_outlines_sermon_sort '
-      'ON local_sermon_outlines(sermon_id, sort)',
+      'CREATE INDEX IF NOT EXISTS idx_local_sermon_outlines_sermon_position '
+      'ON local_sermon_outlines(sermon_id, position)',
     );
     await customStatement(
       'CREATE INDEX IF NOT EXISTS idx_local_sermon_topics_topic '

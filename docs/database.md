@@ -22,6 +22,10 @@ ascending. Repositories add a stable ID tie-breaker. Current owners include
 course lessons, discipleship stages/tasks, and sermon outlines; these records
 must never reuse display-priority `sort`.
 
+Flutter schema v17 rebuilds the non-authoritative sermon outline/topic child
+cache when moving from ambiguous legacy `sort_order`/`sort` values to
+`position`. Sermon records and user-owned playback/study state are preserved.
+
 Local app database:
 
 ```text

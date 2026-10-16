@@ -119,7 +119,7 @@ class SermonsLocalDataSource {
     final outlines =
         await (database.select(database.localSermonOutlines)
               ..where((outline) => outline.sermonId.isIn(sermonIds))
-              ..orderBy([(outline) => OrderingTerm.desc(outline.sort)]))
+              ..orderBy([(outline) => OrderingTerm.asc(outline.position)]))
             .get();
     final references = await (database.select(
       database.localSermonReferences,
@@ -127,7 +127,7 @@ class SermonsLocalDataSource {
     final topics =
         await (database.select(database.localSermonTopics)
               ..where((topic) => topic.sermonId.isIn(sermonIds))
-              ..orderBy([(topic) => OrderingTerm.desc(topic.sort)]))
+              ..orderBy([(topic) => OrderingTerm.asc(topic.position)]))
             .get();
     return mapCachedSermons(sermons, outlines, topics, references);
   }

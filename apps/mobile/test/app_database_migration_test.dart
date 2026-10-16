@@ -31,13 +31,28 @@ void main() {
           .customSelect('PRAGMA user_version')
           .getSingle()
           .then((row) => row.data.values.single);
-      expect(version, 16);
+      expect(version, 17);
 
       final sermonTopicColumns = await database
           .customSelect('PRAGMA table_info("local_sermon_topics")')
           .get()
           .then((rows) => rows.map((row) => row.data['name']).toSet());
-      expect(sermonTopicColumns, containsAll(['sermon_id', 'topic', 'sort']));
+      expect(
+        sermonTopicColumns,
+        containsAll(['sermon_id', 'topic', 'position']),
+      );
+
+      final sermonOutlineColumns = await database
+          .customSelect('PRAGMA table_info("local_sermon_outlines")')
+          .get()
+          .then((rows) => rows.map((row) => row.data['name']).toSet());
+      expect(sermonOutlineColumns, contains('position'));
+
+      expect(
+        await database.select(database.localSermonOutlines).get(),
+        isEmpty,
+      );
+      expect(await database.select(database.localSermons).get(), hasLength(1));
 
       final lifeColumns = await database
           .customSelect('PRAGMA table_info("local_life_posts")')
@@ -55,7 +70,7 @@ void main() {
           'idx_local_bible_verses_book_chapter',
           'idx_local_bible_verse_texts_lookup',
           'idx_local_sermons_sermon_date',
-          'idx_local_sermon_outlines_sermon_sort',
+          'idx_local_sermon_outlines_sermon_position',
           'idx_local_sermon_topics_topic',
           'idx_local_sermon_references_verse_id',
           'idx_local_life_posts_sort_starts_at',
@@ -170,6 +185,13 @@ CREATE TABLE local_sermons (
 )
 ''',
   '''
+INSERT INTO local_sermons (
+  id, title, speaker, sermon_date, duration_seconds, updated_at
+) VALUES (
+  'cached-sermon', 'Cached sermon', 'Pastor', 0, 1800, 0
+)
+''',
+  '''
 CREATE TABLE local_sermon_outlines (
   id TEXT NOT NULL PRIMARY KEY,
   sermon_id TEXT NOT NULL REFERENCES local_sermons (id),
@@ -177,6 +199,13 @@ CREATE TABLE local_sermon_outlines (
   summary TEXT NOT NULL,
   start_seconds INTEGER NOT NULL,
   sort_order INTEGER NOT NULL
+)
+''',
+  '''
+INSERT INTO local_sermon_outlines (
+  id, sermon_id, title, summary, start_seconds, sort_order
+) VALUES (
+  'cached-outline', 'cached-sermon', 'Cached outline', '', 0, 0
 )
 ''',
   '''

@@ -80,7 +80,7 @@ class SermonCacheWriter {
               title: outline.title,
               summary: outline.summary,
               startSeconds: outline.startSeconds,
-              sort: sermon.outline.length - index,
+              position: index,
             ),
           );
     }
@@ -91,7 +91,7 @@ class SermonCacheWriter {
             LocalSermonTopicsCompanion.insert(
               sermonId: sermon.id,
               topic: topic,
-              sort: sermon.topics.length - index,
+              position: index,
             ),
           );
     }

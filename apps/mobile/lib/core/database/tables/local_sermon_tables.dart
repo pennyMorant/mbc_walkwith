@@ -27,7 +27,7 @@ class LocalSermonOutlines extends Table {
   TextColumn get title => text()();
   TextColumn get summary => text()();
   IntColumn get startSeconds => integer()();
-  IntColumn get sort => integer()();
+  IntColumn get position => integer()();
 
   @override
   Set<Column<Object>> get primaryKey => {id};
@@ -36,7 +36,7 @@ class LocalSermonOutlines extends Table {
 class LocalSermonTopics extends Table {
   TextColumn get sermonId => text().references(LocalSermons, #id)();
   TextColumn get topic => text()();
-  IntColumn get sort => integer()();
+  IntColumn get position => integer()();
 
   @override
   Set<Column<Object>> get primaryKey => {sermonId, topic};

@@ -40,6 +40,9 @@ This document covers sermon listing, details, audio playback, transcripts, progr
   ranges must fall back safely instead of crashing the stream.
 - UI must still show a clear unavailable state for legacy cache, partial data, or media failures.
 - Transcript and outline are admin-uploaded or admin-generated content.
+- Cached sermon outlines and topics preserve API array order with ascending
+  `position`; schema upgrades may discard these child caches and refetch them,
+  but must not clear sermon playback or user-owned study state.
 - Audio URLs may be relative to API base URL and must be normalized by DTO parsing.
 - Sermon playback must go through `SermonPlayerSession`, not directly through widgets.
 - `SermonPlayerSession` must use the audio playback capability so Android notification controls, iOS Control Center / lock screen controls, headset buttons, interruption handling, completion state, and App UI share one playback state.
