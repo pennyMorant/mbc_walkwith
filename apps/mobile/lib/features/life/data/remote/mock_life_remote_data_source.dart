@@ -259,7 +259,7 @@ LifePostDto _toDto(
     'visibility': post.visibility,
     'status': post.status,
     'imageUrl': post.imageUrl,
-    'displayWeight': post.displayWeight,
+    'sort': post.sort,
     'ctaLabel': post.ctaLabel,
     'ctaUrl': post.ctaUrl,
     'registrationEnabled': post.registrationEnabled,

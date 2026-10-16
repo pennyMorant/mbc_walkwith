@@ -6,6 +6,17 @@ This document covers both local Flutter storage and backend Postgres persistence
 
 ## 1. Database Decisions
 
+### Display priority contract
+
+Admin-authored records fetched for ordered frontend display use one column
+named `sort`. It is a non-negative integer, defaults to `0`, and is ordered
+descending so larger values have higher priority. Every repository adds a
+domain-specific secondary order and a stable ID tie-breaker.
+
+This contract does not apply to canonical sequence fields such as Bible book
+`sort_order`, or to operational/history records such as transactions,
+registrations, assignments, progress, read state, and audit logs.
+
 Local app database:
 
 ```text
@@ -310,9 +321,9 @@ Important local indexes:
 local_bible_verses(book_id, chapter)
 local_bible_verse_texts(version_id, book_id, chapter)
 local_sermon_references(verse_id)
-local_sermon_outlines(sermon_id, sort_order)
+local_sermon_outlines(sermon_id, sort)
 local_sermon_topics(topic)
-local_life_posts(display_weight, starts_at)
+local_life_posts(sort, starts_at)
 local_life_posts(type, starts_at)
 study_notes(verse_id)
 study_bookmarks(verse_id)
@@ -327,7 +338,7 @@ sermons(speaker)
 sermons(series)
 sermon_references(verse_id)
 sermon_topics(topic)
-life_posts(display_weight)
+life_posts(sort)
 life_posts(visibility, starts_at)
 life_post_reads(user_id)
 life_post_reads(read_at)

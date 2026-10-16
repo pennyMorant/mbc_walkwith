@@ -12,7 +12,7 @@ void main() {
         body: 'Important update',
         meta: '',
         iconName: 'church',
-        displayWeight: 100,
+        sort: 100,
       ),
       LifePost(
         id: 'sunday',

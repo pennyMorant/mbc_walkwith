@@ -63,7 +63,7 @@ function question(id: string) {
     id,
     type: "application" as const,
     prompt: "What will you practice?",
-    sortOrder: 1
+    sort: 1
   };
 }
 
@@ -72,6 +72,6 @@ function actionStep(id: string) {
     id,
     title: "Take one step",
     description: "",
-    sortOrder: 1
+    sort: 1
   };
 }

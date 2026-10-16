@@ -112,7 +112,7 @@ class SermonDiscussionQuestionDto {
     required this.id,
     required this.type,
     required this.prompt,
-    required this.sortOrder,
+    required this.sort,
     required this.startSeconds,
   });
 
@@ -121,7 +121,7 @@ class SermonDiscussionQuestionDto {
       id: sermonDiscussionString(json, 'id'),
       type: sermonDiscussionEnum(json, 'type', _questionTypes),
       prompt: sermonDiscussionString(json, 'prompt'),
-      sortOrder: sermonDiscussionInt(json, 'sortOrder'),
+      sort: sermonDiscussionInt(json, 'sort'),
       startSeconds: sermonDiscussionNullableInt(
         json,
         'startSeconds',
@@ -133,7 +133,7 @@ class SermonDiscussionQuestionDto {
   final String id;
   final String type;
   final String prompt;
-  final int sortOrder;
+  final int sort;
   final int? startSeconds;
 
   SermonDiscussionQuestion toDomain() {
@@ -141,7 +141,7 @@ class SermonDiscussionQuestionDto {
       id: id,
       type: type,
       prompt: prompt,
-      sortOrder: sortOrder,
+      sort: sort,
       startSeconds: startSeconds,
     );
   }
@@ -152,7 +152,7 @@ class SermonDiscussionActionStepDto {
     required this.id,
     required this.title,
     required this.description,
-    required this.sortOrder,
+    required this.sort,
   });
 
   factory SermonDiscussionActionStepDto.fromJson(Map<String, Object?> json) {
@@ -164,21 +164,21 @@ class SermonDiscussionActionStepDto {
         'description',
         allowEmpty: true,
       ),
-      sortOrder: sermonDiscussionInt(json, 'sortOrder'),
+      sort: sermonDiscussionInt(json, 'sort'),
     );
   }
 
   final String id;
   final String title;
   final String description;
-  final int sortOrder;
+  final int sort;
 
   SermonDiscussionActionStep toDomain() {
     return SermonDiscussionActionStep(
       id: id,
       title: title,
       description: description,
-      sortOrder: sortOrder,
+      sort: sort,
     );
   }
 }

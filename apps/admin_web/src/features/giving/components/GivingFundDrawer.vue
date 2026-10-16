@@ -18,7 +18,7 @@ defineProps<{
     description: string;
     status: GivingFund["status"];
     targetAmountDollars: string;
-    displayOrder: number;
+    sort: number;
   };
   isSaving: boolean;
   save: () => void;
@@ -95,10 +95,11 @@ const statusItems = computed(() =>
           variant="outlined"
         />
         <v-text-field
-          v-model.number="form.displayOrder"
+          v-model.number="form.sort"
           :disabled="!canManage || isSaving"
-          :label="t('Display order')"
+          :label="t('common.sort')"
           density="comfortable"
+          min="0"
           type="number"
           variant="outlined"
         />

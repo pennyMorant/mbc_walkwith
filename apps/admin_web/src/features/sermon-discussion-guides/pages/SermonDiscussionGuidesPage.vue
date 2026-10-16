@@ -196,11 +196,11 @@ function selectGuide(guide: SermonDiscussionGuide) {
   guideForm.audienceId = guide.audienceId;
   guideForm.questions = guide.questions.map((question, index) => ({
     ...question,
-    sortOrder: question.sortOrder ?? index
+    sort: question.sort ?? index
   }));
   guideForm.actionSteps = guide.actionSteps.map((action, index) => ({
     ...action,
-    sortOrder: action.sortOrder ?? index
+    sort: action.sort ?? index
   }));
   guideForm.prayerPrompts = [...guide.prayerPrompts];
   guideForm.generatedMetadata = { ...guide.generatedMetadata };
@@ -229,7 +229,7 @@ function addQuestion() {
     id: nextLocalId("question"),
     type: "application",
     prompt: "",
-    sortOrder: index,
+    sort: index,
     startSeconds: null
   });
 }
@@ -240,7 +240,7 @@ function addActionStep() {
     id: nextLocalId("action"),
     title: "",
     description: "",
-    sortOrder: index
+    sort: index
   });
 }
 
@@ -277,7 +277,7 @@ function buildGuideCreatePayload(): SermonDiscussionGuideCreateRequest {
         id: question.id.trim() || nextLocalId("question"),
         type: question.type,
         prompt: question.prompt.trim(),
-        sortOrder: index,
+        sort: index,
         startSeconds: question.startSeconds
       }))
       .filter((question) => question.prompt.length > 0),
@@ -286,7 +286,7 @@ function buildGuideCreatePayload(): SermonDiscussionGuideCreateRequest {
         id: action.id.trim() || nextLocalId("action"),
         title: action.title.trim(),
         description: action.description.trim(),
-        sortOrder: index
+        sort: index
       }))
       .filter((action) => action.title.length > 0),
     prayerPrompts: guideForm.prayerPrompts

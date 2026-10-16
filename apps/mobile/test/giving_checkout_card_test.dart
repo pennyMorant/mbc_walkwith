@@ -105,7 +105,7 @@ class _FakeGivingRepository implements GivingRepository {
         description: 'Care fund.',
         status: 'active',
         targetAmountCents: null,
-        displayOrder: 1,
+        sort: 1,
       ),
     ];
   }

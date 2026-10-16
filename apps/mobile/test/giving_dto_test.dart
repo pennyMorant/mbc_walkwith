@@ -128,5 +128,5 @@ const _fundJson = {
   'description': 'General church offering.',
   'status': 'active',
   'targetAmountCents': null,
-  'displayOrder': 10,
+  'sort': 10,
 };

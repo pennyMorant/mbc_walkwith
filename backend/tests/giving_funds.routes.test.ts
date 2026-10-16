@@ -31,7 +31,7 @@ describe("giving funds routes", () => {
         description: "Local care and mercy ministry.",
         status: "active",
         targetAmountCents: 250000,
-        displayOrder: 15
+        sort: 15
       }
     });
     expect(createResponse.statusCode).toBe(200);

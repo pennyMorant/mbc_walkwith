@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { sortValueSchema } from "./sort.js";
 
 export const givingTransactionStatusSchema = z.enum([
   "pending",
@@ -113,7 +114,7 @@ export const givingFundSchema = z.object({
   description: z.string().default(""),
   status: givingFundStatusSchema,
   targetAmountCents: z.number().int().nullable().default(null),
-  displayOrder: z.number().int().default(0),
+  sort: sortValueSchema,
   totalAmountCents: z.number().int().default(0),
   transactionCount: z.number().int().default(0),
   createdAt: z.string(),
@@ -202,12 +203,7 @@ export const givingFundUpsertRequestSchema = z
       .max(2_147_483_647)
       .nullable()
       .default(null),
-    displayOrder: z
-      .number()
-      .int()
-      .min(-2_147_483_648)
-      .max(2_147_483_647)
-      .default(0)
+    sort: sortValueSchema
   })
   .strict();
 

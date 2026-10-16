@@ -94,7 +94,7 @@ export class InMemoryLifePostRepository implements LifePostRepository {
       endsAt: input.endsAt ?? null,
       visibility: input.visibility,
       imageUrl: input.imageUrl ?? null,
-      displayWeight: input.displayWeight,
+      sort: input.sort,
       ctaLabel: cleanNullableString(input.ctaLabel),
       ctaUrl: cleanNullableString(input.ctaUrl),
       registrationEnabled: input.registrationEnabled,
@@ -134,7 +134,7 @@ export class InMemoryLifePostRepository implements LifePostRepository {
       visibility: input.visibility ?? existing.visibility,
       imageUrl:
         input.imageUrl === undefined ? existing.imageUrl : input.imageUrl,
-      displayWeight: input.displayWeight ?? existing.displayWeight,
+      sort: input.sort ?? existing.sort,
       ctaLabel:
         input.ctaLabel === undefined
           ? existing.ctaLabel
@@ -333,14 +333,14 @@ function readStateKey(lifePostId: string, userId: string) {
 }
 
 function compareLifePosts(a: LifePost, b: LifePost) {
-  if (a.displayWeight !== b.displayWeight) {
-    return b.displayWeight - a.displayWeight;
+  if (a.sort !== b.sort) {
+    return b.sort - a.sort;
   }
   const startComparison = compareNullableIsoDesc(a.startsAt, b.startsAt);
   if (startComparison !== 0) {
     return startComparison;
   }
-  return b.updatedAt.localeCompare(a.updatedAt);
+  return b.updatedAt.localeCompare(a.updatedAt) || a.id.localeCompare(b.id);
 }
 
 function compareLifePostsByStartAsc(a: LifePost, b: LifePost) {
@@ -348,10 +348,10 @@ function compareLifePostsByStartAsc(a: LifePost, b: LifePost) {
   if (startComparison !== 0) {
     return startComparison;
   }
-  if (a.displayWeight !== b.displayWeight) {
-    return b.displayWeight - a.displayWeight;
+  if (a.sort !== b.sort) {
+    return b.sort - a.sort;
   }
-  return b.updatedAt.localeCompare(a.updatedAt);
+  return b.updatedAt.localeCompare(a.updatedAt) || a.id.localeCompare(b.id);
 }
 
 function compareNullableIsoAsc(

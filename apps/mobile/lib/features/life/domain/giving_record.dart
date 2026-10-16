@@ -68,7 +68,7 @@ class GivingFund {
     required this.description,
     required this.status,
     required this.targetAmountCents,
-    required this.displayOrder,
+    required this.sort,
   });
 
   final String id;
@@ -77,7 +77,7 @@ class GivingFund {
   final String description;
   final String status;
   final int? targetAmountCents;
-  final int displayOrder;
+  final int sort;
 }
 
 class GivingCheckoutSession {

@@ -164,8 +164,8 @@ int compareLifePostTimeline(LifePost a, LifePost b) {
 }
 
 int _compareHeroPriority(LifePost a, LifePost b) {
-  if (a.displayWeight != b.displayWeight) {
-    return b.displayWeight.compareTo(a.displayWeight);
+  if (a.sort != b.sort) {
+    return b.sort.compareTo(a.sort);
   }
   return compareLifePostStartTime(a, b);
 }

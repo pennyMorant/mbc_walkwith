@@ -57,7 +57,7 @@ const _publicCourse = CourseLearning(
       description: 'The heart of the Christian faith.',
       startsAt: null,
       status: 'published',
-      sortOrder: 1,
+      sort: 1,
     ),
   ],
 );

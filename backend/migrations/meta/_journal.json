@@ -442,6 +442,13 @@
       "when": 1791154853182,
       "tag": "0064_nebulous_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1792128717033,
+      "tag": "0065_fearless_killmonger",
+      "breakpoints": true
     }
   ]
 }

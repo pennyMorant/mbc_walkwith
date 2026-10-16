@@ -121,7 +121,7 @@ export function useDiscipleshipPageController() {
         taskForm.stageId = stage.id;
         stageForm.title = "";
         stageForm.description = "";
-        stageForm.sortOrder += 1;
+        stageForm.sort += 1;
       }
       await queryClient.invalidateQueries({
         queryKey: ["discipleship-stages"]
@@ -148,7 +148,7 @@ export function useDiscipleshipPageController() {
         taskForm.title = "";
         taskForm.description = "";
         taskForm.referenceId = "";
-        taskForm.sortOrder += 1;
+        taskForm.sort += 1;
       }
       await queryClient.invalidateQueries({
         queryKey: ["discipleship-tasks"]

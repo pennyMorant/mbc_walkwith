@@ -1417,7 +1417,7 @@ Response:
       "endsAt": null,
       "visibility": "public",
       "imageUrl": null,
-      "displayWeight": 50,
+      "sort": 50,
       "updatedAt": "2026-05-09T17:00:00Z"
     }
   ]
@@ -1425,7 +1425,7 @@ Response:
 ```
 
 Life post lists are ordered by backend display strategy: higher
-`displayWeight` first, then scheduled time, then update time. `displayWeight`
+`sort` first, then scheduled time, then update time. `sort`
 is an admin-owned ordering field, not a user-facing App label. Callers that
 need the nearest upcoming records, such as Public Landing aggregation, use
 `sort=starts_at_asc`; the default remains `priority_desc`.
@@ -1778,7 +1778,7 @@ existing newcomer source id.
 Task references are stored as `referenceType` and `referenceId`; the owner
 feature remains responsible for the canonical target state.
 
-Stage and task list responses are ordered by `sortOrder`, then creation time,
+Stage and task list responses are ordered by `sort`, then creation time,
 so Admin Web can safely rebuild the journey structure after reload.
 
 Assignment list and create responses use the same summary fields as the member
@@ -2293,10 +2293,17 @@ not emulate publishing with PATCH followed by publish. Published content can be
 changed, unpublished, archived, or deleted only by an actor with
 `life_posts:publish`.
 
-Admin create/update payloads accept `displayWeight` as an integer display
+Admin create/update payloads accept `sort` as an integer display
 priority. Current UI presets are `0` normal, `50` important, and `100` very
-important. The backend stores this as `public_posts.display_weight` and uses it
+important. The backend stores this as `public_posts.sort` and uses it
 for list ordering.
+
+For every admin-authored display priority field, `sort` is a non-negative
+integer with a default of `0`. Higher values are returned first. Repositories
+must add a domain-specific secondary order and a stable ID tie-breaker. This
+contract does not replace canonical order fields such as Bible book
+`sortOrder`, and does not apply to transactions, registrations, audit rows, or
+other operational history.
 
 ```json
 {

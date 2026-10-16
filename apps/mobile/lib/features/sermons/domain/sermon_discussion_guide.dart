@@ -35,14 +35,14 @@ class SermonDiscussionQuestion {
     required this.id,
     required this.type,
     required this.prompt,
-    required this.sortOrder,
+    required this.sort,
     required this.startSeconds,
   });
 
   final String id;
   final String type;
   final String prompt;
-  final int sortOrder;
+  final int sort;
   final int? startSeconds;
 }
 
@@ -51,13 +51,13 @@ class SermonDiscussionActionStep {
     required this.id,
     required this.title,
     required this.description,
-    required this.sortOrder,
+    required this.sort,
   });
 
   final String id;
   final String title;
   final String description;
-  final int sortOrder;
+  final int sort;
 }
 
 class SermonDiscussionResponse {

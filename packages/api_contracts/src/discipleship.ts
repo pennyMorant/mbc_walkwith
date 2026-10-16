@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { sortValueSchema } from "./sort.js";
 
 export const discipleshipJourneyStatusSchema = z.enum([
   "draft",
@@ -51,7 +52,7 @@ export const discipleshipStageSchema = z.object({
   journeyId: z.string(),
   title: z.string(),
   description: z.string().default(""),
-  sortOrder: z.number().int().default(0),
+  sort: sortValueSchema,
   createdAt: z.string(),
   updatedAt: z.string()
 });
@@ -65,7 +66,7 @@ export const discipleshipTaskSchema = z.object({
   referenceType: discipleshipTaskReferenceTypeSchema,
   referenceId: z.string().default(""),
   required: z.boolean().default(true),
-  sortOrder: z.number().int().default(0),
+  sort: sortValueSchema,
   createdAt: z.string(),
   updatedAt: z.string()
 });
@@ -125,7 +126,7 @@ export const discipleshipJourneyUpdateRequestSchema =
 export const discipleshipStageCreateRequestSchema = z.object({
   title: z.string().trim().min(1).max(160),
   description: z.string().trim().max(2000).default(""),
-  sortOrder: z.number().int().default(0)
+  sort: sortValueSchema
 });
 
 export const discipleshipTaskCreateRequestSchema = z.object({
@@ -135,7 +136,7 @@ export const discipleshipTaskCreateRequestSchema = z.object({
   referenceType: discipleshipTaskReferenceTypeSchema,
   referenceId: z.string().trim().max(200).default(""),
   required: z.boolean().default(true),
-  sortOrder: z.number().int().default(0)
+  sort: sortValueSchema
 });
 
 export const discipleshipAssignmentCreateRequestSchema = z

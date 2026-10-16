@@ -113,7 +113,7 @@ export class PostgresDiscipleshipRepository
         journeyId,
         title: input.title.trim(),
         description: input.description.trim(),
-        sortOrder: input.sortOrder,
+        sort: input.sort,
         updatedAt: new Date()
       })
       .returning();
@@ -137,7 +137,11 @@ export class PostgresDiscipleshipRepository
       .select()
       .from(discipleshipStages)
       .where(eq(discipleshipStages.journeyId, journeyId))
-      .orderBy(asc(discipleshipStages.sortOrder), asc(discipleshipStages.createdAt));
+      .orderBy(
+        desc(discipleshipStages.sort),
+        asc(discipleshipStages.createdAt),
+        asc(discipleshipStages.id)
+      );
     return rows.map(stageFromRow);
   }
 
@@ -155,7 +159,7 @@ export class PostgresDiscipleshipRepository
         referenceType: input.referenceType,
         referenceId: input.referenceId.trim(),
         required: input.required,
-        sortOrder: input.sortOrder,
+        sort: input.sort,
         updatedAt: new Date()
       })
       .returning();
@@ -179,7 +183,11 @@ export class PostgresDiscipleshipRepository
       .select()
       .from(discipleshipTasks)
       .where(eq(discipleshipTasks.journeyId, journeyId))
-      .orderBy(asc(discipleshipTasks.sortOrder), asc(discipleshipTasks.createdAt));
+      .orderBy(
+        desc(discipleshipTasks.sort),
+        asc(discipleshipTasks.createdAt),
+        asc(discipleshipTasks.id)
+      );
     return rows.map(taskFromRow);
   }
 
@@ -366,7 +374,7 @@ function stageFromRow(
     journeyId: row.journeyId,
     title: row.title,
     description: row.description,
-    sortOrder: row.sortOrder,
+    sort: row.sort,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString()
   };
@@ -384,7 +392,7 @@ function taskFromRow(
     referenceType: row.referenceType,
     referenceId: row.referenceId,
     required: row.required,
-    sortOrder: row.sortOrder,
+    sort: row.sort,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString()
   };

@@ -15,7 +15,7 @@ export function courseLessonFromRow(
     description: row.description,
     startsAt: row.startsAt?.toISOString() ?? null,
     status: row.status,
-    sortOrder: row.sortOrder,
+    sort: row.sort,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString()
   };

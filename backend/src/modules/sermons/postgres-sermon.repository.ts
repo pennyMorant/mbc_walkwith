@@ -6,7 +6,7 @@ import type {
   SermonStatus,
   UpdateSermonRequest
 } from "@mbc/api-contracts";
-import { asc, count, eq, inArray, sql } from "drizzle-orm";
+import { asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 
 import type { AppDb } from "../../shared/db/client.js";
 import {
@@ -329,7 +329,11 @@ export class PostgresSermonRepository implements SermonRepository {
           .select()
           .from(sermonOutlines)
           .where(eq(sermonOutlines.sermonId, row.id))
-          .orderBy(sermonOutlines.sortOrder),
+          .orderBy(
+            desc(sermonOutlines.sort),
+            asc(sermonOutlines.startSeconds),
+            asc(sermonOutlines.id)
+          ),
         database
           .select()
           .from(sermonReferences)

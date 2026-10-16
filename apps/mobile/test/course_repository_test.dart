@@ -41,9 +41,8 @@ void main() {
       responseData: const {'data': _courseJson, 'meta': <String, Object?>{}},
     );
 
-    final course = await _repository(
-      dio,
-    ).getCourse('public-foundations', _memberSession);
+    final course = await _repository(dio)
+        .getCourse('public-foundations', _memberSession);
 
     expect(course.myEnrollmentStatus, 'enrolled');
     expect(dio.requests.single.authorization, 'Bearer member-token');
@@ -114,7 +113,7 @@ void main() {
     final malformedLesson = Map<String, Object?>.from(
       (_courseJson['lessons']! as List<Object?>).single!
           as Map<String, Object?>,
-    )..['sortOrder'] = -1;
+    )..['sort'] = -1;
     final malformed = Map<String, Object?>.from(_courseJson)
       ..['lessons'] = [malformedLesson];
     final dio = _CourseDio(
@@ -219,7 +218,7 @@ const _courseJson = <String, Object?>{
       'description': 'The heart of the Christian faith.',
       'startsAt': '2026-07-05T17:00:00.000Z',
       'status': 'published',
-      'sortOrder': 1,
+      'sort': 1,
       'createdAt': '2026-07-01T12:00:00.000Z',
       'updatedAt': '2026-07-02T12:00:00.000Z',
     },

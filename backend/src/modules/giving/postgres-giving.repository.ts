@@ -71,7 +71,11 @@ export class PostgresGivingRepository implements GivingRepository {
       .select()
       .from(givingFunds)
       .where(fundWhere(query))
-      .orderBy(asc(givingFunds.displayOrder), asc(givingFunds.name))
+      .orderBy(
+        desc(givingFunds.sort),
+        asc(givingFunds.name),
+        asc(givingFunds.id)
+      )
       .limit(query.limit);
     return Promise.all(rows.map((row) => fundFromRow(this.db, row)));
   }
@@ -100,7 +104,7 @@ export class PostgresGivingRepository implements GivingRepository {
           description: input.description,
           status: input.status,
           targetAmountCents: input.targetAmountCents,
-          displayOrder: input.displayOrder
+          sort: input.sort
         })
         .returning();
     } catch (error) {
@@ -138,8 +142,8 @@ export class PostgresGivingRepository implements GivingRepository {
         ...(input.targetAmountCents !== undefined
           ? { targetAmountCents: input.targetAmountCents }
           : {}),
-        ...(input.displayOrder !== undefined
-          ? { displayOrder: input.displayOrder }
+        ...(input.sort !== undefined
+          ? { sort: input.sort }
           : {}),
         updatedAt: new Date()
       })

@@ -37,7 +37,7 @@ describe("giving workspace models", () => {
       description: "  Local mercy ministry.  ",
       status: "active",
       targetAmountDollars: "2500.00",
-      displayOrder: 4.9
+      sort: 4.9
     });
 
     expect(isGivingFundFormValid(form)).toBeTrue();
@@ -47,14 +47,14 @@ describe("giving workspace models", () => {
       description: "Local mercy ministry.",
       status: "active",
       targetAmountCents: 250000,
-      displayOrder: 4
+      sort: 4
     });
     expect(givingFundUpdatePayload(form)).toEqual({
       name: "Community Care",
       description: "Local mercy ministry.",
       status: "active",
       targetAmountCents: 250000,
-      displayOrder: 4
+      sort: 4
     });
     expect(givingFundUpdatePayload(form)).not.toHaveProperty("code");
   });
@@ -68,7 +68,7 @@ describe("giving workspace models", () => {
       description: "Global missions.",
       status: "paused",
       targetAmountCents: 12345,
-      displayOrder: 8,
+      sort: 8,
       totalAmountCents: 5000,
       transactionCount: 2,
       createdAt: "2026-01-01T00:00:00.000Z",

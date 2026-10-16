@@ -18,7 +18,7 @@ describe("life post ordering", () => {
           endsAt: `2099-07-${String(day).padStart(2, "0")}T20:00:00.000Z`,
           visibility: "private",
           imageUrl: null,
-          displayWeight: 13 - day,
+          sort: 13 - day,
           ctaLabel: null,
           ctaUrl: null,
           registrationEnabled: false,

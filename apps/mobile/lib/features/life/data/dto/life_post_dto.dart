@@ -24,7 +24,7 @@ class LifePostDto {
     this.visibility,
     this.status = 'published',
     this.imageUrl,
-    this.displayWeight = 0,
+    this.sort = 0,
     this.ctaLabel,
     this.ctaUrl,
     this.registrationEnabled = false,
@@ -49,7 +49,7 @@ class LifePostDto {
   final String? visibility;
   final String status;
   final String? imageUrl;
-  final int displayWeight;
+  final int sort;
   final String? ctaLabel;
   final String? ctaUrl;
   final bool registrationEnabled;
@@ -90,12 +90,7 @@ class LifePostDto {
       visibility: readLifePostEnum(json, 'visibility', _lifePostVisibilities),
       status: readLifePostEnum(json, 'status', _lifePostStatuses),
       imageUrl: readNullableLifePostString(json, 'imageUrl'),
-      displayWeight: readLifePostInt(
-        json,
-        'displayWeight',
-        minimum: 0,
-        maximum: 100,
-      ),
+      sort: readLifePostInt(json, 'sort', minimum: 0, maximum: 100),
       ctaLabel: readNullableLifePostString(json, 'ctaLabel'),
       ctaUrl: readNullableLifePostString(json, 'ctaUrl'),
       registrationEnabled: registrationEnabled,
@@ -134,7 +129,7 @@ class LifePostDto {
       visibility: visibility ?? 'public',
       status: status,
       imageUrl: imageUrl,
-      displayWeight: displayWeight,
+      sort: sort,
       ctaLabel: ctaLabel,
       ctaUrl: ctaUrl,
       registrationEnabled: registrationEnabled,
@@ -161,7 +156,7 @@ class LifePostDto {
     String? visibility,
     String? status,
     String? imageUrl,
-    int? displayWeight,
+    int? sort,
     String? ctaLabel,
     String? ctaUrl,
     bool? registrationEnabled,
@@ -186,7 +181,7 @@ class LifePostDto {
       visibility: visibility ?? this.visibility,
       status: status ?? this.status,
       imageUrl: imageUrl ?? this.imageUrl,
-      displayWeight: displayWeight ?? this.displayWeight,
+      sort: sort ?? this.sort,
       ctaLabel: ctaLabel ?? this.ctaLabel,
       ctaUrl: ctaUrl ?? this.ctaUrl,
       registrationEnabled: registrationEnabled ?? this.registrationEnabled,

@@ -25,7 +25,7 @@ function stageTitle(stageId: string | null) {
   <v-table class="mt-3" density="compact">
     <thead>
       <tr>
-        <th>{{ t("Order") }}</th>
+        <th>{{ t("common.sort") }}</th>
         <th>{{ t("Task") }}</th>
         <th>{{ t("Stage") }}</th>
         <th>{{ t("Reference") }}</th>
@@ -36,7 +36,7 @@ function stageTitle(stageId: string | null) {
         <td colspan="4">{{ t("No tasks yet.") }}</td>
       </tr>
       <tr v-for="task in tasks" :key="task.id">
-        <td>{{ task.sortOrder }}</td>
+        <td>{{ task.sort }}</td>
         <td>
           <div class="font-weight-medium">{{ task.title }}</div>
           <div class="text-caption text-medium-emphasis">

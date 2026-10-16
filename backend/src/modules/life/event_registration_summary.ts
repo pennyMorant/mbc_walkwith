@@ -10,8 +10,8 @@ export function dedupeAndSortLifePosts(posts: LifePost[]) {
     byId.set(post.id, post);
   }
   return [...byId.values()].sort((a, b) => {
-    if (a.displayWeight !== b.displayWeight) {
-      return b.displayWeight - a.displayWeight;
+    if (a.sort !== b.sort) {
+      return b.sort - a.sort;
     }
     const startComparison = compareNullableIsoDesc(a.startsAt, b.startsAt);
     if (startComparison !== 0) {

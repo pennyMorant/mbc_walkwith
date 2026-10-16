@@ -12,7 +12,7 @@ export type GivingFundForm = {
   description: string;
   status: GivingFund["status"];
   targetAmountDollars: string;
-  displayOrder: number;
+  sort: number;
 };
 
 export function createGivingFundForm(): GivingFundForm {
@@ -22,7 +22,7 @@ export function createGivingFundForm(): GivingFundForm {
     description: "",
     status: "draft",
     targetAmountDollars: "",
-    displayOrder: 0
+    sort: 0
   };
 }
 
@@ -35,7 +35,7 @@ export function fillGivingFundForm(form: GivingFundForm, fund: GivingFund) {
     fund.targetAmountCents == null
       ? ""
       : (fund.targetAmountCents / 100).toFixed(2);
-  form.displayOrder = fund.displayOrder;
+  form.sort = fund.sort;
 }
 
 export function resetGivingFundForm(form: GivingFundForm) {
@@ -57,7 +57,7 @@ export function isGivingFundFormValid(form: GivingFundForm) {
     description: form.description,
     status: form.status,
     targetAmountCents: target.value,
-    displayOrder: normalizeInteger(form.displayOrder)
+    sort: normalizeInteger(form.sort)
   }).success;
 }
 
@@ -71,7 +71,7 @@ export function givingFundCreatePayload(
     description: form.description.trim(),
     status: form.status,
     targetAmountCents: target,
-    displayOrder: normalizeInteger(form.displayOrder)
+    sort: normalizeInteger(form.sort)
   });
 }
 
@@ -84,7 +84,7 @@ export function givingFundUpdatePayload(
     description: createPayload.description,
     status: createPayload.status,
     targetAmountCents: createPayload.targetAmountCents,
-    displayOrder: createPayload.displayOrder
+    sort: createPayload.sort
   };
 }
 
@@ -116,5 +116,5 @@ function requireTargetAmount(value: string) {
 }
 
 function normalizeInteger(value: number) {
-  return Number.isFinite(value) ? Math.trunc(value) : 0;
+  return Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : 0;
 }

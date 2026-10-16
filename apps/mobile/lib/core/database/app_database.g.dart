@@ -3157,19 +3157,17 @@ class $LocalSermonTopicsTable extends LocalSermonTopics
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
-    'sortOrder',
-  );
+  static const VerificationMeta _sortMeta = const VerificationMeta('sort');
   @override
-  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
-    'sort_order',
+  late final GeneratedColumn<int> sort = GeneratedColumn<int>(
+    'sort',
     aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [sermonId, topic, sortOrder];
+  List<GeneratedColumn> get $columns => [sermonId, topic, sort];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3198,13 +3196,13 @@ class $LocalSermonTopicsTable extends LocalSermonTopics
     } else if (isInserting) {
       context.missing(_topicMeta);
     }
-    if (data.containsKey('sort_order')) {
+    if (data.containsKey('sort')) {
       context.handle(
-        _sortOrderMeta,
-        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+        _sortMeta,
+        sort.isAcceptableOrUnknown(data['sort']!, _sortMeta),
       );
     } else if (isInserting) {
-      context.missing(_sortOrderMeta);
+      context.missing(_sortMeta);
     }
     return context;
   }
@@ -3223,9 +3221,9 @@ class $LocalSermonTopicsTable extends LocalSermonTopics
         DriftSqlType.string,
         data['${effectivePrefix}topic'],
       )!,
-      sortOrder: attachedDatabase.typeMapping.read(
+      sort: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}sort_order'],
+        data['${effectivePrefix}sort'],
       )!,
     );
   }
@@ -3240,18 +3238,18 @@ class LocalSermonTopic extends DataClass
     implements Insertable<LocalSermonTopic> {
   final String sermonId;
   final String topic;
-  final int sortOrder;
+  final int sort;
   const LocalSermonTopic({
     required this.sermonId,
     required this.topic,
-    required this.sortOrder,
+    required this.sort,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['sermon_id'] = Variable<String>(sermonId);
     map['topic'] = Variable<String>(topic);
-    map['sort_order'] = Variable<int>(sortOrder);
+    map['sort'] = Variable<int>(sort);
     return map;
   }
 
@@ -3259,7 +3257,7 @@ class LocalSermonTopic extends DataClass
     return LocalSermonTopicsCompanion(
       sermonId: Value(sermonId),
       topic: Value(topic),
-      sortOrder: Value(sortOrder),
+      sort: Value(sort),
     );
   }
 
@@ -3271,7 +3269,7 @@ class LocalSermonTopic extends DataClass
     return LocalSermonTopic(
       sermonId: serializer.fromJson<String>(json['sermonId']),
       topic: serializer.fromJson<String>(json['topic']),
-      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+      sort: serializer.fromJson<int>(json['sort']),
     );
   }
   @override
@@ -3280,24 +3278,21 @@ class LocalSermonTopic extends DataClass
     return <String, dynamic>{
       'sermonId': serializer.toJson<String>(sermonId),
       'topic': serializer.toJson<String>(topic),
-      'sortOrder': serializer.toJson<int>(sortOrder),
+      'sort': serializer.toJson<int>(sort),
     };
   }
 
-  LocalSermonTopic copyWith({
-    String? sermonId,
-    String? topic,
-    int? sortOrder,
-  }) => LocalSermonTopic(
-    sermonId: sermonId ?? this.sermonId,
-    topic: topic ?? this.topic,
-    sortOrder: sortOrder ?? this.sortOrder,
-  );
+  LocalSermonTopic copyWith({String? sermonId, String? topic, int? sort}) =>
+      LocalSermonTopic(
+        sermonId: sermonId ?? this.sermonId,
+        topic: topic ?? this.topic,
+        sort: sort ?? this.sort,
+      );
   LocalSermonTopic copyWithCompanion(LocalSermonTopicsCompanion data) {
     return LocalSermonTopic(
       sermonId: data.sermonId.present ? data.sermonId.value : this.sermonId,
       topic: data.topic.present ? data.topic.value : this.topic,
-      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      sort: data.sort.present ? data.sort.value : this.sort,
     );
   }
 
@@ -3306,51 +3301,51 @@ class LocalSermonTopic extends DataClass
     return (StringBuffer('LocalSermonTopic(')
           ..write('sermonId: $sermonId, ')
           ..write('topic: $topic, ')
-          ..write('sortOrder: $sortOrder')
+          ..write('sort: $sort')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(sermonId, topic, sortOrder);
+  int get hashCode => Object.hash(sermonId, topic, sort);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalSermonTopic &&
           other.sermonId == this.sermonId &&
           other.topic == this.topic &&
-          other.sortOrder == this.sortOrder);
+          other.sort == this.sort);
 }
 
 class LocalSermonTopicsCompanion extends UpdateCompanion<LocalSermonTopic> {
   final Value<String> sermonId;
   final Value<String> topic;
-  final Value<int> sortOrder;
+  final Value<int> sort;
   final Value<int> rowid;
   const LocalSermonTopicsCompanion({
     this.sermonId = const Value.absent(),
     this.topic = const Value.absent(),
-    this.sortOrder = const Value.absent(),
+    this.sort = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LocalSermonTopicsCompanion.insert({
     required String sermonId,
     required String topic,
-    required int sortOrder,
+    required int sort,
     this.rowid = const Value.absent(),
   }) : sermonId = Value(sermonId),
        topic = Value(topic),
-       sortOrder = Value(sortOrder);
+       sort = Value(sort);
   static Insertable<LocalSermonTopic> custom({
     Expression<String>? sermonId,
     Expression<String>? topic,
-    Expression<int>? sortOrder,
+    Expression<int>? sort,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (sermonId != null) 'sermon_id': sermonId,
       if (topic != null) 'topic': topic,
-      if (sortOrder != null) 'sort_order': sortOrder,
+      if (sort != null) 'sort': sort,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3358,13 +3353,13 @@ class LocalSermonTopicsCompanion extends UpdateCompanion<LocalSermonTopic> {
   LocalSermonTopicsCompanion copyWith({
     Value<String>? sermonId,
     Value<String>? topic,
-    Value<int>? sortOrder,
+    Value<int>? sort,
     Value<int>? rowid,
   }) {
     return LocalSermonTopicsCompanion(
       sermonId: sermonId ?? this.sermonId,
       topic: topic ?? this.topic,
-      sortOrder: sortOrder ?? this.sortOrder,
+      sort: sort ?? this.sort,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3378,8 +3373,8 @@ class LocalSermonTopicsCompanion extends UpdateCompanion<LocalSermonTopic> {
     if (topic.present) {
       map['topic'] = Variable<String>(topic.value);
     }
-    if (sortOrder.present) {
-      map['sort_order'] = Variable<int>(sortOrder.value);
+    if (sort.present) {
+      map['sort'] = Variable<int>(sort.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -3392,7 +3387,7 @@ class LocalSermonTopicsCompanion extends UpdateCompanion<LocalSermonTopic> {
     return (StringBuffer('LocalSermonTopicsCompanion(')
           ..write('sermonId: $sermonId, ')
           ..write('topic: $topic, ')
-          ..write('sortOrder: $sortOrder, ')
+          ..write('sort: $sort, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3459,12 +3454,10 @@ class $LocalSermonOutlinesTable extends LocalSermonOutlines
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
-    'sortOrder',
-  );
+  static const VerificationMeta _sortMeta = const VerificationMeta('sort');
   @override
-  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
-    'sort_order',
+  late final GeneratedColumn<int> sort = GeneratedColumn<int>(
+    'sort',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -3477,7 +3470,7 @@ class $LocalSermonOutlinesTable extends LocalSermonOutlines
     title,
     summary,
     startSeconds,
-    sortOrder,
+    sort,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3531,13 +3524,13 @@ class $LocalSermonOutlinesTable extends LocalSermonOutlines
     } else if (isInserting) {
       context.missing(_startSecondsMeta);
     }
-    if (data.containsKey('sort_order')) {
+    if (data.containsKey('sort')) {
       context.handle(
-        _sortOrderMeta,
-        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+        _sortMeta,
+        sort.isAcceptableOrUnknown(data['sort']!, _sortMeta),
       );
     } else if (isInserting) {
-      context.missing(_sortOrderMeta);
+      context.missing(_sortMeta);
     }
     return context;
   }
@@ -3568,9 +3561,9 @@ class $LocalSermonOutlinesTable extends LocalSermonOutlines
         DriftSqlType.int,
         data['${effectivePrefix}start_seconds'],
       )!,
-      sortOrder: attachedDatabase.typeMapping.read(
+      sort: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}sort_order'],
+        data['${effectivePrefix}sort'],
       )!,
     );
   }
@@ -3588,14 +3581,14 @@ class LocalSermonOutline extends DataClass
   final String title;
   final String summary;
   final int startSeconds;
-  final int sortOrder;
+  final int sort;
   const LocalSermonOutline({
     required this.id,
     required this.sermonId,
     required this.title,
     required this.summary,
     required this.startSeconds,
-    required this.sortOrder,
+    required this.sort,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3605,7 +3598,7 @@ class LocalSermonOutline extends DataClass
     map['title'] = Variable<String>(title);
     map['summary'] = Variable<String>(summary);
     map['start_seconds'] = Variable<int>(startSeconds);
-    map['sort_order'] = Variable<int>(sortOrder);
+    map['sort'] = Variable<int>(sort);
     return map;
   }
 
@@ -3616,7 +3609,7 @@ class LocalSermonOutline extends DataClass
       title: Value(title),
       summary: Value(summary),
       startSeconds: Value(startSeconds),
-      sortOrder: Value(sortOrder),
+      sort: Value(sort),
     );
   }
 
@@ -3631,7 +3624,7 @@ class LocalSermonOutline extends DataClass
       title: serializer.fromJson<String>(json['title']),
       summary: serializer.fromJson<String>(json['summary']),
       startSeconds: serializer.fromJson<int>(json['startSeconds']),
-      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+      sort: serializer.fromJson<int>(json['sort']),
     );
   }
   @override
@@ -3643,7 +3636,7 @@ class LocalSermonOutline extends DataClass
       'title': serializer.toJson<String>(title),
       'summary': serializer.toJson<String>(summary),
       'startSeconds': serializer.toJson<int>(startSeconds),
-      'sortOrder': serializer.toJson<int>(sortOrder),
+      'sort': serializer.toJson<int>(sort),
     };
   }
 
@@ -3653,14 +3646,14 @@ class LocalSermonOutline extends DataClass
     String? title,
     String? summary,
     int? startSeconds,
-    int? sortOrder,
+    int? sort,
   }) => LocalSermonOutline(
     id: id ?? this.id,
     sermonId: sermonId ?? this.sermonId,
     title: title ?? this.title,
     summary: summary ?? this.summary,
     startSeconds: startSeconds ?? this.startSeconds,
-    sortOrder: sortOrder ?? this.sortOrder,
+    sort: sort ?? this.sort,
   );
   LocalSermonOutline copyWithCompanion(LocalSermonOutlinesCompanion data) {
     return LocalSermonOutline(
@@ -3671,7 +3664,7 @@ class LocalSermonOutline extends DataClass
       startSeconds: data.startSeconds.present
           ? data.startSeconds.value
           : this.startSeconds,
-      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+      sort: data.sort.present ? data.sort.value : this.sort,
     );
   }
 
@@ -3683,14 +3676,14 @@ class LocalSermonOutline extends DataClass
           ..write('title: $title, ')
           ..write('summary: $summary, ')
           ..write('startSeconds: $startSeconds, ')
-          ..write('sortOrder: $sortOrder')
+          ..write('sort: $sort')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, sermonId, title, summary, startSeconds, sortOrder);
+      Object.hash(id, sermonId, title, summary, startSeconds, sort);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3700,7 +3693,7 @@ class LocalSermonOutline extends DataClass
           other.title == this.title &&
           other.summary == this.summary &&
           other.startSeconds == this.startSeconds &&
-          other.sortOrder == this.sortOrder);
+          other.sort == this.sort);
 }
 
 class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
@@ -3709,7 +3702,7 @@ class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
   final Value<String> title;
   final Value<String> summary;
   final Value<int> startSeconds;
-  final Value<int> sortOrder;
+  final Value<int> sort;
   final Value<int> rowid;
   const LocalSermonOutlinesCompanion({
     this.id = const Value.absent(),
@@ -3717,7 +3710,7 @@ class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
     this.title = const Value.absent(),
     this.summary = const Value.absent(),
     this.startSeconds = const Value.absent(),
-    this.sortOrder = const Value.absent(),
+    this.sort = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LocalSermonOutlinesCompanion.insert({
@@ -3726,21 +3719,21 @@ class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
     required String title,
     required String summary,
     required int startSeconds,
-    required int sortOrder,
+    required int sort,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        sermonId = Value(sermonId),
        title = Value(title),
        summary = Value(summary),
        startSeconds = Value(startSeconds),
-       sortOrder = Value(sortOrder);
+       sort = Value(sort);
   static Insertable<LocalSermonOutline> custom({
     Expression<String>? id,
     Expression<String>? sermonId,
     Expression<String>? title,
     Expression<String>? summary,
     Expression<int>? startSeconds,
-    Expression<int>? sortOrder,
+    Expression<int>? sort,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3749,7 +3742,7 @@ class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
       if (title != null) 'title': title,
       if (summary != null) 'summary': summary,
       if (startSeconds != null) 'start_seconds': startSeconds,
-      if (sortOrder != null) 'sort_order': sortOrder,
+      if (sort != null) 'sort': sort,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3760,7 +3753,7 @@ class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
     Value<String>? title,
     Value<String>? summary,
     Value<int>? startSeconds,
-    Value<int>? sortOrder,
+    Value<int>? sort,
     Value<int>? rowid,
   }) {
     return LocalSermonOutlinesCompanion(
@@ -3769,7 +3762,7 @@ class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
       title: title ?? this.title,
       summary: summary ?? this.summary,
       startSeconds: startSeconds ?? this.startSeconds,
-      sortOrder: sortOrder ?? this.sortOrder,
+      sort: sort ?? this.sort,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3792,8 +3785,8 @@ class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
     if (startSeconds.present) {
       map['start_seconds'] = Variable<int>(startSeconds.value);
     }
-    if (sortOrder.present) {
-      map['sort_order'] = Variable<int>(sortOrder.value);
+    if (sort.present) {
+      map['sort'] = Variable<int>(sort.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -3809,7 +3802,7 @@ class LocalSermonOutlinesCompanion extends UpdateCompanion<LocalSermonOutline> {
           ..write('title: $title, ')
           ..write('summary: $summary, ')
           ..write('startSeconds: $startSeconds, ')
-          ..write('sortOrder: $sortOrder, ')
+          ..write('sort: $sort, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4355,12 +4348,10 @@ class $LocalLifePostsTable extends LocalLifePosts
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _displayWeightMeta = const VerificationMeta(
-    'displayWeight',
-  );
+  static const VerificationMeta _sortMeta = const VerificationMeta('sort');
   @override
-  late final GeneratedColumn<int> displayWeight = GeneratedColumn<int>(
-    'display_weight',
+  late final GeneratedColumn<int> sort = GeneratedColumn<int>(
+    'sort',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -4411,7 +4402,7 @@ class $LocalLifePostsTable extends LocalLifePosts
     visibility,
     status,
     imageUrl,
-    displayWeight,
+    sort,
     ctaLabel,
     ctaUrl,
     updatedAt,
@@ -4501,13 +4492,10 @@ class $LocalLifePostsTable extends LocalLifePosts
         imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
       );
     }
-    if (data.containsKey('display_weight')) {
+    if (data.containsKey('sort')) {
       context.handle(
-        _displayWeightMeta,
-        displayWeight.isAcceptableOrUnknown(
-          data['display_weight']!,
-          _displayWeightMeta,
-        ),
+        _sortMeta,
+        sort.isAcceptableOrUnknown(data['sort']!, _sortMeta),
       );
     }
     if (data.containsKey('cta_label')) {
@@ -4583,9 +4571,9 @@ class $LocalLifePostsTable extends LocalLifePosts
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
       ),
-      displayWeight: attachedDatabase.typeMapping.read(
+      sort: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}display_weight'],
+        data['${effectivePrefix}sort'],
       )!,
       ctaLabel: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -4620,7 +4608,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
   final String visibility;
   final String status;
   final String? imageUrl;
-  final int displayWeight;
+  final int sort;
   final String? ctaLabel;
   final String? ctaUrl;
   final DateTime updatedAt;
@@ -4636,7 +4624,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
     required this.visibility,
     required this.status,
     this.imageUrl,
-    required this.displayWeight,
+    required this.sort,
     this.ctaLabel,
     this.ctaUrl,
     required this.updatedAt,
@@ -4661,7 +4649,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
     if (!nullToAbsent || imageUrl != null) {
       map['image_url'] = Variable<String>(imageUrl);
     }
-    map['display_weight'] = Variable<int>(displayWeight);
+    map['sort'] = Variable<int>(sort);
     if (!nullToAbsent || ctaLabel != null) {
       map['cta_label'] = Variable<String>(ctaLabel);
     }
@@ -4691,7 +4679,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
       imageUrl: imageUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(imageUrl),
-      displayWeight: Value(displayWeight),
+      sort: Value(sort),
       ctaLabel: ctaLabel == null && nullToAbsent
           ? const Value.absent()
           : Value(ctaLabel),
@@ -4719,7 +4707,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
       visibility: serializer.fromJson<String>(json['visibility']),
       status: serializer.fromJson<String>(json['status']),
       imageUrl: serializer.fromJson<String?>(json['imageUrl']),
-      displayWeight: serializer.fromJson<int>(json['displayWeight']),
+      sort: serializer.fromJson<int>(json['sort']),
       ctaLabel: serializer.fromJson<String?>(json['ctaLabel']),
       ctaUrl: serializer.fromJson<String?>(json['ctaUrl']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -4740,7 +4728,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
       'visibility': serializer.toJson<String>(visibility),
       'status': serializer.toJson<String>(status),
       'imageUrl': serializer.toJson<String?>(imageUrl),
-      'displayWeight': serializer.toJson<int>(displayWeight),
+      'sort': serializer.toJson<int>(sort),
       'ctaLabel': serializer.toJson<String?>(ctaLabel),
       'ctaUrl': serializer.toJson<String?>(ctaUrl),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -4759,7 +4747,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
     String? visibility,
     String? status,
     Value<String?> imageUrl = const Value.absent(),
-    int? displayWeight,
+    int? sort,
     Value<String?> ctaLabel = const Value.absent(),
     Value<String?> ctaUrl = const Value.absent(),
     DateTime? updatedAt,
@@ -4775,7 +4763,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
     visibility: visibility ?? this.visibility,
     status: status ?? this.status,
     imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
-    displayWeight: displayWeight ?? this.displayWeight,
+    sort: sort ?? this.sort,
     ctaLabel: ctaLabel.present ? ctaLabel.value : this.ctaLabel,
     ctaUrl: ctaUrl.present ? ctaUrl.value : this.ctaUrl,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -4795,9 +4783,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
           : this.visibility,
       status: data.status.present ? data.status.value : this.status,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-      displayWeight: data.displayWeight.present
-          ? data.displayWeight.value
-          : this.displayWeight,
+      sort: data.sort.present ? data.sort.value : this.sort,
       ctaLabel: data.ctaLabel.present ? data.ctaLabel.value : this.ctaLabel,
       ctaUrl: data.ctaUrl.present ? data.ctaUrl.value : this.ctaUrl,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
@@ -4818,7 +4804,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
           ..write('visibility: $visibility, ')
           ..write('status: $status, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('displayWeight: $displayWeight, ')
+          ..write('sort: $sort, ')
           ..write('ctaLabel: $ctaLabel, ')
           ..write('ctaUrl: $ctaUrl, ')
           ..write('updatedAt: $updatedAt')
@@ -4839,7 +4825,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
     visibility,
     status,
     imageUrl,
-    displayWeight,
+    sort,
     ctaLabel,
     ctaUrl,
     updatedAt,
@@ -4859,7 +4845,7 @@ class LocalLifePost extends DataClass implements Insertable<LocalLifePost> {
           other.visibility == this.visibility &&
           other.status == this.status &&
           other.imageUrl == this.imageUrl &&
-          other.displayWeight == this.displayWeight &&
+          other.sort == this.sort &&
           other.ctaLabel == this.ctaLabel &&
           other.ctaUrl == this.ctaUrl &&
           other.updatedAt == this.updatedAt);
@@ -4877,7 +4863,7 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
   final Value<String> visibility;
   final Value<String> status;
   final Value<String?> imageUrl;
-  final Value<int> displayWeight;
+  final Value<int> sort;
   final Value<String?> ctaLabel;
   final Value<String?> ctaUrl;
   final Value<DateTime> updatedAt;
@@ -4894,7 +4880,7 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
     this.visibility = const Value.absent(),
     this.status = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.displayWeight = const Value.absent(),
+    this.sort = const Value.absent(),
     this.ctaLabel = const Value.absent(),
     this.ctaUrl = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -4912,7 +4898,7 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
     required String visibility,
     this.status = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.displayWeight = const Value.absent(),
+    this.sort = const Value.absent(),
     this.ctaLabel = const Value.absent(),
     this.ctaUrl = const Value.absent(),
     required DateTime updatedAt,
@@ -4935,7 +4921,7 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
     Expression<String>? visibility,
     Expression<String>? status,
     Expression<String>? imageUrl,
-    Expression<int>? displayWeight,
+    Expression<int>? sort,
     Expression<String>? ctaLabel,
     Expression<String>? ctaUrl,
     Expression<DateTime>? updatedAt,
@@ -4953,7 +4939,7 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
       if (visibility != null) 'visibility': visibility,
       if (status != null) 'status': status,
       if (imageUrl != null) 'image_url': imageUrl,
-      if (displayWeight != null) 'display_weight': displayWeight,
+      if (sort != null) 'sort': sort,
       if (ctaLabel != null) 'cta_label': ctaLabel,
       if (ctaUrl != null) 'cta_url': ctaUrl,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -4973,7 +4959,7 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
     Value<String>? visibility,
     Value<String>? status,
     Value<String?>? imageUrl,
-    Value<int>? displayWeight,
+    Value<int>? sort,
     Value<String?>? ctaLabel,
     Value<String?>? ctaUrl,
     Value<DateTime>? updatedAt,
@@ -4991,7 +4977,7 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
       visibility: visibility ?? this.visibility,
       status: status ?? this.status,
       imageUrl: imageUrl ?? this.imageUrl,
-      displayWeight: displayWeight ?? this.displayWeight,
+      sort: sort ?? this.sort,
       ctaLabel: ctaLabel ?? this.ctaLabel,
       ctaUrl: ctaUrl ?? this.ctaUrl,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -5035,8 +5021,8 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
-    if (displayWeight.present) {
-      map['display_weight'] = Variable<int>(displayWeight.value);
+    if (sort.present) {
+      map['sort'] = Variable<int>(sort.value);
     }
     if (ctaLabel.present) {
       map['cta_label'] = Variable<String>(ctaLabel.value);
@@ -5067,7 +5053,7 @@ class LocalLifePostsCompanion extends UpdateCompanion<LocalLifePost> {
           ..write('visibility: $visibility, ')
           ..write('status: $status, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('displayWeight: $displayWeight, ')
+          ..write('sort: $sort, ')
           ..write('ctaLabel: $ctaLabel, ')
           ..write('ctaUrl: $ctaUrl, ')
           ..write('updatedAt: $updatedAt, ')
@@ -8017,19 +8003,15 @@ class $$LocalBibleVersesTableTableManager
                     >
                   >(state) {
                     if (bookId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.bookId,
-                                referencedTable:
-                                    $$LocalBibleVersesTableReferences
-                                        ._bookIdTable(db),
-                                referencedColumn:
-                                    $$LocalBibleVersesTableReferences
-                                        ._bookIdTable(db)
-                                        .id,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.bookId,
+                        referencedTable: $$LocalBibleVersesTableReferences
+                            ._bookIdTable(db),
+                        referencedColumn: $$LocalBibleVersesTableReferences
+                            ._bookIdTable(db)
+                            .id,
+                      ) as T;
                     }
 
                     return state;
@@ -9069,14 +9051,14 @@ typedef $$LocalSermonTopicsTableCreateCompanionBuilder =
     LocalSermonTopicsCompanion Function({
       required String sermonId,
       required String topic,
-      required int sortOrder,
+      required int sort,
       Value<int> rowid,
     });
 typedef $$LocalSermonTopicsTableUpdateCompanionBuilder =
     LocalSermonTopicsCompanion Function({
       Value<String> sermonId,
       Value<String> topic,
-      Value<int> sortOrder,
+      Value<int> sort,
       Value<int> rowid,
     });
 
@@ -9125,8 +9107,8 @@ class $$LocalSermonTopicsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get sortOrder => $composableBuilder(
-    column: $table.sortOrder,
+  ColumnFilters<int> get sort => $composableBuilder(
+    column: $table.sort,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9168,8 +9150,8 @@ class $$LocalSermonTopicsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get sortOrder => $composableBuilder(
-    column: $table.sortOrder,
+  ColumnOrderings<int> get sort => $composableBuilder(
+    column: $table.sort,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -9209,8 +9191,8 @@ class $$LocalSermonTopicsTableAnnotationComposer
   GeneratedColumn<String> get topic =>
       $composableBuilder(column: $table.topic, builder: (column) => column);
 
-  GeneratedColumn<int> get sortOrder =>
-      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+  GeneratedColumn<int> get sort =>
+      $composableBuilder(column: $table.sort, builder: (column) => column);
 
   $$LocalSermonsTableAnnotationComposer get sermonId {
     final $$LocalSermonsTableAnnotationComposer composer = $composerBuilder(
@@ -9271,24 +9253,24 @@ class $$LocalSermonTopicsTableTableManager
               ({
                 Value<String> sermonId = const Value.absent(),
                 Value<String> topic = const Value.absent(),
-                Value<int> sortOrder = const Value.absent(),
+                Value<int> sort = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LocalSermonTopicsCompanion(
                 sermonId: sermonId,
                 topic: topic,
-                sortOrder: sortOrder,
+                sort: sort,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String sermonId,
                 required String topic,
-                required int sortOrder,
+                required int sort,
                 Value<int> rowid = const Value.absent(),
               }) => LocalSermonTopicsCompanion.insert(
                 sermonId: sermonId,
                 topic: topic,
-                sortOrder: sortOrder,
+                sort: sort,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -9320,19 +9302,15 @@ class $$LocalSermonTopicsTableTableManager
                     >
                   >(state) {
                     if (sermonId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.sermonId,
-                                referencedTable:
-                                    $$LocalSermonTopicsTableReferences
-                                        ._sermonIdTable(db),
-                                referencedColumn:
-                                    $$LocalSermonTopicsTableReferences
-                                        ._sermonIdTable(db)
-                                        .id,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.sermonId,
+                        referencedTable: $$LocalSermonTopicsTableReferences
+                            ._sermonIdTable(db),
+                        referencedColumn: $$LocalSermonTopicsTableReferences
+                            ._sermonIdTable(db)
+                            .id,
+                      ) as T;
                     }
 
                     return state;
@@ -9367,7 +9345,7 @@ typedef $$LocalSermonOutlinesTableCreateCompanionBuilder =
       required String title,
       required String summary,
       required int startSeconds,
-      required int sortOrder,
+      required int sort,
       Value<int> rowid,
     });
 typedef $$LocalSermonOutlinesTableUpdateCompanionBuilder =
@@ -9377,7 +9355,7 @@ typedef $$LocalSermonOutlinesTableUpdateCompanionBuilder =
       Value<String> title,
       Value<String> summary,
       Value<int> startSeconds,
-      Value<int> sortOrder,
+      Value<int> sort,
       Value<int> rowid,
     });
 
@@ -9441,8 +9419,8 @@ class $$LocalSermonOutlinesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get sortOrder => $composableBuilder(
-    column: $table.sortOrder,
+  ColumnFilters<int> get sort => $composableBuilder(
+    column: $table.sort,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9499,8 +9477,8 @@ class $$LocalSermonOutlinesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get sortOrder => $composableBuilder(
-    column: $table.sortOrder,
+  ColumnOrderings<int> get sort => $composableBuilder(
+    column: $table.sort,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -9551,8 +9529,8 @@ class $$LocalSermonOutlinesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get sortOrder =>
-      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+  GeneratedColumn<int> get sort =>
+      $composableBuilder(column: $table.sort, builder: (column) => column);
 
   $$LocalSermonsTableAnnotationComposer get sermonId {
     final $$LocalSermonsTableAnnotationComposer composer = $composerBuilder(
@@ -9619,7 +9597,7 @@ class $$LocalSermonOutlinesTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<String> summary = const Value.absent(),
                 Value<int> startSeconds = const Value.absent(),
-                Value<int> sortOrder = const Value.absent(),
+                Value<int> sort = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LocalSermonOutlinesCompanion(
                 id: id,
@@ -9627,7 +9605,7 @@ class $$LocalSermonOutlinesTableTableManager
                 title: title,
                 summary: summary,
                 startSeconds: startSeconds,
-                sortOrder: sortOrder,
+                sort: sort,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -9637,7 +9615,7 @@ class $$LocalSermonOutlinesTableTableManager
                 required String title,
                 required String summary,
                 required int startSeconds,
-                required int sortOrder,
+                required int sort,
                 Value<int> rowid = const Value.absent(),
               }) => LocalSermonOutlinesCompanion.insert(
                 id: id,
@@ -9645,7 +9623,7 @@ class $$LocalSermonOutlinesTableTableManager
                 title: title,
                 summary: summary,
                 startSeconds: startSeconds,
-                sortOrder: sortOrder,
+                sort: sort,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -9679,19 +9657,15 @@ class $$LocalSermonOutlinesTableTableManager
                     >
                   >(state) {
                     if (sermonId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.sermonId,
-                                referencedTable:
-                                    $$LocalSermonOutlinesTableReferences
-                                        ._sermonIdTable(db),
-                                referencedColumn:
-                                    $$LocalSermonOutlinesTableReferences
-                                        ._sermonIdTable(db)
-                                        .id,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.sermonId,
+                        referencedTable: $$LocalSermonOutlinesTableReferences
+                            ._sermonIdTable(db),
+                        referencedColumn: $$LocalSermonOutlinesTableReferences
+                            ._sermonIdTable(db)
+                            .id,
+                      ) as T;
                     }
 
                     return state;
@@ -10044,19 +10018,15 @@ class $$LocalSermonReferencesTableTableManager
                     >
                   >(state) {
                     if (sermonId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.sermonId,
-                                referencedTable:
-                                    $$LocalSermonReferencesTableReferences
-                                        ._sermonIdTable(db),
-                                referencedColumn:
-                                    $$LocalSermonReferencesTableReferences
-                                        ._sermonIdTable(db)
-                                        .id,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.sermonId,
+                        referencedTable: $$LocalSermonReferencesTableReferences
+                            ._sermonIdTable(db),
+                        referencedColumn: $$LocalSermonReferencesTableReferences
+                            ._sermonIdTable(db)
+                            .id,
+                      ) as T;
                     }
 
                     return state;
@@ -10097,7 +10067,7 @@ typedef $$LocalLifePostsTableCreateCompanionBuilder =
       required String visibility,
       Value<String> status,
       Value<String?> imageUrl,
-      Value<int> displayWeight,
+      Value<int> sort,
       Value<String?> ctaLabel,
       Value<String?> ctaUrl,
       required DateTime updatedAt,
@@ -10116,7 +10086,7 @@ typedef $$LocalLifePostsTableUpdateCompanionBuilder =
       Value<String> visibility,
       Value<String> status,
       Value<String?> imageUrl,
-      Value<int> displayWeight,
+      Value<int> sort,
       Value<String?> ctaLabel,
       Value<String?> ctaUrl,
       Value<DateTime> updatedAt,
@@ -10187,8 +10157,8 @@ class $$LocalLifePostsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get displayWeight => $composableBuilder(
-    column: $table.displayWeight,
+  ColumnFilters<int> get sort => $composableBuilder(
+    column: $table.sort,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10272,8 +10242,8 @@ class $$LocalLifePostsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get displayWeight => $composableBuilder(
-    column: $table.displayWeight,
+  ColumnOrderings<int> get sort => $composableBuilder(
+    column: $table.sort,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -10337,10 +10307,8 @@ class $$LocalLifePostsTableAnnotationComposer
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
 
-  GeneratedColumn<int> get displayWeight => $composableBuilder(
-    column: $table.displayWeight,
-    builder: (column) => column,
-  );
+  GeneratedColumn<int> get sort =>
+      $composableBuilder(column: $table.sort, builder: (column) => column);
 
   GeneratedColumn<String> get ctaLabel =>
       $composableBuilder(column: $table.ctaLabel, builder: (column) => column);
@@ -10396,7 +10364,7 @@ class $$LocalLifePostsTableTableManager
                 Value<String> visibility = const Value.absent(),
                 Value<String> status = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
-                Value<int> displayWeight = const Value.absent(),
+                Value<int> sort = const Value.absent(),
                 Value<String?> ctaLabel = const Value.absent(),
                 Value<String?> ctaUrl = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -10413,7 +10381,7 @@ class $$LocalLifePostsTableTableManager
                 visibility: visibility,
                 status: status,
                 imageUrl: imageUrl,
-                displayWeight: displayWeight,
+                sort: sort,
                 ctaLabel: ctaLabel,
                 ctaUrl: ctaUrl,
                 updatedAt: updatedAt,
@@ -10432,7 +10400,7 @@ class $$LocalLifePostsTableTableManager
                 required String visibility,
                 Value<String> status = const Value.absent(),
                 Value<String?> imageUrl = const Value.absent(),
-                Value<int> displayWeight = const Value.absent(),
+                Value<int> sort = const Value.absent(),
                 Value<String?> ctaLabel = const Value.absent(),
                 Value<String?> ctaUrl = const Value.absent(),
                 required DateTime updatedAt,
@@ -10449,7 +10417,7 @@ class $$LocalLifePostsTableTableManager
                 visibility: visibility,
                 status: status,
                 imageUrl: imageUrl,
-                displayWeight: displayWeight,
+                sort: sort,
                 ctaLabel: ctaLabel,
                 ctaUrl: ctaUrl,
                 updatedAt: updatedAt,
@@ -10782,19 +10750,15 @@ class $$ReadingProgressTableTableManager
                     >
                   >(state) {
                     if (bookId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.bookId,
-                                referencedTable:
-                                    $$ReadingProgressTableReferences
-                                        ._bookIdTable(db),
-                                referencedColumn:
-                                    $$ReadingProgressTableReferences
-                                        ._bookIdTable(db)
-                                        .id,
-                              )
-                              as T;
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.bookId,
+                        referencedTable: $$ReadingProgressTableReferences
+                            ._bookIdTable(db),
+                        referencedColumn: $$ReadingProgressTableReferences
+                            ._bookIdTable(db)
+                            .id,
+                      ) as T;
                     }
 
                     return state;
@@ -10822,28 +10786,26 @@ typedef $$ReadingProgressTableProcessedTableManager =
       ReadingProgressData,
       PrefetchHooks Function({bool bookId})
     >;
-typedef $$StudyNotesTableCreateCompanionBuilder =
-    StudyNotesCompanion Function({
-      required String id,
-      required String verseId,
-      required String noteText,
-      Value<String?> highlightColor,
-      Value<bool> dirty,
-      Value<bool> deleted,
-      required DateTime updatedAt,
-      Value<int> rowid,
-    });
-typedef $$StudyNotesTableUpdateCompanionBuilder =
-    StudyNotesCompanion Function({
-      Value<String> id,
-      Value<String> verseId,
-      Value<String> noteText,
-      Value<String?> highlightColor,
-      Value<bool> dirty,
-      Value<bool> deleted,
-      Value<DateTime> updatedAt,
-      Value<int> rowid,
-    });
+typedef $$StudyNotesTableCreateCompanionBuilder = StudyNotesCompanion Function({
+  required String id,
+  required String verseId,
+  required String noteText,
+  Value<String?> highlightColor,
+  Value<bool> dirty,
+  Value<bool> deleted,
+  required DateTime updatedAt,
+  Value<int> rowid,
+});
+typedef $$StudyNotesTableUpdateCompanionBuilder = StudyNotesCompanion Function({
+  Value<String> id,
+  Value<String> verseId,
+  Value<String> noteText,
+  Value<String?> highlightColor,
+  Value<bool> dirty,
+  Value<bool> deleted,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
 
 class $$StudyNotesTableFilterComposer
     extends Composer<_$AppDatabase, $StudyNotesTable> {
@@ -11279,30 +11241,28 @@ typedef $$StudyBookmarksTableProcessedTableManager =
       StudyBookmark,
       PrefetchHooks Function()
     >;
-typedef $$SyncQueueTableCreateCompanionBuilder =
-    SyncQueueCompanion Function({
-      required String id,
-      required String entityType,
-      required String entityId,
-      required String action,
-      required String payloadJson,
-      Value<int> attempts,
-      Value<String?> lastError,
-      required DateTime createdAt,
-      Value<int> rowid,
-    });
-typedef $$SyncQueueTableUpdateCompanionBuilder =
-    SyncQueueCompanion Function({
-      Value<String> id,
-      Value<String> entityType,
-      Value<String> entityId,
-      Value<String> action,
-      Value<String> payloadJson,
-      Value<int> attempts,
-      Value<String?> lastError,
-      Value<DateTime> createdAt,
-      Value<int> rowid,
-    });
+typedef $$SyncQueueTableCreateCompanionBuilder = SyncQueueCompanion Function({
+  required String id,
+  required String entityType,
+  required String entityId,
+  required String action,
+  required String payloadJson,
+  Value<int> attempts,
+  Value<String?> lastError,
+  required DateTime createdAt,
+  Value<int> rowid,
+});
+typedef $$SyncQueueTableUpdateCompanionBuilder = SyncQueueCompanion Function({
+  Value<String> id,
+  Value<String> entityType,
+  Value<String> entityId,
+  Value<String> action,
+  Value<String> payloadJson,
+  Value<int> attempts,
+  Value<String?> lastError,
+  Value<DateTime> createdAt,
+  Value<int> rowid,
+});
 
 class $$SyncQueueTableFilterComposer
     extends Composer<_$AppDatabase, $SyncQueueTable> {

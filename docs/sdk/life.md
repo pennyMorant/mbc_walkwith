@@ -95,7 +95,7 @@ Rules:
   selected month. The Sunday/weekly hero loads from the latest visible life
   posts and is not filtered by the currently selected tab period.
 - Public life content may be cached; member-only or group-only content must respect visibility rules before use.
-- `displayWeight` is backend-owned display ordering metadata. App repositories
+- `sort` is backend-owned display ordering metadata. App repositories
   may cache and preserve it for ordered fallback lists, but App UI must not
   render it as a pinned/priority chip.
 - Local content cache is not the source of unread state. Cached fallback content
@@ -149,7 +149,7 @@ Admin Web API helper:
 Admin capabilities:
 
 - Create and edit life posts.
-- Set display priority through `displayWeight` presets: normal `0`,
+- Set display priority through `sort` presets: normal `0`,
   important `50`, and very important `100`.
 - Configure registration settings.
 - List registrations with `life_posts:update` because attendee names, emails,

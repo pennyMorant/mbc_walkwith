@@ -87,7 +87,7 @@ void main() {
     expect(posts, hasLength(1));
     expect(posts.single.id, 'cached-life-post');
     expect(posts.single.visibility, 'public');
-    expect(posts.single.displayWeight, 100);
+    expect(posts.single.sort, 100);
     expect(posts.single.ctaUrl, 'https://example.com/fellowship');
   });
 
@@ -105,7 +105,7 @@ void main() {
 
     expect(cached.single.id, 'cached-life-post');
     expect(cached.single.iconName, 'groups');
-    expect(cached.single.displayWeight, 100);
+    expect(cached.single.sort, 100);
     expect(cached.single.ctaLabel, '报名团契');
   });
 

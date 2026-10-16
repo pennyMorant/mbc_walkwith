@@ -1,6 +1,7 @@
 import { lifePostStatuses, visibilityLevels } from "@mbc/shared-types";
 import { z } from "zod";
 import { contentLocaleSchema } from "./content_localization.js";
+import { sortValueSchema } from "./sort.js";
 
 export const lifePostVisibilitySchema = z.enum(visibilityLevels);
 export const lifePostStatusSchema = z.enum(lifePostStatuses);
@@ -55,7 +56,7 @@ export const lifePostSchema = z.object({
   endsAt: z.string().datetime().nullable().default(null),
   visibility: lifePostVisibilitySchema.default("public"),
   imageUrl: z.string().nullable().default(null),
-  displayWeight: z.number().int().default(0),
+  sort: sortValueSchema,
   ctaLabel: z.string().nullable().default(null),
   ctaUrl: z.string().nullable().default(null),
   registrationEnabled: z.boolean().default(false),
@@ -99,7 +100,7 @@ export const lifePostUpsertRequestSchema = z.object({
   endsAt: z.string().datetime().nullable().optional(),
   visibility: lifePostVisibilitySchema.default("private"),
   imageUrl: z.string().trim().nullable().optional(),
-  displayWeight: z.number().int().min(0).max(100).default(0),
+  sort: sortValueSchema,
   ctaLabel: z.string().trim().nullable().optional(),
   ctaUrl: z.string().trim().url().nullable().optional(),
   registrationEnabled: z.boolean().default(false),

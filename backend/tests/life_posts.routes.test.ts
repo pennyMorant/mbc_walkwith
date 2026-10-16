@@ -121,7 +121,7 @@ describe("life post routes", () => {
         endsAt: "2026-06-04T03:30:00.000Z",
         imageUrl,
         visibility: "private",
-        displayWeight: 100,
+        sort: 100,
         ctaLabel: "Register",
         ctaUrl: "https://example.com/prayer-night"
       }
@@ -134,7 +134,7 @@ describe("life post routes", () => {
     );
     expect(createdPost.visibility).toBe("private");
     expect(createdPost.status).toBe("draft");
-    expect(createdPost.displayWeight).toBe(100);
+    expect(createdPost.sort).toBe(100);
     expect(createdPost.ctaLabel).toBe("Register");
     expect(createdPost.ctaUrl).toBe("https://example.com/prayer-night");
     expect(createdPost.body).toBe("Join us for prayer.");
@@ -226,7 +226,7 @@ describe("life post routes", () => {
     const listedPost = afterPosts.find(
       (post: { id: string }) => post.id === postId
     );
-    expect(listedPost?.displayWeight).toBe(100);
+    expect(listedPost?.sort).toBe(100);
     expect(listedPost?.meta).toBe("Wednesday 7 PM");
 
     const publicInRange = await app.inject({
@@ -285,7 +285,7 @@ describe("life post routes", () => {
     expect(publicPost.title).toBe("Prayer Night");
     expect(publicPost.body).toBe("Join us for prayer.");
     expect(publicPost.visibility).toBe("public");
-    expect(publicPost.displayWeight).toBe(100);
+    expect(publicPost.sort).toBe(100);
     expect(publicPost.ctaLabel).toBe("Register");
     expect(publicPost.ctaUrl).toBe("https://example.com/prayer-night");
     expect(publicPost.startsAt).toBe("2026-06-04T02:00:00.000Z");

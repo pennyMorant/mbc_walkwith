@@ -35,14 +35,14 @@ const emit = defineEmits<{
 
 const { optionItems, t } = useI18n();
 
-function displayWeightLabel(weight: number) {
+function sortLabel(weight: number) {
   if (weight >= 100) {
-    return t("life.displayWeight.veryImportant");
+    return t("life.sort.veryImportant");
   }
   if (weight >= 50) {
-    return t("life.displayWeight.important");
+    return t("life.sort.important");
   }
-  return t("life.displayWeight.normal");
+  return t("life.sort.normal");
 }
 </script>
 
@@ -122,7 +122,7 @@ function displayWeightLabel(weight: number) {
           <th>{{ t("Title") }}</th>
           <th>{{ t("Type") }}</th>
           <th>{{ t("Status") }}</th>
-          <th>{{ t("life.displayWeight.label") }}</th>
+          <th>{{ t("life.sort.label") }}</th>
           <th>{{ t("Visibility") }}</th>
           <th>{{ t("Registrations") }}</th>
           <th>{{ t("Meta") }}</th>
@@ -146,7 +146,7 @@ function displayWeightLabel(weight: number) {
           </td>
           <td>
             <v-chip size="small" color="primary" variant="tonal">
-              {{ displayWeightLabel(post.displayWeight) }}
+              {{ sortLabel(post.sort) }}
             </v-chip>
           </td>
           <td>

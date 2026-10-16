@@ -4,7 +4,7 @@ import {
   buildDiscipleshipAssignmentPayload,
   buildDiscipleshipProgressPayload,
   createDiscipleshipAssignmentForm,
-  normalizeDiscipleshipSortOrder,
+  normalizeDiscipleshipSort,
   resetDiscipleshipAssignmentForm
 } from "../src/features/discipleship/discipleship_workspace_models";
 
@@ -36,7 +36,7 @@ describe("discipleship workspace models", () => {
       status: "completed",
       note: "  reviewed  "
     })).toEqual({ status: "completed", note: "reviewed" });
-    expect(normalizeDiscipleshipSortOrder(3.9)).toBe(3);
-    expect(normalizeDiscipleshipSortOrder(Number.NaN)).toBe(0);
+    expect(normalizeDiscipleshipSort(3.9)).toBe(3);
+    expect(normalizeDiscipleshipSort(Number.NaN)).toBe(0);
   });
 });

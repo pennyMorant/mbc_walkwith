@@ -208,12 +208,12 @@ export const sermonOutlines = pgTable(
     title: text("title").notNull(),
     summary: text("summary").notNull(),
     startSeconds: integer("start_seconds").notNull(),
-    sortOrder: integer("sort_order").notNull()
+    sort: integer("sort").notNull()
   },
   (table) => ({
     sermonSortIdx: index("idx_sermon_outlines_sermon_sort").on(
       table.sermonId,
-      table.sortOrder
+      table.sort
     )
   })
 );
@@ -564,7 +564,7 @@ export const publicPosts = pgTable(
       .notNull()
       .default("public"),
     imageUrl: text("image_url"),
-    displayWeight: integer("display_weight").notNull().default(0),
+    sort: integer("sort").notNull().default(0),
     ctaLabel: text("cta_label"),
     ctaUrl: text("cta_url"),
     registrationEnabled: boolean("registration_enabled").notNull().default(false),
@@ -586,8 +586,8 @@ export const publicPosts = pgTable(
   (table) => ({
     visibilityIdx: index("idx_public_posts_visibility").on(table.visibility),
     statusIdx: index("idx_public_posts_status").on(table.status),
-    displayWeightIdx: index("idx_public_posts_display_weight").on(
-      table.displayWeight
+    sortIdx: index("idx_public_posts_sort").on(
+      table.sort
     ),
     startsAtIdx: index("idx_public_posts_starts_at").on(table.startsAt),
     registrationIdx: index("idx_public_posts_registration").on(
@@ -949,7 +949,7 @@ export const courseLessons = pgTable(
     status: text("status", { enum: ["scheduled", "published", "completed"] })
       .notNull()
       .default("scheduled"),
-    sortOrder: integer("sort_order").notNull().default(0),
+    sort: integer("sort").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -960,7 +960,7 @@ export const courseLessons = pgTable(
   (table) => ({
     courseSortIdx: index("idx_course_lessons_course_sort").on(
       table.courseId,
-      table.sortOrder
+      table.sort
     ),
     statusIdx: index("idx_course_lessons_status").on(table.status)
   })
@@ -1282,7 +1282,7 @@ export const discipleshipStages = pgTable(
       .references(() => discipleshipJourneys.id, { onDelete: "cascade" }),
     title: text("title").notNull(),
     description: text("description").notNull().default(""),
-    sortOrder: integer("sort_order").notNull().default(0),
+    sort: integer("sort").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -1293,7 +1293,7 @@ export const discipleshipStages = pgTable(
   (table) => ({
     journeySortIdx: index("idx_discipleship_stages_journey_sort").on(
       table.journeyId,
-      table.sortOrder
+      table.sort
     )
   })
 );
@@ -1325,7 +1325,7 @@ export const discipleshipTasks = pgTable(
     }).notNull(),
     referenceId: text("reference_id").notNull().default(""),
     required: boolean("required").notNull().default(true),
-    sortOrder: integer("sort_order").notNull().default(0),
+    sort: integer("sort").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -1336,7 +1336,7 @@ export const discipleshipTasks = pgTable(
   (table) => ({
     journeySortIdx: index("idx_discipleship_tasks_journey_sort").on(
       table.journeyId,
-      table.sortOrder
+      table.sort
     ),
     stageIdx: index("idx_discipleship_tasks_stage").on(table.stageId)
   })
@@ -1511,7 +1511,7 @@ export const givingFunds = pgTable(
       .notNull()
       .default("draft"),
     targetAmountCents: integer("target_amount_cents"),
-    displayOrder: integer("display_order").notNull().default(0),
+    sort: integer("sort").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -1521,8 +1521,8 @@ export const givingFunds = pgTable(
   },
   (table) => ({
     statusIdx: index("idx_giving_funds_status").on(table.status),
-    displayOrderIdx: index("idx_giving_funds_display_order").on(
-      table.displayOrder
+    sortIdx: index("idx_giving_funds_sort").on(
+      table.sort
     )
   })
 );

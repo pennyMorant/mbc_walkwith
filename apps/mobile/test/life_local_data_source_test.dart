@@ -21,7 +21,7 @@ void main() {
         iconName: 'prayer',
         visibility: 'public',
         status: 'published',
-        displayWeight: 100,
+        sort: 100,
         ctaLabel: '报名参加',
         ctaUrl: 'https://example.com/register',
       ),
@@ -33,7 +33,7 @@ void main() {
     expect(posts.single.meta, 'Wednesday 7 PM');
     expect(posts.single.iconName, 'prayer');
     expect(posts.single.status, 'published');
-    expect(posts.single.displayWeight, 100);
+    expect(posts.single.sort, 100);
     expect(posts.single.ctaLabel, '报名参加');
     expect(posts.single.ctaUrl, 'https://example.com/register');
   });

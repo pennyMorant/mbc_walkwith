@@ -130,7 +130,7 @@ class MockGivingRepository implements GivingRepository {
       description: 'General church offering.',
       status: 'active',
       targetAmountCents: null,
-      displayOrder: 10,
+      sort: 10,
     ),
     const GivingFund(
       id: 'fund-missions',
@@ -139,7 +139,7 @@ class MockGivingRepository implements GivingRepository {
       description: 'Missions and outreach giving.',
       status: 'active',
       targetAmountCents: null,
-      displayOrder: 20,
+      sort: 20,
     ),
   ];
 

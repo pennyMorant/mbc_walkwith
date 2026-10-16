@@ -61,7 +61,7 @@ const {
   confirmDialog,
   lifePostTypes,
   lifePostIcons,
-  displayWeightOptions,
+  sortOptions,
   filters,
   form,
   registrationFilters,
@@ -264,9 +264,9 @@ const {
             </v-col>
             <v-col cols="12" md="6">
               <v-select
-                v-model="form.displayWeight"
-                :label="t('life.displayWeight.label')"
-                :items="displayWeightOptions"
+                v-model="form.sort"
+                :label="t('life.sort.label')"
+                :items="sortOptions"
                 density="comfortable"
                 variant="outlined"
               />

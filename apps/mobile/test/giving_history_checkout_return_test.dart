@@ -136,7 +136,7 @@ class _HistoryGivingRepository implements GivingRepository {
         description: '',
         status: 'active',
         targetAmountCents: null,
-        displayOrder: 0,
+        sort: 0,
       ),
     ];
   }

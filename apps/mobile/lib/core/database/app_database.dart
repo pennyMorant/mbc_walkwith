@@ -38,7 +38,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? openDatabaseConnection());
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration {
@@ -161,7 +161,7 @@ class AppDatabase extends _$AppDatabase {
           await _addColumnIfMissing(
             migrator,
             localLifePosts,
-            localLifePosts.displayWeight,
+            localLifePosts.sort,
           );
         }
         if (from < 14) {
@@ -173,6 +173,26 @@ class AppDatabase extends _$AppDatabase {
         }
         if (from < 15) {
           await _createTableIfMissing(migrator, localSermonTopics);
+        }
+        if (from < 16) {
+          await _renameColumnIfPresent(
+            'local_life_posts',
+            'display_weight',
+            'sort',
+          );
+          await _renameColumnIfPresent(
+            'local_sermon_outlines',
+            'sort_order',
+            'sort',
+          );
+          await _renameColumnIfPresent(
+            'local_sermon_topics',
+            'sort_order',
+            'sort',
+          );
+          await customStatement(
+            'DROP INDEX IF EXISTS idx_local_life_posts_weight_starts_at',
+          );
         }
       },
     );
@@ -221,6 +241,25 @@ class AppDatabase extends _$AppDatabase {
     return rows.any((row) => row.data['name'] == column.$name);
   }
 
+  Future<void> _renameColumnIfPresent(
+    String tableName,
+    String oldName,
+    String newName,
+  ) async {
+    final rows = await customSelect(
+      'PRAGMA table_info(${_quoteIdentifier(tableName)})',
+    ).get();
+    final names = rows.map((row) => row.data['name']).toSet();
+    if (!names.contains(oldName) || names.contains(newName)) {
+      return;
+    }
+    await customStatement(
+      'ALTER TABLE ${_quoteIdentifier(tableName)} '
+      'RENAME COLUMN ${_quoteIdentifier(oldName)} '
+      'TO ${_quoteIdentifier(newName)}',
+    );
+  }
+
   String _quoteIdentifier(String identifier) {
     return '"${identifier.replaceAll('"', '""')}"';
   }
@@ -240,7 +279,7 @@ class AppDatabase extends _$AppDatabase {
     );
     await customStatement(
       'CREATE INDEX IF NOT EXISTS idx_local_sermon_outlines_sermon_sort '
-      'ON local_sermon_outlines(sermon_id, sort_order)',
+      'ON local_sermon_outlines(sermon_id, sort)',
     );
     await customStatement(
       'CREATE INDEX IF NOT EXISTS idx_local_sermon_topics_topic '
@@ -251,8 +290,8 @@ class AppDatabase extends _$AppDatabase {
       'ON local_sermon_references(verse_id)',
     );
     await customStatement(
-      'CREATE INDEX IF NOT EXISTS idx_local_life_posts_weight_starts_at '
-      'ON local_life_posts(display_weight, starts_at)',
+      'CREATE INDEX IF NOT EXISTS idx_local_life_posts_sort_starts_at '
+      'ON local_life_posts(sort, starts_at)',
     );
     await customStatement(
       'CREATE INDEX IF NOT EXISTS idx_local_life_posts_type_starts_at '

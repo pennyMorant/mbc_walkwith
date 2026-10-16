@@ -15,7 +15,7 @@ class LifePost {
     this.visibility = 'public',
     this.status = 'published',
     this.imageUrl,
-    this.displayWeight = 0,
+    this.sort = 0,
     this.ctaLabel,
     this.ctaUrl,
     this.registrationEnabled = false,
@@ -40,7 +40,7 @@ class LifePost {
   final String visibility;
   final String status;
   final String? imageUrl;
-  final int displayWeight;
+  final int sort;
   final String? ctaLabel;
   final String? ctaUrl;
   final bool registrationEnabled;

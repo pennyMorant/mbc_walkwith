@@ -28,7 +28,7 @@ export async function replaceSermonChildren(
           title: outline.title,
           summary: outline.summary,
           startSeconds: outline.startSeconds,
-          sortOrder: index
+          sort: index
         }))
       );
     }

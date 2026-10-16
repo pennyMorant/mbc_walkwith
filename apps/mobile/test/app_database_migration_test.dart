@@ -31,16 +31,13 @@ void main() {
           .customSelect('PRAGMA user_version')
           .getSingle()
           .then((row) => row.data.values.single);
-      expect(version, 15);
+      expect(version, 16);
 
       final sermonTopicColumns = await database
           .customSelect('PRAGMA table_info("local_sermon_topics")')
           .get()
           .then((rows) => rows.map((row) => row.data['name']).toSet());
-      expect(
-        sermonTopicColumns,
-        containsAll(['sermon_id', 'topic', 'sort_order']),
-      );
+      expect(sermonTopicColumns, containsAll(['sermon_id', 'topic', 'sort']));
 
       final lifeColumns = await database
           .customSelect('PRAGMA table_info("local_life_posts")')
@@ -48,7 +45,7 @@ void main() {
           .then((rows) => rows.map((row) => row.data['name']).toSet());
       expect(
         lifeColumns,
-        containsAll(['display_weight', 'cta_label', 'cta_url', 'status']),
+        containsAll(['sort', 'cta_label', 'cta_url', 'status']),
       );
 
       final indexes = await _indexNames(database);
@@ -61,7 +58,7 @@ void main() {
           'idx_local_sermon_outlines_sermon_sort',
           'idx_local_sermon_topics_topic',
           'idx_local_sermon_references_verse_id',
-          'idx_local_life_posts_weight_starts_at',
+          'idx_local_life_posts_sort_starts_at',
           'idx_local_life_posts_type_starts_at',
           'idx_study_notes_verse_id',
           'idx_study_bookmarks_verse_id',

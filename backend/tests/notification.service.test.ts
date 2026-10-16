@@ -848,7 +848,7 @@ const lifePostFixture: LifePost = {
   endsAt: "2026-06-12T21:00:00.000Z",
   visibility: "public",
   imageUrl: null,
-  displayWeight: 0,
+  sort: 0,
   ctaLabel: null,
   ctaUrl: null,
   registrationEnabled: false,

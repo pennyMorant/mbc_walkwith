@@ -162,7 +162,7 @@ class MockCourseRepository implements CourseRepository {
           description: 'The heart of the Christian faith.',
           startsAt: null,
           status: 'published',
-          sortOrder: 1,
+          sort: 1,
         ),
       ],
     );
@@ -186,9 +186,8 @@ List<CourseLearning> _courseListFromEnvelope(Map<String, Object?> response) {
 }
 
 CourseLearning _courseFromEnvelope(Map<String, Object?> response) {
-  return CourseLearningDto.fromJson(
-    _courseDataFromEnvelope(response),
-  ).toDomain();
+  return CourseLearningDto.fromJson(_courseDataFromEnvelope(response))
+      .toDomain();
 }
 
 Map<String, Object?> _courseDataFromEnvelope(Map<String, Object?> response) {

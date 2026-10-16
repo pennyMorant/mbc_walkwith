@@ -8,7 +8,7 @@ import type {
   LifePostUpdateRequest,
   LifePostUpsertRequest
 } from "@mbc/api-contracts";
-import { and, desc, eq, gt, ilike, inArray, lt, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt, ilike, inArray, lt, or, sql } from "drizzle-orm";
 
 import type { AppDb } from "../../shared/db/client.js";
 import {
@@ -74,13 +74,15 @@ export class PostgresLifePostRepository implements LifePostRepository {
       query.sort === "starts_at_asc"
         ? [
             sql`${publicPosts.startsAt} asc nulls last`,
-            desc(publicPosts.displayWeight),
-            desc(publicPosts.updatedAt)
+            desc(publicPosts.sort),
+            desc(publicPosts.updatedAt),
+            asc(publicPosts.id)
           ]
         : [
-            desc(publicPosts.displayWeight),
+            desc(publicPosts.sort),
             sql`${publicPosts.startsAt} desc nulls last`,
-            desc(publicPosts.updatedAt)
+            desc(publicPosts.updatedAt),
+            asc(publicPosts.id)
           ];
     const rows = await this.db
       .select()
@@ -136,7 +138,7 @@ export class PostgresLifePostRepository implements LifePostRepository {
         endsAt: dateFromIso(input.endsAt),
         visibility: input.visibility,
         imageUrl: cleanNullableString(input.imageUrl),
-        displayWeight: input.displayWeight,
+        sort: input.sort,
         ctaLabel: cleanNullableString(input.ctaLabel),
         ctaUrl: cleanNullableString(input.ctaUrl),
         registrationEnabled: input.registrationEnabled,
@@ -187,7 +189,7 @@ export class PostgresLifePostRepository implements LifePostRepository {
               input.imageUrl === undefined
                 ? existing.imageUrl
                 : cleanNullableString(input.imageUrl),
-            displayWeight: input.displayWeight ?? existing.displayWeight,
+            sort: input.sort ?? existing.sort,
             ctaLabel:
               input.ctaLabel === undefined
                 ? existing.ctaLabel

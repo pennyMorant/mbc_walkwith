@@ -102,7 +102,7 @@ describe("sermon discussion guide state routes", () => {
             id: "review-question",
             type: "application",
             prompt: "What will you practice this week?",
-            sortOrder: 1
+            sort: 1
           }
         ]
       }
@@ -256,7 +256,7 @@ describe("sermon discussion guide state routes", () => {
             id: "draft-sermon-action",
             title: "Wait for sermon review",
             description: "",
-            sortOrder: 1
+            sort: 1
           }
         ]
       }

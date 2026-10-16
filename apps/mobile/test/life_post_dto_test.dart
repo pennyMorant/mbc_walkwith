@@ -61,7 +61,7 @@ Map<String, Object?> _validLifePostJson() {
     'visibility': 'members',
     'status': 'published',
     'imageUrl': null,
-    'displayWeight': 50,
+    'sort': 50,
     'ctaLabel': null,
     'ctaUrl': null,
     'registrationEnabled': true,

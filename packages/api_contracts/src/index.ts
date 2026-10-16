@@ -23,5 +23,6 @@ export * from "./prayer.js";
 export * from "./sermon-discussion-guides.js";
 export * from "./sermons.js";
 export * from "./settings.js";
+export * from "./sort.js";
 export * from "./serving.js";
 export * from "./route-registry.js";

@@ -14,7 +14,7 @@ class LifeLocalDataSource {
   }) async {
     final query = database.select(database.localLifePosts)
       ..orderBy([
-        (post) => OrderingTerm.desc(post.displayWeight),
+        (post) => OrderingTerm.desc(post.sort),
         (post) => OrderingTerm.desc(post.startsAt),
         (post) => OrderingTerm.desc(post.updatedAt),
       ]);
@@ -72,7 +72,7 @@ class LifeLocalDataSource {
       visibility: post.visibility ?? 'public',
       status: Value(post.status),
       imageUrl: Value(post.imageUrl),
-      displayWeight: Value(post.displayWeight),
+      sort: Value(post.sort),
       ctaLabel: Value(post.ctaLabel),
       ctaUrl: Value(post.ctaUrl),
       updatedAt: _dateFromString(post.updatedAt) ?? fallbackUpdatedAt,
@@ -100,7 +100,7 @@ LifePostDto _postFromRow(LocalLifePost post) {
     visibility: post.visibility,
     status: post.status,
     imageUrl: post.imageUrl,
-    displayWeight: post.displayWeight,
+    sort: post.sort,
     ctaLabel: post.ctaLabel,
     ctaUrl: post.ctaUrl,
     updatedAt: post.updatedAt.toIso8601String(),

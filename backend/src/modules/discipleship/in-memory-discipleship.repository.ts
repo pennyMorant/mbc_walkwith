@@ -98,7 +98,7 @@ export class InMemoryDiscipleshipRepository
       journeyId,
       title: input.title.trim(),
       description: input.description.trim(),
-      sortOrder: input.sortOrder,
+      sort: input.sort,
       createdAt: now,
       updatedAt: now
     };
@@ -130,7 +130,7 @@ export class InMemoryDiscipleshipRepository
       referenceType: input.referenceType,
       referenceId: input.referenceId.trim(),
       required: input.required,
-      sortOrder: input.sortOrder,
+      sort: input.sort,
       createdAt: now,
       updatedAt: now
     };
@@ -281,5 +281,9 @@ function compareDiscipleshipItemOrder(
   left: DiscipleshipStage | DiscipleshipTask,
   right: DiscipleshipStage | DiscipleshipTask
 ) {
-  return left.sortOrder - right.sortOrder || left.createdAt.localeCompare(right.createdAt);
+  return (
+    right.sort - left.sort ||
+    left.createdAt.localeCompare(right.createdAt) ||
+    left.id.localeCompare(right.id)
+  );
 }

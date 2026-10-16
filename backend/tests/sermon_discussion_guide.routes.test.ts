@@ -34,14 +34,14 @@ describe("sermon discussion guide routes", () => {
             id: "q1",
             type: "observation",
             prompt: "What promise stands out in Romans 8:28?",
-            sortOrder: 10,
+            sort: 10,
             startSeconds: 60
           },
           {
             id: "q2",
             type: "application",
             prompt: "Where do you need to trust Christ this week?",
-            sortOrder: 20
+            sort: 20
           }
         ],
         actionSteps: [
@@ -49,7 +49,7 @@ describe("sermon discussion guide routes", () => {
             id: "a1",
             title: "Pray with one person",
             description: "Share one concern and pray together this week.",
-            sortOrder: 10
+            sort: 10
           }
         ],
         prayerPrompts: ["求主帮助我们在患难中仍信靠祂。"],
@@ -333,7 +333,7 @@ describe("sermon discussion guide routes", () => {
             id: "group-action",
             title: "Pray together",
             description: "Meet and pray this week.",
-            sortOrder: 1
+            sort: 1
           }
         ]
       }

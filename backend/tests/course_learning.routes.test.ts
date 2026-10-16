@@ -106,7 +106,7 @@ describe("course learning routes", () => {
           description: "Membership and fellowship.",
           startsAt: "2026-06-28T16:00:00.000Z",
           status: "published",
-          sortOrder: 1
+          sort: 1
         }
       }),
       courseLessonSchema,
@@ -387,7 +387,7 @@ describe("course learning routes", () => {
         method: "POST",
         url: `/v1/admin/courses/${course.id}/lessons`,
         headers: { authorization: `Bearer ${accessToken}` },
-        payload: { title: "Lesson one", status: "published", sortOrder: 0 }
+        payload: { title: "Lesson one", status: "published", sort: 0 }
       }),
       courseLessonSchema,
       "course cancellation lesson"

@@ -44,10 +44,10 @@ export function useLifePostsPageController() {
     "service_opportunity"
   ];
   const lifePostIcons = ["church", "groups", "prayer", "giving", "meal", "event"];
-  const displayWeightOptions = computed(() => [
-    { title: t("life.displayWeight.normal"), value: 0 },
-    { title: t("life.displayWeight.important"), value: 50 },
-    { title: t("life.displayWeight.veryImportant"), value: 100 }
+  const sortOptions = computed(() => [
+    { title: t("life.sort.normal"), value: 0 },
+    { title: t("life.sort.important"), value: 50 },
+    { title: t("life.sort.veryImportant"), value: 100 }
   ]);
   
   const filters = reactive({
@@ -212,7 +212,7 @@ export function useLifePostsPageController() {
     form.endsAt = datetimeLocalFromIso(post.endsAt);
     form.visibility = post.visibility;
     form.imageUrl = post.imageUrl ?? "";
-    form.displayWeight = post.displayWeight;
+    form.sort = post.sort;
     form.ctaLabel = post.ctaLabel ?? "";
     form.ctaUrl = post.ctaUrl ?? "";
     form.registrationEnabled = post.registrationEnabled;
@@ -277,7 +277,7 @@ export function useLifePostsPageController() {
     confirmDialog,
     lifePostTypes,
     lifePostIcons,
-    displayWeightOptions,
+    sortOptions,
     filters,
     form,
     registrationFilters,

@@ -142,7 +142,7 @@ void registerLifeWidgetChecks() {
                 endsAt: DateTime.utc(2026, 5, 30, 4),
                 visibility: 'members',
                 imageUrl: 'https://example.com/life.jpg',
-                displayWeight: 100,
+                sort: 100,
                 ctaLabel: '报名参加',
                 ctaUrl: 'https://example.com/register',
               ),

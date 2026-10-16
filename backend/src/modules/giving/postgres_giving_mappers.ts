@@ -80,7 +80,7 @@ export async function fundFromRow(
     description: row.description,
     status: row.status,
     targetAmountCents: row.targetAmountCents,
-    displayOrder: row.displayOrder,
+    sort: row.sort,
     totalAmountCents: stats.totalAmountCents,
     transactionCount: stats.transactionCount,
     createdAt: row.createdAt.toISOString(),

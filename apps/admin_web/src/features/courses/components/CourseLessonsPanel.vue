@@ -13,7 +13,7 @@ export type LessonForm = {
   description: string;
   startsAt: string;
   status: CourseLessonStatus;
-  sortOrder: number;
+  sort: number;
 };
 
 const lessonForm = defineModel<LessonForm>("lessonForm", { required: true });
@@ -105,8 +105,8 @@ const { locale, optionItems, t } = useI18n();
       </v-col>
       <v-col cols="12" md="2">
         <v-text-field
-          v-model.number="lessonForm.sortOrder"
-          :label="t('Order')"
+          v-model.number="lessonForm.sort"
+          :label="t('common.sort')"
           type="number"
           min="0"
           density="compact"

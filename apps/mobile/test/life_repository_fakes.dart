@@ -10,7 +10,7 @@ const _cachedLifePostDto = LifePostDto(
   startsAt: '2026-05-29T19:30:00.000Z',
   visibility: 'public',
   status: 'published',
-  displayWeight: 100,
+  sort: 100,
   ctaLabel: '报名团契',
   ctaUrl: 'https://example.com/fellowship',
 );
@@ -489,7 +489,7 @@ const _apiLifePostJson = {
   'visibility': 'public',
   'status': 'published',
   'imageUrl': null,
-  'displayWeight': 0,
+  'sort': 0,
   'ctaLabel': null,
   'ctaUrl': null,
   'registrationEnabled': false,

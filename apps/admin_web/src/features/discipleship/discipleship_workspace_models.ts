@@ -12,7 +12,7 @@ import type {
 export type DiscipleshipStageForm = {
   title: string;
   description: string;
-  sortOrder: number;
+  sort: number;
 };
 
 export type DiscipleshipTaskForm = {
@@ -22,7 +22,7 @@ export type DiscipleshipTaskForm = {
   referenceType: DiscipleshipTaskReferenceType;
   referenceId: string;
   required: boolean;
-  sortOrder: number;
+  sort: number;
 };
 
 export function createDiscipleshipJourneyForm(): DiscipleshipJourneyCreateRequest {
@@ -30,7 +30,7 @@ export function createDiscipleshipJourneyForm(): DiscipleshipJourneyCreateReques
 }
 
 export function createDiscipleshipStageForm(): DiscipleshipStageForm {
-  return { title: "", description: "", sortOrder: 0 };
+  return { title: "", description: "", sort: 0 };
 }
 
 export function createDiscipleshipTaskForm(): DiscipleshipTaskForm {
@@ -41,7 +41,7 @@ export function createDiscipleshipTaskForm(): DiscipleshipTaskForm {
     referenceType: "manual_review",
     referenceId: "",
     required: true,
-    sortOrder: 0
+    sort: 0
   };
 }
 
@@ -89,7 +89,7 @@ export function buildDiscipleshipStagePayload(
   return {
     title: form.title.trim(),
     description: form.description.trim(),
-    sortOrder: normalizeDiscipleshipSortOrder(form.sortOrder)
+    sort: normalizeDiscipleshipSort(form.sort)
   };
 }
 
@@ -103,7 +103,7 @@ export function buildDiscipleshipTaskPayload(
     referenceType: form.referenceType,
     referenceId: form.referenceId.trim(),
     required: form.required,
-    sortOrder: normalizeDiscipleshipSortOrder(form.sortOrder)
+    sort: normalizeDiscipleshipSort(form.sort)
   };
 }
 
@@ -129,8 +129,8 @@ export function buildDiscipleshipProgressPayload(input: {
   return { status: input.status, note: input.note.trim() };
 }
 
-export function normalizeDiscipleshipSortOrder(value: number) {
-  return Number.isFinite(value) ? Math.trunc(value) : 0;
+export function normalizeDiscipleshipSort(value: number) {
+  return Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : 0;
 }
 
 export function discipleshipJourneyStatusColor(

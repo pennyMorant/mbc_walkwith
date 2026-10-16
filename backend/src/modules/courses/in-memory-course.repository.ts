@@ -166,7 +166,7 @@ export class InMemoryCourseRepository implements CourseRepository {
       description: input.description?.trim() ?? "",
       startsAt: input.startsAt ?? null,
       status: input.status,
-      sortOrder: input.sortOrder,
+      sort: input.sort,
       createdAt: now,
       updatedAt: now
     };
@@ -196,7 +196,7 @@ export class InMemoryCourseRepository implements CourseRepository {
       startsAt:
         input.startsAt === undefined ? existing.startsAt : input.startsAt,
       status: input.status ?? existing.status,
-      sortOrder: input.sortOrder ?? existing.sortOrder,
+      sort: input.sort ?? existing.sort,
       updatedAt: new Date().toISOString()
     };
     this.lessons.set(lessonId, updated);
@@ -383,7 +383,12 @@ export class InMemoryCourseRepository implements CourseRepository {
   private lessonsForCourse(courseId: string) {
     return [...this.lessons.values()]
       .filter((lesson) => lesson.courseId === courseId)
-      .sort((a, b) => a.sortOrder - b.sortOrder || a.title.localeCompare(b.title));
+      .sort(
+        (a, b) =>
+          b.sort - a.sort ||
+          a.title.localeCompare(b.title) ||
+          a.id.localeCompare(b.id)
+      );
   }
 
   private refreshCourse(courseId: string) {
@@ -429,7 +434,7 @@ const seedLessons: CourseLesson[] = [
     description: "The heart of the Christian faith.",
     startsAt: "2026-06-07T17:00:00.000Z",
     status: "published",
-    sortOrder: 1,
+    sort: 1,
     createdAt: "2026-05-01T18:00:00.000Z",
     updatedAt: "2026-05-01T18:00:00.000Z"
   },
@@ -440,7 +445,7 @@ const seedLessons: CourseLesson[] = [
     description: "Membership, fellowship, and service.",
     startsAt: "2026-06-14T17:00:00.000Z",
     status: "scheduled",
-    sortOrder: 2,
+    sort: 2,
     createdAt: "2026-05-01T18:00:00.000Z",
     updatedAt: "2026-05-01T18:00:00.000Z"
   }

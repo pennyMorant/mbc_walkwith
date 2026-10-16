@@ -203,7 +203,7 @@ function stageAuditSnapshot(stage: DiscipleshipStage) {
   return {
     id: stage.id,
     journeyId: stage.journeyId,
-    sortOrder: stage.sortOrder
+    sort: stage.sort
   };
 }
 
@@ -215,7 +215,7 @@ function taskAuditSnapshot(task: DiscipleshipTask) {
     referenceType: task.referenceType,
     hasReferenceId: task.referenceId.trim().length > 0,
     required: task.required,
-    sortOrder: task.sortOrder
+    sort: task.sort
   };
 }
 

@@ -31,7 +31,7 @@ export function postFromRow(row: PublicPostRow): LifePost {
     endsAt: row.endsAt?.toISOString() ?? null,
     visibility: row.visibility,
     imageUrl: row.imageUrl,
-    displayWeight: row.displayWeight,
+    sort: row.sort,
     ctaLabel: row.ctaLabel,
     ctaUrl: row.ctaUrl,
     registrationEnabled: row.registrationEnabled,

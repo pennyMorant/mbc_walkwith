@@ -187,7 +187,7 @@ function lessonAuditSnapshot(lesson: CourseLesson) {
     id: lesson.id,
     courseId: lesson.courseId,
     status: lesson.status,
-    sortOrder: lesson.sortOrder
+    sort: lesson.sort
   };
 }
 

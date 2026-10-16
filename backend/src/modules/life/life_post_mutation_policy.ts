@@ -45,7 +45,7 @@ function buildLifePostCandidate(
     endsAt: input.endsAt === undefined ? post.endsAt : input.endsAt,
     visibility: input.visibility ?? post.visibility,
     imageUrl: input.imageUrl === undefined ? post.imageUrl : input.imageUrl,
-    displayWeight: input.displayWeight ?? post.displayWeight,
+    sort: input.sort ?? post.sort,
     ctaLabel: input.ctaLabel === undefined ? post.ctaLabel : input.ctaLabel,
     ctaUrl: input.ctaUrl === undefined ? post.ctaUrl : input.ctaUrl,
     registrationEnabled:

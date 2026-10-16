@@ -11,7 +11,7 @@ final List<LifePost> lifePosts = [
     startsAt: DateTime.utc(2026, 5, 31, 17),
     endsAt: DateTime.utc(2026, 5, 31, 18, 30),
     imageUrl: 'https://images.unsplash.com/photo-1438032005730-c779502df39b',
-    displayWeight: 100,
+    sort: 100,
   ),
   LifePost(
     id: 'mock-life-fellowship',

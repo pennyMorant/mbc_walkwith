@@ -105,9 +105,8 @@ class SermonsLocalDataSource {
     DateTime? reconcileFrom,
     DateTime? reconcileTo,
   }) {
-    return SermonCacheWriter(
-      database: database,
-    ).save(sermons, reconcileFrom: reconcileFrom, reconcileTo: reconcileTo);
+    return SermonCacheWriter(database: database)
+        .save(sermons, reconcileFrom: reconcileFrom, reconcileTo: reconcileTo);
   }
 
   Future<List<SermonDto>> _loadSermons(List<LocalSermon> sermons) async {
@@ -120,7 +119,7 @@ class SermonsLocalDataSource {
     final outlines =
         await (database.select(database.localSermonOutlines)
               ..where((outline) => outline.sermonId.isIn(sermonIds))
-              ..orderBy([(outline) => OrderingTerm.asc(outline.sortOrder)]))
+              ..orderBy([(outline) => OrderingTerm.desc(outline.sort)]))
             .get();
     final references = await (database.select(
       database.localSermonReferences,
@@ -128,7 +127,7 @@ class SermonsLocalDataSource {
     final topics =
         await (database.select(database.localSermonTopics)
               ..where((topic) => topic.sermonId.isIn(sermonIds))
-              ..orderBy([(topic) => OrderingTerm.asc(topic.sortOrder)]))
+              ..orderBy([(topic) => OrderingTerm.desc(topic.sort)]))
             .get();
     return mapCachedSermons(sermons, outlines, topics, references);
   }

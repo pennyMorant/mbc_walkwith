@@ -15,7 +15,7 @@ import DiscipleshipTasksTable from "./DiscipleshipTasksTable.vue";
 type StageForm = {
   title: string;
   description: string;
-  sortOrder: number;
+  sort: number;
 };
 
 type TaskForm = {
@@ -25,7 +25,7 @@ type TaskForm = {
   referenceType: DiscipleshipTaskReferenceType;
   referenceId: string;
   required: boolean;
-  sortOrder: number;
+  sort: number;
 };
 
 const props = defineProps<{
@@ -58,7 +58,7 @@ const { optionItems, t } = useI18n();
 const stageOptions = computed(() => [
   { title: t("No stage"), value: "" },
   ...props.stages.map((stage) => ({
-    title: `${stage.sortOrder}. ${stage.title}`,
+    title: `${stage.sort}. ${stage.title}`,
     value: stage.id
   }))
 ]);
@@ -140,10 +140,11 @@ const stageOptions = computed(() => [
       </v-col>
       <v-col cols="12" md="3">
         <v-text-field
-          v-model.number="stageForm.sortOrder"
+          v-model.number="stageForm.sort"
           :disabled="!canManage"
-          :label="t('Order')"
+          :label="t('common.sort')"
           density="compact"
+          min="0"
           type="number"
           variant="outlined"
         />
@@ -211,10 +212,11 @@ const stageOptions = computed(() => [
       </v-col>
       <v-col cols="12" md="3">
         <v-text-field
-          v-model.number="taskForm.sortOrder"
+          v-model.number="taskForm.sort"
           :disabled="!canManage"
-          :label="t('Order')"
+          :label="t('common.sort')"
           density="compact"
+          min="0"
           type="number"
           variant="outlined"
         />

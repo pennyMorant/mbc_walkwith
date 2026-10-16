@@ -56,7 +56,7 @@ describe("discipleship journey routes", () => {
       },
       payload: {
         title: "Gospel Foundations",
-        sortOrder: 10
+        sort: 10
       }
     });
     expect(stageResponse.statusCode).toBe(200);
@@ -85,7 +85,7 @@ describe("discipleship journey routes", () => {
     expect(stageAudit.items[0]?.afterJson).toMatchObject({
       id: stage.id,
       journeyId: journey.id,
-      sortOrder: 10
+      sort: 10
     });
     expect(JSON.stringify(stageAuditResponse.json())).not.toContain(
       "Gospel Foundations"
@@ -148,7 +148,7 @@ describe("discipleship journey routes", () => {
         stageId: stage.id,
         title: "Read assigned sermon",
         referenceType: "sermon",
-        sortOrder: 15
+        sort: 15
       }
     });
     expect(missingReferenceTaskResponse.statusCode).toBe(409);
@@ -187,7 +187,7 @@ describe("discipleship journey routes", () => {
         title: "Read John 1",
         referenceType: "manual_review",
         referenceId: "john-1",
-        sortOrder: 20
+        sort: 20
       }
     });
     expect(taskResponse.statusCode).toBe(200);
@@ -225,7 +225,7 @@ describe("discipleship journey routes", () => {
       referenceType: "manual_review",
       hasReferenceId: true,
       required: true,
-      sortOrder: 20
+      sort: 20
     });
     expect(JSON.stringify(taskAuditResponse.json())).not.toContain(
       "Read John 1"

@@ -78,7 +78,12 @@ export class InMemoryGivingRepository implements GivingRepository {
         }
         return true;
       })
-      .sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name))
+      .sort(
+        (a, b) =>
+          b.sort - a.sort ||
+          a.name.localeCompare(b.name) ||
+          a.id.localeCompare(b.id)
+      )
       .slice(0, query.limit);
   }
 
@@ -103,7 +108,7 @@ export class InMemoryGivingRepository implements GivingRepository {
       description: input.description,
       status: input.status,
       targetAmountCents: input.targetAmountCents,
-      displayOrder: input.displayOrder,
+      sort: input.sort,
       totalAmountCents: 0,
       transactionCount: 0,
       createdAt: now,
@@ -131,8 +136,8 @@ export class InMemoryGivingRepository implements GivingRepository {
       ...(input.targetAmountCents !== undefined
         ? { targetAmountCents: input.targetAmountCents }
         : {}),
-      ...(input.displayOrder !== undefined
-        ? { displayOrder: input.displayOrder }
+      ...(input.sort !== undefined
+        ? { sort: input.sort }
         : {}),
       updatedAt: new Date().toISOString()
     };

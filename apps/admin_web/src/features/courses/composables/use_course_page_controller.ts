@@ -125,7 +125,7 @@ export function useCoursePageController() {
       if (!context || !mutationFeedback.isCurrent(context)) {
         return;
       }
-      resetLessonForm(lessonForm.sortOrder + 1);
+      resetLessonForm(lessonForm.sort + 1);
       await refreshCanonicalCourse(lesson.courseId);
     },
     onError: mutationFeedback.capture
@@ -250,8 +250,8 @@ export function useCoursePageController() {
     );
   }
 
-  function resetLessonForm(sortOrder = 1) {
-    Object.assign(lessonForm, emptyLessonForm(sortOrder));
+  function resetLessonForm(sort = 1) {
+    Object.assign(lessonForm, emptyLessonForm(sort));
   }
 
   function resetWorkspaceInputs() {
@@ -303,7 +303,7 @@ export function useCoursePageController() {
         description: lessonForm.description.trim(),
         startsAt: dateTimeInputToIso(lessonForm.startsAt),
         status: lessonForm.status,
-        sortOrder: Math.max(1, Number(lessonForm.sortOrder) || 1)
+        sort: Math.max(0, Number(lessonForm.sort) || 0)
       }
     });
   }

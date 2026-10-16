@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { contentLocaleSchema } from "./content_localization.js";
+import { sortValueSchema } from "./sort.js";
 
 export const sermonDiscussionGuideStatusSchema = z.enum([
   "draft",
@@ -34,7 +35,7 @@ export const sermonDiscussionQuestionSchema = z.object({
   id: z.string().trim().min(1).max(80),
   type: sermonDiscussionQuestionTypeSchema,
   prompt: z.string().trim().min(1).max(1000),
-  sortOrder: z.number().int().default(0),
+  sort: sortValueSchema,
   startSeconds: z.number().int().nonnegative().nullable().default(null)
 });
 
@@ -42,7 +43,7 @@ export const sermonDiscussionActionStepSchema = z.object({
   id: z.string().trim().min(1).max(80),
   title: z.string().trim().min(1).max(160),
   description: z.string().trim().max(1000).default(""),
-  sortOrder: z.number().int().default(0)
+  sort: sortValueSchema
 });
 
 export const sermonDiscussionQuestionListSchema = z

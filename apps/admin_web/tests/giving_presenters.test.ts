@@ -15,7 +15,7 @@ const fund = {
   description: "Global missions.",
   status: "active" as const,
   targetAmountCents: 20000,
-  displayOrder: 1,
+  sort: 1,
   totalAmountCents: 5000,
   transactionCount: 2,
   createdAt: "2026-01-01T00:00:00.000Z",

@@ -12,7 +12,7 @@ class LocalLifePosts extends Table {
   TextColumn get visibility => text()();
   TextColumn get status => text().withDefault(const Constant('published'))();
   TextColumn get imageUrl => text().nullable()();
-  IntColumn get displayWeight => integer().withDefault(const Constant(0))();
+  IntColumn get sort => integer().withDefault(const Constant(0))();
   TextColumn get ctaLabel => text().nullable()();
   TextColumn get ctaUrl => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();

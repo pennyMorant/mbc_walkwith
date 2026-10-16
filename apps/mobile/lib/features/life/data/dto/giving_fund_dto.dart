@@ -11,7 +11,7 @@ class GivingFundDto {
     required this.description,
     required this.status,
     required this.targetAmountCents,
-    required this.displayOrder,
+    required this.sort,
   });
 
   factory GivingFundDto.fromJson(Map<String, Object?> json) {
@@ -25,7 +25,7 @@ class GivingFundDto {
         json,
         'targetAmountCents',
       ),
-      displayOrder: readGivingInt(json, 'displayOrder', defaultValue: 0),
+      sort: readGivingInt(json, 'sort', defaultValue: 0),
     );
   }
 
@@ -35,7 +35,7 @@ class GivingFundDto {
   final String description;
   final String status;
   final int? targetAmountCents;
-  final int displayOrder;
+  final int sort;
 
   GivingFund toDomain() => GivingFund(
     id: id,
@@ -44,7 +44,7 @@ class GivingFundDto {
     description: description,
     status: status,
     targetAmountCents: targetAmountCents,
-    displayOrder: displayOrder,
+    sort: sort,
   );
 }
 

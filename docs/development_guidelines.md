@@ -5,6 +5,12 @@ Audience: Flutter app, backend service, admin web, public web, and future contri
 
 This document defines the engineering rules for building MBC WalkWith over time. The goal is to keep the codebase scalable as more screens, APIs, languages, offline data, and backend modules are added.
 
+Backend-fetched, admin-authored content and catalog records use `sort` for
+display priority: integer, default `0`, non-negative, higher values first.
+Repositories own this ordering and must add a stable tie-breaker. Do not reuse
+`sort` for canonical order, user activity, financial records, registrations,
+progress, or audit history.
+
 Related documents:
 
 - [roadmap.md](roadmap.md): phased implementation plan.
@@ -820,7 +826,7 @@ local_sermon_outlines
   title text
   summary text
   start_seconds integer
-  sort_order integer
+  sort integer
 
 local_sermon_references
   id text primary key

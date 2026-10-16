@@ -16,13 +16,13 @@ export function emptyCourseForm(): CourseUpsertRequest {
   };
 }
 
-export function emptyLessonForm(sortOrder = 1) {
+export function emptyLessonForm(sort = 0) {
   return {
     title: "",
     description: "",
     startsAt: "",
     status: "scheduled" as CourseLessonStatus,
-    sortOrder
+    sort
   };
 }
 

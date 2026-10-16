@@ -27,7 +27,7 @@ class CourseLessonDto {
     required this.description,
     required this.startsAt,
     required this.status,
-    required this.sortOrder,
+    required this.sort,
   });
 
   factory CourseLessonDto.fromJson(Map<String, Object?> json) {
@@ -40,7 +40,7 @@ class CourseLessonDto {
       description: readCourseString(json, 'description'),
       startsAt: readNullableCourseDateTime(json, 'startsAt'),
       status: readCourseEnum(json, 'status', _courseLessonStatuses),
-      sortOrder: readCourseNonNegativeInt(json, 'sortOrder'),
+      sort: readCourseNonNegativeInt(json, 'sort'),
     );
   }
 
@@ -50,7 +50,7 @@ class CourseLessonDto {
   final String description;
   final DateTime? startsAt;
   final String status;
-  final int sortOrder;
+  final int sort;
 
   CourseLesson toDomain() {
     return CourseLesson(
@@ -60,7 +60,7 @@ class CourseLessonDto {
       description: description,
       startsAt: startsAt,
       status: status,
-      sortOrder: sortOrder,
+      sort: sort,
     );
   }
 }

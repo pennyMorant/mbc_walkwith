@@ -95,7 +95,7 @@ describe("life post editor models", () => {
         endsAt: null,
         visibility: "members",
         imageUrl: null,
-        displayWeight: 0,
+        sort: 0,
         ctaLabel: null,
         ctaUrl: null,
         registrationEnabled: true,
