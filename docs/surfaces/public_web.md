@@ -46,6 +46,7 @@ Public Web does not own:
 - `GET /v1/public/landing?locale=...` 读取官网身份、首屏、宗旨、聚会信息、教会入口、App 引导、联系信息和 CTA action。
 - 同一聚合响应读取固定日程、公开人员介绍，并投影公开、已发布、尚未结束的近期活动。
 - `public_landing` 分类下的 `app_settings` 是官网可变资源的后端 source of truth。
+- 所有重复展示资源使用统一 `sort` 字段，由后端按数值降序聚合；官网只按返回顺序渲染，不在组件内重复排序。
 - 管理员通过管理 Web 的 Settings 页面维护官网导航、新朋友入口、地图链接、联系方式、社交媒体和 App 下载入口。
 - 官网不调用 `GET /v1/sermons` 作为内容列表。
 - 官网不直接调用 `GET /v1/life/posts`；Landing 后端聚合层只读取 canonical Life event 投影。

@@ -86,6 +86,11 @@ Landing settings own only the events section copy and display limit. The
 response includes `timeZone` from `church.timezone`; public event dates must be
 formatted in that timezone. Empty target-locale schedule or people lists fall
 back to the `zh-Hans` source items while retaining localized section copy.
+Every independently sortable repeated Landing resource includes the shared
+non-negative integer `sort`, defaulting to `0`. The backend returns larger
+values first and preserves stored array order for ties. Event `sort` is
+projected from the canonical Life post rather than copied into Landing
+settings.
 
 Supported locale values across public resources are `en`, `es`, `zh-Hans`, and
 `zh-Hant`. Client surfaces should default to the browser or device system locale

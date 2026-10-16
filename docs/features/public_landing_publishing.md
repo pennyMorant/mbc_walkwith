@@ -47,6 +47,8 @@ Settings 页面为固定日程、人员介绍和近期活动区块提供结构�
 
 `GET /v1/public/landing?locale=...` 聚合 locale 对应的 Landing 配置，并从 Life service 读取近期活动。聚合层只生成公开只读投影，不改变活动状态。
 
+所有重复展示项统一使用 `sort` 作为展示优先级，包括 action、宗旨支柱、聚会事实、固定日程、人员、App highlight 和近期活动。`sort` 为非负整数，默认 `0`，数值越大越靠前；相同值保留后台配置中的原始顺序。近期活动的 `sort` 直接来自 Life `public_posts.sort`，官网不复制活动排序状态。
+
 ## 10. Side Effects
 
 配置更新写入 `app_settings` 并进入既有 Settings 审计链。活动发布副作用仍归 Life feature。

@@ -14,7 +14,8 @@ function addItem() {
     name: "",
     role: "",
     summary: "",
-    imageUrl: ""
+    imageUrl: "",
+    sort: 0
   });
 }
 </script>
@@ -46,6 +47,13 @@ function addItem() {
       <v-text-field v-model="item.role" :label="t('settings.landing.role')" variant="filled" />
     </div>
     <v-text-field v-model="item.imageUrl" :label="t('settings.landing.imageUrl')" variant="filled" />
+    <v-text-field
+      v-model.number="item.sort"
+      :label="t('common.sort')"
+      type="number"
+      min="0"
+      variant="filled"
+    />
     <v-textarea v-model="item.summary" :label="t('settings.landing.summary')" variant="filled" rows="3" auto-grow />
   </div>
 </template>

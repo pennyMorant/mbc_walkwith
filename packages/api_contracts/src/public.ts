@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { sortValueSchema } from "./sort.js";
 
 export const supportedLocales = ["en", "es", "zh-Hans", "zh-Hant"] as const;
 
@@ -25,7 +26,8 @@ export const publicLandingActionSchema = z.object({
   href: z.string(),
   iconName: z.string(),
   kind: publicLandingActionKindSchema,
-  target: publicLandingActionTargetSchema.default("same_tab")
+  target: publicLandingActionTargetSchema.default("same_tab"),
+  sort: sortValueSchema
 });
 
 export const publicLandingIdentitySchema = z.object({
@@ -50,7 +52,8 @@ export const publicLandingHeroSchema = z.object({
 export const publicLandingPillarSchema = z.object({
   title: z.string(),
   body: z.string(),
-  iconName: z.string()
+  iconName: z.string(),
+  sort: sortValueSchema
 });
 
 export const publicLandingMissionSectionSchema = z.object({
@@ -63,7 +66,8 @@ export const publicLandingMissionSectionSchema = z.object({
 export const publicLandingFactSchema = z.object({
   id: z.string(),
   label: z.string(),
-  iconName: z.string()
+  iconName: z.string(),
+  sort: sortValueSchema
 });
 
 export const publicLandingServiceSectionSchema = z.object({
@@ -107,7 +111,8 @@ export const publicLandingScheduleItemSchema = z.object({
   timeLabel: z.string().trim().min(1),
   location: z.string(),
   detail: z.string().default(""),
-  iconName: z.string().default("mdi-calendar-heart")
+  iconName: z.string().default("mdi-calendar-heart"),
+  sort: sortValueSchema
 });
 
 export const publicLandingScheduleSectionSchema = z.object({
@@ -122,7 +127,8 @@ export const publicLandingPersonSchema = z.object({
   name: z.string().trim().min(1),
   role: z.string().trim().min(1),
   summary: z.string(),
-  imageUrl: z.string().default("")
+  imageUrl: z.string().default(""),
+  sort: sortValueSchema
 });
 
 export const publicLandingPeopleSectionSchema = z.object({
@@ -148,7 +154,8 @@ export const publicLandingEventSchema = z.object({
   endsAt: z.string().datetime().nullable(),
   imageUrl: z.string().nullable(),
   ctaLabel: z.string().nullable(),
-  ctaUrl: z.string().nullable()
+  ctaUrl: z.string().nullable(),
+  sort: sortValueSchema
 });
 
 export const publicLandingEventsSectionSchema =

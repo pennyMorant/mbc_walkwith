@@ -13,6 +13,11 @@ GET /v1/public/landing?locale=en|es|zh-Hans|zh-Hant
 
 The response includes identity, church timezone, hero, mission, service information, recurring schedule, public people profiles, upcoming events, visitor entrances, App links, contact links, and footer actions.
 
+Repeated landing resources carry a shared non-negative `sort` field. The
+backend returns larger values first and preserves authored order for ties.
+Public Web renders the returned order and must not own a second sorting rule.
+Event priority is projected from the canonical Life post `sort` value.
+
 Rules:
 
 - Schedule and people use locale-specific section copy and fall back to source-locale items when the requested item list is empty.

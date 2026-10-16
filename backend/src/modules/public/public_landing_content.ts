@@ -132,7 +132,7 @@ export async function getPublicLandingContent(
     people: withSourceItems(localizedPeople, sourcePeople),
     events: {
       ...eventsConfig,
-      items: events.slice(0, eventsConfig.maxItems)
+      items: events
     },
     entrance: settingValue(
       settingByKey,
@@ -164,7 +164,72 @@ export async function getPublicLandingContent(
     )
   });
 
-  return content;
+  return orderLandingContent(content);
+}
+
+function orderLandingContent(
+  content: ReturnType<typeof publicLandingContentSchema.parse>
+) {
+  return {
+    ...content,
+    navigation: byDisplayPriority(content.navigation),
+    headerActions: byDisplayPriority(content.headerActions),
+    mobileActions: byDisplayPriority(content.mobileActions),
+    hero: {
+      ...content.hero,
+      primaryActions: byDisplayPriority(content.hero.primaryActions),
+      quickActions: byDisplayPriority(content.hero.quickActions)
+    },
+    mission: {
+      ...content.mission,
+      pillars: byDisplayPriority(content.mission.pillars)
+    },
+    service: {
+      ...content.service,
+      facts: byDisplayPriority(content.service.facts),
+      actions: byDisplayPriority(content.service.actions)
+    },
+    schedule: {
+      ...content.schedule,
+      items: byDisplayPriority(content.schedule.items)
+    },
+    people: {
+      ...content.people,
+      items: byDisplayPriority(content.people.items)
+    },
+    events: {
+      ...content.events,
+      items: byDisplayPriority(content.events.items).slice(
+        0,
+        content.events.maxItems
+      )
+    },
+    entrance: {
+      ...content.entrance,
+      actions: byDisplayPriority(content.entrance.actions)
+    },
+    app: {
+      ...content.app,
+      highlights: byDisplayPriority(content.app.highlights),
+      actions: byDisplayPriority(content.app.actions)
+    },
+    contact: {
+      ...content.contact,
+      links: byDisplayPriority(content.contact.links)
+    },
+    footerActions: byDisplayPriority(content.footerActions)
+  };
+}
+
+function byDisplayPriority<T extends { sort: number }>(items: T[]): T[] {
+  return items
+    .map((item, sourceIndex) => ({ item, sourceIndex }))
+    .sort(
+      (left, right) =>
+        right.item.sort - left.item.sort ||
+        left.sourceIndex - right.sourceIndex
+    )
+    .map(({ item }) => item);
 }
 
 function withSourceItems<T extends { items: unknown[] }>(

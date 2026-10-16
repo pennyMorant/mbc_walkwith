@@ -136,6 +136,8 @@ Surface rule:
   `publicLanding.es.contact` 和 `publicLanding.zh-Hant.contact`。
   固定日程、公开人员和活动区文案使用结构化表单；其他低频配置保留高级 JSON
   编辑器。两种编辑方式都通过同一 Settings API 保存，并由后端契约最终校验。
+  重复展示项统一编辑 `sort` 优先级，默认 `0`，数值越大越靠前；固定日程和人员
+  直接显示数值字段，其他高级配置在受契约校验的 JSON 编辑器中维护。
 
 ## Verification
 

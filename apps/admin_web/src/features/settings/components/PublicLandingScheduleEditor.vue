@@ -16,7 +16,8 @@ function addItem() {
     timeLabel: "",
     location: "",
     detail: "",
-    iconName: "mdi-calendar-heart"
+    iconName: "mdi-calendar-heart",
+    sort: 0
   });
 }
 </script>
@@ -54,6 +55,13 @@ function addItem() {
       <v-text-field v-model="item.timeLabel" :label="t('settings.landing.time')" variant="filled" />
     </div>
     <v-text-field v-model="item.location" :label="t('settings.landing.location')" variant="filled" />
+    <v-text-field
+      v-model.number="item.sort"
+      :label="t('common.sort')"
+      type="number"
+      min="0"
+      variant="filled"
+    />
     <v-textarea v-model="item.detail" :label="t('settings.landing.detail')" variant="filled" rows="2" auto-grow />
   </div>
 </template>

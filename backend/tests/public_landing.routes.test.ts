@@ -45,6 +45,7 @@ describe("public landing routes", () => {
       "讲道"
     );
     expect(landing.brandAction.href).toBe("#top");
+    expect(landing.navigation.every((action) => action.sort === 0)).toBe(true);
     expect(landing.headerActions.map((action) => action.href)).toEqual([
       "#service",
       "#contact"
@@ -186,13 +187,24 @@ describe("public landing routes", () => {
           body: "最新聚会安排",
           items: [
             {
+              id: "weekday-study",
+              title: "周中查经",
+              dayLabel: "每周三",
+              timeLabel: "7:30 PM",
+              location: "Online",
+              detail: "",
+              iconName: "mdi-book-open-page-variant",
+              sort: 10
+            },
+            {
               id: "sunday-worship",
               title: "国语主日崇拜",
               dayLabel: "每周日",
               timeLabel: "1:00 PM",
               location: "Main Sanctuary",
               detail: "",
-              iconName: "mdi-church"
+              iconName: "mdi-church",
+              sort: 100
             }
           ]
         }
@@ -210,11 +222,20 @@ describe("public landing routes", () => {
           body: "服事团队",
           items: [
             {
+              id: "ministry-worker",
+              name: "示例同工",
+              role: "同工",
+              summary: "教会服事",
+              imageUrl: "",
+              sort: 5
+            },
+            {
               id: "lead-pastor",
               name: "示例牧者",
               role: "主任牧师",
               summary: "讲道与牧养",
-              imageUrl: ""
+              imageUrl: "",
+              sort: 50
             }
           ]
         }
@@ -234,8 +255,10 @@ describe("public landing routes", () => {
     expect(landing.timeZone).toBe("America/New_York");
     expect(landing.schedule.title).toBe("Church life throughout the week");
     expect(landing.schedule.items[0]?.title).toBe("国语主日崇拜");
+    expect(landing.schedule.items.map((item) => item.sort)).toEqual([100, 10]);
     expect(landing.people.title).toBe("Pastors and ministry team");
     expect(landing.people.items[0]?.name).toBe("示例牧者");
+    expect(landing.people.items.map((item) => item.sort)).toEqual([50, 5]);
     await harness.close();
   });
 
@@ -294,7 +317,8 @@ describe("public landing routes", () => {
           href: "https://apps.apple.com/",
           iconName: "mdi-apple",
           kind: "external_link",
-          target: "new_tab"
+          target: "new_tab",
+          sort: 100
         }
       ]
     };
@@ -330,7 +354,7 @@ describe("public landing routes", () => {
     expect(afterLanding.contact.links.map((link) => link.id)).toContain(
       "contact-app-store"
     );
-    expect(afterLanding.contact.links.at(-1)?.href).toBe(
+    expect(afterLanding.contact.links.at(0)?.href).toBe(
       "https://apps.apple.com/"
     );
     await harness.close();
@@ -430,6 +454,41 @@ describe("public landing routes", () => {
       evidence: {
         settingKey: "publicLanding.schedule"
       }
+    });
+    await harness.close();
+  });
+
+  it("rejects negative landing display priorities", async () => {
+    const harness = await buildTestApp();
+    const { app } = harness;
+    const { accessToken } = await login(app);
+
+    const response = await app.inject({
+      method: "PATCH",
+      url: "/v1/admin/settings/publicLanding.people",
+      headers: { authorization: `Bearer ${accessToken}` },
+      payload: {
+        value: {
+          eyebrow: "People",
+          title: "Church team",
+          body: "Meet our team.",
+          items: [
+            {
+              id: "pastor",
+              name: "Pastor",
+              role: "Lead pastor",
+              summary: "",
+              imageUrl: "",
+              sort: -1
+            }
+          ]
+        }
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json().error).toMatchObject({
+      code: "setting_value_invalid"
     });
     await harness.close();
   });
