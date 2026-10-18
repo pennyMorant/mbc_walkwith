@@ -182,17 +182,17 @@ The Docker manager starts PostgreSQL, runs the same Drizzle Kit migrations as a
 one-shot container, then starts API and Web. It does not modify the native
 systemd units, host PostgreSQL, or host Nginx configuration.
 
-## Sermon Media Env
+## Media Storage Env
 
-Local file storage:
+Local file storage is supported only for development and automated tests:
 
 ```sh
 MEDIA_STORAGE_DRIVER=local
 MEDIA_UPLOAD_DIR=/var/lib/mbc_walkwith/uploads
 ```
 
-Native VPS deployments keep this directory outside timestamped releases.
-Local development may continue to use a repository-relative `uploads` path.
+Local development may use a repository-relative `uploads` path. Production
+startup rejects this driver.
 
 Cloudflare R2 or other S3-compatible storage:
 
@@ -204,7 +204,12 @@ S3_BUCKET=<bucket>
 S3_ACCESS_KEY_ID=<key>
 S3_SECRET_ACCESS_KEY=<secret>
 S3_FORCE_PATH_STYLE=true
+MEDIA_PUBLIC_BASE_URL=https://media.example.com
 ```
+
+`MEDIA_PUBLIC_BASE_URL` should be the Cloudflare custom domain attached to the
+public media prefix. Public images are delivered directly from R2; private
+objects remain accessible only through signed backend flows.
 
 Local sermon processing configuration belongs to the local workstation, not the
 backend VPS. See [local_sermon_processing.md](local_sermon_processing.md) and

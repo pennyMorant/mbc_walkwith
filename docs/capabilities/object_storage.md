@@ -10,6 +10,9 @@
 
 Backend storage gateway adapter。
 
+生产环境的唯一文件存储实现是 Cloudflare R2。Postgres 只保存媒体元数据、业务关联与
+R2 object key；开发和自动化测试可以使用本地 driver，但生产启动时不得回退到本地磁盘。
+
 ## Contract
 
 输入：
@@ -31,6 +34,13 @@ Backend storage gateway adapter。
 ## Rules
 
 - 私有文件通过后端签名 URL 访问。
+- 公开图片通过 `MEDIA_PUBLIC_BASE_URL` 指向的 R2 自定义媒体域名访问；URL 不经过 VPS
+  转发，避免把图片流量压到应用服务器。
+- 生产必须配置 `MEDIA_STORAGE_DRIVER=s3`、R2 S3 endpoint、bucket、access key、secret
+  与 `MEDIA_PUBLIC_BASE_URL`，缺少任一项时后端拒绝启动。
+- 统一媒体元数据由 `media_assets` 管理；API 不暴露 `storageKey`。
+- 公开资源 key 使用 `public/<kind>s/<uuid>.<ext>`，私有资源使用
+  `private/<kind>s/<uuid>.<ext>`。
 - Object storage 只存文件本体，业务状态在后端数据库。
 - App 和管理 Web 不直接访问私有 bucket。
 - 文件缺失必须返回结构化错误。

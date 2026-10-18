@@ -22,6 +22,8 @@ export const adminPermissionSchema = z.enum([
   "life_posts:read",
   "life_posts:update",
   "life_posts:publish",
+  "media:read",
+  "media:manage",
   "groups:read",
   "groups:manage",
   "courses:read",

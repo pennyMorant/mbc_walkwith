@@ -115,6 +115,7 @@ export const testConfig: AppConfig = {
   s3AccessKeyId: undefined,
   s3SecretAccessKey: undefined,
   s3ForcePathStyle: true,
+  mediaPublicBaseUrl: undefined,
   authSecret: "test-secret-minimum-32-characters",
   appUserAuthSecret: "test-member-secret-minimum-32-characters",
   debugMemberAuthBypass: true,

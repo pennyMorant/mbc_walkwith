@@ -62,6 +62,26 @@ export const apiRouteContractRegistry = [
       "Public website configuration, recurring schedules, people profiles, CTA actions, and canonical upcoming Life event projections. Sermon consumption remains owned by the mobile App."
   },
   {
+    featureId: "media",
+    surface: "public",
+    owner: "object-storage",
+    contractFile: "packages/api_contracts/src/media.ts",
+    sdkDocs: ["docs/sdk/media.md", "docs/capabilities/object_storage.md"],
+    backendRouteFiles: [
+      "backend/src/modules/media/media.routes.ts",
+      "backend/src/modules/admin/media/admin-media.routes.ts"
+    ],
+    clientFiles: [],
+    routes: [
+      "GET /v1/media/:mediaId/content",
+      "GET /v1/admin/media",
+      "POST /v1/admin/media/images",
+      "PATCH /v1/admin/media/:mediaId"
+    ],
+    notes:
+      "Canonical media metadata and upload boundary. Production objects live in R2; feature clients consume safe projections and never receive storage keys."
+  },
+  {
     featureId: "admin_auth",
     surface: "admin",
     owner: "admin-auth",

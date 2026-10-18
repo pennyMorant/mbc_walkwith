@@ -15,6 +15,7 @@ import { registerAdminGroupRoutes } from "./modules/admin/groups/admin-groups.ro
 import { registerAdminJobRoutes } from "./modules/admin/jobs/admin-jobs.routes.js";
 import { registerAdminLifePostRoutes } from "./modules/admin/life-posts/admin-life-posts.routes.js";
 import { registerAdminMemberRoutes } from "./modules/admin/members/admin-members.routes.js";
+import { registerAdminMediaRoutes } from "./modules/admin/media/admin-media.routes.js";
 import { registerAdminNewcomerRoutes } from "./modules/admin/newcomers/admin-newcomers.routes.js";
 import { registerAdminNotificationRoutes } from "./modules/admin/notifications/admin_notifications.routes.js";
 import { registerAdminPrayerRequestRoutes } from "./modules/admin/prayer-requests/admin-prayer-requests.routes.js";
@@ -38,6 +39,7 @@ import {
 import { registerGroupRoutes } from "./modules/groups/group.routes.js";
 import { registerHealthRoutes } from "./modules/health/health.routes.js";
 import { registerLifeRoutes } from "./modules/life/life.routes.js";
+import { registerMediaRoutes } from "./modules/media/media.routes.js";
 import { registerMemberAuthRoutes } from "./modules/members/auth/member-auth.routes.js";
 import { registerMemberNotificationRoutes } from "./modules/notifications/member-notification.routes.js";
 import { registerNewcomerRoutes } from "./modules/newcomers/newcomer.routes.js";
@@ -72,6 +74,7 @@ type AppRouteDependencies = {
   jobService: Parameters<typeof registerAdminJobRoutes>[1];
   lifePostImageStorageService: Parameters<typeof registerLifeRoutes>[2];
   lifePostService: Parameters<typeof registerLifeRoutes>[1];
+  mediaService: Parameters<typeof registerMediaRoutes>[1];
   memberAuthService: Parameters<typeof registerMemberAuthRoutes>[1];
   memberService: Parameters<typeof registerMemberAuthRoutes>[2];
   memberAuthRateLimiter: Parameters<typeof registerMemberAuthRoutes>[4];
@@ -109,6 +112,7 @@ export async function registerAppRoutes(
     dependencies.lifePostService,
     dependencies.contentLocalizationService
   );
+  await registerMediaRoutes(app, dependencies.mediaService);
   await registerSermonRoutes(
     app,
     dependencies.sermonService,
@@ -225,6 +229,12 @@ export async function registerAppRoutes(
   await registerAdminMemberRoutes(
     app,
     dependencies.memberService,
+    dependencies.auditService,
+    adminPermission
+  );
+  await registerAdminMediaRoutes(
+    app,
+    dependencies.mediaService,
     dependencies.auditService,
     adminPermission
   );

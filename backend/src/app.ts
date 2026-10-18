@@ -62,6 +62,10 @@ import { PostgresLifePostRepository } from "./modules/life/postgres-life-post.re
 import { InMemoryMemberRepository } from "./modules/members/in-memory-member.repository.js";
 import { MemberService } from "./modules/members/member.service.js";
 import { PostgresMemberRepository } from "./modules/members/postgres-member.repository.js";
+import { InMemoryMediaRepository } from "./modules/media/in-memory-media.repository.js";
+import { MediaService } from "./modules/media/media.service.js";
+import { MediaStorageService } from "./modules/media/media-storage.service.js";
+import { PostgresMediaRepository } from "./modules/media/postgres-media.repository.js";
 import { InMemoryMemberAuthRepository } from "./modules/members/auth/in-memory-member-auth.repository.js";
 import { PostgresMemberAuthRepository } from "./modules/members/auth/postgres-member-auth.repository.js";
 import { MemberAuthService } from "./modules/members/auth/member-auth.service.js";
@@ -123,6 +127,12 @@ export async function buildApp(config: AppConfig) {
     credentials: true
   });
   await app.register(sensible);
+
+  app.addContentTypeParser(
+    /^image\/.*$/,
+    { parseAs: "buffer" },
+    (_request, body, done) => done(null, body)
+  );
 
   registerErrorHandler(app);
 
@@ -189,6 +199,10 @@ export async function buildApp(config: AppConfig) {
   const lifePostService = new LifePostService(lifePostRepository);
   const lifePostImageStorageService =
     LifePostImageStorageService.fromConfig(config);
+  const mediaService = new MediaService(
+    db ? new PostgresMediaRepository(db) : new InMemoryMediaRepository(),
+    MediaStorageService.fromConfig(config)
+  );
   const prayerRepository = db
     ? new PostgresPrayerRepository(db)
     : new InMemoryPrayerRepository();
@@ -413,6 +427,7 @@ export async function buildApp(config: AppConfig) {
     jobService,
     lifePostImageStorageService,
     lifePostService,
+    mediaService,
     memberAuthService,
     memberAuthRateLimiter,
     memberService,

@@ -16,6 +16,7 @@ export type AppConfig = {
   s3AccessKeyId: string | undefined;
   s3SecretAccessKey: string | undefined;
   s3ForcePathStyle: boolean;
+  mediaPublicBaseUrl: string | undefined;
   authSecret: string;
   appUserAuthSecret: string;
   debugMemberAuthBypass: boolean;
@@ -96,6 +97,7 @@ export function loadConfig(): AppConfig {
     s3AccessKeyId: process.env.S3_ACCESS_KEY_ID,
     s3SecretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     s3ForcePathStyle: boolFromEnv("S3_FORCE_PATH_STYLE", true),
+    mediaPublicBaseUrl: blankToUndefined(process.env.MEDIA_PUBLIC_BASE_URL),
     authSecret,
     appUserAuthSecret,
     debugMemberAuthBypass:
@@ -204,6 +206,20 @@ function validateProductionConfig(config: AppConfig): void {
   }
   if (config.bootstrapDevAdmin) {
     assertProductionAdminPassword(config.devAdminPassword);
+  }
+  if (config.mediaStorageDriver !== "s3") {
+    throw new Error("MEDIA_STORAGE_DRIVER=s3 is required in production.");
+  }
+  if (
+    !config.s3Endpoint ||
+    !config.s3Bucket ||
+    !config.s3AccessKeyId ||
+    !config.s3SecretAccessKey ||
+    !config.mediaPublicBaseUrl
+  ) {
+    throw new Error(
+      "S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, and MEDIA_PUBLIC_BASE_URL are required for production R2 storage."
+    );
   }
 }
 

@@ -15,6 +15,7 @@ export * from "./health.js";
 export * from "./jobs.js";
 export * from "./life.js";
 export * from "./members.js";
+export * from "./media.js";
 export * from "./newcomers.js";
 export * from "./push.js";
 export * from "./public.js";

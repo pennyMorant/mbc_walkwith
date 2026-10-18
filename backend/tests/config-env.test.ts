@@ -58,6 +58,14 @@ const originalSecurityEnv = {
   DEV_ADMIN_PASSWORD: process.env.DEV_ADMIN_PASSWORD,
   BOOTSTRAP_DEV_ADMIN: process.env.BOOTSTRAP_DEV_ADMIN
 };
+const originalMediaEnv = {
+  MEDIA_STORAGE_DRIVER: process.env.MEDIA_STORAGE_DRIVER,
+  S3_ENDPOINT: process.env.S3_ENDPOINT,
+  S3_BUCKET: process.env.S3_BUCKET,
+  S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
+  S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
+  MEDIA_PUBLIC_BASE_URL: process.env.MEDIA_PUBLIC_BASE_URL
+};
 
 describe("loadConfig", () => {
   afterEach(() => {
@@ -81,6 +89,9 @@ describe("loadConfig", () => {
       restoreEnv(key, value);
     }
     for (const [key, value] of Object.entries(originalSecurityEnv)) {
+      restoreEnv(key, value);
+    }
+    for (const [key, value] of Object.entries(originalMediaEnv)) {
       restoreEnv(key, value);
     }
   });
@@ -122,6 +133,7 @@ describe("loadConfig", () => {
     process.env.auth_secret = "prod-admin-secret-minimum-32-characters";
     process.env.app_user_auth_secret =
       "prod-member-secret-minimum-32-characters";
+    configureProductionR2();
     delete process.env.TRUST_PROXY;
 
     expect(loadConfig().trustProxy).toEqual(["127.0.0.1"]);
@@ -235,6 +247,7 @@ describe("loadConfig", () => {
       "prod-member-secret-minimum-32-characters";
     process.env.DEBUG_MEMBER_AUTH_BYPASS = "true";
     process.env.DEBUG_MEMBER_ACCESS_TOKEN = "prod-debug-token";
+    configureProductionR2();
     expect(loadConfig()).toMatchObject({
       debugMemberAuthBypass: false,
       debugMemberAccessToken: "prod-debug-token"
@@ -287,7 +300,35 @@ describe("loadConfig", () => {
 
     expect(() => loadConfig()).toThrow(/DEV_ADMIN_PASSWORD/);
   });
+
+  it("requires complete R2 media configuration in production", () => {
+    process.env.NODE_ENV = "production";
+    process.env.DATABASE_URL = "postgres://user@localhost:5432/mbc";
+    process.env.auth_secret = "prod-admin-secret-minimum-32-characters";
+    process.env.app_user_auth_secret =
+      "prod-member-secret-minimum-32-characters";
+
+    expect(() => loadConfig()).toThrow(/MEDIA_STORAGE_DRIVER=s3/);
+
+    process.env.MEDIA_STORAGE_DRIVER = "s3";
+    expect(() => loadConfig()).toThrow(/MEDIA_PUBLIC_BASE_URL/);
+
+    configureProductionR2();
+    expect(loadConfig()).toMatchObject({
+      mediaStorageDriver: "s3",
+      mediaPublicBaseUrl: "https://media.example.com"
+    });
+  });
 });
+
+function configureProductionR2() {
+  process.env.MEDIA_STORAGE_DRIVER = "s3";
+  process.env.S3_ENDPOINT = "https://account.r2.cloudflarestorage.com";
+  process.env.S3_BUCKET = "mbc-media";
+  process.env.S3_ACCESS_KEY_ID = "test-access-key";
+  process.env.S3_SECRET_ACCESS_KEY = "test-secret-key";
+  process.env.MEDIA_PUBLIC_BASE_URL = "https://media.example.com";
+}
 
 function restoreEnv(key: string, value: string | undefined) {
   if (value === undefined) {

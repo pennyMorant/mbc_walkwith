@@ -24,6 +24,10 @@ const contentStatuses = [
 
 const visibilityLevels = ["public", "members", "group", "private"] as const;
 
+const mediaAssetKinds = ["image", "audio", "document", "release"] as const;
+const mediaVisibilities = ["public", "private"] as const;
+const mediaConsentStatuses = ["pending", "approved", "restricted"] as const;
+
 const adminRoles = [
   "owner",
   "admin",
@@ -34,6 +38,48 @@ const adminRoles = [
 ] as const;
 
 const adminUserStatuses = ["active", "disabled"] as const;
+
+export const mediaAssets = pgTable(
+  "media_assets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    kind: text("kind", { enum: mediaAssetKinds }).notNull(),
+    visibility: text("visibility", { enum: mediaVisibilities })
+      .notNull()
+      .default("public"),
+    consentStatus: text("consent_status", { enum: mediaConsentStatuses })
+      .notNull()
+      .default("pending"),
+    storageKey: text("storage_key").notNull(),
+    publicUrl: text("public_url").notNull(),
+    originalFileName: text("original_file_name").notNull(),
+    mimeType: text("mime_type").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    width: integer("width"),
+    height: integer("height"),
+    focalX: integer("focal_x").notNull().default(50),
+    focalY: integer("focal_y").notNull().default(50),
+    altText: text("alt_text").notNull().default(""),
+    caption: text("caption").notNull().default(""),
+    copyrightSource: text("copyright_source"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+  },
+  (table) => ({
+    storageKeyIdx: uniqueIndex("idx_media_assets_storage_key").on(
+      table.storageKey
+    ),
+    kindCreatedAtIdx: index("idx_media_assets_kind_created_at").on(
+      table.kind,
+      table.createdAt
+    ),
+    visibilityIdx: index("idx_media_assets_visibility").on(table.visibility)
+  })
+);
 
 export const sermons = pgTable(
   "sermons",

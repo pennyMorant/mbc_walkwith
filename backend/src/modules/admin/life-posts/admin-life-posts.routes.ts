@@ -48,12 +48,6 @@ export async function registerAdminLifePostRoutes(
   aiRateLimiter: AiRateLimiter,
   permissionPreHandler: PermissionPreHandler
 ) {
-  app.addContentTypeParser(
-    /^image\/.*/,
-    { parseAs: "buffer" },
-    (_request, body, done) => done(null, body)
-  );
-
   await registerAdminLifePostRegistrationRoutes(
     app,
     service,
