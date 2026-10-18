@@ -110,7 +110,8 @@ export async function registerAppRoutes(
     app,
     dependencies.settingsService,
     dependencies.lifePostService,
-    dependencies.contentLocalizationService
+    dependencies.contentLocalizationService,
+    dependencies.mediaService
   );
   await registerMediaRoutes(app, dependencies.mediaService);
   await registerSermonRoutes(
@@ -247,7 +248,7 @@ export async function registerAppRoutes(
   await registerAdminLifePostRoutes(
     app,
     dependencies.lifePostService,
-    dependencies.lifePostImageStorageService,
+    dependencies.mediaService,
     dependencies.notificationService,
     dependencies.auditService,
     dependencies.aiService,

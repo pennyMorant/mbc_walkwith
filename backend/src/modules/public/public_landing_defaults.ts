@@ -24,6 +24,7 @@ export const publicLandingSettingIds = [
   "schedule",
   "people",
   "events",
+  "gallery",
   "entrance",
   "app",
   "contact",
@@ -173,6 +174,12 @@ const zhHansDefaultContent = publicLandingContentSchema.parse({
     maxItems: 6,
     items: []
   },
+  gallery: {
+    eyebrow: "教会剪影",
+    title: "在真实的相聚中彼此同行",
+    body: "从敬拜、团契、课程到社区服事，记录我们一起经历的教会生活。",
+    items: []
+  },
   entrance: {
     eyebrow: "教会入口",
     title: "从这里开始认识我们",
@@ -317,6 +324,11 @@ const zhHantDefaultContent = localizePublicLandingContent("zh-Hant", {
     body: "查看已公開發布並仍在進行中的近期活動。",
     emptyText: "目前沒有已發布的近期活動。"
   },
+  gallery: {
+    eyebrow: "教會剪影",
+    title: "在真實的相聚中彼此同行",
+    body: "從敬拜、團契、課程到社區服事，記錄我們一起經歷的教會生活。"
+  },
   entrance: {
     eyebrow: "教會入口",
     title: "從這裡開始認識我們",
@@ -420,6 +432,11 @@ const enDefaultContent = localizePublicLandingContent("en", {
     title: "Take part in church life",
     body: "Explore upcoming activities that have been reviewed and published by the church.",
     emptyText: "There are no published upcoming events right now."
+  },
+  gallery: {
+    eyebrow: "Life together",
+    title: "Walking together in real community",
+    body: "Moments from worship, fellowship, classes, and service in our community."
   },
   entrance: {
     eyebrow: "Church entrances",
@@ -527,6 +544,11 @@ const esDefaultContent = localizePublicLandingContent("es", {
     title: "Participa en la vida de la iglesia",
     body: "Explora las próximas actividades revisadas y publicadas por la iglesia.",
     emptyText: "No hay próximos eventos publicados en este momento."
+  },
+  gallery: {
+    eyebrow: "Vida en comunidad",
+    title: "Caminamos juntos en una comunidad real",
+    body: "Momentos de adoración, compañerismo, clases y servicio a nuestra comunidad."
   },
   entrance: {
     eyebrow: "Entradas de la iglesia",
@@ -651,6 +673,7 @@ function sectionLabel(id: PublicLandingSettingId) {
     schedule: "教会固定日程",
     people: "牧者与同工介绍",
     events: "近期活动区块",
+    gallery: "教会照片展示",
     entrance: "新朋友和公开入口",
     app: "App 下载与引导入口",
     contact: "联系方式和社交媒体",
@@ -734,6 +757,11 @@ function localizePublicLandingContent(
     events: {
       ...base.events,
       ...text.events,
+      items: []
+    },
+    gallery: {
+      ...base.gallery,
+      ...text.gallery,
       items: []
     },
     entrance: {
@@ -845,6 +873,11 @@ type LocalizedLandingText = {
     title: string;
     body: string;
     emptyText: string;
+  };
+  gallery: {
+    eyebrow: string;
+    title: string;
+    body: string;
   };
   entrance: {
     eyebrow: string;

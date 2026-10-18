@@ -41,6 +41,10 @@ export const mediaAssetListQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50)
 });
 
+export const mediaAssetListResponseSchema = z.object({
+  items: z.array(mediaAssetSchema)
+});
+
 export const mediaAssetUploadMetadataSchema = z.object({
   kind: mediaAssetKindSchema.default("image"),
   visibility: mediaVisibilitySchema.default("public"),
@@ -66,6 +70,9 @@ export type MediaAssetKind = z.infer<typeof mediaAssetKindSchema>;
 export type MediaVisibility = z.infer<typeof mediaVisibilitySchema>;
 export type MediaConsentStatus = z.infer<typeof mediaConsentStatusSchema>;
 export type MediaAssetListQuery = z.infer<typeof mediaAssetListQuerySchema>;
+export type MediaAssetListResponse = z.infer<
+  typeof mediaAssetListResponseSchema
+>;
 export type MediaAssetUploadMetadata = z.infer<
   typeof mediaAssetUploadMetadataSchema
 >;

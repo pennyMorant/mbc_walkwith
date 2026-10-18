@@ -44,7 +44,7 @@ Public Web does not own:
 第一版使用：
 
 - `GET /v1/public/landing?locale=...` 读取官网身份、首屏、宗旨、聚会信息、教会入口、App 引导、联系信息和 CTA action。
-- 同一聚合响应读取固定日程、公开人员介绍，并投影公开、已发布、尚未结束的近期活动。
+- 同一聚合响应读取固定日程、公开人员介绍、R2 照片墙，并投影公开、已发布、尚未结束的近期活动。
 - `public_landing` 分类下的 `app_settings` 是官网可变资源的后端 source of truth。
 - 所有重复展示资源使用统一 `sort` 字段，由后端按数值降序聚合；官网只按返回顺序渲染，不在组件内重复排序。
 - 管理员通过管理 Web 的 Settings 页面维护官网导航、新朋友入口、地图链接、联系方式、社交媒体和 App 下载入口。
@@ -75,6 +75,8 @@ Public Web does not own:
 - 其他语言使用 locale setting key，例如 `publicLanding.en.hero`、
   `publicLanding.es.hero` 和 `publicLanding.zh-Hant.hero`。
 - Public Web 只负责选择 locale 和展示后端返回内容，不在前端维护另一份翻译资源真相。
+- 图片使用后端媒体投影中的公开 URL；生产 URL 直接指向 R2 自定义媒体域名，Public Web
+  不拼接 bucket、object key 或签名规则。
 - 浏览器标签页标题、描述和 favicon 跟随后端返回的 `identity.name`、`identity.mission`
   和 `identity.logoUrl`；`index.html` 只提供首屏加载前的默认值。
 

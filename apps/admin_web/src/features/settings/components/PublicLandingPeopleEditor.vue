@@ -4,6 +4,7 @@ import type { PublicLandingPeopleSection } from "@mbc/api-contracts";
 import { useI18n } from "@/core/i18n/i18n";
 import { createLandingItemId } from "../public_landing_editor";
 import PublicLandingSectionFields from "./PublicLandingSectionFields.vue";
+import MediaImagePicker from "./MediaImagePicker.vue";
 
 const model = defineModel<PublicLandingPeopleSection>({ required: true });
 const { t } = useI18n();
@@ -15,6 +16,7 @@ function addItem() {
     role: "",
     summary: "",
     imageUrl: "",
+    imageMediaId: null,
     sort: 0
   });
 }
@@ -46,7 +48,13 @@ function addItem() {
       <v-text-field v-model="item.name" :label="t('settings.landing.name')" variant="filled" />
       <v-text-field v-model="item.role" :label="t('settings.landing.role')" variant="filled" />
     </div>
-    <v-text-field v-model="item.imageUrl" :label="t('settings.landing.imageUrl')" variant="filled" />
+    <MediaImagePicker
+      v-model="item.imageMediaId"
+      :preview-url="item.imageUrl"
+      :alt-text="item.name"
+      @update:model-value="!$event && (item.imageUrl = '')"
+      @selected="item.imageUrl = $event.url ?? ''"
+    />
     <v-text-field
       v-model.number="item.sort"
       :label="t('common.sort')"

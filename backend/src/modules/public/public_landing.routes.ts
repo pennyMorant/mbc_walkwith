@@ -8,6 +8,7 @@ import type { FastifyInstance } from "fastify";
 import { ok } from "../../shared/http/api-response.js";
 import type { ContentLocalizationService } from "../content-localization/content-localization.service.js";
 import type { LifePostService } from "../life/life-post.service.js";
+import type { MediaService } from "../media/media.service.js";
 import type { SettingsService } from "../settings/settings.service.js";
 import { getPublicLandingContent } from "./public_landing_content.js";
 
@@ -15,7 +16,8 @@ export async function registerPublicLandingRoutes(
   app: FastifyInstance,
   settingsService: SettingsService,
   lifePostService: LifePostService,
-  contentLocalizationService: ContentLocalizationService
+  contentLocalizationService: ContentLocalizationService,
+  mediaService: MediaService
 ) {
   app.get("/v1/public/landing", async (request) => {
     const query = publicLandingQuerySchema.parse(request.query);
@@ -25,7 +27,12 @@ export async function registerPublicLandingRoutes(
       query.locale
     );
     return ok(
-      await getPublicLandingContent(settingsService, query.locale, events)
+      await getPublicLandingContent(
+        settingsService,
+        mediaService,
+        query.locale,
+        events
+      )
     );
   });
 }

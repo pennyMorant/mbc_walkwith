@@ -5,6 +5,7 @@ import {
   publicLandingContentSchema,
   publicLandingEntranceSectionSchema,
   publicLandingEventsConfigSchema,
+  publicLandingGallerySectionSchema,
   publicLandingHeroSchema,
   publicLandingIdentitySchema,
   publicLandingMissionSectionSchema,
@@ -19,6 +20,7 @@ import { z, type ZodType } from "zod";
 
 import { settingValueInvalid } from "../settings/settings-errors.js";
 import type { SettingsService } from "../settings/settings.service.js";
+import type { MediaService } from "../media/media.service.js";
 import {
   publicLandingDefaultContent,
   publicLandingDefaultContentByLocale,
@@ -31,6 +33,7 @@ const actionListSchema = z.array(publicLandingActionSchema);
 
 export async function getPublicLandingContent(
   settingsService: SettingsService,
+  mediaService: MediaService,
   locale: SupportedLocale = publicLandingDefaultLocale,
   events: PublicLandingEvent[] = []
 ) {
@@ -67,6 +70,18 @@ export async function getPublicLandingContent(
     publicLandingSettingKey(locale, "people"),
     publicLandingPeopleSectionSchema,
     fallbackContent.people
+  );
+  const sourceGallery = settingValue(
+    settingByKey,
+    publicLandingSettingKey(publicLandingDefaultLocale, "gallery"),
+    publicLandingGallerySectionSchema,
+    publicLandingDefaultContent.gallery
+  );
+  const localizedGallery = settingValue(
+    settingByKey,
+    publicLandingSettingKey(locale, "gallery"),
+    publicLandingGallerySectionSchema,
+    fallbackContent.gallery
   );
   const { items: _fallbackEventItems, ...fallbackEventsConfig } =
     fallbackContent.events;
@@ -134,6 +149,7 @@ export async function getPublicLandingContent(
       ...eventsConfig,
       items: events
     },
+    gallery: withSourceItems(localizedGallery, sourceGallery),
     entrance: settingValue(
       settingByKey,
       publicLandingSettingKey(locale, "entrance"),
@@ -164,7 +180,68 @@ export async function getPublicLandingContent(
     )
   });
 
-  return orderLandingContent(content);
+  return orderLandingContent(await resolveLandingMedia(content, mediaService));
+}
+
+async function resolveLandingMedia(
+  content: ReturnType<typeof publicLandingContentSchema.parse>,
+  mediaService: MediaService
+) {
+  const [heroImageUrl, serviceImageUrl, people, galleryItems] =
+    await Promise.all([
+      resolveMediaUrl(mediaService, content.hero.imageMediaId, content.hero.imageUrl),
+      resolveMediaUrl(
+        mediaService,
+        content.service.imageMediaId,
+        content.service.imageUrl
+      ),
+      Promise.all(
+        content.people.items.map(async (person) => ({
+          ...person,
+          imageUrl: await resolveMediaUrl(
+            mediaService,
+            person.imageMediaId,
+            person.imageUrl
+          )
+        }))
+      ),
+      Promise.all(
+        content.gallery.items.map(async (item) => {
+          if (!item.mediaId) {
+            return null;
+          }
+          const asset = await mediaService.findPublicById(item.mediaId);
+          return asset
+            ? {
+                ...item,
+                imageUrl: asset.url ?? "",
+                altText: item.altText || asset.altText
+              }
+            : null;
+        })
+      )
+    ]);
+  return {
+    ...content,
+    hero: { ...content.hero, imageUrl: heroImageUrl },
+    service: { ...content.service, imageUrl: serviceImageUrl },
+    people: { ...content.people, items: people },
+    gallery: {
+      ...content.gallery,
+      items: galleryItems.filter((item) => item !== null)
+    }
+  };
+}
+
+async function resolveMediaUrl(
+  service: MediaService,
+  mediaId: string | null,
+  fallback: string
+) {
+  if (!mediaId) {
+    return fallback;
+  }
+  return (await service.findPublicById(mediaId))?.url ?? fallback;
 }
 
 function orderLandingContent(
@@ -203,6 +280,10 @@ function orderLandingContent(
         0,
         content.events.maxItems
       )
+    },
+    gallery: {
+      ...content.gallery,
+      items: byDisplayPriority(content.gallery.items)
     },
     entrance: {
       ...content.entrance,

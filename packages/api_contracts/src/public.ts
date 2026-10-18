@@ -45,6 +45,7 @@ export const publicLandingHeroSchema = z.object({
   mission: z.string(),
   body: z.string(),
   imageUrl: z.string(),
+  imageMediaId: z.string().uuid().nullable().default(null),
   primaryActions: z.array(publicLandingActionSchema),
   quickActions: z.array(publicLandingActionSchema)
 });
@@ -75,6 +76,7 @@ export const publicLandingServiceSectionSchema = z.object({
   title: z.string(),
   body: z.string(),
   imageUrl: z.string(),
+  imageMediaId: z.string().uuid().nullable().default(null),
   facts: z.array(publicLandingFactSchema),
   actions: z.array(publicLandingActionSchema)
 });
@@ -128,6 +130,7 @@ export const publicLandingPersonSchema = z.object({
   role: z.string().trim().min(1),
   summary: z.string(),
   imageUrl: z.string().default(""),
+  imageMediaId: z.string().uuid().nullable().default(null),
   sort: sortValueSchema
 });
 
@@ -163,6 +166,23 @@ export const publicLandingEventsSectionSchema =
     items: z.array(publicLandingEventSchema)
   });
 
+export const publicLandingGalleryItemSchema = z.object({
+  id: z.string().trim().min(1),
+  mediaId: z.string().uuid().nullable().default(null),
+  imageUrl: z.string().default(""),
+  altText: z.string().default(""),
+  title: z.string().default(""),
+  body: z.string().default(""),
+  sort: sortValueSchema
+});
+
+export const publicLandingGallerySectionSchema = z.object({
+  eyebrow: z.string(),
+  title: z.string(),
+  body: z.string(),
+  items: z.array(publicLandingGalleryItemSchema)
+});
+
 export const publicLandingContentSchema = z.object({
   locale: supportedLocaleSchema,
   timeZone: z.string().min(1),
@@ -177,6 +197,7 @@ export const publicLandingContentSchema = z.object({
   schedule: publicLandingScheduleSectionSchema,
   people: publicLandingPeopleSectionSchema,
   events: publicLandingEventsSectionSchema,
+  gallery: publicLandingGallerySectionSchema,
   entrance: publicLandingEntranceSectionSchema,
   app: publicLandingAppSectionSchema,
   contact: publicLandingContactSectionSchema,
@@ -230,5 +251,11 @@ export type PublicLandingEventsConfig = z.infer<
 export type PublicLandingEvent = z.infer<typeof publicLandingEventSchema>;
 export type PublicLandingEventsSection = z.infer<
   typeof publicLandingEventsSectionSchema
+>;
+export type PublicLandingGalleryItem = z.infer<
+  typeof publicLandingGalleryItemSchema
+>;
+export type PublicLandingGallerySection = z.infer<
+  typeof publicLandingGallerySectionSchema
 >;
 export type PublicLandingResponse = z.infer<typeof publicLandingResponseSchema>;

@@ -25,7 +25,10 @@ describe("life post routes", () => {
         "content-type": "image/png",
         "x-file-name": encodeURIComponent("prayer-night.png")
       },
-      payload: Buffer.from("fake png bytes")
+      payload: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        "base64"
+      )
     });
     expect(imageUploadResponse.statusCode).toBe(200);
     const imageUpload = expectResponseData(
@@ -33,7 +36,7 @@ describe("life post routes", () => {
       lifeImageUploadResponseSchema,
       "life post image upload"
     );
-    expect(imageUpload.imageUrl).toMatch(/^\/v1\/life\/images\//);
+    expect(imageUpload.imageUrl).toMatch(/^http:\/\/localhost:3020\/v1\/media\//);
     const imageUrl = imageUpload.imageUrl;
 
     const invalidImageBodyResponse = await app.inject({
@@ -58,7 +61,7 @@ describe("life post routes", () => {
 
     const imageResponse = await app.inject({
       method: "GET",
-      url: imageUrl
+      url: new URL(imageUrl).pathname
     });
     expect(imageResponse.statusCode).toBe(200);
     expect(imageResponse.headers["content-type"]).toBe("image/png");

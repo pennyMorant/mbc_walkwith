@@ -2,6 +2,7 @@ import {
   appSettingListResponseSchema,
   appSettingSchema,
   lifePostSchema,
+  mediaAssetSchema,
   publicLandingResponseSchema
 } from "@mbc/api-contracts";
 import { describe, expect, it } from "vitest";
@@ -75,6 +76,7 @@ describe("public landing routes", () => {
     expect(landing.schedule.items).toEqual([]);
     expect(landing.people.items).toEqual([]);
     expect(landing.events.items).toEqual([]);
+    expect(landing.gallery.items).toEqual([]);
     expect(landing.contact.links).toEqual([]);
     expect(landing.entrance.actions.every((action) => action.kind === "anchor"))
       .toBe(true);
@@ -92,6 +94,74 @@ describe("public landing routes", () => {
     ]);
     expect(landing.footerActions.map((action) => action.href)).toEqual(["#top"]);
     expect(landing.entrance.actions.length).toBeGreaterThan(0);
+    await harness.close();
+  });
+
+  it("projects R2 media metadata into the public gallery", async () => {
+    const harness = await buildTestApp();
+    const { app } = harness;
+    const { accessToken } = await login(app);
+    const headers = { authorization: `Bearer ${accessToken}` };
+    const uploadResponse = await app.inject({
+      method: "POST",
+      url: "/v1/admin/media/images?altText=Church%20fellowship",
+      headers: {
+        ...headers,
+        "content-type": "image/png",
+        "x-file-name": "fellowship.png"
+      },
+      payload: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+        "base64"
+      )
+    });
+    const asset = expectResponseData(
+      uploadResponse,
+      mediaAssetSchema,
+      "landing gallery upload"
+    );
+
+    const settingResponse = await app.inject({
+      method: "PATCH",
+      url: "/v1/admin/settings/publicLanding.gallery",
+      headers,
+      payload: {
+        value: {
+          eyebrow: "教会剪影",
+          title: "一起同行",
+          body: "真实的教会生活",
+          items: [
+            {
+              id: "fellowship",
+              mediaId: asset.id,
+              title: "团契相聚",
+              body: "主日后的彼此交流",
+              altText: "",
+              sort: 20
+            }
+          ]
+        }
+      }
+    });
+    expect(settingResponse.statusCode).toBe(200);
+
+    const landingResponse = await app.inject({
+      method: "GET",
+      url: "/v1/public/landing"
+    });
+    const landing = expectResponseData(
+      landingResponse,
+      publicLandingResponseSchema,
+      "public landing gallery"
+    );
+    expect(landing.gallery.items).toEqual([
+      expect.objectContaining({
+        mediaId: asset.id,
+        imageUrl: asset.url,
+        altText: "Church fellowship",
+        title: "团契相聚"
+      })
+    ]);
     await harness.close();
   });
 

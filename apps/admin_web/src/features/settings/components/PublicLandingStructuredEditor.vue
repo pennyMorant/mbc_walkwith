@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type {
   PublicLandingEventsConfig,
+  PublicLandingGallerySection,
   PublicLandingPeopleSection,
   PublicLandingScheduleSection
 } from "@mbc/api-contracts";
@@ -8,6 +9,7 @@ import { computed } from "vue";
 
 import { publicLandingStructuredSection } from "../public_landing_editor";
 import PublicLandingEventsEditor from "./PublicLandingEventsEditor.vue";
+import PublicLandingGalleryEditor from "./PublicLandingGalleryEditor.vue";
 import PublicLandingPeopleEditor from "./PublicLandingPeopleEditor.vue";
 import PublicLandingScheduleEditor from "./PublicLandingScheduleEditor.vue";
 
@@ -26,10 +28,15 @@ const events = computed({
   get: () => model.value as PublicLandingEventsConfig,
   set: (value: PublicLandingEventsConfig) => (model.value = value)
 });
+const gallery = computed({
+  get: () => model.value as PublicLandingGallerySection,
+  set: (value: PublicLandingGallerySection) => (model.value = value)
+});
 </script>
 
 <template>
   <PublicLandingScheduleEditor v-if="section === 'schedule'" v-model="schedule" />
   <PublicLandingPeopleEditor v-else-if="section === 'people'" v-model="people" />
   <PublicLandingEventsEditor v-else-if="section === 'events'" v-model="events" />
+  <PublicLandingGalleryEditor v-else-if="section === 'gallery'" v-model="gallery" />
 </template>

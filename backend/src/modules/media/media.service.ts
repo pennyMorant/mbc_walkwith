@@ -79,6 +79,19 @@ export class MediaService {
     return asset;
   }
 
+  async findPublicById(id: string) {
+    const asset = await this.repository.getById(id);
+    if (
+      !asset ||
+      asset.visibility !== "public" ||
+      asset.consentStatus === "restricted" ||
+      !asset.url
+    ) {
+      return null;
+    }
+    return asset;
+  }
+
   async update(id: string, input: MediaAssetUpdateRequest) {
     const asset = await this.repository.update(id, input);
     if (!asset) {

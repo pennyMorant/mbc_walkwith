@@ -1,6 +1,6 @@
 # Public Landing Publishing
 
-状态：第一版闭环
+状态：R2 媒体与照片展示闭环
 
 ## 1. Feature Goal
 
@@ -21,8 +21,9 @@
 
 ## 4. Source Of Truth
 
-- 身份、导航、宗旨、聚会说明、固定日程、人员介绍、联系与 App 入口：`app_settings`。
+- 身份、导航、宗旨、聚会说明、固定日程、人员介绍、照片墙、联系与 App 入口：`app_settings`。
 - 近期活动：公开、已发布、尚未结束且 `type=event` 的 Life post。
+- 文件本体：Cloudflare R2；媒体元数据：`media_assets`。Landing 设置只保存媒体 ID。
 - Public Web 不保存第二份内容或活动列表。
 
 ## 5. State Model
@@ -31,8 +32,8 @@
 
 ## 6. Capability Contracts
 
-- 不新增外部 capability。
-- 图片 URL 只能来自管理员已经批准的公开资源。
+- 图片复用统一 Object Storage capability；生产文件只写 Cloudflare R2。
+- 图片 URL 由媒体 ID 在后端解析，只能来自管理员批准且未受限的公开资源。
 - 内容多语言投影复用 content localization contract。
 
 ## 7. App Surface Boundary
@@ -41,11 +42,11 @@
 
 ## 8. Admin Web Surface Boundary
 
-Settings 页面为固定日程、人员介绍和近期活动区块提供结构化编辑器，其他高级 Landing 配置继续显示后端校验错误。活动继续在 Life 内容页面创建、审核和发布，不在 Settings 中重复录入。
+Settings 页面为固定日程、人员介绍、照片墙和近期活动区块提供结构化编辑器。人物和照片墙通过统一媒体选择器上传或复用 R2 图片，不手填 object key。活动继续在 Life 内容页面创建、审核和发布，不在 Settings 中重复录入。
 
 ## 9. Backend Service Boundary
 
-`GET /v1/public/landing?locale=...` 聚合 locale 对应的 Landing 配置，并从 Life service 读取近期活动。聚合层只生成公开只读投影，不改变活动状态。
+`GET /v1/public/landing?locale=...` 聚合 locale 对应的 Landing 配置，从 Life service 读取近期活动，并通过 Media service 把媒体 ID 解析为安全公开 URL。聚合层只生成公开只读投影，不改变活动或媒体状态。
 
 所有重复展示项统一使用 `sort` 作为展示优先级，包括 action、宗旨支柱、聚会事实、固定日程、人员、App highlight 和近期活动。`sort` 为非负整数，默认 `0`，数值越大越靠前；相同值保留后台配置中的原始顺序。近期活动的 `sort` 直接来自 Life `public_posts.sort`，官网不复制活动排序状态。
 
@@ -70,6 +71,7 @@ Settings 页面为固定日程、人员介绍和近期活动区块提供结构�
 ```text
 管理员维护 Landing 配置 / 发布活动
 -> Settings 或 Life service 保存 canonical state
+-> Media service 将图片写入 R2 并保存媒体元数据
 -> GET /v1/public/landing 按 locale 读取配置
 -> 聚合公开、已发布、尚未结束的 event
 -> 应用已有翻译投影
@@ -90,6 +92,8 @@ Settings 页面为固定日程、人员介绍和近期活动区块提供结构�
 - 活动按 `sort` 高值优先；相同优先级按开始时间升序、再按稳定 ID 排序，并受 `maxItems` 限制。
 - 活动时间固定使用 `church.timezone`，不随访客设备时区改变。
 - 日程和人员缺少目标语言条目时回退源语言条目。
+- 人物和照片墙只输出可公开访问的媒体；缺失或受限资源不进入照片墙。
+- 活动封面上传走统一 Media service，不再创建 VPS 本地图片。
 - Public Web 在空数据时不显示空区块。
 - 桌面和移动布局无溢出。
 

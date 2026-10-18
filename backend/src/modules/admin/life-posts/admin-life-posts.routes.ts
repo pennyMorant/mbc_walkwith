@@ -20,7 +20,7 @@ import {
   lifePostNotificationTranslationNotAllowed,
   lifePostNotFound
 } from "../../life/life-post-errors.js";
-import type { LifePostImageStorageService } from "../../life/life-post-image-storage.service.js";
+import type { MediaService } from "../../media/media.service.js";
 import type { LifePostService } from "../../life/life-post.service.js";
 import type { LifePostMutationContext } from "../../life/life_post_mutation_policy.js";
 import type { NotificationService } from "../../notifications/notification.service.js";
@@ -40,7 +40,7 @@ type PermissionPreHandler = (permission: AdminPermission) => AdminPreHandler;
 export async function registerAdminLifePostRoutes(
   app: FastifyInstance,
   service: LifePostService,
-  imageStorageService: LifePostImageStorageService,
+  mediaService: MediaService,
   notificationService: NotificationService,
   auditService: AuditService,
   aiService: AiService,
@@ -106,21 +106,27 @@ export async function registerAdminLifePostRoutes(
       if (!Buffer.isBuffer(request.body)) {
         throw lifeImageUploadBodyInvalid();
       }
-      const image = await imageStorageService.saveImage({
+      const image = await mediaService.uploadImage({
         buffer: request.body,
         fileName: decodeFileNameHeader(headerValue(request.headers["x-file-name"])),
         mimeType:
           headerValue(request.headers["content-type"]) ??
-          "application/octet-stream"
+          "application/octet-stream",
+        kind: "image",
+        visibility: "public",
+        consentStatus: "approved",
+        altText: "",
+        caption: "",
+        copyrightSource: null
       });
       await auditService.record({
         actorUserId: request.adminUser?.id ?? null,
         action: "life_post.upload_image",
         resourceType: "life_post_image",
-        resourceId: image.fileName,
+        resourceId: image.id,
         afterJson: image
       });
-      return ok({ imageUrl: image.url });
+      return ok({ imageUrl: image.url ?? "" });
     }
   );
 
