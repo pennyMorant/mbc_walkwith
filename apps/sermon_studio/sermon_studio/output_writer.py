@@ -74,6 +74,25 @@ def write_outputs(
     )
 
 
+def save_reviewed_transcript(
+    outputs: OutputFiles,
+    title: str,
+    transcript: TranscriptPayload,
+) -> None:
+    text = transcript.text.strip()
+    _atomic_write(outputs.transcript_text_file, text + "\n")
+    _atomic_write(
+        outputs.transcript_markdown_file,
+        _build_markdown(title, transcript),
+    )
+
+
+def _atomic_write(path: Path, content: str) -> None:
+    temporary = path.with_name(f".{path.name}.saving")
+    temporary.write_text(content, encoding="utf-8")
+    temporary.replace(path)
+
+
 def _build_markdown(title: str, transcript: TranscriptPayload) -> str:
     language = transcript.language or "unknown"
     return (

@@ -17,7 +17,7 @@ from sermon_studio.models import (
     TranscriptPayload,
     TranscriptSegment,
 )
-from sermon_studio.output_writer import write_outputs
+from sermon_studio.output_writer import save_reviewed_transcript, write_outputs
 from sermon_studio.project_store import create_output_files
 
 
@@ -69,6 +69,32 @@ class OutputWriterTest(unittest.TestCase):
             self.assertEqual(info["audio"]["sourceRange"]["startSeconds"], 30)
             self.assertEqual(info["audio"]["sourceRange"]["endSeconds"], 50)
             self.assertEqual(info["transcription"]["segmentCount"], 1)
+
+    def test_saves_reviewed_text_without_rewriting_subtitles(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = create_output_files(root, root / "sermon.mp4", root / "out")
+            outputs.transcript_srt_file.write_text("timed\n", encoding="utf-8")
+            transcript = TranscriptPayload(
+                text="Reviewed sermon text.",
+                source="faster-whisper:small",
+                language="en",
+            )
+
+            save_reviewed_transcript(outputs, "Sunday Sermon", transcript)
+
+            self.assertEqual(
+                outputs.transcript_text_file.read_text(encoding="utf-8"),
+                "Reviewed sermon text.\n",
+            )
+            self.assertIn(
+                "# Sunday Sermon",
+                outputs.transcript_markdown_file.read_text(encoding="utf-8"),
+            )
+            self.assertEqual(
+                outputs.transcript_srt_file.read_text(encoding="utf-8"),
+                "timed\n",
+            )
 
 
 if __name__ == "__main__":
