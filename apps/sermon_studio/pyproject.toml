@@ -5,11 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "sermon-studio"
 version = "0.1.0"
-description = "Local sermon processing studio for transcript, summary, markdown, and backend upload."
+description = "Offline sermon audio extraction and transcription studio."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-  "httpx>=0.28.0",
   "PyYAML>=6.0.2",
 ]
 

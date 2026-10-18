@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from .config import TranscriptionConfig
-from .models import TranscriptPayload
+from .models import TranscriptPayload, TranscriptSegment
 
 
 def transcribe_audio(
@@ -33,11 +33,20 @@ def _transcribe_with_faster_whisper(
         device=_normalized_device(config.provider, config.device),
         compute_type=config.compute_type,
     )
-    segments, info = model.transcribe(
+    raw_segments, info = model.transcribe(
         str(normalized_audio_path),
         language=config.language or None,
     )
-    text = "\n".join(segment.text.strip() for segment in segments if segment.text.strip()).strip()
+    segments = [
+        TranscriptSegment(
+            start_seconds=max(0.0, float(segment.start)),
+            end_seconds=max(0.0, float(segment.end)),
+            text=segment.text.strip(),
+        )
+        for segment in raw_segments
+        if segment.text.strip()
+    ]
+    text = "\n".join(segment.text for segment in segments).strip()
     if not text:
         raise RuntimeError("Transcription completed but returned empty text.")
     detected_language = getattr(info, "language", None) or config.language
@@ -45,6 +54,7 @@ def _transcribe_with_faster_whisper(
         text=text,
         source=f"faster_whisper:{config.model}",
         language=detected_language,
+        segments=segments,
     )
 
 

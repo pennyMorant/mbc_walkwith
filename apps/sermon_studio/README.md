@@ -1,12 +1,17 @@
 # Sermon Studio
 
-Local sermon processing tool for:
+Sermon Studio is an offline workstation tool for church-owned sermon media:
 
-- processing church-recorded local audio files
-- normalizing audio with `ffmpeg`
-- transcribing sermon audio with `faster-whisper`
-- generating structured summary, outline, references, and review markdown
-- uploading finished sermon packages into the MBC WalkWith backend
+```text
+local video or audio
+-> extract a standard M4A audio file
+-> transcribe locally with faster-whisper
+-> write local transcript files
+-> church staff review and upload through Admin Web
+```
+
+It does not authenticate with, call, upload to, or publish through the backend.
+It does not generate sermon summaries, outlines, or Scripture references.
 
 ## Install
 
@@ -14,86 +19,55 @@ Local sermon processing tool for:
 cd apps/sermon_studio
 python3 -m venv .venv
 source .venv/bin/activate
+pip install -U pip
 pip install -e .[local,gui]
 ```
 
-## Configure
+FFmpeg and FFprobe must be installed separately and available on `PATH`.
 
-Copy and edit:
+## Configure
 
 ```sh
 cp config.example.yaml config.yaml
 ```
 
-For your Fedora 44 workstation profile, start from:
-
-```sh
-cp config.fedora44.example.yaml config.yaml
-```
+Use `config.fedora44.example.yaml` for the church Fedora workstation.
 
 ## Commands
 
-Run diagnostics:
-
 ```sh
 sermon-studio doctor --config config.yaml
-```
 
-Process a local church-recorded sermon:
-
-```sh
 sermon-studio process \
   --config config.yaml \
-  --audio-file "/path/to/sermon-audio.mp3" \
-  --title "Hope in Suffering" \
-  --speaker "Pastor David Chen" \
-  --date 2026-05-24 \
-  --series "Romans" \
-  --primary-reference "Romans 8:18-30"
-```
+  --source-file "/path/to/sunday-service.mp4"
 
-Upload a processed package:
-
-```sh
-sermon-studio upload \
+sermon-studio process \
   --config config.yaml \
-  work/2026-05-24_hope-in-suffering
-```
+  --source-file "/path/to/sunday-service.mp4" \
+  --output-dir "/path/to/sermon-output"
 
-Launch the GUI shell:
-
-```sh
 sermon-studio gui --config config.yaml
 ```
 
-## Backend Contract
+## Outputs
 
-This tool uploads to:
+```text
+sermon_audio.m4a       audio for manual Admin Web upload
+transcript.txt         plain transcript
+transcript.md          review-friendly transcript
+transcript.srt         timestamped subtitles
+processing_info.json   source, audio, checksum, and transcription metadata
+```
 
-- `POST /v1/admin/sermons/local-drafts`
-- `POST /v1/admin/sermons/:sermonId/audio`
-- `POST /v1/admin/sermons/:sermonId/local-package`
-- `POST /v1/admin/sermons/:sermonId/publish`
+The temporary Whisper WAV is removed after transcription. The source video is
+never copied into the output directory.
 
-Existing-sermon writes send the latest Admin sermon `revision` in
-`x-sermon-revision`. The upload pipeline advances the token from each successful
-response and stops on a stale-write conflict instead of overwriting newer work.
+## Manual Publishing Boundary
 
-See:
+Church staff review and correct the transcript, open the sermon editor in Admin
+Web, enter the sermon metadata, upload `sermon_audio.m4a` and the reviewed text,
+then use the normal review and publish flow.
 
-- `../../docs/local_sermon_processing.md`
-- `../../docs/api.md`
-- `docs/fedora44_workstation.md`
-
-## Recommended Hardware Profile
-
-For a Fedora 44 workstation with:
-
-- Ryzen 9950X3D
-- Radeon RX 9070 XT
-
-the recommended V1 execution strategy is:
-
-- transcription on CPU with `faster-whisper`
-- summary on local `Ollama`
-- upload reviewed sermon packages to the backend after local processing
+See [Local Sermon Processing](../../docs/local_sermon_processing.md) and the
+[Fedora workstation guide](docs/fedora44_workstation.md).

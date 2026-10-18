@@ -86,7 +86,7 @@ route/handler
 - service：业务规则 owner，负责状态迁移、权限含义、幂等策略、审计意图。
 - repository：持久化 owner，负责 Postgres 或内存实现差异。
 - gateway/adapter：外部系统边界，如 Stripe、object storage、notification。
-- local workstation：讲道转录、大纲、经文引用等媒体处理生命周期 owner。
+- local workstation：讲道音频提取和本地转录文件生命周期 owner。
 - contract/schema：请求、响应、DTO、错误格式 owner。
 
 ## 5. Source Of Truth
@@ -113,7 +113,7 @@ route/handler
 
 - auth/member service：会员身份、会话、设备绑定。
 - sermon service：讲道草稿、上传、本地 package 导入、发布、下架、审核元数据。
-- local sermon processing：本地转录、大纲、经文引用和 package metadata。
+- local sermon processing：本地音频提取、转录和输出 metadata。
 - life service：公告、周报、生活内容可见性。
 - event service：活动、报名、候补、取消、签到。
 - prayer service：代祷提交、审核、可见性、归档。
@@ -146,8 +146,8 @@ Route 只转发 intent。Repository 只存取数据。Gateway 只接外部能力
 ## 8. Sermon Content Chain
 
 讲道音频和文案应该由教会管理员上传或导入，并由后端统一管理。
-转录、大纲、经文引用由本地工作站完成，VPS 后端只接收审核后的
-local package。
+音频提取和转录由本地工作站完成；工作人员审核后在 Admin Web 手动上传
+音频和文案。VPS 后端不运行媒体处理任务。
 
 链路：
 
@@ -155,8 +155,8 @@ local package。
 admin creates sermon draft
 -> upload audio/text/metadata through admin API
 -> backend stores file metadata and draft state
--> local workstation prepares transcript/outline/scripture references
--> admin uploads reviewed local package
+-> local workstation extracts audio and prepares transcript files
+-> church staff review and upload audio/text manually through Admin Web
 -> backend publishes sermon
 -> App reads public/member-visible sermon API
 -> public Web may link users toward the App but does not list or play sermons

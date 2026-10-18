@@ -3,22 +3,24 @@ from __future__ import annotations
 from pathlib import Path
 
 from .config import AppConfig, load_config
-from .models import SourceInput
-from .pipeline import process_source, upload_project
+from .pipeline import process_media
 
 
 def load_app_config(config_path: str | Path) -> AppConfig:
     return load_config(config_path)
 
 
-def run_process(config: AppConfig, source: SourceInput, log=print):
-    return process_source(config, source, log=log)
-
-
-def run_upload(
+def run_process(
     config: AppConfig,
-    project_root: str | Path,
-    publish: bool = False,
+    source_file: str | Path,
+    output_dir: str | Path | None = None,
     log=print,
+    progress=None,
 ):
-    return upload_project(config, project_root, publish=publish, log=log)
+    return process_media(
+        config,
+        source_file,
+        output_dir=output_dir,
+        log=log,
+        progress=progress,
+    )

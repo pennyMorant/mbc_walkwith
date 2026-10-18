@@ -1,136 +1,82 @@
-import json
+from __future__ import annotations
+
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from sermon_studio.config import (
     AppConfig,
-    BackendConfig,
-    DefaultsConfig,
+    AudioConfig,
     PathsConfig,
-    SummaryConfig,
     TranscriptionConfig,
 )
-from sermon_studio.models import AudioMetadata
-from sermon_studio.pipeline import upload_project
-from sermon_studio.project_store import resolve_original_audio_path
+from sermon_studio.models import MediaProbe, TranscriptPayload, TranscriptSegment
+from sermon_studio.pipeline import process_media
 
 
 class PipelineTest(unittest.TestCase):
-    def test_upload_project_advances_canonical_revision_between_commands(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            source = root / "source"
-            output = root / "output"
-            source.mkdir()
-            output.mkdir()
-            audio_path = source / "sermon.wav"
-            audio_path.write_bytes(b"audio")
-            (output / "transcript.txt").write_text(
-                "Reviewed transcript.", encoding="utf-8"
-            )
-            (output / "review.md").write_text("# Review", encoding="utf-8")
-            (output / "manifest.json").write_text(
-                json.dumps(
-                    {
-                        "title": "Hope",
-                        "speaker": "Pastor",
-                        "sermonDate": "2026-07-12",
-                        "series": None,
-                        "primaryReference": "Romans 8:28",
-                        "summary": "Summary",
-                        "durationSeconds": 1800,
-                        "audio": AudioMetadata(
-                            file_name=audio_path.name,
-                            mime_type="audio/wav",
-                            size_bytes=5,
-                            sha256="hash",
-                        ).to_json_dict(),
-                        "transcript": {
-                            "textFile": "transcript.txt",
-                            "source": "local-whisper",
-                        },
-                        "outline": [],
-                        "references": [],
-                        "reviewMarkdownFile": "review.md",
-                        "processingMetadata": {},
-                        "backend": {"sermonId": "sermon-1"},
-                    }
+    def test_process_media_extracts_audio_and_removes_temporary_wav(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "service.mp4"
+            source.write_bytes(b"video")
+            output = root / "result"
+            config = AppConfig(
+                paths=PathsConfig(work_dir=str(root)),
+                audio=AudioConfig(),
+                transcription=TranscriptionConfig(
+                    provider="faster-whisper", model="small"
                 ),
-                encoding="utf-8",
             )
-            uploader = MagicMock()
-            uploader.get_sermon.return_value = {"id": "sermon-1", "revision": 7}
-            uploader.upload_audio.return_value = {"id": "sermon-1", "revision": 8}
-            uploader.upload_local_package.return_value = {
-                "id": "sermon-1",
-                "revision": 9,
-            }
-            uploader.publish.return_value = {"id": "sermon-1", "revision": 10}
+            media = MediaProbe(1800, 1, "aac", 2, 48000, "mov,mp4")
+            transcript = TranscriptPayload(
+                text="A complete sermon transcript.",
+                source="faster-whisper:small",
+                language="en",
+                segments=[
+                    TranscriptSegment(0, 2, "A complete sermon transcript.")
+                ],
+            )
 
-            with patch(
-                "sermon_studio.pipeline.BackendUploader", return_value=uploader
+            def write_audio(
+                _source: Path,
+                destination: Path,
+                *_args: object,
+            ) -> Path:
+                destination.write_bytes(b"audio")
+                return destination
+
+            def write_wav(
+                _source: Path,
+                destination: Path,
+                *_args: object,
+            ) -> Path:
+                destination.write_bytes(b"wav")
+                return destination
+
+            with (
+                patch("sermon_studio.pipeline.probe_media", return_value=media),
+                patch(
+                    "sermon_studio.pipeline.extract_audio",
+                    side_effect=write_audio,
+                ),
+                patch(
+                    "sermon_studio.pipeline.create_transcription_audio",
+                    side_effect=write_wav,
+                ),
+                patch(
+                    "sermon_studio.pipeline.transcribe_audio",
+                    return_value=transcript,
+                ),
             ):
-                result = upload_project(config(root), root, publish=True)
+                result = process_media(config, source, output)
 
-            uploader.get_sermon.assert_called_once_with("sermon-1")
-            self.assertEqual(
-                uploader.upload_audio.call_args.args[:2], ("sermon-1", 7)
-            )
-            self.assertEqual(
-                uploader.upload_local_package.call_args.args[:2],
-                ("sermon-1", 8),
-            )
-            uploader.publish.assert_called_once_with("sermon-1", 9)
-            self.assertEqual(result["published"]["revision"], 10)
+            self.assertEqual(result.outputs.audio_file.read_bytes(), b"audio")
+            self.assertTrue(result.outputs.transcript_text_file.is_file())
+            self.assertFalse(result.outputs.transcription_audio_file.exists())
+            self.assertFalse((output / source.name).exists())
 
-    def test_resolve_original_audio_accepts_generated_audio_metadata(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            source_dir = Path(tmp)
-            expected = source_dir / "sermon-source.wav"
-            expected.write_bytes(b"audio")
-            metadata = AudioMetadata(
-                file_name=expected.name,
-                mime_type="audio/wav",
-                size_bytes=5,
-                sha256="hash",
-            )
-
-            resolved = resolve_original_audio_path(
-                source_dir,
-                {"audio": metadata.to_json_dict()},
-            )
-
-            self.assertEqual(resolved, expected.resolve())
-
-    def test_resolve_original_audio_uses_manifest_file_name(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            source_dir = Path(tmp)
-            (source_dir / "aaa-old-file.mp3").write_bytes(b"old")
-            expected = source_dir / "sermon-source.wav"
-            expected.write_bytes(b"audio")
-
-            resolved = resolve_original_audio_path(
-                source_dir,
-                {"audio": {"fileName": "sermon-source.wav"}},
-            )
-
-            self.assertEqual(resolved, expected.resolve())
-
-
-def config(root: Path) -> AppConfig:
-    return AppConfig(
-        backend=BackendConfig(
-            base_url="http://localhost:3020/v1",
-            email="admin@example.com",
-            password="password",
-        ),
-        paths=PathsConfig(work_dir=str(root)),
-        transcription=TranscriptionConfig(provider="local", model="test"),
-        summary=SummaryConfig(provider="local", model="test"),
-        defaults=DefaultsConfig(),
-    )
 
 if __name__ == "__main__":
     unittest.main()

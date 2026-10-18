@@ -1,73 +1,26 @@
 from __future__ import annotations
 
 import hashlib
-import mimetypes
+import json
 import subprocess
 from pathlib import Path
+from typing import Any
 
-from .models import AudioMetadata
-
-
-def normalize_audio(
-    source_path: str | Path,
-    output_path: str | Path,
-    ffmpeg_bin: str,
-    sample_rate: int = 16000,
-) -> Path:
-    source_path = Path(source_path).expanduser().resolve()
-    output_path = Path(output_path).expanduser().resolve()
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    command = [
-        ffmpeg_bin,
-        "-y",
-        "-i",
-        str(source_path),
-        "-ar",
-        str(sample_rate),
-        "-ac",
-        "1",
-        "-c:a",
-        "pcm_s16le",
-        str(output_path),
-    ]
-    subprocess.run(command, check=True)
-    return output_path
+from .config import AudioConfig
+from .models import MediaProbe
 
 
-def build_audio_metadata(
-    original_audio_path: str | Path,
-    ffprobe_bin: str | None = None,
-) -> AudioMetadata:
-    original_audio_path = Path(original_audio_path).expanduser().resolve()
-    size_bytes = original_audio_path.stat().st_size
-    mime_type = mimetypes.guess_type(original_audio_path.name)[0] or "application/octet-stream"
-    duration_seconds = (
-        probe_duration_seconds(original_audio_path, ffprobe_bin)
-        if ffprobe_bin
-        else None
-    )
-    return AudioMetadata(
-        file_name=original_audio_path.name,
-        mime_type=mime_type,
-        size_bytes=size_bytes,
-        sha256=sha256_file(original_audio_path),
-        duration_seconds=duration_seconds,
-    )
-
-
-def probe_duration_seconds(audio_path: str | Path, ffprobe_bin: str | None) -> int | None:
-    if not ffprobe_bin:
-        return None
-    audio_path = Path(audio_path).expanduser().resolve()
+def probe_media(source_path: str | Path, ffprobe_bin: str) -> MediaProbe:
+    source = _require_source_file(source_path)
     command = [
         ffprobe_bin,
         "-v",
         "error",
-        "-show_entries",
-        "format=duration",
+        "-show_format",
+        "-show_streams",
         "-of",
-        "default=noprint_wrappers=1:nokey=1",
-        str(audio_path),
+        "json",
+        str(source),
     ]
     try:
         result = subprocess.run(
@@ -76,21 +29,164 @@ def probe_duration_seconds(audio_path: str | Path, ffprobe_bin: str | None) -> i
             capture_output=True,
             text=True,
         )
-    except Exception:
-        return None
-    value = result.stdout.strip()
-    if not value:
-        return None
-    try:
-        return round(float(value))
-    except ValueError:
-        return None
+        payload = json.loads(result.stdout)
+    except (subprocess.CalledProcessError, json.JSONDecodeError) as error:
+        raise RuntimeError("The selected media file could not be inspected.") from error
+    if not isinstance(payload, dict):
+        raise RuntimeError("The selected media file returned invalid metadata.")
+
+    streams = payload.get("streams")
+    if not isinstance(streams, list):
+        raise RuntimeError("The selected media file has no readable streams.")
+    audio_stream = next(
+        (
+            stream
+            for stream in streams
+            if isinstance(stream, dict) and stream.get("codec_type") == "audio"
+        ),
+        None,
+    )
+    if audio_stream is None:
+        raise RuntimeError("The selected media file does not contain an audio track.")
+
+    format_metadata = payload.get("format")
+    if not isinstance(format_metadata, dict):
+        format_metadata = {}
+    duration = _positive_float(format_metadata.get("duration"))
+    if duration is None:
+        duration = _positive_float(audio_stream.get("duration"))
+    if duration is None:
+        raise RuntimeError("The media duration could not be determined.")
+
+    stream_index = _optional_nonnegative_int(audio_stream.get("index"))
+    if stream_index is None:
+        raise RuntimeError("The audio stream index could not be determined.")
+
+    return MediaProbe(
+        duration_seconds=duration,
+        audio_stream_index=stream_index,
+        audio_codec=str(audio_stream.get("codec_name") or "unknown"),
+        channels=_optional_positive_int(audio_stream.get("channels")),
+        sample_rate=_optional_positive_int(audio_stream.get("sample_rate")),
+        format_name=str(format_metadata.get("format_name") or "unknown"),
+    )
+
+
+def extract_audio(
+    source_path: str | Path,
+    output_path: str | Path,
+    media: MediaProbe,
+    ffmpeg_bin: str,
+    config: AudioConfig,
+) -> Path:
+    source = _require_source_file(source_path)
+    output = Path(output_path).expanduser().resolve()
+    if source == output:
+        raise ValueError("The output audio path must not replace the source media.")
+    command = [
+        ffmpeg_bin,
+        "-y",
+        "-i",
+        str(source),
+        "-map",
+        f"0:{media.audio_stream_index}",
+        "-vn",
+        "-c:a",
+        config.codec,
+        "-b:a",
+        config.bitrate,
+        "-ar",
+        str(config.sample_rate),
+        "-ac",
+        str(config.channels),
+        "-movflags",
+        "+faststart",
+    ]
+    return _run_ffmpeg(command, output, "Audio extraction failed.")
+
+
+def create_transcription_audio(
+    source_audio_path: str | Path,
+    output_path: str | Path,
+    ffmpeg_bin: str,
+) -> Path:
+    source = _require_source_file(source_audio_path)
+    output = Path(output_path).expanduser().resolve()
+    command = [
+        ffmpeg_bin,
+        "-y",
+        "-i",
+        str(source),
+        "-vn",
+        "-ar",
+        "16000",
+        "-ac",
+        "1",
+        "-c:a",
+        "pcm_s16le",
+    ]
+    return _run_ffmpeg(command, output, "Transcription audio conversion failed.")
 
 
 def sha256_file(path: str | Path) -> str:
-    path = Path(path)
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
+    with Path(path).open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _run_ffmpeg(command: list[str], output: Path, message: str) -> Path:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    temporary = output.with_name(f".{output.stem}.partial{output.suffix}")
+    temporary.unlink(missing_ok=True)
+    try:
+        subprocess.run(
+            [*command, str(temporary)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        if not temporary.is_file() or temporary.stat().st_size == 0:
+            raise RuntimeError(f"{message} FFmpeg produced an empty file.")
+        temporary.replace(output)
+    except subprocess.CalledProcessError as error:
+        temporary.unlink(missing_ok=True)
+        detail = (error.stderr or "").strip().splitlines()[-1:]
+        suffix = f" {' '.join(detail)}" if detail else ""
+        raise RuntimeError(f"{message}{suffix}") from error
+    except Exception:
+        temporary.unlink(missing_ok=True)
+        raise
+    return output
+
+
+def _require_source_file(path: str | Path) -> Path:
+    source = Path(path).expanduser().resolve()
+    if not source.is_file():
+        raise FileNotFoundError(f"Media file not found: {source}")
+    return source
+
+
+def _positive_float(value: Any) -> float | None:
+    try:
+        parsed = float(value)
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed > 0 else None
+
+
+def _optional_positive_int(value: Any) -> int | None:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed > 0 else None
+
+
+def _optional_nonnegative_int(value: Any) -> int | None:
+    try:
+        parsed = int(value)
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed >= 0 else None

@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import shutil
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable
 
 from .config import AppConfig
@@ -19,31 +20,12 @@ def run_diagnostics(config: AppConfig) -> list[CheckResult]:
     results = [
         _binary_check("ffmpeg", config.paths.ffmpeg_bin),
         _binary_check("ffprobe", config.paths.ffprobe_bin),
+        _work_dir_check(config.paths.work_dir),
         _python_import_check("PyYAML", "yaml"),
-        _python_import_check("httpx", "httpx"),
     ]
 
     if config.transcription.provider.startswith("faster-whisper"):
         results.append(_python_import_check("faster-whisper", "faster_whisper"))
-
-    if config.summary.provider == "ollama":
-        results.append(_binary_check("ollama", "ollama"))
-    elif config.summary.provider == "openai":
-        results.append(
-            CheckResult(
-                name="openai-api-key",
-                ok=bool(config.summary.api_key),
-                detail="Configured" if config.summary.api_key else "Missing api_key",
-            )
-        )
-    elif config.summary.provider == "gemini":
-        results.append(
-            CheckResult(
-                name="gemini-api-key",
-                ok=bool(config.summary.api_key),
-                detail="Configured" if config.summary.api_key else "Missing api_key",
-            )
-        )
 
     return results
 
@@ -72,3 +54,12 @@ def _python_import_check(name: str, module_name: str) -> CheckResult:
         ok=spec is not None,
         detail="Importable" if spec else f"Module '{module_name}' not installed",
     )
+
+
+def _work_dir_check(work_dir: str) -> CheckResult:
+    path = Path(work_dir).expanduser().resolve()
+    try:
+        path.mkdir(parents=True, exist_ok=True)
+    except OSError as error:
+        return CheckResult(name="work-directory", ok=False, detail=str(error))
+    return CheckResult(name="work-directory", ok=True, detail=str(path))

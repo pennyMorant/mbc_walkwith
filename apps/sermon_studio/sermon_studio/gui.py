@@ -7,7 +7,8 @@ from pathlib import Path
 
 def run_gui(config_path: str | Path) -> int:
     try:
-        from PySide6.QtCore import Signal
+        from PySide6.QtCore import QUrl, Signal
+        from PySide6.QtGui import QDesktopServices
         from PySide6.QtWidgets import (
             QApplication,
             QFileDialog,
@@ -17,6 +18,7 @@ def run_gui(config_path: str | Path) -> int:
             QLineEdit,
             QMainWindow,
             QMessageBox,
+            QProgressBar,
             QPushButton,
             QPlainTextEdit,
             QVBoxLayout,
@@ -29,128 +31,142 @@ def run_gui(config_path: str | Path) -> int:
 
     from .config import load_config
     from .diagnostics import run_diagnostics
-    from .main import run_process, run_upload
-    from .models import SourceInput
+    from .main import run_process
 
     config = load_config(config_path)
 
     class MainWindow(QMainWindow):
         log_message = Signal(str)
-        project_ready = Signal(str)
+        output_ready = Signal(str)
+        progress_changed = Signal(int)
+        processing_finished = Signal()
 
         def __init__(self) -> None:
             super().__init__()
             self.setWindowTitle("Sermon Studio")
-            self.resize(920, 680)
+            self.resize(860, 620)
 
-            self.audio_file = QLineEdit()
-            self.title_input = QLineEdit()
-            self.speaker_input = QLineEdit(config.defaults.speaker)
-            self.date_input = QLineEdit()
-            self.series_input = QLineEdit(config.defaults.series)
-            self.reference_input = QLineEdit(config.defaults.primary_reference)
-            self.project_root = QLineEdit()
+            self.source_file = QLineEdit()
+            self.output_dir = QLineEdit()
             self.log_view = QPlainTextEdit()
             self.log_view.setReadOnly(True)
+            self.progress = QProgressBar()
+            self.progress.setRange(0, 100)
+            self.process_button = QPushButton("Extract Audio and Transcribe")
+            self.open_button = QPushButton("Open Output Folder")
+            self.open_button.setEnabled(False)
+
             self.log_message.connect(self.log_view.appendPlainText)
-            self.project_ready.connect(self.project_root.setText)
+            self.output_ready.connect(self._set_output_dir)
+            self.progress_changed.connect(self.progress.setValue)
+            self.processing_finished.connect(self._finish_processing)
 
-            browse_button = QPushButton("Browse Audio")
-            browse_button.clicked.connect(self._browse_audio)
-
+            source_button = QPushButton("Browse Media")
+            source_button.clicked.connect(self._browse_source)
+            output_button = QPushButton("Choose Folder")
+            output_button.clicked.connect(self._browse_output)
             doctor_button = QPushButton("Run Doctor")
             doctor_button.clicked.connect(self._run_doctor)
-
-            process_button = QPushButton("Process")
-            process_button.clicked.connect(self._run_process)
-
-            upload_button = QPushButton("Upload Package")
-            upload_button.clicked.connect(self._run_upload)
+            self.process_button.clicked.connect(self._run_process)
+            self.open_button.clicked.connect(self._open_output)
 
             form = QFormLayout()
-            audio_row = QHBoxLayout()
-            audio_row.addWidget(self.audio_file)
-            audio_row.addWidget(browse_button)
-            audio_widget = QWidget()
-            audio_widget.setLayout(audio_row)
-            form.addRow("Local Audio", audio_widget)
-            form.addRow("Title", self.title_input)
-            form.addRow("Speaker", self.speaker_input)
-            form.addRow("Date (YYYY-MM-DD)", self.date_input)
-            form.addRow("Series", self.series_input)
-            form.addRow("Primary Reference", self.reference_input)
-            form.addRow("Project Root", self.project_root)
+            form.addRow(
+                "Source Media",
+                self._field_row(self.source_file, source_button),
+            )
+            form.addRow(
+                "Output Folder",
+                self._field_row(self.output_dir, output_button),
+            )
 
             buttons = QHBoxLayout()
             buttons.addWidget(doctor_button)
-            buttons.addWidget(process_button)
-            buttons.addWidget(upload_button)
+            buttons.addWidget(self.process_button)
+            buttons.addWidget(self.open_button)
 
             layout = QVBoxLayout()
             layout.addWidget(QLabel(f"Config: {config_path}"))
             layout.addLayout(form)
+            layout.addWidget(self.progress)
             layout.addLayout(buttons)
-            layout.addWidget(QLabel("Log"))
+            layout.addWidget(QLabel("Processing Log"))
             layout.addWidget(self.log_view, stretch=1)
 
             central = QWidget()
             central.setLayout(layout)
             self.setCentralWidget(central)
 
-        def _append_log(self, message: str) -> None:
-            self.log_message.emit(message)
+        def _field_row(self, field: QLineEdit, button: QPushButton) -> QWidget:
+            row = QHBoxLayout()
+            row.addWidget(field)
+            row.addWidget(button)
+            widget = QWidget()
+            widget.setLayout(row)
+            return widget
 
-        def _browse_audio(self) -> None:
+        def _browse_source(self) -> None:
             selected, _ = QFileDialog.getOpenFileName(
                 self,
-                "Select Audio File",
+                "Select Sermon Media",
                 "",
-                "Audio Files (*.mp3 *.wav *.m4a *.aac);;All Files (*)",
+                "Media Files (*.mp4 *.mov *.mkv *.webm *.mp3 *.m4a *.aac *.wav);;All Files (*)",
             )
             if selected:
-                self.audio_file.setText(selected)
+                self.source_file.setText(selected)
+
+        def _browse_output(self) -> None:
+            selected = QFileDialog.getExistingDirectory(
+                self,
+                "Select Output Folder",
+            )
+            if selected:
+                self.output_dir.setText(selected)
 
         def _run_doctor(self) -> None:
             self.log_view.clear()
             for item in run_diagnostics(config):
                 status = "OK" if item.ok else "FAIL"
-                self._append_log(f"[{status}] {item.name}: {item.detail}")
+                self.log_message.emit(f"[{status}] {item.name}: {item.detail}")
 
         def _run_process(self) -> None:
-            source = SourceInput(
-                source_type="local_file",
-                local_file=self.audio_file.text().strip() or None,
-                title=self.title_input.text().strip(),
-                speaker=self.speaker_input.text().strip(),
-                sermon_date=self.date_input.text().strip(),
-                series=self.series_input.text().strip() or None,
-                primary_reference=self.reference_input.text().strip() or None,
-            )
-
-            def worker() -> None:
-                try:
-                    project = run_process(config, source, log=self._append_log)
-                    self.project_ready.emit(str(project.root))
-                    self._append_log(f"Created project: {project.root}")
-                except Exception as error:  # noqa: BLE001
-                    self._append_log(f"ERROR: {error}")
-
-            threading.Thread(target=worker, daemon=True).start()
-
-        def _run_upload(self) -> None:
-            project_root = self.project_root.text().strip()
-            if not project_root:
-                QMessageBox.warning(self, "Missing project", "Project Root is required.")
+            source = self.source_file.text().strip()
+            if not source:
+                QMessageBox.warning(self, "Missing media", "Source media is required.")
                 return
+            self.log_view.clear()
+            self.progress.setValue(0)
+            self.process_button.setEnabled(False)
+            self.open_button.setEnabled(False)
 
             def worker() -> None:
                 try:
-                    result = run_upload(config, project_root, log=self._append_log)
-                    self._append_log(f"Upload complete: {result}")
+                    result = run_process(
+                        config,
+                        source,
+                        output_dir=self.output_dir.text().strip() or None,
+                        log=self.log_message.emit,
+                        progress=self.progress_changed.emit,
+                    )
+                    self.output_ready.emit(str(result.outputs.root))
                 except Exception as error:  # noqa: BLE001
-                    self._append_log(f"ERROR: {error}")
+                    self.log_message.emit(f"ERROR: {error}")
+                finally:
+                    self.processing_finished.emit()
 
             threading.Thread(target=worker, daemon=True).start()
+
+        def _set_output_dir(self, path: str) -> None:
+            self.output_dir.setText(path)
+            self.open_button.setEnabled(True)
+
+        def _finish_processing(self) -> None:
+            self.process_button.setEnabled(True)
+
+        def _open_output(self) -> None:
+            path = self.output_dir.text().strip()
+            if path:
+                QDesktopServices.openUrl(QUrl.fromLocalFile(path))
 
     app = QApplication(sys.argv)
     app.setApplicationName("Sermon Studio")

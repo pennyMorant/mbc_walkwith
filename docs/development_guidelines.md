@@ -168,9 +168,9 @@ apps/public_web/
   contact/map links, App entry points, and admin-managed public resources.
 
 apps/sermon_studio/
-  Local workstation tool for extracting sermon audio from church video, running
-  local transcription/summarization helpers, and preparing reviewed sermon
-  packages before admin upload.
+  Offline workstation tool for extracting sermon audio from church video and
+  generating local transcript files. Staff review the files and upload them
+  manually through Admin Web; the tool never calls the backend.
 
 apps/user_web/
   Future member-facing web app for sermons, bulletins, giving statements, and account access.

@@ -76,8 +76,8 @@ Historical job records may keep:
 - `maxAttempts`
 
 For sermon processing failures, the recovery path is to fix the local
-workstation output and upload a reviewed local package, not to requeue backend
-processing.
+workstation output and manually upload reviewed audio/text through Admin Web,
+not to requeue backend processing.
 
 ## 6. Backend Job Action Guards
 

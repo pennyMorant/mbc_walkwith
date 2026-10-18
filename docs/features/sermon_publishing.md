@@ -1,6 +1,6 @@
 # Sermon Publishing
 
-状态：管理员草稿、音频/文案、本地 package 审核、发布、App 播放和音频对象清理恢复已接入；远程对象存储 smoke 待验收
+状态：管理员草稿、音频/文案、手工审核发布、App 播放和音频对象清理恢复已接入；本地 Studio 只负责音频提取和转录；远程对象存储 smoke 待验收
 
 ## Feature Goal
 
@@ -46,8 +46,8 @@ Object storage 存文件本体。Postgres 存元数据和状态。
 - `archived`
 - `failed`
 
-本地处理状态由本地工作站记录在 `processingMetadata`。后端只接收已审核
-package，不在 VPS 上运行转录、提纲或经文抽取任务。
+本地 Studio 不写后端处理状态。工作人员审核其音频和转录文件后，通过
+Admin Web 手动上传和编辑；VPS 不运行转录、提纲或经文抽取任务。
 
 ## Capability Contracts
 
@@ -55,7 +55,7 @@ package，不在 VPS 上运行转录、提纲或经文抽取任务。
 
 - object storage：音频、图片、附件。
 - audio playback：App 讲道播放、后台播放、锁屏/控制中心和系统媒体控制。
-- media processing：本地转录、大纲、经文引用。
+- media processing：本地音频提取和转录文件生成。
 - notification delivery：新讲道通知。
 - audit log：上传、替换、发布、下架、删除。
 
@@ -86,7 +86,7 @@ App 不可以：
 - 创建讲道草稿。
 - 上传音频和文案。
 - 编辑元数据。
-- 上传本地处理后的审核包。
+- 手动上传本地提取的音频和审核后的转录文本。
 - 查看历史任务诊断和本地处理链路就绪状态。
 - 审核并发布。
 - 下架或归档。
@@ -155,10 +155,9 @@ Sermon progress service 负责：
 
 本地工作站负责：
 
-- 音频标准化。
-- 转录。
-- 大纲草拟。
-- 经文引用提取。
+- 从教会视频或音频中提取标准 M4A 音频。
+- 使用 faster-whisper 生成本地转录文件。
+- 不连接后端，不上传、不发布、不生成大纲或经文引用。
 - 人工复核后生成 package。
 
 后端不运行讲道媒体处理任务；后端只负责存储 package、发布校验、审计和分发。
@@ -222,8 +221,8 @@ admin creates sermon draft
 -> backend atomically stores initial metadata/text
 -> admin uploads audio or later text revisions through backend
 -> backend stores audio object metadata and draft state
--> local workstation prepares transcript/outline/scripture references
--> admin uploads reviewed local package
+-> local workstation extracts audio and prepares transcript files
+-> church staff review and upload audio/text manually through Admin Web
 -> backend publishes sermon
 -> App reads published sermon
 -> App player requests authorized media URL

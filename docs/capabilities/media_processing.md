@@ -1,10 +1,11 @@
 # Media Processing
 
-状态：媒体处理能力边界
+状态：本地媒体处理能力边界
 
 ## Purpose
 
-封装讲道转录、大纲生成、经文引用提取、未来 embedding 等本地处理能力。
+把教会已有视频或音频转换为可人工审核的讲道音频和转录文件，不让 VPS
+承担 FFmpeg、Whisper 或其他媒体计算任务。
 
 ## Owner
 
@@ -12,41 +13,30 @@ Local sermon workstation / `apps/sermon_studio`。
 
 ## Contract
 
-输入：
-
-- media asset id。
-- processing type。
-- language。
-- source metadata。
-- correlation id。
+输入：教会拥有或获准处理的本地视频或音频、输出目录、音频编码配置和
+faster-whisper 配置。
 
 输出：
 
-- transcript。
-- outline。
-- scripture references。
-- processing diagnostics。
-- local package diagnostics。
+- `sermon_audio.m4a`；
+- `transcript.txt`；
+- `transcript.md`；
+- `transcript.srt`；
+- `processing_info.json`。
 
 ## Rules
 
-- 生成内容默认不发布。
-- Processing capability 不决定讲道可见性。
-- 本地工具必须支持可重复运行、超时诊断和人工复核。
-- 外部 provider key 不进入移动 App、管理 Web 或 VPS 后端。
-- 处理结果进入审核流程。
+- 完全在本地运行，不登录、不请求、不写入后端。
+- 不持有后台账户、API key、发布 token 或对象存储凭据。
+- 不负责标题、讲员、讲义、大纲、经文引用、审核或发布状态。
+- 不生成 AI 摘要；工作人员在 Admin Web 中维护最终文案。
+- 输出只是待审核素材，不是发布事实来源。
+- 临时 Whisper WAV 在转录结束或失败后删除。
 
-## Errors
-
-这些错误属于本地处理工具和本地 package 诊断，不是 VPS 后端 API 的
-稳定错误码。
-
-- `media_processing_queued`
-- `media_processing_failed`
-- `media_source_missing`
-- `media_provider_unavailable`
-- `media_processing_timeout`
+本地错误包括 source missing、no audio stream、FFprobe/FFmpeg 失败、模型
+不可用、转录失败和输出写入失败。这些错误不映射成 VPS API 错误码。
 
 ## Used By
 
 - [../features/sermon_publishing.md](../features/sermon_publishing.md)
+- [../local_sermon_processing.md](../local_sermon_processing.md)

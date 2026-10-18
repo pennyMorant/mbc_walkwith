@@ -7,22 +7,22 @@ from typing import Any
 import yaml
 
 
-@dataclass
-class BackendConfig:
-    base_url: str
-    email: str
-    password: str
-    submit_for_review: bool = True
-
-
-@dataclass
+@dataclass(frozen=True)
 class PathsConfig:
     work_dir: str
     ffmpeg_bin: str = "ffmpeg"
     ffprobe_bin: str = "ffprobe"
 
 
-@dataclass
+@dataclass(frozen=True)
+class AudioConfig:
+    codec: str = "aac"
+    bitrate: str = "128k"
+    sample_rate: int = 44100
+    channels: int = 2
+
+
+@dataclass(frozen=True)
 class TranscriptionConfig:
     provider: str
     model: str
@@ -31,42 +31,22 @@ class TranscriptionConfig:
     language: str | None = None
 
 
-@dataclass
-class SummaryConfig:
-    provider: str
-    model: str
-    endpoint: str | None = None
-    api_key: str | None = None
-    temperature: float = 0.2
-
-
-@dataclass
-class DefaultsConfig:
-    speaker: str = ""
-    series: str = ""
-    primary_reference: str = ""
-
-
-@dataclass
+@dataclass(frozen=True)
 class AppConfig:
-    backend: BackendConfig
     paths: PathsConfig
+    audio: AudioConfig
     transcription: TranscriptionConfig
-    summary: SummaryConfig
-    defaults: DefaultsConfig
 
 
 def load_config(path: str | Path) -> AppConfig:
     path = Path(path).expanduser().resolve()
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     return AppConfig(
-        backend=BackendConfig(**_require_mapping(raw, "backend")),
         paths=PathsConfig(**_require_mapping(raw, "paths")),
+        audio=AudioConfig(**dict(raw.get("audio") or {})),
         transcription=TranscriptionConfig(
             **_require_mapping(raw, "transcription")
         ),
-        summary=SummaryConfig(**_require_mapping(raw, "summary")),
-        defaults=DefaultsConfig(**dict(raw.get("defaults") or {})),
     )
 
 

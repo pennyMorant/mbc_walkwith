@@ -1,13 +1,11 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 
 from .config import load_config
 from .diagnostics import run_diagnostics, summarize_diagnostics
 from .gui import run_gui
-from .main import run_process, run_upload
-from .models import SourceInput
+from .main import run_process
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -18,7 +16,6 @@ def main(argv: list[str] | None = None) -> int:
         return run_gui(args.config)
 
     config = load_config(args.config)
-
     if args.command == "doctor":
         results = run_diagnostics(config)
         ok, summary = summarize_diagnostics(results)
@@ -29,30 +26,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if ok else 1
 
     if args.command == "process":
-        source = SourceInput(
-            source_type="local_file",
-            local_file=args.audio_file,
-            title=args.title,
-            speaker=args.speaker or config.defaults.speaker,
-            sermon_date=args.date,
-            series=args.series or config.defaults.series or None,
-            primary_reference=args.primary_reference
-            or config.defaults.primary_reference
-            or None,
-            summary_hint=args.summary_hint,
-        )
-        project = run_process(config, source, log=print)
-        print(f"Created project: {project.root}")
-        return 0
-
-    if args.command == "upload":
-        result = run_upload(
+        result = run_process(
             config,
-            args.project_root,
-            publish=args.publish,
+            args.source_file,
+            output_dir=args.output_dir,
             log=print,
         )
-        print(result)
+        print(f"Audio: {result.outputs.audio_file}")
+        print(f"Transcript: {result.outputs.transcript_text_file}")
         return 0
 
     parser.print_help()
@@ -68,18 +49,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
     process = subparsers.add_parser("process")
     process.add_argument("--config", required=True)
-    process.add_argument("--audio-file", required=True)
-    process.add_argument("--title", required=True)
-    process.add_argument("--speaker")
-    process.add_argument("--date", required=True)
-    process.add_argument("--series")
-    process.add_argument("--primary-reference")
-    process.add_argument("--summary-hint")
-
-    upload = subparsers.add_parser("upload")
-    upload.add_argument("--config", required=True)
-    upload.add_argument("project_root")
-    upload.add_argument("--publish", action="store_true")
+    process.add_argument("--source-file", required=True)
+    process.add_argument("--output-dir")
 
     gui = subparsers.add_parser("gui")
     gui.add_argument("--config", required=True)

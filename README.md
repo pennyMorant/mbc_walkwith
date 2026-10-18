@@ -146,9 +146,9 @@ bun run dev:web
 bun run dev:public
 ```
 
-Sermon transcription, outline drafting, and Scripture reference extraction run
-locally through `apps/sermon_studio` or another local workstation process. The
-backend receives reviewed local packages through the admin API.
+Sermon audio extraction and transcription run locally through
+`apps/sermon_studio`. Church staff review its files, then manually upload audio
+and written content through Admin Web. Sermon Studio never calls the backend.
 
 Production build/start commands are documented in
 [docs/operations.md](docs/operations.md).
