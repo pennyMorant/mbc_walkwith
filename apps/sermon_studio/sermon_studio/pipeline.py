@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import tempfile
 from pathlib import Path
 from typing import Callable
 
@@ -8,7 +9,7 @@ from .config import AppConfig
 from .media_range import format_time_position, resolve_media_range
 from .models import ProcessingResult
 from .output_writer import write_outputs
-from .project_store import create_output_files
+from .project_store import create_output_files, publish_output_files
 from .transcriber import transcribe_audio
 
 LogFn = Callable[[str], None]
@@ -26,6 +27,8 @@ def process_media(
 ) -> ProcessingResult:
     source = Path(source_file).expanduser().resolve()
     outputs = create_output_files(config.paths.work_dir, source, output_dir)
+    if source == outputs.audio_file:
+        raise ValueError("The output audio path must not replace the source media.")
     _progress(progress, 5)
     _emit(log, f"Inspecting media: {source}")
     media = probe_media(source, config.paths.ffprobe_bin)
@@ -46,39 +49,50 @@ def process_media(
         f"{format_time_position(media_range.end_seconds)}",
     )
 
-    _progress(progress, 15)
-    _emit(log, "Extracting standard M4A audio...")
-    extract_audio(
-        source,
-        outputs.audio_file,
-        media,
-        config.paths.ffmpeg_bin,
-        config.audio,
-        media_range,
-    )
-    _progress(progress, 35)
-    _emit(log, f"Audio saved: {outputs.audio_file}")
-
-    _emit(log, "Preparing temporary transcription audio...")
-    create_transcription_audio(
-        outputs.audio_file,
-        outputs.transcription_audio_file,
-        config.paths.ffmpeg_bin,
-    )
-    _progress(progress, 45)
-
-    try:
-        _emit(log, "Transcribing locally with Whisper...")
-        transcript = transcribe_audio(
-            outputs.transcription_audio_file,
-            config.transcription,
+    with tempfile.TemporaryDirectory(
+        prefix=".sermon-studio-stage-",
+        dir=outputs.root.parent,
+    ) as staging_name:
+        staged = create_output_files(
+            config.paths.work_dir,
+            source,
+            output_dir=staging_name,
         )
-    finally:
-        outputs.transcription_audio_file.unlink(missing_ok=True)
+        _progress(progress, 15)
+        _emit(log, "Extracting standard M4A audio...")
+        extract_audio(
+            source,
+            staged.audio_file,
+            media,
+            config.paths.ffmpeg_bin,
+            config.audio,
+            media_range,
+        )
+        _progress(progress, 35)
+        _emit(log, "Audio extraction complete.")
 
-    _progress(progress, 90)
-    _emit(log, "Writing transcript files...")
-    write_outputs(source, media, media_range, outputs, transcript, config)
+        _emit(log, "Preparing temporary transcription audio...")
+        create_transcription_audio(
+            staged.audio_file,
+            staged.transcription_audio_file,
+            config.paths.ffmpeg_bin,
+        )
+        _progress(progress, 45)
+
+        try:
+            _emit(log, "Transcribing locally with Whisper...")
+            transcript = transcribe_audio(
+                staged.transcription_audio_file,
+                config.transcription,
+            )
+        finally:
+            staged.transcription_audio_file.unlink(missing_ok=True)
+
+        _progress(progress, 90)
+        _emit(log, "Writing transcript files...")
+        write_outputs(source, media, media_range, staged, transcript, config)
+        publish_output_files(staged, outputs)
+
     _progress(progress, 100)
     _emit(log, f"Processing complete: {outputs.root}")
     return ProcessingResult(

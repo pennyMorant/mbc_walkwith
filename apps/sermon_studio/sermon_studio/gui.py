@@ -44,6 +44,8 @@ def run_gui(config_path: str | Path) -> int:
         output_ready = Signal(str)
         progress_changed = Signal(int)
         processing_finished = Signal()
+        media_inspected = Signal(str, float)
+        media_inspection_failed = Signal(str, str)
 
         def __init__(self) -> None:
             super().__init__()
@@ -73,6 +75,8 @@ def run_gui(config_path: str | Path) -> int:
             self.output_ready.connect(self._set_output_dir)
             self.progress_changed.connect(self.progress.setValue)
             self.processing_finished.connect(self._finish_processing)
+            self.media_inspected.connect(self._apply_media_inspection)
+            self.media_inspection_failed.connect(self._apply_media_inspection_error)
 
             source_button = QPushButton("Browse Media")
             source_button.clicked.connect(self._browse_source)
@@ -141,16 +145,28 @@ def run_gui(config_path: str | Path) -> int:
                 self._inspect_source(selected)
 
         def _inspect_source(self, source: str) -> None:
-            try:
-                media = probe_media(source, config.paths.ffprobe_bin)
-            except Exception as error:  # noqa: BLE001
-                self.media_duration.setText(f"Could not inspect media: {error}")
+            self.media_duration.setText("Inspecting media...")
+
+            def worker() -> None:
+                try:
+                    media = probe_media(source, config.paths.ffprobe_bin)
+                    self.media_inspected.emit(source, media.duration_seconds)
+                except Exception as error:  # noqa: BLE001
+                    self.media_inspection_failed.emit(source, str(error))
+
+            threading.Thread(target=worker, daemon=True).start()
+
+        def _apply_media_inspection(self, source: str, duration: float) -> None:
+            if self.source_file.text().strip() != source:
                 return
-            rounded_duration = min(86_399, round(media.duration_seconds))
+            rounded_duration = min(86_399, round(duration))
             self.end_time.setTime(QTime(0, 0, 0).addSecs(rounded_duration))
-            self.media_duration.setText(
-                format_time_position(media.duration_seconds)
-            )
+            self.media_duration.setText(format_time_position(duration))
+
+        def _apply_media_inspection_error(self, source: str, detail: str) -> None:
+            if self.source_file.text().strip() != source:
+                return
+            self.media_duration.setText(f"Could not inspect media: {detail}")
 
         def _browse_output(self) -> None:
             selected = QFileDialog.getExistingDirectory(

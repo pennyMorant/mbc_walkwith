@@ -34,6 +34,8 @@ Local sermon workstation / `apps/sermon_studio`。
 - 开始/结束位置必须统一作用于音频提取和转录；输出字幕以截取后音频的
   `00:00:00` 为起点，metadata 保留原始素材的起止位置。
 - 临时 Whisper WAV 在转录结束或失败后删除。
+- 音频、文稿、字幕和 metadata 必须先在临时目录完整生成，再作为一组替换
+  最终输出；失败重跑不能留下新旧混合文件。
 
 ## Errors
 

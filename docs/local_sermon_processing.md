@@ -64,6 +64,8 @@ credential, member data, or publish token.
   non-empty result is confirmed.
 - Failed extraction removes its partial output.
 - The temporary Whisper WAV is removed after success or transcription failure.
+- Audio, transcript, subtitles, and metadata are staged together. A failed rerun
+  leaves the previous complete output set unchanged.
 - A failed run never uploads, publishes, or mutates backend data.
 
 ## Manual Admin Flow

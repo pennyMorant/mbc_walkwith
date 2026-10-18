@@ -57,6 +57,16 @@ class AudioTest(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "audio track"):
                     probe_media(source, "ffprobe")
 
+    def test_probe_media_times_out(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "blocked.mp4"
+            source.write_bytes(b"video")
+            timeout = subprocess.TimeoutExpired(cmd=["ffprobe"], timeout=30)
+
+            with patch("sermon_studio.audio.subprocess.run", side_effect=timeout):
+                with self.assertRaisesRegex(RuntimeError, "timed out"):
+                    probe_media(source, "ffprobe")
+
     def test_extract_audio_uses_selected_stream(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "sermon.mp4"

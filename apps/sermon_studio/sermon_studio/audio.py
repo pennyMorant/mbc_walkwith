@@ -9,6 +9,8 @@ from typing import Any
 from .config import AudioConfig
 from .models import MediaProbe, MediaRange
 
+PROBE_TIMEOUT_SECONDS = 30
+
 
 def probe_media(source_path: str | Path, ffprobe_bin: str) -> MediaProbe:
     source = _require_source_file(source_path)
@@ -28,8 +30,11 @@ def probe_media(source_path: str | Path, ffprobe_bin: str) -> MediaProbe:
             check=True,
             capture_output=True,
             text=True,
+            timeout=PROBE_TIMEOUT_SECONDS,
         )
         payload = json.loads(result.stdout)
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError("Media inspection timed out after 30 seconds.") from error
     except (subprocess.CalledProcessError, json.JSONDecodeError) as error:
         raise RuntimeError("The selected media file could not be inspected.") from error
     if not isinstance(payload, dict):
