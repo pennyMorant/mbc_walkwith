@@ -169,14 +169,12 @@ export async function deleteLifePost(
   );
 }
 
-export async function uploadLifePostImage(file: File): Promise<string> {
-  return (
-    await apiClient.uploadBinaryData(
-      "/admin/life-posts/images",
-      file,
-      lifeImageUploadResponseSchema
-    )
-  ).imageUrl;
+export async function uploadLifePostImage(file: File) {
+  return apiClient.uploadBinaryData(
+    "/admin/life-posts/images",
+    file,
+    lifeImageUploadResponseSchema
+  );
 }
 
 export async function createEventCheckInCode(

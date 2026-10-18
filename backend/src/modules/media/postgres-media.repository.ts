@@ -75,6 +75,9 @@ export class PostgresMediaRepository implements MediaRepository {
       query.kind ? eq(mediaAssets.kind, query.kind) : undefined,
       query.visibility
         ? eq(mediaAssets.visibility, query.visibility)
+        : undefined,
+      query.consentStatus
+        ? eq(mediaAssets.consentStatus, query.consentStatus)
         : undefined
     ].filter((filter) => filter !== undefined);
     const rows = await this.db

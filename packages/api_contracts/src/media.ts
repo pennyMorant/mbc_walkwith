@@ -38,6 +38,7 @@ export const mediaAssetSchema = z.object({
 export const mediaAssetListQuerySchema = z.object({
   kind: mediaAssetKindSchema.optional(),
   visibility: mediaVisibilitySchema.optional(),
+  consentStatus: mediaConsentStatusSchema.optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50)
 });
 

@@ -271,10 +271,19 @@ class R2MediaStorageDriver implements MediaStorageDriver {
               : "private, no-store"
           })
         );
+      } catch {
+        throw mediaObjectUploadFailed();
+      }
+      try {
         await this.client.send(
           new DeleteObjectCommand({ Bucket: source.bucket, Key: source.key })
         );
       } catch {
+        await this.client
+          .send(
+            new DeleteObjectCommand({ Bucket: targetBucket, Key: targetKey })
+          )
+          .catch(() => undefined);
         throw mediaObjectUploadFailed();
       }
     }

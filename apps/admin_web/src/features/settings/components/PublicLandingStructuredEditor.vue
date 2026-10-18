@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type {
   PublicLandingEventsConfig,
-  PublicLandingGallerySection,
-  PublicLandingPeopleSection,
+  PublicLandingGallerySetting,
+  PublicLandingPeopleSetting,
   PublicLandingScheduleSection
 } from "@mbc/api-contracts";
 import { computed } from "vue";
@@ -21,16 +21,16 @@ const schedule = computed({
   set: (value: PublicLandingScheduleSection) => (model.value = value)
 });
 const people = computed({
-  get: () => model.value as PublicLandingPeopleSection,
-  set: (value: PublicLandingPeopleSection) => (model.value = value)
+  get: () => model.value as PublicLandingPeopleSetting,
+  set: (value: PublicLandingPeopleSetting) => (model.value = value)
 });
 const events = computed({
   get: () => model.value as PublicLandingEventsConfig,
   set: (value: PublicLandingEventsConfig) => (model.value = value)
 });
 const gallery = computed({
-  get: () => model.value as PublicLandingGallerySection,
-  set: (value: PublicLandingGallerySection) => (model.value = value)
+  get: () => model.value as PublicLandingGallerySetting,
+  set: (value: PublicLandingGallerySetting) => (model.value = value)
 });
 </script>
 

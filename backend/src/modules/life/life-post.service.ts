@@ -28,13 +28,17 @@ import {
 } from "./life_post_read_projection.js";
 import { LifePostWriteService } from "./life_post_write.service.js";
 import type { LifePostRepository } from "./life-post.repository.js";
+import type { MediaService } from "../media/media.service.js";
 
 export class LifePostService {
   private readonly eventAttendanceService: LifeEventAttendanceService;
   private readonly eventRegistrationService: LifeEventRegistrationService;
   private readonly writeService: LifePostWriteService;
 
-  constructor(private readonly repository: LifePostRepository) {
+  constructor(
+    private readonly repository: LifePostRepository,
+    private readonly mediaService: MediaService
+  ) {
     this.writeService = new LifePostWriteService(repository);
     this.eventRegistrationService = new LifeEventRegistrationService(
       repository
@@ -45,15 +49,17 @@ export class LifePostService {
     );
   }
 
-  list(query: LifePostListQuery) {
-    return this.withRegistrationSummaries(this.repository.list(query));
+  async list(query: LifePostListQuery) {
+    return this.withMedia(
+      await this.withRegistrationSummaries(this.repository.list(query))
+    );
   }
 
   async listPublic(query: LifePostListQuery) {
     const posts = await this.withRegistrationSummaries(
       this.repository.list(query)
     );
-    return posts.map(toPublicLifePost);
+    return (await this.withMedia(posts)).map(toPublicLifePost);
   }
 
   countPosts() {
@@ -88,14 +94,16 @@ export class LifePostService {
     );
     return withLifePostReadStates(
       this.repository,
-      posts.map(toPublicLifePost),
+      (await this.withMedia(posts)).map(toPublicLifePost),
       userId
     );
   }
 
   async getById(id: string) {
     const post = await this.repository.getById(id);
-    return post ? this.withRegistrationSummary(post) : null;
+    return post
+      ? this.withMediaPost(await this.withRegistrationSummary(post))
+      : null;
   }
 
   async getByIdForMember(id: string) {
@@ -107,7 +115,9 @@ export class LifePostService {
     ) {
       return null;
     }
-    return toPublicLifePost(await this.withRegistrationSummary(post));
+    return toPublicLifePost(
+      await this.withMediaPost(await this.withRegistrationSummary(post))
+    );
   }
 
   async getByIdForMemberWithRegistration(id: string, userId: string) {
@@ -121,13 +131,17 @@ export class LifePostService {
     }
     return withLifePostReadState(
       this.repository,
-      toPublicLifePost(await this.withRegistrationSummary(post, userId)),
+      toPublicLifePost(
+        await this.withMediaPost(
+          await this.withRegistrationSummary(post, userId)
+        )
+      ),
       userId
     );
   }
 
-  create(input: LifePostUpsertRequest) {
-    return this.writeService.create(input);
+  async create(input: LifePostUpsertRequest) {
+    return this.withMediaPost(await this.writeService.create(input));
   }
 
   async update(
@@ -135,31 +149,37 @@ export class LifePostService {
     input: LifePostUpdateRequest,
     context: LifePostMutationContext
   ) {
-    return this.writeService.update(id, input, context);
+    const post = await this.writeService.update(id, input, context);
+    return post ? this.withMediaPost(post) : null;
   }
 
-  publish(
+  async publish(
     id: string,
     input: LifePostPublishRequest,
     context: LifePostMutationContext
   ) {
-    return this.writeService.publish(id, input, context);
+    const post = await this.writeService.publish(id, input, context);
+    return post ? this.withMediaPost(post) : null;
   }
 
-  unpublish(id: string, context: LifePostMutationContext) {
-    return this.writeService.unpublish(id, context);
+  async unpublish(id: string, context: LifePostMutationContext) {
+    const post = await this.writeService.unpublish(id, context);
+    return post ? this.withMediaPost(post) : null;
   }
 
-  submitReview(id: string, context: LifePostMutationContext) {
-    return this.writeService.submitReview(id, context);
+  async submitReview(id: string, context: LifePostMutationContext) {
+    const post = await this.writeService.submitReview(id, context);
+    return post ? this.withMediaPost(post) : null;
   }
 
-  returnDraft(id: string, context: LifePostMutationContext) {
-    return this.writeService.returnDraft(id, context);
+  async returnDraft(id: string, context: LifePostMutationContext) {
+    const post = await this.writeService.returnDraft(id, context);
+    return post ? this.withMediaPost(post) : null;
   }
 
-  archive(id: string, context: LifePostMutationContext) {
-    return this.writeService.archive(id, context);
+  async archive(id: string, context: LifePostMutationContext) {
+    const post = await this.writeService.archive(id, context);
+    return post ? this.withMediaPost(post) : null;
   }
 
   async markReadForMember(id: string, userId: string) {
@@ -306,5 +326,21 @@ export class LifePostService {
         myRegistration
       )
     };
+  }
+
+  private async withMedia<T extends LifePost>(posts: T[]): Promise<T[]> {
+    const assets = await this.mediaService.findPublicByIds(
+      posts.flatMap((post) => (post.imageMediaId ? [post.imageMediaId] : []))
+    );
+    return posts.map((post) => ({
+      ...post,
+      imageUrl: post.imageMediaId
+        ? (assets.get(post.imageMediaId)?.url ?? null)
+        : null
+    }));
+  }
+
+  private async withMediaPost<T extends LifePost>(post: T): Promise<T> {
+    return (await this.withMedia([post]))[0]!;
   }
 }

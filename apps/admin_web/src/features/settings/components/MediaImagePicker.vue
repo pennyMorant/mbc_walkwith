@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { MediaAsset } from "@mbc/api-contracts";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { listMediaImages, uploadMediaImage } from "@/core/api/media";
@@ -9,14 +9,12 @@ import { useI18n } from "@/core/i18n/i18n";
 const props = withDefaults(
   defineProps<{
     modelValue: string | null;
-    previewUrl?: string;
     altText?: string;
   }>(),
-  { previewUrl: "", altText: "" }
+  { altText: "" }
 );
 const emit = defineEmits<{
   "update:modelValue": [value: string | null];
-  selected: [asset: MediaAsset];
 }>();
 const { t } = useI18n();
 const input = ref<HTMLInputElement | null>(null);
@@ -24,6 +22,9 @@ const dialog = ref(false);
 const loading = ref(false);
 const assets = ref<MediaAsset[]>([]);
 const error = ref("");
+const previewUrl = computed(
+  () => assets.value.find((asset) => asset.id === props.modelValue)?.url ?? ""
+);
 
 onMounted(loadAssets);
 
@@ -54,7 +55,6 @@ async function onFileChange(event: Event) {
 
 function select(asset: MediaAsset) {
   emit("update:modelValue", asset.id);
-  emit("selected", asset);
   dialog.value = false;
 }
 </script>

@@ -304,7 +304,6 @@ export const apiRouteContractRegistry = [
       "PATCH /v1/member/life/posts/:postId/registration",
       "POST /v1/member/life/check-in-code",
       "POST /v1/member/life/posts/:postId/registration/check-in",
-      "GET /v1/life/images/:fileName",
       "GET /v1/admin/life-posts",
       "POST /v1/admin/life-posts/images",
       "POST /v1/admin/life-posts",

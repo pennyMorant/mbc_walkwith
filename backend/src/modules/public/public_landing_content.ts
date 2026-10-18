@@ -5,15 +5,19 @@ import {
   publicLandingContentSchema,
   publicLandingEntranceSectionSchema,
   publicLandingEventsConfigSchema,
-  publicLandingGallerySectionSchema,
-  publicLandingHeroSchema,
+  publicLandingGallerySettingSchema,
+  publicLandingHeroSettingSchema,
   publicLandingIdentitySchema,
   publicLandingMissionSectionSchema,
-  publicLandingPeopleSectionSchema,
+  publicLandingPeopleSettingSchema,
   publicLandingScheduleSectionSchema,
-  publicLandingServiceSectionSchema,
+  publicLandingServiceSettingSchema,
   type AppSetting,
   type PublicLandingEvent,
+  type PublicLandingGallerySection,
+  type PublicLandingHero,
+  type PublicLandingPeopleSection,
+  type PublicLandingServiceSection,
   type SupportedLocale
 } from "@mbc/api-contracts";
 import { z, type ZodType } from "zod";
@@ -56,8 +60,8 @@ export async function getPublicLandingContent(
   const sourcePeople = settingValue(
     settingByKey,
     publicLandingSettingKey(publicLandingDefaultLocale, "people"),
-    publicLandingPeopleSectionSchema,
-    publicLandingDefaultContent.people
+    publicLandingPeopleSettingSchema,
+    peopleSetting(publicLandingDefaultContent.people)
   );
   const localizedSchedule = settingValue(
     settingByKey,
@@ -68,20 +72,20 @@ export async function getPublicLandingContent(
   const localizedPeople = settingValue(
     settingByKey,
     publicLandingSettingKey(locale, "people"),
-    publicLandingPeopleSectionSchema,
-    fallbackContent.people
+    publicLandingPeopleSettingSchema,
+    peopleSetting(fallbackContent.people)
   );
   const sourceGallery = settingValue(
     settingByKey,
     publicLandingSettingKey(publicLandingDefaultLocale, "gallery"),
-    publicLandingGallerySectionSchema,
-    publicLandingDefaultContent.gallery
+    publicLandingGallerySettingSchema,
+    gallerySetting(publicLandingDefaultContent.gallery)
   );
   const localizedGallery = settingValue(
     settingByKey,
     publicLandingSettingKey(locale, "gallery"),
-    publicLandingGallerySectionSchema,
-    fallbackContent.gallery
+    publicLandingGallerySettingSchema,
+    gallerySetting(fallbackContent.gallery)
   );
   const { items: _fallbackEventItems, ...fallbackEventsConfig } =
     fallbackContent.events;
@@ -125,31 +129,47 @@ export async function getPublicLandingContent(
       actionListSchema,
       fallbackContent.mobileActions
     ),
-    hero: settingValue(
-      settingByKey,
-      publicLandingSettingKey(locale, "hero"),
-      publicLandingHeroSchema,
-      fallbackContent.hero
-    ),
+    hero: {
+      ...settingValue(
+        settingByKey,
+        publicLandingSettingKey(locale, "hero"),
+        publicLandingHeroSettingSchema,
+        heroSetting(fallbackContent.hero)
+      ),
+      imageUrl: ""
+    },
     mission: settingValue(
       settingByKey,
       publicLandingSettingKey(locale, "mission"),
       publicLandingMissionSectionSchema,
       fallbackContent.mission
     ),
-    service: settingValue(
-      settingByKey,
-      publicLandingSettingKey(locale, "service"),
-      publicLandingServiceSectionSchema,
-      fallbackContent.service
-    ),
+    service: {
+      ...settingValue(
+        settingByKey,
+        publicLandingSettingKey(locale, "service"),
+        publicLandingServiceSettingSchema,
+        serviceSetting(fallbackContent.service)
+      ),
+      imageUrl: ""
+    },
     schedule: withSourceItems(localizedSchedule, sourceSchedule),
-    people: withSourceItems(localizedPeople, sourcePeople),
+    people: {
+      ...withSourceItems(localizedPeople, sourcePeople),
+      items: withSourceItems(localizedPeople, sourcePeople).items.map(
+        (person) => ({ ...person, imageUrl: "" })
+      )
+    },
     events: {
       ...eventsConfig,
       items: events
     },
-    gallery: withSourceItems(localizedGallery, sourceGallery),
+    gallery: {
+      ...withSourceItems(localizedGallery, sourceGallery),
+      items: withSourceItems(localizedGallery, sourceGallery).items.map(
+        (item) => ({ ...item, imageUrl: "" })
+      )
+    },
     entrance: settingValue(
       settingByKey,
       publicLandingSettingKey(locale, "entrance"),
@@ -187,61 +207,79 @@ async function resolveLandingMedia(
   content: ReturnType<typeof publicLandingContentSchema.parse>,
   mediaService: MediaService
 ) {
-  const [heroImageUrl, serviceImageUrl, people, galleryItems] =
-    await Promise.all([
-      resolveMediaUrl(mediaService, content.hero.imageMediaId, content.hero.imageUrl),
-      resolveMediaUrl(
-        mediaService,
-        content.service.imageMediaId,
-        content.service.imageUrl
-      ),
-      Promise.all(
-        content.people.items.map(async (person) => ({
-          ...person,
-          imageUrl: await resolveMediaUrl(
-            mediaService,
-            person.imageMediaId,
-            person.imageUrl
-          )
-        }))
-      ),
-      Promise.all(
-        content.gallery.items.map(async (item) => {
-          if (!item.mediaId) {
-            return null;
+  const assets = await mediaService.findPublicByIds([
+    ...mediaIds(content.hero.imageMediaId),
+    ...mediaIds(content.service.imageMediaId),
+    ...content.people.items.flatMap((person) => mediaIds(person.imageMediaId)),
+    ...content.gallery.items.flatMap((item) => mediaIds(item.mediaId))
+  ]);
+  const people = content.people.items.map((person) => ({
+    ...person,
+    imageUrl: mediaUrl(assets, person.imageMediaId)
+  }));
+  const galleryItems = content.gallery.items.flatMap((item) => {
+    const asset = item.mediaId ? assets.get(item.mediaId) : undefined;
+    return asset
+      ? [
+          {
+            ...item,
+            imageUrl: asset.url ?? "",
+            altText: item.altText || asset.altText
           }
-          const asset = await mediaService.findPublicById(item.mediaId);
-          return asset
-            ? {
-                ...item,
-                imageUrl: asset.url ?? "",
-                altText: item.altText || asset.altText
-              }
-            : null;
-        })
-      )
-    ]);
+        ]
+      : [];
+  });
   return {
     ...content,
-    hero: { ...content.hero, imageUrl: heroImageUrl },
-    service: { ...content.service, imageUrl: serviceImageUrl },
+    hero: {
+      ...content.hero,
+      imageUrl: mediaUrl(assets, content.hero.imageMediaId)
+    },
+    service: {
+      ...content.service,
+      imageUrl: mediaUrl(assets, content.service.imageMediaId)
+    },
     people: { ...content.people, items: people },
     gallery: {
       ...content.gallery,
-      items: galleryItems.filter((item) => item !== null)
+      items: galleryItems
     }
   };
 }
 
-async function resolveMediaUrl(
-  service: MediaService,
-  mediaId: string | null,
-  fallback: string
+function mediaIds(mediaId: string | null) {
+  return mediaId ? [mediaId] : [];
+}
+
+function mediaUrl(
+  assets: Awaited<ReturnType<MediaService["findPublicByIds"]>>,
+  mediaId: string | null
 ) {
-  if (!mediaId) {
-    return fallback;
-  }
-  return (await service.findPublicById(mediaId))?.url ?? fallback;
+  return mediaId ? (assets.get(mediaId)?.url ?? "") : "";
+}
+
+function heroSetting(hero: PublicLandingHero) {
+  const { imageUrl: _imageUrl, ...setting } = hero;
+  return setting;
+}
+
+function serviceSetting(service: PublicLandingServiceSection) {
+  const { imageUrl: _imageUrl, ...setting } = service;
+  return setting;
+}
+
+function peopleSetting(people: PublicLandingPeopleSection) {
+  return {
+    ...people,
+    items: people.items.map(({ imageUrl: _imageUrl, ...person }) => person)
+  };
+}
+
+function gallerySetting(gallery: PublicLandingGallerySection) {
+  return {
+    ...gallery,
+    items: gallery.items.map(({ imageUrl: _imageUrl, ...item }) => item)
+  };
 }
 
 function orderLandingContent(

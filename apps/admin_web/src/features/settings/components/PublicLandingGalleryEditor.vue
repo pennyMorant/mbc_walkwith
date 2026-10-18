@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import type { PublicLandingGallerySection } from "@mbc/api-contracts";
+import type { PublicLandingGallerySetting } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import { createLandingItemId } from "../public_landing_editor";
 import MediaImagePicker from "./MediaImagePicker.vue";
 import PublicLandingSectionFields from "./PublicLandingSectionFields.vue";
 
-const model = defineModel<PublicLandingGallerySection>({ required: true });
+const model = defineModel<PublicLandingGallerySetting>({ required: true });
 const { t } = useI18n();
 
 function addItem() {
   model.value.items.push({
     id: createLandingItemId("gallery"),
     mediaId: null,
-    imageUrl: "",
     altText: "",
     title: "",
     body: "",
@@ -40,10 +39,7 @@ function addItem() {
     </div>
     <MediaImagePicker
       v-model="item.mediaId"
-      :preview-url="item.imageUrl"
       :alt-text="item.altText || item.title"
-      @update:model-value="!$event && (item.imageUrl = '')"
-      @selected="item.imageUrl = $event.url ?? ''"
     />
     <div class="two-columns">
       <v-text-field v-model="item.title" :label="t('settings.landing.galleryTitle')" variant="filled" />

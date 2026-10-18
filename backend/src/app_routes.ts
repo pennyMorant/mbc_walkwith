@@ -62,7 +62,7 @@ type AppRouteDependencies = {
   contentLocalizationAuditService: Parameters<typeof registerContentLocalizationRoutes>[5];
   contentLocalizationAiRateLimiter: Parameters<typeof registerContentLocalizationRoutes>[6];
   aiService: Parameters<typeof registerAiRoutes>[1];
-  auditService: Parameters<typeof registerLifeRoutes>[4];
+  auditService: Parameters<typeof registerLifeRoutes>[3];
   bibleKnowledgeService: Parameters<typeof registerBibleKnowledgeRoutes>[1];
   bibleVerseNoteService: Parameters<typeof registerBibleVerseNoteRoutes>[1];
   careService: Parameters<typeof registerCareRoutes>[1];
@@ -72,7 +72,6 @@ type AppRouteDependencies = {
   groupService: Parameters<typeof registerGroupRoutes>[1];
   healthDatabaseProbe: Parameters<typeof registerHealthRoutes>[2];
   jobService: Parameters<typeof registerAdminJobRoutes>[1];
-  lifePostImageStorageService: Parameters<typeof registerLifeRoutes>[2];
   lifePostService: Parameters<typeof registerLifeRoutes>[1];
   mediaService: Parameters<typeof registerMediaRoutes>[1];
   memberAuthService: Parameters<typeof registerMemberAuthRoutes>[1];
@@ -130,7 +129,6 @@ export async function registerAppRoutes(
   await registerLifeRoutes(
     app,
     dependencies.lifePostService,
-    dependencies.lifePostImageStorageService,
     dependencies.memberAuthService,
     dependencies.auditService,
     dependencies.contentLocalizationService

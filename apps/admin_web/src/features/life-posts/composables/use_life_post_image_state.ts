@@ -7,6 +7,7 @@ import { uploadLifePostImage } from "@/core/api/life_posts";
 type Translate = (key: string) => string;
 
 type LifePostImageForm = {
+  imageMediaId: string | null;
   imageUrl: string;
 };
 
@@ -32,8 +33,9 @@ export function useLifePostImageState(input: UseLifePostImageStateInput) {
 
   const uploadImageMutation = useMutation({
     mutationFn: uploadLifePostImage,
-    onSuccess: (url) => {
-      form.imageUrl = url;
+    onSuccess: (image) => {
+      form.imageMediaId = image.mediaId;
+      form.imageUrl = image.imageUrl;
       showToast(t("Image uploaded."));
     }
   });
@@ -58,6 +60,7 @@ export function useLifePostImageState(input: UseLifePostImageStateInput) {
   }
 
   function clearImage() {
+    form.imageMediaId = null;
     form.imageUrl = "";
     selectedImageUploadError.value = null;
   }

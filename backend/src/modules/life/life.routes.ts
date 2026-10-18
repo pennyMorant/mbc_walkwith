@@ -5,15 +5,14 @@ import {
   eventRegistrationRequestSchema,
   lifePostListQuerySchema
 } from "@mbc/api-contracts";
-import type { FastifyInstance, FastifyReply } from "fastify";
+import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
 import { ok } from "../../shared/http/api-response.js";
 import type { AuditService } from "../audit/audit.service.js";
 import type { MemberAuthService } from "../members/auth/member-auth.service.js";
 import { requireMember } from "../members/auth/member-auth.middleware.js";
-import { lifeImageNotFound, lifePostNotFound } from "./life-post-errors.js";
-import type { LifePostImageStorageService } from "./life-post-image-storage.service.js";
+import { lifePostNotFound } from "./life-post-errors.js";
 import type { LifePostService } from "./life-post.service.js";
 import { contentLocaleFromHeader } from "../content-localization/content_locale.js";
 import type { ContentLocalizationService } from "../content-localization/content-localization.service.js";
@@ -21,7 +20,6 @@ import type { ContentLocalizationService } from "../content-localization/content
 export async function registerLifeRoutes(
   app: FastifyInstance,
   service: LifePostService,
-  imageStorageService: LifePostImageStorageService,
   memberAuthService: MemberAuthService,
   auditService: AuditService,
   contentLocalizationService: ContentLocalizationService
@@ -216,22 +214,10 @@ export async function registerLifeRoutes(
     }
   );
 
-  app.get("/v1/life/images/:fileName", async (request, reply) => {
-    const params = imageParamsSchema.parse(request.params);
-    const image = await imageStorageService.readImage(params.fileName);
-    if (!image) {
-      throw lifeImageNotFound(params.fileName);
-    }
-    return sendImage(reply, image);
-  });
 }
 
 const postParamsSchema = z.object({
   postId: z.string()
-});
-
-const imageParamsSchema = z.object({
-  fileName: z.string()
 });
 
 async function localizePosts<T extends { id: string }>(posts: T[], locale: import("@mbc/api-contracts").ContentLocale, service: LifePostService, localizations: ContentLocalizationService) {
@@ -241,19 +227,6 @@ async function localizePosts<T extends { id: string }>(posts: T[], locale: impor
 async function localizePost<T extends { id: string }>(post: T, locale: import("@mbc/api-contracts").ContentLocale, service: LifePostService, localizations: ContentLocalizationService) {
   const source = await service.getById(post.id);
   return source ? localizations.project("life_post", post.id, locale, source.revision, post, ["title", "body", "meta", "ctaLabel"]) : post;
-}
-
-function sendImage(
-  reply: FastifyReply,
-  image: Awaited<ReturnType<LifePostImageStorageService["readImage"]>>
-) {
-  if (!image) {
-    throw lifeImageNotFound("unknown");
-  }
-  reply.header("content-type", image.mimeType);
-  reply.header("content-length", String(image.sizeBytes));
-  reply.header("cache-control", "public, max-age=31536000, immutable");
-  return reply.send(image.stream);
 }
 
 function registrationAuditSnapshot(registration: EventRegistration) {

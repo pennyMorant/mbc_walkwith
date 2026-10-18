@@ -211,6 +211,7 @@ export function useLifePostsPageController() {
     form.startsAt = datetimeLocalFromIso(post.startsAt);
     form.endsAt = datetimeLocalFromIso(post.endsAt);
     form.visibility = post.visibility;
+    form.imageMediaId = post.imageMediaId;
     form.imageUrl = post.imageUrl ?? "";
     form.sort = post.sort;
     form.ctaLabel = post.ctaLabel ?? "";

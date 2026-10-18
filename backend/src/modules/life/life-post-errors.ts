@@ -93,20 +93,6 @@ export function lifePostNotificationTranslationNotAllowed(
   });
 }
 
-export function lifeImageNotFound(fileName: string) {
-  return appError({
-    code: "life_image_not_found",
-    category: "not_found",
-    sourceLayer: "capability",
-    statusCode: 404,
-    message: "Life image not found.",
-    recoverable: true,
-    retryable: false,
-    evidence: { fileName },
-    nextAction: "refresh"
-  });
-}
-
 export function lifeImageUploadBodyInvalid() {
   return appError({
     code: "life_image_upload_body_invalid",

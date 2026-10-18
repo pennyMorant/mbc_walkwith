@@ -50,6 +50,10 @@ export const publicLandingHeroSchema = z.object({
   quickActions: z.array(publicLandingActionSchema)
 });
 
+export const publicLandingHeroSettingSchema = publicLandingHeroSchema.omit({
+  imageUrl: true
+}).strict();
+
 export const publicLandingPillarSchema = z.object({
   title: z.string(),
   body: z.string(),
@@ -80,6 +84,9 @@ export const publicLandingServiceSectionSchema = z.object({
   facts: z.array(publicLandingFactSchema),
   actions: z.array(publicLandingActionSchema)
 });
+
+export const publicLandingServiceSettingSchema =
+  publicLandingServiceSectionSchema.omit({ imageUrl: true }).strict();
 
 export const publicLandingEntranceSectionSchema = z.object({
   eyebrow: z.string(),
@@ -134,12 +141,21 @@ export const publicLandingPersonSchema = z.object({
   sort: sortValueSchema
 });
 
+export const publicLandingPersonSettingSchema = publicLandingPersonSchema.omit({
+  imageUrl: true
+}).strict();
+
 export const publicLandingPeopleSectionSchema = z.object({
   eyebrow: z.string(),
   title: z.string(),
   body: z.string(),
   items: z.array(publicLandingPersonSchema)
 });
+
+export const publicLandingPeopleSettingSchema =
+  publicLandingPeopleSectionSchema.extend({
+    items: z.array(publicLandingPersonSettingSchema)
+  });
 
 export const publicLandingEventsConfigSchema = z.object({
   eyebrow: z.string(),
@@ -176,12 +192,20 @@ export const publicLandingGalleryItemSchema = z.object({
   sort: sortValueSchema
 });
 
+export const publicLandingGalleryItemSettingSchema =
+  publicLandingGalleryItemSchema.omit({ imageUrl: true }).strict();
+
 export const publicLandingGallerySectionSchema = z.object({
   eyebrow: z.string(),
   title: z.string(),
   body: z.string(),
   items: z.array(publicLandingGalleryItemSchema)
 });
+
+export const publicLandingGallerySettingSchema =
+  publicLandingGallerySectionSchema.extend({
+    items: z.array(publicLandingGalleryItemSettingSchema)
+  });
 
 export const publicLandingContentSchema = z.object({
   locale: supportedLocaleSchema,
@@ -218,6 +242,9 @@ export type PublicLandingActionTarget = z.infer<
 export type PublicLandingAction = z.infer<typeof publicLandingActionSchema>;
 export type PublicLandingIdentity = z.infer<typeof publicLandingIdentitySchema>;
 export type PublicLandingHero = z.infer<typeof publicLandingHeroSchema>;
+export type PublicLandingHeroSetting = z.infer<
+  typeof publicLandingHeroSettingSchema
+>;
 export type PublicLandingPillar = z.infer<typeof publicLandingPillarSchema>;
 export type PublicLandingMissionSection = z.infer<
   typeof publicLandingMissionSectionSchema
@@ -225,6 +252,9 @@ export type PublicLandingMissionSection = z.infer<
 export type PublicLandingFact = z.infer<typeof publicLandingFactSchema>;
 export type PublicLandingServiceSection = z.infer<
   typeof publicLandingServiceSectionSchema
+>;
+export type PublicLandingServiceSetting = z.infer<
+  typeof publicLandingServiceSettingSchema
 >;
 export type PublicLandingEntranceSection = z.infer<
   typeof publicLandingEntranceSectionSchema
@@ -245,6 +275,9 @@ export type PublicLandingPerson = z.infer<typeof publicLandingPersonSchema>;
 export type PublicLandingPeopleSection = z.infer<
   typeof publicLandingPeopleSectionSchema
 >;
+export type PublicLandingPeopleSetting = z.infer<
+  typeof publicLandingPeopleSettingSchema
+>;
 export type PublicLandingEventsConfig = z.infer<
   typeof publicLandingEventsConfigSchema
 >;
@@ -257,5 +290,8 @@ export type PublicLandingGalleryItem = z.infer<
 >;
 export type PublicLandingGallerySection = z.infer<
   typeof publicLandingGallerySectionSchema
+>;
+export type PublicLandingGallerySetting = z.infer<
+  typeof publicLandingGallerySettingSchema
 >;
 export type PublicLandingResponse = z.infer<typeof publicLandingResponseSchema>;

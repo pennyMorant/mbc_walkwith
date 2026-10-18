@@ -604,8 +604,29 @@ function defaultSettingValue(
   locale: SupportedLocale,
   id: PublicLandingSettingId
 ) {
+  const section = publicLandingDefaultContentByLocale[locale][id];
+  if (id === "hero" || id === "service") {
+    const { imageUrl: _imageUrl, ...setting } = section as
+      | PublicLandingResponse["hero"]
+      | PublicLandingResponse["service"];
+    return setting;
+  }
+  if (id === "people") {
+    const people = section as PublicLandingResponse["people"];
+    return {
+      ...people,
+      items: people.items.map(({ imageUrl: _imageUrl, ...person }) => person)
+    };
+  }
+  if (id === "gallery") {
+    const gallery = section as PublicLandingResponse["gallery"];
+    return {
+      ...gallery,
+      items: gallery.items.map(({ imageUrl: _imageUrl, ...item }) => item)
+    };
+  }
   if (id !== "events") {
-    return publicLandingDefaultContentByLocale[locale][id];
+    return section;
   }
   const { items: _items, ...config } =
     publicLandingDefaultContentByLocale[locale].events;

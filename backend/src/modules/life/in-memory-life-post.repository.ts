@@ -93,7 +93,8 @@ export class InMemoryLifePostRepository implements LifePostRepository {
       startsAt: input.startsAt ?? null,
       endsAt: input.endsAt ?? null,
       visibility: input.visibility,
-      imageUrl: input.imageUrl ?? null,
+      imageMediaId: input.imageMediaId ?? null,
+      imageUrl: null,
       sort: input.sort,
       ctaLabel: cleanNullableString(input.ctaLabel),
       ctaUrl: cleanNullableString(input.ctaUrl),
@@ -132,8 +133,11 @@ export class InMemoryLifePostRepository implements LifePostRepository {
         input.startsAt === undefined ? existing.startsAt : input.startsAt,
       endsAt: input.endsAt === undefined ? existing.endsAt : input.endsAt,
       visibility: input.visibility ?? existing.visibility,
-      imageUrl:
-        input.imageUrl === undefined ? existing.imageUrl : input.imageUrl,
+      imageMediaId:
+        input.imageMediaId === undefined
+          ? existing.imageMediaId
+          : input.imageMediaId,
+      imageUrl: null,
       sort: input.sort ?? existing.sort,
       ctaLabel:
         input.ctaLabel === undefined

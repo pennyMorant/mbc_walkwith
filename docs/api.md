@@ -1421,6 +1421,7 @@ Response:
       "startsAt": "2026-05-10T17:00:00Z",
       "endsAt": null,
       "visibility": "public",
+      "imageMediaId": null,
       "imageUrl": null,
       "sort": 50,
       "updatedAt": "2026-05-09T17:00:00Z"
@@ -1454,17 +1455,7 @@ GET /v1/life/posts/:postId
 Only public posts are returned. Private, member-only, group-only, or unpublished
 posts return 404 from the public endpoint.
 
-### 7.3 Get Life Image
-
-```text
-GET /v1/life/images/:fileName
-```
-
-Returns an uploaded public life post image. The `imageUrl` field on a life post
-points to this endpoint when the church uploads an image through the admin
-console.
-
-### 7.4 Current Bulletin
+### 7.3 Current Bulletin
 
 ```text
 GET /v1/life/bulletins/current
@@ -2270,10 +2261,10 @@ current member display name and email. The update route accepts `active`,
 member profile projection synchronization, idempotency, and audit.
 
 `POST /v1/admin/life-posts/images` accepts raw image bytes with
-`Content-Type: image/jpeg | image/png | image/webp | image/gif` and returns an
-`imageUrl` that can be stored on a life post. Local development stores files
-under the configured media upload directory; production should use S3/R2 or
-another S3-compatible object store.
+`Content-Type: image/jpeg | image/png | image/webp | image/gif` and returns a
+canonical `mediaId` plus a transient preview `imageUrl`. Life post mutation
+requests save only `imageMediaId`; read responses project `imageUrl` through the
+Media service. Production stores the object in R2.
 
 `POST /v1/admin/life-posts/:postId/publish` may ask the backend to notify the
 App after the post reaches `published`. Push delivery is a side effect and must
@@ -2597,7 +2588,6 @@ Public without login:
   GET /v1/sermons/recommendations
   GET /v1/life/posts
   GET /v1/life/posts/:postId
-  GET /v1/life/images/:fileName
   GET /v1/prayer-requests
   POST /v1/prayer-requests
   GET /v1/courses

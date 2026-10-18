@@ -470,6 +470,13 @@
       "when": 1792349572139,
       "tag": "0068_superb_phalanx",
       "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1792362309490,
+      "tag": "0069_windy_havok",
+      "breakpoints": true
     }
   ]
 }

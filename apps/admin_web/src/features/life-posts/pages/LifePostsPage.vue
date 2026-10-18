@@ -323,12 +323,6 @@ const {
               />
             </v-col>
           </v-row>
-          <v-text-field
-            v-model="form.imageUrl"
-            :label="t('Image URL')"
-            density="comfortable"
-            variant="outlined"
-          />
           <v-file-input
             :label="t('Upload image')"
             accept="image/png,image/jpeg,image/webp,image/gif"

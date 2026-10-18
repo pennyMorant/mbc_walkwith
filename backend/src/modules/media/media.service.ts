@@ -162,6 +162,14 @@ export class MediaService {
       throw error;
     }
     if (!asset) {
+      await this.storage
+        .relocate(relocated.storageKey, {
+          id: before.id,
+          kind: before.kind,
+          mimeType: before.mimeType,
+          publicAccess: wasPublic
+        })
+        .catch(() => undefined);
       throw mediaAssetNotFound(id);
     }
     return asset;

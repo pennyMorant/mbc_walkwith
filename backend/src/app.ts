@@ -56,7 +56,6 @@ import { InMemoryJobRepository } from "./modules/jobs/in-memory-job.repository.j
 import { JobService } from "./modules/jobs/job.service.js";
 import { PostgresJobRepository } from "./modules/jobs/postgres-job.repository.js";
 import { InMemoryLifePostRepository } from "./modules/life/in-memory-life-post.repository.js";
-import { LifePostImageStorageService } from "./modules/life/life-post-image-storage.service.js";
 import { LifePostService } from "./modules/life/life-post.service.js";
 import { PostgresLifePostRepository } from "./modules/life/postgres-life-post.repository.js";
 import { InMemoryMemberRepository } from "./modules/members/in-memory-member.repository.js";
@@ -193,16 +192,14 @@ export async function buildApp(config: AppConfig) {
     ? new PostgresJobRepository(db)
     : new InMemoryJobRepository();
   const jobService = new JobService(jobRepository);
-  const lifePostRepository = db
-    ? new PostgresLifePostRepository(db)
-    : new InMemoryLifePostRepository();
-  const lifePostService = new LifePostService(lifePostRepository);
-  const lifePostImageStorageService =
-    LifePostImageStorageService.fromConfig(config);
   const mediaService = new MediaService(
     db ? new PostgresMediaRepository(db) : new InMemoryMediaRepository(),
     MediaStorageService.fromConfig(config)
   );
+  const lifePostRepository = db
+    ? new PostgresLifePostRepository(db)
+    : new InMemoryLifePostRepository();
+  const lifePostService = new LifePostService(lifePostRepository, mediaService);
   const prayerRepository = db
     ? new PostgresPrayerRepository(db)
     : new InMemoryPrayerRepository();
@@ -425,7 +422,6 @@ export async function buildApp(config: AppConfig) {
       }
     },
     jobService,
-    lifePostImageStorageService,
     lifePostService,
     mediaService,
     memberAuthService,

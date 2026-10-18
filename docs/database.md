@@ -234,6 +234,8 @@ retaining completed and abandoned history.
 life-content aggregate. It starts at `0` and increments only for content or
 publication-state writes. Event registrations, attendance, check-in codes, and
 member read states remain separate aggregates and do not advance it.
+`public_posts.image_media_id` references `media_assets`; public image URLs are
+derived projections and are never stored on the Life aggregate.
 
 Current `member_profiles` profile extension fields:
 

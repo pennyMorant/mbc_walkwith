@@ -55,6 +55,7 @@ export const lifePostSchema = z.object({
   startsAt: z.string().datetime().nullable().default(null),
   endsAt: z.string().datetime().nullable().default(null),
   visibility: lifePostVisibilitySchema.default("public"),
+  imageMediaId: z.string().uuid().nullable().default(null),
   imageUrl: z.string().nullable().default(null),
   sort: sortValueSchema,
   ctaLabel: z.string().nullable().default(null),
@@ -99,7 +100,7 @@ export const lifePostUpsertRequestSchema = z.object({
   startsAt: z.string().datetime().nullable().optional(),
   endsAt: z.string().datetime().nullable().optional(),
   visibility: lifePostVisibilitySchema.default("private"),
-  imageUrl: z.string().trim().nullable().optional(),
+  imageMediaId: z.string().uuid().nullable().optional(),
   sort: sortValueSchema,
   ctaLabel: z.string().trim().nullable().optional(),
   ctaUrl: z.string().trim().url().nullable().optional(),
@@ -225,6 +226,7 @@ export const lifePostListResponseSchema = z.object({
 });
 
 export const lifeImageUploadResponseSchema = z.object({
+  mediaId: z.string().uuid(),
   imageUrl: z.string()
 });
 

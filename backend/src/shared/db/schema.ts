@@ -609,7 +609,9 @@ export const publicPosts = pgTable(
     visibility: text("visibility", { enum: visibilityLevels })
       .notNull()
       .default("public"),
-    imageUrl: text("image_url"),
+    imageMediaId: uuid("image_media_id").references(() => mediaAssets.id, {
+      onDelete: "set null"
+    }),
     sort: integer("sort").notNull().default(0),
     ctaLabel: text("cta_label"),
     ctaUrl: text("cta_url"),

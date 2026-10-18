@@ -137,7 +137,7 @@ export class PostgresLifePostRepository implements LifePostRepository {
         startsAt: dateFromIso(input.startsAt),
         endsAt: dateFromIso(input.endsAt),
         visibility: input.visibility,
-        imageUrl: cleanNullableString(input.imageUrl),
+        imageMediaId: input.imageMediaId ?? null,
         sort: input.sort,
         ctaLabel: cleanNullableString(input.ctaLabel),
         ctaUrl: cleanNullableString(input.ctaUrl),
@@ -185,10 +185,10 @@ export class PostgresLifePostRepository implements LifePostRepository {
                 ? dateFromIso(existing.endsAt)
                 : dateFromIso(input.endsAt),
             visibility: input.visibility ?? existing.visibility,
-            imageUrl:
-              input.imageUrl === undefined
-                ? existing.imageUrl
-                : cleanNullableString(input.imageUrl),
+            imageMediaId:
+              input.imageMediaId === undefined
+                ? existing.imageMediaId
+                : input.imageMediaId,
             sort: input.sort ?? existing.sort,
             ctaLabel:
               input.ctaLabel === undefined

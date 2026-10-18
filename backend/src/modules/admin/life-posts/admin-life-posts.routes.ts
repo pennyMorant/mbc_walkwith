@@ -126,7 +126,7 @@ export async function registerAdminLifePostRoutes(
         resourceId: image.id,
         afterJson: image
       });
-      return ok({ imageUrl: image.url ?? "" });
+      return ok({ mediaId: image.id, imageUrl: image.url ?? "" });
     }
   );
 

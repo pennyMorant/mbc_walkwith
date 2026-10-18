@@ -162,6 +162,24 @@ describe("public landing routes", () => {
         title: "团契相聚"
       })
     ]);
+
+    const restrictionResponse = await app.inject({
+      method: "PATCH",
+      url: `/v1/admin/media/${asset.id}`,
+      headers,
+      payload: { consentStatus: "restricted" }
+    });
+    expect(restrictionResponse.statusCode).toBe(200);
+    const restrictedLandingResponse = await app.inject({
+      method: "GET",
+      url: "/v1/public/landing"
+    });
+    const restrictedLanding = expectResponseData(
+      restrictedLandingResponse,
+      publicLandingResponseSchema,
+      "landing after media restriction"
+    );
+    expect(restrictedLanding.gallery.items).toEqual([]);
     await harness.close();
   });
 
@@ -336,7 +354,6 @@ describe("public landing routes", () => {
               name: "示例同工",
               role: "同工",
               summary: "教会服事",
-              imageUrl: "",
               sort: 5
             },
             {
@@ -344,7 +361,6 @@ describe("public landing routes", () => {
               name: "示例牧者",
               role: "主任牧师",
               summary: "讲道与牧养",
-              imageUrl: "",
               sort: 50
             }
           ]
@@ -498,6 +514,34 @@ describe("public landing routes", () => {
       },
       nextAction: "review_request"
     });
+
+    const staleUrlResponse = await app.inject({
+      method: "PATCH",
+      url: "/v1/admin/settings/publicLanding.gallery",
+      headers: {
+        authorization: `Bearer ${accessToken}`
+      },
+      payload: {
+        value: {
+          eyebrow: "Gallery",
+          title: "Church life",
+          body: "Photos",
+          items: [
+            {
+              id: "stale-url",
+              mediaId: null,
+              imageUrl: "https://media.example.com/stale.jpg",
+              altText: "",
+              title: "",
+              body: "",
+              sort: 0
+            }
+          ]
+        }
+      }
+    });
+    expect(staleUrlResponse.statusCode).toBe(400);
+    expect(staleUrlResponse.json().error.code).toBe("setting_value_invalid");
     await harness.close();
   });
 

@@ -66,23 +66,6 @@ describe("life post routes", () => {
     expect(imageResponse.statusCode).toBe(200);
     expect(imageResponse.headers["content-type"]).toBe("image/png");
 
-    const missingImageResponse = await app.inject({
-      method: "GET",
-      url: "/v1/life/images/missing-image.png"
-    });
-    expect(missingImageResponse.statusCode).toBe(404);
-    expect(missingImageResponse.json().error).toMatchObject({
-      code: "life_image_not_found",
-      category: "not_found",
-      sourceLayer: "capability",
-      recoverable: true,
-      retryable: false,
-      nextAction: "refresh",
-      evidence: {
-        fileName: "missing-image.png"
-      }
-    });
-
     const invalidScheduleResponse = await app.inject({
       method: "POST",
       url: "/v1/admin/life-posts",
@@ -122,7 +105,7 @@ describe("life post routes", () => {
         iconName: "prayer",
         startsAt: "2026-06-04T02:00:00.000Z",
         endsAt: "2026-06-04T03:30:00.000Z",
-        imageUrl,
+        imageMediaId: imageUpload.mediaId,
         visibility: "private",
         sort: 100,
         ctaLabel: "Register",
@@ -145,6 +128,7 @@ describe("life post routes", () => {
     expect(createdPost.iconName).toBe("prayer");
     expect(createdPost.startsAt).toBe("2026-06-04T02:00:00.000Z");
     expect(createdPost.endsAt).toBe("2026-06-04T03:30:00.000Z");
+    expect(createdPost.imageMediaId).toBe(imageUpload.mediaId);
     expect(createdPost.imageUrl).toBe(imageUrl);
     const postId = createdPost.id;
 
@@ -294,6 +278,25 @@ describe("life post routes", () => {
     expect(publicPost.startsAt).toBe("2026-06-04T02:00:00.000Z");
     expect(publicPost.endsAt).toBe("2026-06-04T03:30:00.000Z");
     expect(publicPost.imageUrl).toBe(imageUrl);
+
+    const restrictImageResponse = await app.inject({
+      method: "PATCH",
+      url: `/v1/admin/media/${imageUpload.mediaId}`,
+      headers: { authorization: `Bearer ${accessToken}` },
+      payload: { consentStatus: "restricted" }
+    });
+    expect(restrictImageResponse.statusCode).toBe(200);
+    const detailAfterRestriction = await app.inject({
+      method: "GET",
+      url: `/v1/life/posts/${postId}`
+    });
+    const postAfterRestriction = expectResponseData(
+      detailAfterRestriction,
+      publicLifePostSchema,
+      "public life post after media restriction"
+    );
+    expect(postAfterRestriction.imageMediaId).toBe(imageUpload.mediaId);
+    expect(postAfterRestriction.imageUrl).toBeNull();
 
     const memberOnlyResponse = await app.inject({
       method: "POST",

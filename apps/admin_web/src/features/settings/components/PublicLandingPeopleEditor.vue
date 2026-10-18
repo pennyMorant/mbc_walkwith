@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { PublicLandingPeopleSection } from "@mbc/api-contracts";
+import type { PublicLandingPeopleSetting } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import { createLandingItemId } from "../public_landing_editor";
 import PublicLandingSectionFields from "./PublicLandingSectionFields.vue";
 import MediaImagePicker from "./MediaImagePicker.vue";
 
-const model = defineModel<PublicLandingPeopleSection>({ required: true });
+const model = defineModel<PublicLandingPeopleSetting>({ required: true });
 const { t } = useI18n();
 
 function addItem() {
@@ -15,7 +15,6 @@ function addItem() {
     name: "",
     role: "",
     summary: "",
-    imageUrl: "",
     imageMediaId: null,
     sort: 0
   });
@@ -50,10 +49,7 @@ function addItem() {
     </div>
     <MediaImagePicker
       v-model="item.imageMediaId"
-      :preview-url="item.imageUrl"
       :alt-text="item.name"
-      @update:model-value="!$event && (item.imageUrl = '')"
-      @selected="item.imageUrl = $event.url ?? ''"
     />
     <v-text-field
       v-model.number="item.sort"

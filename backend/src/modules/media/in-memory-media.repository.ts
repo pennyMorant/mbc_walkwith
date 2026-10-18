@@ -48,6 +48,10 @@ export class InMemoryMediaRepository implements MediaRepository {
       .filter(
         (asset) => !query.visibility || asset.visibility === query.visibility
       )
+      .filter(
+        (asset) =>
+          !query.consentStatus || asset.consentStatus === query.consentStatus
+      )
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
       .slice(0, query.limit)
       .map(publicAsset);
