@@ -16,6 +16,7 @@ from ..diagnostics import run_diagnostics
 from ..media_range import format_time_position
 from ..models import MediaProbe, ProcessingResult
 from ..output_writer import save_reviewed_transcript
+from ..settings_store import SettingsStore, StudioSettings
 from .job_controller import ProbeJob, ProcessingJob
 from .media_preview import MediaPreview
 from .transcript_editor import TranscriptEditor
@@ -30,11 +31,18 @@ class MainWindow(QMainWindow):
         self.processing_job: ProcessingJob | None = None
         self._threads: list[QThread] = []
         self._duration_seconds = 0.0
+        self.settings_store = SettingsStore()
+        self.settings = self.settings_store.load()
         self.setWindowTitle("Sermon Studio")
         self.resize(1180, 760)
 
         self.source_field = QLineEdit()
         self.output_field = QLineEdit()
+        self.output_field.setText(self.settings.output_dir)
+        self.recent_sources = QComboBox()
+        self.recent_sources.addItem("Recent recordings", "")
+        for source in self.settings.recent_sources:
+            self.recent_sources.addItem(Path(source).name, source)
         self.media_summary = QLabel("Choose a sermon recording to begin.")
         self.preview = MediaPreview()
         self.start_time = _time_editor()
@@ -43,6 +51,8 @@ class MainWindow(QMainWindow):
         self.model = QComboBox()
         self.model.addItems(["small", "medium", "large-v3"])
         self.model.setCurrentText(config.transcription.model)
+        if self.settings.model:
+            self.model.setCurrentText(self.settings.model)
         self.language = QComboBox()
         for label, value in (
             ("Auto detect", None), ("Chinese", "zh"),
@@ -50,7 +60,11 @@ class MainWindow(QMainWindow):
         ):
             self.language.addItem(label, value)
         _select_data(self.language, config.transcription.language)
+        if self.settings.language:
+            _select_data(self.language, self.settings.language)
         self.progress = QProgressBar()
+        self.progress.setRange(0, 100)
+        self.progress.setValue(0)
         self.status = QLabel("Ready")
         self.log_view = QPlainTextEdit(readOnly=True)
         self.transcript = TranscriptEditor()
@@ -73,6 +87,7 @@ class MainWindow(QMainWindow):
         media_end.clicked.connect(self._use_media_end)
 
         form = QFormLayout()
+        form.addRow("Recent", self.recent_sources)
         form.addRow("Source media", _row(self.source_field, source_button))
         form.addRow("Output folder", _row(self.output_field, output_button))
         form.addRow("Start", _row(self.start_time, set_start))
@@ -110,6 +125,7 @@ class MainWindow(QMainWindow):
         self.cancel_button.clicked.connect(self._cancel_processing)
         self.open_button.clicked.connect(self._open_output)
         self.transcript.save_requested.connect(self._save_transcript)
+        self.recent_sources.currentIndexChanged.connect(self._load_recent_source)
 
     def _browse_source(self) -> None:
         selected, _ = QFileDialog.getOpenFileName(
@@ -118,6 +134,9 @@ class MainWindow(QMainWindow):
         )
         if not selected:
             return
+        self._load_source(selected)
+
+    def _load_source(self, selected: str) -> None:
         self.source_field.setText(selected)
         self.preview.load(selected)
         self.media_summary.setText("Inspecting media...")
@@ -177,6 +196,7 @@ class MainWindow(QMainWindow):
         self.output_field.setText(str(result.outputs.root))
         self.transcript.set_transcript(result.transcript.text)
         self.open_button.setEnabled(True)
+        self._save_settings(result.source_file)
 
     def _processing_failed(self, detail: str) -> None:
         self.status.setText("Failed")
@@ -222,6 +242,23 @@ class MainWindow(QMainWindow):
     def _set_busy(self, busy: bool) -> None:
         self.process_button.setEnabled(not busy)
         self.cancel_button.setEnabled(busy)
+
+    def _load_recent_source(self) -> None:
+        source = str(self.recent_sources.currentData() or "")
+        if source and Path(source).is_file():
+            self._load_source(source)
+
+    def _save_settings(self, source: Path) -> None:
+        recent = [str(source)] + [
+            value for value in self.settings.recent_sources if value != str(source)
+        ]
+        self.settings = StudioSettings(
+            output_dir=self.output_field.text().strip(),
+            model=self.model.currentText(),
+            language=self.language.currentData(),
+            recent_sources=recent[:10],
+        )
+        self.settings_store.save(self.settings)
 
     def _start_thread(self, job: object) -> None:
         thread = QThread(self)

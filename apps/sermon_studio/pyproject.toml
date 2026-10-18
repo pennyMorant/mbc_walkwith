@@ -19,6 +19,9 @@ local = [
 gui = [
   "PySide6>=6.9.0",
 ]
+build = [
+  "PyInstaller>=6.16.0",
+]
 
 [project.scripts]
 sermon-studio = "sermon_studio.cli:main"

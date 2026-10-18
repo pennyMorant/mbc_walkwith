@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Sermon Studio
+Comment=Extract and transcribe church-owned sermon recordings locally
+Exec=sermon-studio gui --config %h/.config/mbc-sermon-studio/config.yaml
+Terminal=false
+Categories=AudioVideo;Audio;Utility;

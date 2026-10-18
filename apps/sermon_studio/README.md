@@ -60,6 +60,24 @@ sermon-studio gui --config config.yaml
 to `00:00:00`; an omitted end processes through the end of the source. The GUI
 provides equivalent start/end controls and a `Use media end` switch.
 
+The Linux desktop workbench also provides media preview, timeline seeking,
+start/end capture from the current playback position, model and language
+selection, real processing progress, cancellation, transcript review, and a
+recent-recordings list. User preferences are stored under
+`$XDG_CONFIG_HOME/mbc-sermon-studio` (or `~/.config/mbc-sermon-studio`).
+
+## Linux Bundle
+
+Build the portable x86_64 bundle on a Linux x86_64 host:
+
+```sh
+./tools/build_linux.sh
+```
+
+The result is `dist/sermon-studio/`. FFmpeg and FFprobe remain system
+dependencies. Whisper models are downloaded by faster-whisper on first use and
+are not embedded in the application bundle.
+
 ## Outputs
 
 ```text
