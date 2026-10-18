@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 from sermon_studio.audio import extract_audio, probe_media
 from sermon_studio.config import AudioConfig
-from sermon_studio.models import MediaProbe
+from sermon_studio.models import MediaProbe, MediaRange
 
 
 class AudioTest(unittest.TestCase):
@@ -69,7 +69,12 @@ class AudioTest(unittest.TestCase):
 
             with patch("sermon_studio.audio.subprocess.run", side_effect=fake_run) as run:
                 result = extract_audio(
-                    source, output, media, "ffmpeg", AudioConfig()
+                    source,
+                    output,
+                    media,
+                    "ffmpeg",
+                    AudioConfig(),
+                    MediaRange(90, 150),
                 )
 
             command = run.call_args.args[0]
@@ -77,6 +82,9 @@ class AudioTest(unittest.TestCase):
             self.assertIn("-vn", command)
             self.assertEqual(command[command.index("-map") + 1], "0:2")
             self.assertEqual(command[command.index("-c:a") + 1], "aac")
+            self.assertEqual(command[command.index("-ss") + 1], "90")
+            self.assertEqual(command[command.index("-t") + 1], "60")
+            self.assertLess(command.index("-ss"), command.index("-i"))
             self.assertEqual(output.read_bytes(), b"audio")
             self.assertFalse((Path(directory) / ".sermon_audio.partial.m4a").exists())
 
@@ -87,7 +95,14 @@ class AudioTest(unittest.TestCase):
             media = MediaProbe(60, 0, "aac", 2, 48000, "mov,mp4")
 
             with self.assertRaisesRegex(ValueError, "must not replace"):
-                extract_audio(source, source, media, "ffmpeg", AudioConfig())
+                extract_audio(
+                    source,
+                    source,
+                    media,
+                    "ffmpeg",
+                    AudioConfig(),
+                    MediaRange(0, 60),
+                )
 
             self.assertEqual(source.read_bytes(), b"original")
 

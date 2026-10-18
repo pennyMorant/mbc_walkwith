@@ -15,6 +15,16 @@ class MediaProbe:
 
 
 @dataclass(frozen=True)
+class MediaRange:
+    start_seconds: float
+    end_seconds: float
+
+    @property
+    def duration_seconds(self) -> float:
+        return self.end_seconds - self.start_seconds
+
+
+@dataclass(frozen=True)
 class TranscriptSegment:
     start_seconds: float
     end_seconds: float
@@ -44,5 +54,6 @@ class OutputFiles:
 class ProcessingResult:
     source_file: Path
     media: MediaProbe
+    media_range: MediaRange
     outputs: OutputFiles
     transcript: TranscriptPayload

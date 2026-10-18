@@ -11,6 +11,7 @@ manual review and upload:
 ```text
 church-owned video or audio
 -> inspect media and select its audio stream
+-> validate the optional source start/end range
 -> export standard M4A audio
 -> create a temporary Whisper WAV
 -> transcribe locally
@@ -25,6 +26,11 @@ The workstation does not connect to the backend and is not a publishing client.
 Sermon Studio verifies the source, extracts AAC audio into an M4A container,
 transcribes with faster-whisper, exports review files, records checksums, and
 removes temporary transcription audio.
+
+The operator may process the complete source or select start/end positions to
+remove pre-service and post-service material. The selected range is the single
+input for both extraction and transcription. Output audio and SRT timestamps
+start at zero; processing metadata retains the source positions.
 
 The church operator confirms publication rights, corrects the transcript,
 enters title/speaker/date/series/references in Admin Web, uploads audio and
@@ -45,12 +51,15 @@ processing_info.json
 
 `processing_info.json` contains source and output checksums, duration, selected
 audio stream information, encoding settings, detected language, model source,
-and segment count. It contains no credential, member data, or publish token.
+segment count, and selected source start/end positions. It contains no
+credential, member data, or publish token.
 
 ## Failure Rules
 
 - Missing sources fail before FFmpeg starts.
 - Media without an audio stream fails with a clear local error.
+- Start must be inside the media; end must be after start and no later than the
+  media end. A sub-second duration rounding difference is clamped.
 - FFmpeg writes to a temporary file and only replaces a final output after a
   non-empty result is confirmed.
 - Failed extraction removes its partial output.

@@ -14,6 +14,8 @@ def run_process(
     config: AppConfig,
     source_file: str | Path,
     output_dir: str | Path | None = None,
+    start_seconds: float = 0,
+    end_seconds: float | None = None,
     log=print,
     progress=None,
 ):
@@ -21,6 +23,8 @@ def run_process(
         config,
         source_file,
         output_dir=output_dir,
+        start_seconds=start_seconds,
+        end_seconds=end_seconds,
         log=log,
         progress=progress,
     )

@@ -5,6 +5,7 @@ from typing import Callable
 
 from .audio import create_transcription_audio, extract_audio, probe_media
 from .config import AppConfig
+from .media_range import format_time_position, resolve_media_range
 from .models import ProcessingResult
 from .output_writer import write_outputs
 from .project_store import create_output_files
@@ -18,6 +19,8 @@ def process_media(
     config: AppConfig,
     source_file: str | Path,
     output_dir: str | Path | None = None,
+    start_seconds: float = 0,
+    end_seconds: float | None = None,
     log: LogFn | None = None,
     progress: ProgressFn | None = None,
 ) -> ProcessingResult:
@@ -26,10 +29,21 @@ def process_media(
     _progress(progress, 5)
     _emit(log, f"Inspecting media: {source}")
     media = probe_media(source, config.paths.ffprobe_bin)
+    media_range = resolve_media_range(
+        media.duration_seconds,
+        start_seconds=start_seconds,
+        end_seconds=end_seconds,
+    )
     _emit(
         log,
         f"Audio track found: {media.audio_codec}, "
         f"{media.duration_seconds:.1f} seconds",
+    )
+    _emit(
+        log,
+        "Processing range: "
+        f"{format_time_position(media_range.start_seconds)} - "
+        f"{format_time_position(media_range.end_seconds)}",
     )
 
     _progress(progress, 15)
@@ -40,6 +54,7 @@ def process_media(
         media,
         config.paths.ffmpeg_bin,
         config.audio,
+        media_range,
     )
     _progress(progress, 35)
     _emit(log, f"Audio saved: {outputs.audio_file}")
@@ -63,12 +78,13 @@ def process_media(
 
     _progress(progress, 90)
     _emit(log, "Writing transcript files...")
-    write_outputs(source, media, outputs, transcript, config)
+    write_outputs(source, media, media_range, outputs, transcript, config)
     _progress(progress, 100)
     _emit(log, f"Processing complete: {outputs.root}")
     return ProcessingResult(
         source_file=source,
         media=media,
+        media_range=media_range,
         outputs=outputs,
         transcript=transcript,
     )

@@ -6,12 +6,19 @@ from pathlib import Path
 
 from .audio import sha256_file
 from .config import AppConfig
-from .models import MediaProbe, OutputFiles, TranscriptPayload, TranscriptSegment
+from .models import (
+    MediaProbe,
+    MediaRange,
+    OutputFiles,
+    TranscriptPayload,
+    TranscriptSegment,
+)
 
 
 def write_outputs(
     source_file: Path,
     media: MediaProbe,
+    media_range: MediaRange,
     outputs: OutputFiles,
     transcript: TranscriptPayload,
     config: AppConfig,
@@ -46,6 +53,11 @@ def write_outputs(
                     "bitrate": config.audio.bitrate,
                     "sampleRate": config.audio.sample_rate,
                     "channels": config.audio.channels,
+                    "durationSeconds": round(media_range.duration_seconds, 3),
+                    "sourceRange": {
+                        "startSeconds": round(media_range.start_seconds, 3),
+                        "endSeconds": round(media_range.end_seconds, 3),
+                    },
                 },
                 "transcription": {
                     "source": transcript.source,

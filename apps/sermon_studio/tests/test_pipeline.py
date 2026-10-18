@@ -70,9 +70,17 @@ class PipelineTest(unittest.TestCase):
                     return_value=transcript,
                 ),
             ):
-                result = process_media(config, source, output)
+                result = process_media(
+                    config,
+                    source,
+                    output,
+                    start_seconds=60,
+                    end_seconds=120,
+                )
 
             self.assertEqual(result.outputs.audio_file.read_bytes(), b"audio")
+            self.assertEqual(result.media_range.start_seconds, 60)
+            self.assertEqual(result.media_range.end_seconds, 120)
             self.assertTrue(result.outputs.transcript_text_file.is_file())
             self.assertFalse(result.outputs.transcription_audio_file.exists())
             self.assertFalse((output / source.name).exists())

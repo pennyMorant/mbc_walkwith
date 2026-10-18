@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import AudioConfig
-from .models import MediaProbe
+from .models import MediaProbe, MediaRange
 
 
 def probe_media(source_path: str | Path, ffprobe_bin: str) -> MediaProbe:
@@ -78,6 +78,7 @@ def extract_audio(
     media: MediaProbe,
     ffmpeg_bin: str,
     config: AudioConfig,
+    media_range: MediaRange,
 ) -> Path:
     source = _require_source_file(source_path)
     output = Path(output_path).expanduser().resolve()
@@ -86,8 +87,12 @@ def extract_audio(
     command = [
         ffmpeg_bin,
         "-y",
+        "-ss",
+        _ffmpeg_time(media_range.start_seconds),
         "-i",
         str(source),
+        "-t",
+        _ffmpeg_time(media_range.duration_seconds),
         "-map",
         f"0:{media.audio_stream_index}",
         "-vn",
@@ -190,3 +195,7 @@ def _optional_nonnegative_int(value: Any) -> int | None:
     except (TypeError, ValueError):
         return None
     return parsed if parsed >= 0 else None
+
+
+def _ffmpeg_time(seconds: float) -> str:
+    return f"{seconds:.3f}".rstrip("0").rstrip(".")

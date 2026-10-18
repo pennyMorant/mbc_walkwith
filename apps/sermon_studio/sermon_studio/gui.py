@@ -7,10 +7,11 @@ from pathlib import Path
 
 def run_gui(config_path: str | Path) -> int:
     try:
-        from PySide6.QtCore import QUrl, Signal
+        from PySide6.QtCore import QTime, QUrl, Signal
         from PySide6.QtGui import QDesktopServices
         from PySide6.QtWidgets import (
             QApplication,
+            QCheckBox,
             QFileDialog,
             QFormLayout,
             QHBoxLayout,
@@ -21,6 +22,7 @@ def run_gui(config_path: str | Path) -> int:
             QProgressBar,
             QPushButton,
             QPlainTextEdit,
+            QTimeEdit,
             QVBoxLayout,
             QWidget,
         )
@@ -32,6 +34,8 @@ def run_gui(config_path: str | Path) -> int:
     from .config import load_config
     from .diagnostics import run_diagnostics
     from .main import run_process
+    from .audio import probe_media
+    from .media_range import format_time_position
 
     config = load_config(config_path)
 
@@ -48,6 +52,15 @@ def run_gui(config_path: str | Path) -> int:
 
             self.source_file = QLineEdit()
             self.output_dir = QLineEdit()
+            self.start_time = QTimeEdit(QTime(0, 0, 0))
+            self.start_time.setDisplayFormat("HH:mm:ss")
+            self.end_time = QTimeEdit(QTime(1, 0, 0))
+            self.end_time.setDisplayFormat("HH:mm:ss")
+            self.end_at_media_end = QCheckBox("Use media end")
+            self.end_at_media_end.setChecked(True)
+            self.end_time.setDisabled(True)
+            self.end_at_media_end.toggled.connect(self.end_time.setDisabled)
+            self.media_duration = QLabel("Select media to inspect duration")
             self.log_view = QPlainTextEdit()
             self.log_view.setReadOnly(True)
             self.progress = QProgressBar()
@@ -79,6 +92,9 @@ def run_gui(config_path: str | Path) -> int:
                 "Output Folder",
                 self._field_row(self.output_dir, output_button),
             )
+            form.addRow("Start Position", self.start_time)
+            form.addRow("End Position", self._end_time_row())
+            form.addRow("Media Duration", self.media_duration)
 
             buttons = QHBoxLayout()
             buttons.addWidget(doctor_button)
@@ -105,6 +121,14 @@ def run_gui(config_path: str | Path) -> int:
             widget.setLayout(row)
             return widget
 
+        def _end_time_row(self) -> QWidget:
+            row = QHBoxLayout()
+            row.addWidget(self.end_time)
+            row.addWidget(self.end_at_media_end)
+            widget = QWidget()
+            widget.setLayout(row)
+            return widget
+
         def _browse_source(self) -> None:
             selected, _ = QFileDialog.getOpenFileName(
                 self,
@@ -114,6 +138,19 @@ def run_gui(config_path: str | Path) -> int:
             )
             if selected:
                 self.source_file.setText(selected)
+                self._inspect_source(selected)
+
+        def _inspect_source(self, source: str) -> None:
+            try:
+                media = probe_media(source, config.paths.ffprobe_bin)
+            except Exception as error:  # noqa: BLE001
+                self.media_duration.setText(f"Could not inspect media: {error}")
+                return
+            rounded_duration = min(86_399, round(media.duration_seconds))
+            self.end_time.setTime(QTime(0, 0, 0).addSecs(rounded_duration))
+            self.media_duration.setText(
+                format_time_position(media.duration_seconds)
+            )
 
         def _browse_output(self) -> None:
             selected = QFileDialog.getExistingDirectory(
@@ -138,13 +175,22 @@ def run_gui(config_path: str | Path) -> int:
             self.progress.setValue(0)
             self.process_button.setEnabled(False)
             self.open_button.setEnabled(False)
+            output_dir = self.output_dir.text().strip() or None
+            start_seconds = QTime(0, 0, 0).secsTo(self.start_time.time())
+            end_seconds = (
+                None
+                if self.end_at_media_end.isChecked()
+                else QTime(0, 0, 0).secsTo(self.end_time.time())
+            )
 
             def worker() -> None:
                 try:
                     result = run_process(
                         config,
                         source,
-                        output_dir=self.output_dir.text().strip() or None,
+                        output_dir=output_dir,
+                        start_seconds=start_seconds,
+                        end_seconds=end_seconds,
                         log=self.log_message.emit,
                         progress=self.progress_changed.emit,
                     )

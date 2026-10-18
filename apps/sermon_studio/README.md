@@ -47,8 +47,18 @@ sermon-studio process \
   --source-file "/path/to/sunday-service.mp4" \
   --output-dir "/path/to/sermon-output"
 
+sermon-studio process \
+  --config config.yaml \
+  --source-file "/path/to/sunday-service.mp4" \
+  --start "12:30" \
+  --end "42:00"
+
 sermon-studio gui --config config.yaml
 ```
+
+`--start` and `--end` accept seconds, `MM:SS`, or `HH:MM:SS`. Start defaults
+to `00:00:00`; an omitted end processes through the end of the source. The GUI
+provides equivalent start/end controls and a `Use media end` switch.
 
 ## Outputs
 
@@ -61,7 +71,9 @@ processing_info.json   source, audio, checksum, and transcription metadata
 ```
 
 The temporary Whisper WAV is removed after transcription. The source video is
-never copied into the output directory.
+never copied into the output directory. For a selected range, the M4A and SRT
+start at `00:00:00`; `processing_info.json` records the original source start
+and end positions.
 
 ## Manual Publishing Boundary
 

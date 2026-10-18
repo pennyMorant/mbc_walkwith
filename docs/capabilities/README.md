@@ -33,7 +33,7 @@ Capability 不可以：
 - [audio_playback.md](audio_playback.md)：讲道音频播放、后台播放和原生媒体控制。
 - [pdf_generation.md](pdf_generation.md)：PDF 生成。
 - [tts_playback.md](tts_playback.md)：系统 TTS。
-- [media_processing.md](media_processing.md)：转录、大纲、经文引用等媒体处理。
+- [media_processing.md](media_processing.md)：本地讲道音频提取和转录文件生成。
 - [qr_check_in.md](qr_check_in.md)：二维码或签到码生成、校验和过期。
 - [data_export.md](data_export.md)：名单、统计和财务报表导出。
 - [scheduled_notification.md](scheduled_notification.md)：延迟通知、定时提醒和重复提醒。

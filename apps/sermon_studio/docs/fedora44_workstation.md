@@ -38,6 +38,16 @@ sermon-studio process \
   --source-file "/path/to/sunday-service.mp4"
 ```
 
+To remove pre-service or post-service video, select a source range:
+
+```sh
+sermon-studio process \
+  --config config.yaml \
+  --source-file "/path/to/sunday-service.mp4" \
+  --start "15:20" \
+  --end "48:10"
+```
+
 The first run may download the configured Whisper model. Later runs reuse its
 local cache. Process one sermon at a time, review the transcript, and manually
 upload the M4A audio and corrected text in Admin Web. Sermon Studio has no

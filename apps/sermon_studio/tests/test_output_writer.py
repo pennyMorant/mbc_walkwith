@@ -11,7 +11,12 @@ from sermon_studio.config import (
     PathsConfig,
     TranscriptionConfig,
 )
-from sermon_studio.models import MediaProbe, TranscriptPayload, TranscriptSegment
+from sermon_studio.models import (
+    MediaProbe,
+    MediaRange,
+    TranscriptPayload,
+    TranscriptSegment,
+)
 from sermon_studio.output_writer import write_outputs
 from sermon_studio.project_store import create_output_files
 
@@ -39,7 +44,14 @@ class OutputWriterTest(unittest.TestCase):
                 segments=[TranscriptSegment(0.0, 1.25, "Grace and peace.")],
             )
 
-            write_outputs(source, media, outputs, transcript, config)
+            write_outputs(
+                source,
+                media,
+                MediaRange(30, 50),
+                outputs,
+                transcript,
+                config,
+            )
 
             self.assertEqual(
                 outputs.transcript_text_file.read_text(encoding="utf-8"),
@@ -53,6 +65,9 @@ class OutputWriterTest(unittest.TestCase):
                 outputs.processing_info_file.read_text(encoding="utf-8")
             )
             self.assertEqual(info["audio"]["fileName"], "sermon_audio.m4a")
+            self.assertEqual(info["audio"]["durationSeconds"], 20)
+            self.assertEqual(info["audio"]["sourceRange"]["startSeconds"], 30)
+            self.assertEqual(info["audio"]["sourceRange"]["endSeconds"], 50)
             self.assertEqual(info["transcription"]["segmentCount"], 1)
 
 

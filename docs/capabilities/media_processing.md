@@ -13,8 +13,8 @@ Local sermon workstation / `apps/sermon_studio`。
 
 ## Contract
 
-输入：教会拥有或获准处理的本地视频或音频、输出目录、音频编码配置和
-faster-whisper 配置。
+输入：教会拥有或获准处理的本地视频或音频、可选的开始/结束位置、输出
+目录、音频编码配置和 faster-whisper 配置。
 
 输出：
 
@@ -31,10 +31,15 @@ faster-whisper 配置。
 - 不负责标题、讲员、讲义、大纲、经文引用、审核或发布状态。
 - 不生成 AI 摘要；工作人员在 Admin Web 中维护最终文案。
 - 输出只是待审核素材，不是发布事实来源。
+- 开始/结束位置必须统一作用于音频提取和转录；输出字幕以截取后音频的
+  `00:00:00` 为起点，metadata 保留原始素材的起止位置。
 - 临时 Whisper WAV 在转录结束或失败后删除。
 
-本地错误包括 source missing、no audio stream、FFprobe/FFmpeg 失败、模型
-不可用、转录失败和输出写入失败。这些错误不映射成 VPS API 错误码。
+## Errors
+
+本地错误包括 source missing、no audio stream、invalid media range、
+FFprobe/FFmpeg 失败、模型不可用、转录失败和输出写入失败。这些错误不映射成
+VPS API 错误码。
 
 ## Used By
 
