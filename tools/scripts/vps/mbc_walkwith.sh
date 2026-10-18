@@ -485,15 +485,18 @@ validate_backend_env_file() {
   [[ "$admin_secret" != "dev-only-change-me-minimum-32-characters" ]] || die "auth_secret must be rotated in ${env_file}."
   [[ "$member_secret" != "dev-only-change-me-minimum-32-characters" ]] || die "app_user_auth_secret must be rotated in ${env_file}."
 
-  if [[ "$media_driver" == "s3" ]]; then
-    local s3_bucket s3_access_key s3_secret
-    s3_bucket="$(read_env_value "$env_file" "S3_BUCKET")"
-    s3_access_key="$(read_env_value "$env_file" "S3_ACCESS_KEY_ID")"
-    s3_secret="$(read_env_value "$env_file" "S3_SECRET_ACCESS_KEY")"
-    [[ -n "$s3_bucket" ]] || die "S3_BUCKET must be set when MEDIA_STORAGE_DRIVER=s3."
-    [[ -n "$s3_access_key" ]] || die "S3_ACCESS_KEY_ID must be set when MEDIA_STORAGE_DRIVER=s3."
-    [[ -n "$s3_secret" ]] || die "S3_SECRET_ACCESS_KEY must be set when MEDIA_STORAGE_DRIVER=s3."
-  fi
+  [[ "$media_driver" == "s3" ]] || die "MEDIA_STORAGE_DRIVER must be s3 for VPS production deployment."
+  local s3_endpoint s3_bucket s3_access_key s3_secret media_public_base_url
+  s3_endpoint="$(read_env_value "$env_file" "S3_ENDPOINT")"
+  s3_bucket="$(read_env_value "$env_file" "S3_BUCKET")"
+  s3_access_key="$(read_env_value "$env_file" "S3_ACCESS_KEY_ID")"
+  s3_secret="$(read_env_value "$env_file" "S3_SECRET_ACCESS_KEY")"
+  media_public_base_url="$(read_env_value "$env_file" "MEDIA_PUBLIC_BASE_URL")"
+  [[ -n "$s3_endpoint" ]] || die "S3_ENDPOINT must be set for Cloudflare R2."
+  [[ -n "$s3_bucket" ]] || die "S3_BUCKET must be set for Cloudflare R2."
+  [[ -n "$s3_access_key" ]] || die "S3_ACCESS_KEY_ID must be set for Cloudflare R2."
+  [[ -n "$s3_secret" ]] || die "S3_SECRET_ACCESS_KEY must be set for Cloudflare R2."
+  [[ -n "$media_public_base_url" ]] || die "MEDIA_PUBLIC_BASE_URL must be set to the R2 public media domain."
 }
 
 init_runtime() {
@@ -770,14 +773,15 @@ USE_MOCK_DATA=false
 DATABASE_URL=postgres://${db_user}:${db_password}@127.0.0.1:5432/${db_name}
 REDIS_URL=
 
-MEDIA_STORAGE_DRIVER=local
-MEDIA_UPLOAD_DIR=/var/lib/mbc_walkwith/uploads
+MEDIA_STORAGE_DRIVER=s3
+MEDIA_UPLOAD_DIR=
 S3_ENDPOINT=
 S3_REGION=auto
 S3_BUCKET=
 S3_ACCESS_KEY_ID=
 S3_SECRET_ACCESS_KEY=
 S3_FORCE_PATH_STYLE=true
+MEDIA_PUBLIC_BASE_URL=
 
 # Sermon transcription, outline generation, and Scripture extraction run on the
 # local sermon workstation. The VPS only stores reviewed local packages.
@@ -816,13 +820,6 @@ EOF
   update_env_value "$backend_env" "PUBLIC_WEB_ORIGIN" "$runtime_public_origin"
   update_env_value "$backend_env" "USE_MOCK_DATA" "false"
   update_env_value "$backend_env" "DATABASE_URL" "postgres://${db_user}:${db_password}@127.0.0.1:5432/${db_name}"
-  local configured_media_driver configured_media_upload_dir
-  configured_media_driver="$(read_env_value "$backend_env" "MEDIA_STORAGE_DRIVER")"
-  configured_media_upload_dir="$(read_env_value "$backend_env" "MEDIA_UPLOAD_DIR")"
-  if [[ "$configured_media_driver" == "local" && ( -z "$configured_media_upload_dir" || "$configured_media_upload_dir" == "uploads" ) ]]; then
-    update_env_value "$backend_env" "MEDIA_UPLOAD_DIR" "/var/lib/mbc_walkwith/uploads"
-  fi
-
   local deploy_env="/etc/mbc_walkwith/deploy.env"
   cat > /tmp/mbcwalkwith-deploy.env <<EOF
 MBC_WALKWITH_APP_DIR=$(shell_quote "$app_dir")

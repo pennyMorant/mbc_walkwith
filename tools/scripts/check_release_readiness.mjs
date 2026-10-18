@@ -114,24 +114,28 @@ function backendReadiness() {
 function storageReadiness() {
   const driver = env.MEDIA_STORAGE_DRIVER || "local";
   if (driver === "s3") {
-    const ready = ["S3_BUCKET", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY"].every(
-      (key) => isUsableValue(env[key])
-    );
+    const ready = [
+      "S3_ENDPOINT",
+      "S3_BUCKET",
+      "S3_ACCESS_KEY_ID",
+      "S3_SECRET_ACCESS_KEY",
+      "MEDIA_PUBLIC_BASE_URL"
+    ].every((key) => isUsableValue(env[key]));
     addCheck({
       label: "Object storage",
       status: ready ? "ready" : "missing",
       detail: ready
         ? "S3/R2 media storage is configured."
-        : "S3_BUCKET, S3_ACCESS_KEY_ID, and S3_SECRET_ACCESS_KEY are required when MEDIA_STORAGE_DRIVER=s3."
+        : "S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, and MEDIA_PUBLIC_BASE_URL are required for Cloudflare R2."
     });
     return;
   }
 
   addCheck({
     label: "Object storage",
-    status: "warning",
+    status: "missing",
     detail:
-      "MEDIA_STORAGE_DRIVER=local is acceptable for a small VPS test, but R2/S3 should be used before production."
+      "MEDIA_STORAGE_DRIVER=s3 with Cloudflare R2 is required for production. Local storage is development/test only."
   });
 }
 

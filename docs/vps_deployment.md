@@ -360,12 +360,13 @@ Origins are the primary external configuration inputs:
 The generated `backend.env` defaults to:
 
 - `USE_MOCK_DATA=false`
-- `MEDIA_STORAGE_DRIVER=local`
-- `MEDIA_UPLOAD_DIR=/var/lib/mbc_walkwith/uploads`
+- `MEDIA_STORAGE_DRIVER=s3`
+- empty R2 credential fields that must be supplied from private deployment configuration
+- empty `MEDIA_PUBLIC_BASE_URL` that must be set to the R2 public media domain
 
-The local upload directory belongs to the API service user and lives outside
-timestamped releases, so deployments and release cleanup cannot remove sermon
-audio or images. Production may switch to a private R2/S3 bucket.
+The installer refuses to start or deploy the production backend until the R2
+endpoint, bucket, credentials, and public media URL are complete. Local disk
+storage remains a development/test adapter only.
 
 The VPS backend has no sermon transcription, outline generation, or Scripture
 extraction provider configuration. Run those steps locally and upload the
@@ -377,7 +378,8 @@ reviewed package through the admin API.
 - no fully interactive release selector for rollback yet
 - separate public web domains require `--public-origin`, matching DNS records,
   and successful certificate issuance
-- no built-in remote object storage validation beyond runtime configuration
+- object storage credentials are validated for presence at deploy time; live R2
+  connectivity is verified by the application upload path
 - backup recovery still requires a real R2 credential, restic password, and a
   PostgreSQL restore rehearsal on the target VPS
 

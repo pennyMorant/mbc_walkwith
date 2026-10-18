@@ -44,9 +44,6 @@ services:
       HOST: 0.0.0.0
       PORT: 3020
       DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in compose.env}
-      MEDIA_UPLOAD_DIR: /app/uploads
-    volumes:
-      - media_uploads:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -91,4 +88,3 @@ networks:
 
 volumes:
   postgres_data:
-  media_uploads:

@@ -63,10 +63,10 @@ cp infra/docker/backend.env.example infra/docker/backend.env
 - 两个互不相同且不少于 32 字符的 JWT secret。
 - 对外 `PUBLIC_API_BASE_URL`、`ADMIN_WEB_ORIGIN` 与 `PUBLIC_WEB_ORIGIN`。
 - 只覆盖容器私有网段的 `TRUST_PROXY`，不要配置为任意来源。
-- R2、Firebase、Stripe、Resend 等实际启用能力的服务端密钥。
+- R2 endpoint、bucket、access key、secret 与 `MEDIA_PUBLIC_BASE_URL`；R2 是生产必填能力。
 
-生产媒体应使用 `MEDIA_STORAGE_DRIVER=s3`。`media_uploads` 命名卷只用于本地或测试
-环境的 local storage，不能作为生产媒体的唯一副本。
+生产媒体必须使用 `MEDIA_STORAGE_DRIVER=s3`。Compose 不挂载媒体 volume；文件本体
+直接写入 Cloudflare R2，Postgres 只保存元数据与业务关联。
 
 ## 4. Build Locally
 
