@@ -42,29 +42,37 @@ export class MediaService {
     const stored = await this.storage.put({
       id,
       kind: "image",
-      visibility: input.visibility,
+      publicAccess: isPubliclyAccessible(
+        input.visibility,
+        input.consentStatus
+      ),
       fileName: input.fileName,
       mimeType,
       buffer: input.buffer
     });
-    return this.repository.create({
-      id,
-      kind: "image",
-      visibility: input.visibility,
-      consentStatus: input.consentStatus,
-      storageKey: stored.storageKey,
-      url: stored.publicUrl,
-      originalFileName: input.fileName,
-      mimeType,
-      sizeBytes: input.buffer.length,
-      width: null,
-      height: null,
-      focalX: 50,
-      focalY: 50,
-      altText: input.altText,
-      caption: input.caption,
-      copyrightSource: input.copyrightSource
-    });
+    try {
+      return await this.repository.create({
+        id,
+        kind: "image",
+        visibility: input.visibility,
+        consentStatus: input.consentStatus,
+        storageKey: stored.storageKey,
+        url: stored.publicUrl,
+        originalFileName: input.fileName,
+        mimeType,
+        sizeBytes: input.buffer.length,
+        width: null,
+        height: null,
+        focalX: 50,
+        focalY: 50,
+        altText: input.altText,
+        caption: input.caption,
+        copyrightSource: input.copyrightSource
+      });
+    } catch (error) {
+      await this.storage.delete(stored.storageKey).catch(() => undefined);
+      throw error;
+    }
   }
 
   list(query: MediaAssetListQuery) {
@@ -84,7 +92,7 @@ export class MediaService {
     if (
       !asset ||
       asset.visibility !== "public" ||
-      asset.consentStatus === "restricted" ||
+      asset.consentStatus !== "approved" ||
       !asset.url
     ) {
       return null;
@@ -92,8 +100,67 @@ export class MediaService {
     return asset;
   }
 
+  async findPublicByIds(ids: string[]) {
+    const assets = await this.repository.getByIds(ids);
+    return new Map(
+      assets
+        .filter(
+          (asset) =>
+            asset.visibility === "public" &&
+            asset.consentStatus === "approved" &&
+            Boolean(asset.url)
+        )
+        .map((asset) => [asset.id, asset])
+    );
+  }
+
   async update(id: string, input: MediaAssetUpdateRequest) {
-    const asset = await this.repository.update(id, input);
+    const before = await this.getById(id);
+    const consentStatus = input.consentStatus ?? before.consentStatus;
+    const wasPublic = isPubliclyAccessible(
+      before.visibility,
+      before.consentStatus
+    );
+    const willBePublic = isPubliclyAccessible(
+      before.visibility,
+      consentStatus
+    );
+    if (wasPublic === willBePublic) {
+      const asset = await this.repository.update(id, input);
+      if (!asset) {
+        throw mediaAssetNotFound(id);
+      }
+      return asset;
+    }
+
+    const storageKey = await this.repository.getStorageKey(id);
+    if (!storageKey) {
+      throw mediaAssetNotFound(id);
+    }
+    const relocated = await this.storage.relocate(storageKey, {
+      id: before.id,
+      kind: before.kind,
+      mimeType: before.mimeType,
+      publicAccess: willBePublic
+    });
+    let asset: MediaAsset | null;
+    try {
+      asset = await this.repository.update(id, {
+        ...input,
+        storageKey: relocated.storageKey,
+        url: relocated.publicUrl
+      });
+    } catch (error) {
+      await this.storage
+        .relocate(relocated.storageKey, {
+          id: before.id,
+          kind: before.kind,
+          mimeType: before.mimeType,
+          publicAccess: wasPublic
+        })
+        .catch(() => undefined);
+      throw error;
+    }
     if (!asset) {
       throw mediaAssetNotFound(id);
     }
@@ -104,7 +171,7 @@ export class MediaService {
     const asset = await this.getById(id);
     if (
       asset.visibility !== "public" ||
-      asset.consentStatus === "restricted"
+      asset.consentStatus !== "approved"
     ) {
       throw mediaAssetNotFound(id);
     }
@@ -118,6 +185,13 @@ export class MediaService {
     }
     return { asset, ...object };
   }
+}
+
+function isPubliclyAccessible(
+  visibility: MediaAsset["visibility"],
+  consentStatus: MediaAsset["consentStatus"]
+) {
+  return visibility === "public" && consentStatus === "approved";
 }
 
 function validateImage(buffer: Buffer, mimeType: string) {

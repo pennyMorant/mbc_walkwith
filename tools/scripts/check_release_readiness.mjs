@@ -117,6 +117,7 @@ function storageReadiness() {
     const ready = [
       "S3_ENDPOINT",
       "S3_BUCKET",
+      "S3_PRIVATE_BUCKET",
       "S3_ACCESS_KEY_ID",
       "S3_SECRET_ACCESS_KEY",
       "MEDIA_PUBLIC_BASE_URL"
@@ -126,7 +127,7 @@ function storageReadiness() {
       status: ready ? "ready" : "missing",
       detail: ready
         ? "S3/R2 media storage is configured."
-        : "S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, and MEDIA_PUBLIC_BASE_URL are required for Cloudflare R2."
+        : "S3_ENDPOINT, S3_BUCKET, S3_PRIVATE_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, and MEDIA_PUBLIC_BASE_URL are required for Cloudflare R2."
     });
     return;
   }

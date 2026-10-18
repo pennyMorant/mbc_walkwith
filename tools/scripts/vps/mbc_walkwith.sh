@@ -486,14 +486,17 @@ validate_backend_env_file() {
   [[ "$member_secret" != "dev-only-change-me-minimum-32-characters" ]] || die "app_user_auth_secret must be rotated in ${env_file}."
 
   [[ "$media_driver" == "s3" ]] || die "MEDIA_STORAGE_DRIVER must be s3 for VPS production deployment."
-  local s3_endpoint s3_bucket s3_access_key s3_secret media_public_base_url
+  local s3_endpoint s3_bucket s3_private_bucket s3_access_key s3_secret media_public_base_url
   s3_endpoint="$(read_env_value "$env_file" "S3_ENDPOINT")"
   s3_bucket="$(read_env_value "$env_file" "S3_BUCKET")"
+  s3_private_bucket="$(read_env_value "$env_file" "S3_PRIVATE_BUCKET")"
   s3_access_key="$(read_env_value "$env_file" "S3_ACCESS_KEY_ID")"
   s3_secret="$(read_env_value "$env_file" "S3_SECRET_ACCESS_KEY")"
   media_public_base_url="$(read_env_value "$env_file" "MEDIA_PUBLIC_BASE_URL")"
   [[ -n "$s3_endpoint" ]] || die "S3_ENDPOINT must be set for Cloudflare R2."
   [[ -n "$s3_bucket" ]] || die "S3_BUCKET must be set for Cloudflare R2."
+  [[ -n "$s3_private_bucket" ]] || die "S3_PRIVATE_BUCKET must be set for private media."
+  [[ "$s3_bucket" != "$s3_private_bucket" ]] || die "S3_BUCKET and S3_PRIVATE_BUCKET must be different buckets."
   [[ -n "$s3_access_key" ]] || die "S3_ACCESS_KEY_ID must be set for Cloudflare R2."
   [[ -n "$s3_secret" ]] || die "S3_SECRET_ACCESS_KEY must be set for Cloudflare R2."
   [[ -n "$media_public_base_url" ]] || die "MEDIA_PUBLIC_BASE_URL must be set to the R2 public media domain."
@@ -778,6 +781,7 @@ MEDIA_UPLOAD_DIR=
 S3_ENDPOINT=
 S3_REGION=auto
 S3_BUCKET=
+S3_PRIVATE_BUCKET=
 S3_ACCESS_KEY_ID=
 S3_SECRET_ACCESS_KEY=
 S3_FORCE_PATH_STYLE=true

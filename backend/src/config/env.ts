@@ -13,6 +13,7 @@ export type AppConfig = {
   s3Endpoint: string | undefined;
   s3Region: string;
   s3Bucket: string | undefined;
+  s3PrivateBucket: string | undefined;
   s3AccessKeyId: string | undefined;
   s3SecretAccessKey: string | undefined;
   s3ForcePathStyle: boolean;
@@ -94,6 +95,7 @@ export function loadConfig(): AppConfig {
     s3Endpoint: process.env.S3_ENDPOINT,
     s3Region: process.env.S3_REGION ?? "us-east-1",
     s3Bucket: process.env.S3_BUCKET,
+    s3PrivateBucket: process.env.S3_PRIVATE_BUCKET,
     s3AccessKeyId: process.env.S3_ACCESS_KEY_ID,
     s3SecretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     s3ForcePathStyle: boolFromEnv("S3_FORCE_PATH_STYLE", true),
@@ -213,13 +215,17 @@ function validateProductionConfig(config: AppConfig): void {
   if (
     !config.s3Endpoint ||
     !config.s3Bucket ||
+    !config.s3PrivateBucket ||
     !config.s3AccessKeyId ||
     !config.s3SecretAccessKey ||
     !config.mediaPublicBaseUrl
   ) {
     throw new Error(
-      "S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, and MEDIA_PUBLIC_BASE_URL are required for production R2 storage."
+      "S3_ENDPOINT, S3_BUCKET, S3_PRIVATE_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, and MEDIA_PUBLIC_BASE_URL are required for production R2 storage."
     );
+  }
+  if (config.s3Bucket === config.s3PrivateBucket) {
+    throw new Error("S3_BUCKET and S3_PRIVATE_BUCKET must be different buckets.");
   }
 }
 

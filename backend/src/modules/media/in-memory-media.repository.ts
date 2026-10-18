@@ -6,7 +6,8 @@ import type {
 
 import type {
   CreateMediaAssetInput,
-  MediaRepository
+  MediaRepository,
+  UpdateMediaAssetRecordInput
 } from "./media.repository.js";
 
 type StoredMediaAsset = MediaAsset & { storageKey: string };
@@ -34,6 +35,13 @@ export class InMemoryMediaRepository implements MediaRepository {
     return this.assets.get(id)?.storageKey ?? null;
   }
 
+  async getByIds(ids: string[]): Promise<MediaAsset[]> {
+    return ids.flatMap((id) => {
+      const asset = this.assets.get(id);
+      return asset ? [publicAsset(asset)] : [];
+    });
+  }
+
   async list(query: MediaAssetListQuery): Promise<MediaAsset[]> {
     return [...this.assets.values()]
       .filter((asset) => !query.kind || asset.kind === query.kind)
@@ -47,7 +55,7 @@ export class InMemoryMediaRepository implements MediaRepository {
 
   async update(
     id: string,
-    input: MediaAssetUpdateRequest
+    input: UpdateMediaAssetRecordInput
   ): Promise<MediaAsset | null> {
     const asset = this.assets.get(id);
     if (!asset) {
@@ -65,6 +73,10 @@ export class InMemoryMediaRepository implements MediaRepository {
       ...(input.copyrightSource === undefined
         ? {}
         : { copyrightSource: input.copyrightSource }),
+      ...(input.storageKey === undefined
+        ? {}
+        : { storageKey: input.storageKey }),
+      ...(input.url === undefined ? {} : { url: input.url }),
       updatedAt: new Date().toISOString()
     };
     this.assets.set(id, updated);

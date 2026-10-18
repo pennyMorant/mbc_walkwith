@@ -3,13 +3,14 @@ import type {
   MediaAssetListQuery,
   MediaAssetUpdateRequest
 } from "@mbc/api-contracts";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 
 import type { AppDb } from "../../shared/db/client.js";
 import { mediaAssets } from "../../shared/db/schema.js";
 import type {
   CreateMediaAssetInput,
-  MediaRepository
+  MediaRepository,
+  UpdateMediaAssetRecordInput
 } from "./media.repository.js";
 
 export class PostgresMediaRepository implements MediaRepository {
@@ -58,6 +59,17 @@ export class PostgresMediaRepository implements MediaRepository {
     return row?.storageKey ?? null;
   }
 
+  async getByIds(ids: string[]): Promise<MediaAsset[]> {
+    if (ids.length === 0) {
+      return [];
+    }
+    const rows = await this.db
+      .select()
+      .from(mediaAssets)
+      .where(inArray(mediaAssets.id, [...new Set(ids)]));
+    return rows.map(mediaAssetFromRow);
+  }
+
   async list(query: MediaAssetListQuery): Promise<MediaAsset[]> {
     const filters = [
       query.kind ? eq(mediaAssets.kind, query.kind) : undefined,
@@ -76,11 +88,17 @@ export class PostgresMediaRepository implements MediaRepository {
 
   async update(
     id: string,
-    input: MediaAssetUpdateRequest
+    input: UpdateMediaAssetRecordInput
   ): Promise<MediaAsset | null> {
+    const { storageKey, url, ...metadata } = input;
     const [row] = await this.db
       .update(mediaAssets)
-      .set({ ...input, updatedAt: new Date() })
+      .set({
+        ...metadata,
+        ...(storageKey === undefined ? {} : { storageKey }),
+        ...(url === undefined ? {} : { publicUrl: url ?? "" }),
+        updatedAt: new Date()
+      })
       .where(eq(mediaAssets.id, id))
       .returning();
     return row ? mediaAssetFromRow(row) : null;

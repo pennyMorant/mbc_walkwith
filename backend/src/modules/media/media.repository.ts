@@ -11,13 +11,19 @@ export type CreateMediaAssetInput = Omit<
   storageKey: string;
 };
 
+export type UpdateMediaAssetRecordInput = MediaAssetUpdateRequest & {
+  storageKey?: string;
+  url?: string | null;
+};
+
 export interface MediaRepository {
   create(input: CreateMediaAssetInput): Promise<MediaAsset>;
   getById(id: string): Promise<MediaAsset | null>;
   getStorageKey(id: string): Promise<string | null>;
+  getByIds(ids: string[]): Promise<MediaAsset[]>;
   list(query: MediaAssetListQuery): Promise<MediaAsset[]>;
   update(
     id: string,
-    input: MediaAssetUpdateRequest
+    input: UpdateMediaAssetRecordInput
   ): Promise<MediaAsset | null>;
 }

@@ -62,6 +62,7 @@ const originalMediaEnv = {
   MEDIA_STORAGE_DRIVER: process.env.MEDIA_STORAGE_DRIVER,
   S3_ENDPOINT: process.env.S3_ENDPOINT,
   S3_BUCKET: process.env.S3_BUCKET,
+  S3_PRIVATE_BUCKET: process.env.S3_PRIVATE_BUCKET,
   S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
   S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
   MEDIA_PUBLIC_BASE_URL: process.env.MEDIA_PUBLIC_BASE_URL
@@ -316,8 +317,12 @@ describe("loadConfig", () => {
     configureProductionR2();
     expect(loadConfig()).toMatchObject({
       mediaStorageDriver: "s3",
+      s3PrivateBucket: "mbc-media-private",
       mediaPublicBaseUrl: "https://media.example.com"
     });
+
+    process.env.S3_PRIVATE_BUCKET = process.env.S3_BUCKET;
+    expect(() => loadConfig()).toThrow(/must be different buckets/);
   });
 });
 
@@ -325,6 +330,7 @@ function configureProductionR2() {
   process.env.MEDIA_STORAGE_DRIVER = "s3";
   process.env.S3_ENDPOINT = "https://account.r2.cloudflarestorage.com";
   process.env.S3_BUCKET = "mbc-media";
+  process.env.S3_PRIVATE_BUCKET = "mbc-media-private";
   process.env.S3_ACCESS_KEY_ID = "test-access-key";
   process.env.S3_SECRET_ACCESS_KEY = "test-secret-key";
   process.env.MEDIA_PUBLIC_BASE_URL = "https://media.example.com";

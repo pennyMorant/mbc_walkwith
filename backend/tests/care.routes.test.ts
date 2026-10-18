@@ -786,6 +786,7 @@ const testConfig: AppConfig = {
   s3Endpoint: undefined,
   s3Region: "us-east-1",
   s3Bucket: undefined,
+  s3PrivateBucket: undefined,
   s3AccessKeyId: undefined,
   s3SecretAccessKey: undefined,
   s3ForcePathStyle: true,

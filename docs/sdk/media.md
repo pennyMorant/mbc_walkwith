@@ -33,6 +33,8 @@ GET /v1/media/:mediaId/content
 
 本地开发 driver 通过该路由读取公开资源。生产返回的媒体 URL 指向
 `MEDIA_PUBLIC_BASE_URL`，浏览器直接从 Cloudflare R2 自定义媒体域名获取文件。
+私有、待授权和受限媒体写入独立的私有 bucket，公开域名不得绑定该 bucket。
+只有 `visibility=public` 且 `consentStatus=approved` 的媒体具有公开 URL。
 
 ## Projection
 

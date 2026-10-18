@@ -361,11 +361,11 @@ The generated `backend.env` defaults to:
 
 - `USE_MOCK_DATA=false`
 - `MEDIA_STORAGE_DRIVER=s3`
-- empty R2 credential fields that must be supplied from private deployment configuration
+- empty public/private R2 bucket and credential fields that must be supplied from private deployment configuration
 - empty `MEDIA_PUBLIC_BASE_URL` that must be set to the R2 public media domain
 
 The installer refuses to start or deploy the production backend until the R2
-endpoint, bucket, credentials, and public media URL are complete. Local disk
+endpoint, distinct public/private buckets, credentials, and public media URL are complete. Local disk
 storage remains a development/test adapter only.
 
 The VPS backend has no sermon transcription, outline generation, or Scripture

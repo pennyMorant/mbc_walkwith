@@ -201,15 +201,17 @@ MEDIA_STORAGE_DRIVER=s3
 S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
 S3_REGION=auto
 S3_BUCKET=<bucket>
+S3_PRIVATE_BUCKET=<private-bucket>
 S3_ACCESS_KEY_ID=<key>
 S3_SECRET_ACCESS_KEY=<secret>
 S3_FORCE_PATH_STYLE=true
 MEDIA_PUBLIC_BASE_URL=https://media.example.com
 ```
 
-`MEDIA_PUBLIC_BASE_URL` should be the Cloudflare custom domain attached to the
-public media prefix. Public images are delivered directly from R2; private
-objects remain accessible only through signed backend flows.
+`MEDIA_PUBLIC_BASE_URL` should be the Cloudflare custom domain attached only to
+`S3_BUCKET`. `S3_PRIVATE_BUCKET` must be a different bucket with no public
+domain or public development URL. Public images are delivered directly from R2;
+private objects remain accessible only through signed backend flows.
 
 Local sermon processing configuration belongs to the local workstation, not the
 backend VPS. See [local_sermon_processing.md](local_sermon_processing.md) and
