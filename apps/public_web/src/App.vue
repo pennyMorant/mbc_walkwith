@@ -3,6 +3,7 @@ import AppInvitationSection from "@/components/AppInvitationSection.vue";
 import ChurchEntranceSection from "@/components/ChurchEntranceSection.vue";
 import ContactFooter from "@/components/ContactFooter.vue";
 import HeroSection from "@/components/HeroSection.vue";
+import GallerySection from "@/components/GallerySection.vue";
 import LandingLoadState from "@/components/LandingLoadState.vue";
 import MissionSection from "@/components/MissionSection.vue";
 import OpeningIntro from "@/components/OpeningIntro.vue";
@@ -112,6 +113,7 @@ function setIconLink(rel: string, href: string, type?: string) {
           :locale="content.locale"
           :time-zone="content.timeZone"
         />
+        <GallerySection :gallery="content.gallery" />
         <PeopleSection :people="content.people" />
         <ChurchEntranceSection :entrance="content.entrance" />
         <AppInvitationSection :app="content.app" />

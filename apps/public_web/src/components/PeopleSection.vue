@@ -26,7 +26,13 @@ defineProps<{
         :transition="{ duration: 0.6, delay: index * 0.07, ease: 'easeOut' }"
       >
         <div class="person-photo">
-          <img v-if="person.imageUrl" :src="person.imageUrl" :alt="person.name" />
+          <img
+            v-if="person.imageUrl"
+            :src="person.imageUrl"
+            :alt="person.name"
+            loading="lazy"
+            decoding="async"
+          />
           <v-icon v-else icon="mdi-account-heart-outline" size="42" />
         </div>
         <div class="person-copy">

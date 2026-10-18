@@ -40,6 +40,9 @@ describe("media routes", () => {
       });
       expect(contentResponse.statusCode).toBe(200);
       expect(contentResponse.headers["content-type"]).toContain("image/png");
+      expect(contentResponse.headers["cross-origin-resource-policy"]).toBe(
+        "cross-origin"
+      );
       expect(contentResponse.rawPayload.equals(onePixelPng)).toBe(true);
 
       const listResponse = await harness.app.inject({

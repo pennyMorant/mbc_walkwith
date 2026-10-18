@@ -13,6 +13,7 @@ export async function registerMediaRoutes(
     reply.header("Content-Type", result.asset.mimeType);
     reply.header("Content-Length", String(result.sizeBytes));
     reply.header("Cache-Control", "public, max-age=31536000, immutable");
+    reply.header("Cross-Origin-Resource-Policy", "cross-origin");
     return reply.send(result.stream);
   });
 }

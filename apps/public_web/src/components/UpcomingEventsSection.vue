@@ -51,7 +51,12 @@ function eventDate(event: PublicLandingEvent) {
         :transition="{ duration: 0.62, delay: index * 0.07, ease: 'easeOut' }"
       >
         <div v-if="event.imageUrl" class="event-image">
-          <img :src="event.imageUrl" :alt="event.title" />
+          <img
+            :src="event.imageUrl"
+            :alt="event.title"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         <div class="event-copy">
           <p v-if="eventDate(event)" class="event-date">{{ eventDate(event) }}</p>
