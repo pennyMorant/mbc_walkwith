@@ -4,12 +4,14 @@ import hashlib
 import json
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from .config import AudioConfig
 from .models import MediaProbe, MediaRange
+from .processing_control import CancellationToken, ProcessingCancelled
 
 PROBE_TIMEOUT_SECONDS = 30
+FfmpegProgressFn = Callable[[float], None]
 
 
 def probe_media(source_path: str | Path, ffprobe_bin: str) -> MediaProbe:
@@ -84,6 +86,8 @@ def extract_audio(
     ffmpeg_bin: str,
     config: AudioConfig,
     media_range: MediaRange,
+    progress: FfmpegProgressFn | None = None,
+    cancellation: CancellationToken | None = None,
 ) -> Path:
     source = _require_source_file(source_path)
     output = Path(output_path).expanduser().resolve()
@@ -112,13 +116,23 @@ def extract_audio(
         "-movflags",
         "+faststart",
     ]
-    return _run_ffmpeg(command, output, "Audio extraction failed.")
+    return _run_ffmpeg(
+        command,
+        output,
+        "Audio extraction failed.",
+        expected_duration=media_range.duration_seconds,
+        progress=progress,
+        cancellation=cancellation,
+    )
 
 
 def create_transcription_audio(
     source_audio_path: str | Path,
     output_path: str | Path,
     ffmpeg_bin: str,
+    duration_seconds: float | None = None,
+    progress: FfmpegProgressFn | None = None,
+    cancellation: CancellationToken | None = None,
 ) -> Path:
     source = _require_source_file(source_audio_path)
     output = Path(output_path).expanduser().resolve()
@@ -135,7 +149,14 @@ def create_transcription_audio(
         "-c:a",
         "pcm_s16le",
     ]
-    return _run_ffmpeg(command, output, "Transcription audio conversion failed.")
+    return _run_ffmpeg(
+        command,
+        output,
+        "Transcription audio conversion failed.",
+        expected_duration=duration_seconds,
+        progress=progress,
+        cancellation=cancellation,
+    )
 
 
 def sha256_file(path: str | Path) -> str:
@@ -146,17 +167,34 @@ def sha256_file(path: str | Path) -> str:
     return digest.hexdigest()
 
 
-def _run_ffmpeg(command: list[str], output: Path, message: str) -> Path:
+def _run_ffmpeg(
+    command: list[str],
+    output: Path,
+    message: str,
+    expected_duration: float | None = None,
+    progress: FfmpegProgressFn | None = None,
+    cancellation: CancellationToken | None = None,
+) -> Path:
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_name(f".{output.stem}.partial{output.suffix}")
     temporary.unlink(missing_ok=True)
     try:
-        subprocess.run(
-            [*command, str(temporary)],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+        if progress is None and cancellation is None:
+            subprocess.run(
+                [*command, str(temporary)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        else:
+            _run_ffmpeg_with_progress(
+                command,
+                temporary,
+                message,
+                expected_duration,
+                progress,
+                cancellation or CancellationToken(),
+            )
         if not temporary.is_file() or temporary.stat().st_size == 0:
             raise RuntimeError(f"{message} FFmpeg produced an empty file.")
         temporary.replace(output)
@@ -169,6 +207,68 @@ def _run_ffmpeg(command: list[str], output: Path, message: str) -> Path:
         temporary.unlink(missing_ok=True)
         raise
     return output
+
+
+def _run_ffmpeg_with_progress(
+    command: list[str],
+    output: Path,
+    message: str,
+    expected_duration: float | None,
+    progress: FfmpegProgressFn | None,
+    cancellation: CancellationToken,
+) -> None:
+    cancellation.raise_if_cancelled()
+    process = subprocess.Popen(
+        [
+            command[0],
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            *command[1:],
+            "-progress",
+            "pipe:1",
+            "-nostats",
+            str(output),
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    cancellation.bind_process(process)
+    try:
+        if process.stdout is not None:
+            for line in process.stdout:
+                cancellation.raise_if_cancelled()
+                _report_ffmpeg_progress(line, expected_duration, progress)
+        stderr = process.stderr.read() if process.stderr is not None else ""
+        return_code = process.wait()
+        if cancellation.is_cancelled:
+            raise ProcessingCancelled("Processing was cancelled.")
+        if return_code != 0:
+            detail = stderr.strip().splitlines()[-1:]
+            suffix = f" {' '.join(detail)}" if detail else ""
+            raise RuntimeError(f"{message}{suffix}")
+        if progress:
+            progress(1.0)
+    finally:
+        cancellation.release_process(process)
+
+
+def _report_ffmpeg_progress(
+    line: str,
+    expected_duration: float | None,
+    progress: FfmpegProgressFn | None,
+) -> None:
+    if progress is None or not expected_duration or expected_duration <= 0:
+        return
+    key, separator, value = line.strip().partition("=")
+    if not separator or key not in {"out_time_us", "out_time_ms"}:
+        return
+    try:
+        elapsed_seconds = int(value) / 1_000_000
+    except ValueError:
+        return
+    progress(min(1.0, max(0.0, elapsed_seconds / expected_duration)))
 
 
 def _require_source_file(path: str | Path) -> Path:

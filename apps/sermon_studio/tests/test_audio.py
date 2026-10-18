@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from sermon_studio.audio import extract_audio, probe_media
+from sermon_studio.audio import _report_ffmpeg_progress, extract_audio, probe_media
 from sermon_studio.config import AudioConfig
 from sermon_studio.models import MediaProbe, MediaRange
 
@@ -115,6 +115,13 @@ class AudioTest(unittest.TestCase):
                 )
 
             self.assertEqual(source.read_bytes(), b"original")
+
+    def test_ffmpeg_progress_uses_expected_duration(self) -> None:
+        values: list[float] = []
+
+        _report_ffmpeg_progress("out_time_us=5000000", 10, values.append)
+
+        self.assertEqual(values, [0.5])
 
 
 if __name__ == "__main__":

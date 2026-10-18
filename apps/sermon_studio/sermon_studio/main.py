@@ -4,6 +4,7 @@ from pathlib import Path
 
 from .config import AppConfig, load_config
 from .pipeline import process_media
+from .processing_control import CancellationToken
 
 
 def load_app_config(config_path: str | Path) -> AppConfig:
@@ -18,6 +19,8 @@ def run_process(
     end_seconds: float | None = None,
     log=print,
     progress=None,
+    cancellation: CancellationToken | None = None,
+    stage=None,
 ):
     return process_media(
         config,
@@ -27,4 +30,6 @@ def run_process(
         end_seconds=end_seconds,
         log=log,
         progress=progress,
+        cancellation=cancellation,
+        stage=stage,
     )
