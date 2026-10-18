@@ -11,7 +11,9 @@ class SettingsStoreTest(unittest.TestCase):
     def test_round_trips_settings(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             store = SettingsStore(Path(directory) / "settings.json")
-            expected = StudioSettings("/output", "medium", "zh", ["/video.mp4"])
+            expected = StudioSettings(
+                "/output", "medium", "zh", True, ["/video.mp4"]
+            )
 
             store.save(expected)
 
@@ -22,6 +24,19 @@ class SettingsStoreTest(unittest.TestCase):
             path = Path(directory) / "settings.json"
             path.write_text("not-json", encoding="utf-8")
             self.assertEqual(SettingsStore(path).load(), StudioSettings())
+
+    def test_non_object_json_returns_defaults(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "settings.json"
+            path.write_text("[]", encoding="utf-8")
+            self.assertEqual(SettingsStore(path).load(), StudioSettings())
+
+    def test_explicit_auto_language_round_trips(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            store = SettingsStore(Path(directory) / "settings.json")
+            expected = StudioSettings(language=None, language_is_set=True)
+            store.save(expected)
+            self.assertEqual(store.load(), expected)
 
 
 if __name__ == "__main__":

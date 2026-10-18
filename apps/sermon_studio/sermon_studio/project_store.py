@@ -30,6 +30,20 @@ def create_output_files(
     )
 
 
+def resolve_output_directory(
+    work_dir: str | Path,
+    source_file: str | Path,
+    output_parent: str | Path | None = None,
+) -> Path:
+    source = Path(source_file).expanduser().resolve()
+    parent = (
+        Path(output_parent).expanduser().resolve()
+        if output_parent
+        else Path(work_dir).expanduser().resolve()
+    )
+    return parent / slugify(source.stem)
+
+
 def slugify(text: str) -> str:
     text = text.strip().lower()
     text = re.sub(r"[^a-z0-9\u4e00-\u9fff]+", "-", text)

@@ -9,11 +9,21 @@ from sermon_studio.models import OutputFiles
 from sermon_studio.project_store import (
     create_output_files,
     publish_output_files,
+    resolve_output_directory,
     slugify,
 )
 
 
 class ProjectStoreTest(unittest.TestCase):
+    def test_output_parent_creates_a_source_specific_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory) / "exports"
+            source = Path(directory) / "Sunday Grace.mp4"
+
+            result = resolve_output_directory(directory, source, parent)
+
+            self.assertEqual(result, (parent / "sunday-grace").resolve())
+
     def test_slugify_preserves_chinese_and_normalizes_separators(self) -> None:
         self.assertEqual(slugify("主日 信息 2026"), "主日-信息-2026")
 

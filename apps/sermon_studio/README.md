@@ -58,7 +58,9 @@ sermon-studio gui --config config.yaml
 
 `--start` and `--end` accept seconds, `MM:SS`, or `HH:MM:SS`. Start defaults
 to `00:00:00`; an omitted end processes through the end of the source. The GUI
-provides equivalent start/end controls and a `Use media end` switch.
+provides equivalent start/end controls and a `Use Media End` action. Its output
+field selects a parent directory; each recording receives a source-specific
+child directory so one sermon cannot overwrite another.
 
 The Linux desktop workbench also provides media preview, timeline seeking,
 start/end capture from the current playback position, model and language

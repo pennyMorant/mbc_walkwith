@@ -11,6 +11,7 @@ class StudioSettings:
     output_dir: str = ""
     model: str = ""
     language: str | None = None
+    language_is_set: bool = False
     recent_sources: list[str] = field(default_factory=list)
 
 
@@ -23,13 +24,19 @@ class SettingsStore:
             return StudioSettings()
         try:
             raw = json.loads(self.path.read_text(encoding="utf-8"))
+            if not isinstance(raw, dict):
+                return StudioSettings()
+            recent_sources = raw.get("recent_sources", [])
+            if not isinstance(recent_sources, list):
+                recent_sources = []
             return StudioSettings(
                 output_dir=str(raw.get("output_dir") or ""),
                 model=str(raw.get("model") or ""),
                 language=raw.get("language"),
-                recent_sources=[str(value) for value in raw.get("recent_sources", [])][
-                    :10
-                ],
+                language_is_set=bool(raw.get("language_is_set", False)),
+                recent_sources=[
+                    value for value in recent_sources if isinstance(value, str)
+                ][:10],
             )
         except (OSError, TypeError, ValueError, json.JSONDecodeError):
             return StudioSettings()

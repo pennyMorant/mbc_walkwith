@@ -3,8 +3,8 @@ from __future__ import annotations
 from dataclasses import replace
 from pathlib import Path
 
-from PySide6.QtCore import QThread, QTime, QUrl
-from PySide6.QtGui import QDesktopServices
+from PySide6.QtCore import QThread, QTime, QTimer, QUrl
+from PySide6.QtGui import QCloseEvent, QDesktopServices
 from PySide6.QtWidgets import (
     QComboBox, QFileDialog, QFormLayout, QHBoxLayout, QLabel, QLineEdit,
     QMainWindow, QMessageBox, QProgressBar, QPushButton, QPlainTextEdit,
@@ -16,6 +16,7 @@ from ..diagnostics import run_diagnostics
 from ..media_range import format_time_position
 from ..models import MediaProbe, ProcessingResult
 from ..output_writer import save_reviewed_transcript
+from ..project_store import resolve_output_directory
 from ..settings_store import SettingsStore, StudioSettings
 from .job_controller import ProbeJob, ProcessingJob
 from .media_preview import MediaPreview
@@ -30,7 +31,11 @@ class MainWindow(QMainWindow):
         self.result: ProcessingResult | None = None
         self.processing_job: ProcessingJob | None = None
         self._threads: list[QThread] = []
+        self._jobs: list[object] = []
         self._duration_seconds = 0.0
+        self._use_full_media_end = True
+        self._close_pending = False
+        self._last_output_dir: Path | None = None
         self.settings_store = SettingsStore()
         self.settings = self.settings_store.load()
         self.setWindowTitle("Sermon Studio")
@@ -60,7 +65,7 @@ class MainWindow(QMainWindow):
         ):
             self.language.addItem(label, value)
         _select_data(self.language, config.transcription.language)
-        if self.settings.language:
+        if self.settings.language_is_set:
             _select_data(self.language, self.settings.language)
         self.progress = QProgressBar()
         self.progress.setRange(0, 100)
@@ -89,7 +94,7 @@ class MainWindow(QMainWindow):
         form = QFormLayout()
         form.addRow("Recent", self.recent_sources)
         form.addRow("Source media", _row(self.source_field, source_button))
-        form.addRow("Output folder", _row(self.output_field, output_button))
+        form.addRow("Output parent", _row(self.output_field, output_button))
         form.addRow("Start", _row(self.start_time, set_start))
         form.addRow("End", _row(self.end_time, set_end, media_end))
         form.addRow("Whisper model", self.model)
@@ -126,6 +131,7 @@ class MainWindow(QMainWindow):
         self.open_button.clicked.connect(self._open_output)
         self.transcript.save_requested.connect(self._save_transcript)
         self.recent_sources.currentIndexChanged.connect(self._load_recent_source)
+        self.end_time.timeChanged.connect(self._end_time_edited)
 
     def _browse_source(self) -> None:
         selected, _ = QFileDialog.getOpenFileName(
@@ -169,8 +175,9 @@ class MainWindow(QMainWindow):
         if not Path(source).is_file():
             QMessageBox.warning(self, "Missing media", "Choose a valid media file.")
             return
-        start, end = _seconds(self.start_time.time()), _seconds(self.end_time.time())
-        if end <= start:
+        start = _seconds(self.start_time.time())
+        end = None if self._use_full_media_end else _seconds(self.end_time.time())
+        if end is not None and end <= start:
             QMessageBox.warning(self, "Invalid range", "End must be after start.")
             return
         self.result = None
@@ -178,7 +185,15 @@ class MainWindow(QMainWindow):
         self.log_view.clear()
         self._set_busy(True)
         job = ProcessingJob(
-            self.config, source, self.output_field.text().strip() or None,
+            self.config,
+            source,
+            str(
+                resolve_output_directory(
+                    self.config.paths.work_dir,
+                    source,
+                    self.output_field.text().strip() or None,
+                )
+            ),
             start, end, self.model.currentText(), self.language.currentData(),
         )
         self.processing_job = job
@@ -193,7 +208,7 @@ class MainWindow(QMainWindow):
 
     def _processing_succeeded(self, result: ProcessingResult) -> None:
         self.result = result
-        self.output_field.setText(str(result.outputs.root))
+        self._last_output_dir = result.outputs.root
         self.transcript.set_transcript(result.transcript.text)
         self.open_button.setEnabled(True)
         self._save_settings(result.source_file)
@@ -201,7 +216,8 @@ class MainWindow(QMainWindow):
     def _processing_failed(self, detail: str) -> None:
         self.status.setText("Failed")
         self.log_view.appendPlainText(f"ERROR: {detail}")
-        QMessageBox.critical(self, "Processing failed", detail)
+        if not self._close_pending:
+            QMessageBox.critical(self, "Processing failed", detail)
 
     def _processing_finished(self) -> None:
         self.processing_job = None
@@ -229,15 +245,20 @@ class MainWindow(QMainWindow):
             self.log_view.appendPlainText(f"[{status}] {item.name}: {item.detail}")
 
     def _open_output(self) -> None:
-        path = self.output_field.text().strip()
-        if path:
-            QDesktopServices.openUrl(QUrl.fromLocalFile(path))
+        if self._last_output_dir:
+            QDesktopServices.openUrl(QUrl.fromLocalFile(str(self._last_output_dir)))
 
     def _set_editor_time(self, editor: QTimeEdit) -> None:
         editor.setTime(QTime(0, 0).addSecs(round(self.preview.position_seconds)))
+        if editor is self.end_time:
+            self._use_full_media_end = False
 
     def _use_media_end(self) -> None:
         self.end_time.setTime(QTime(0, 0).addSecs(round(self._duration_seconds)))
+        self._use_full_media_end = True
+
+    def _end_time_edited(self) -> None:
+        self._use_full_media_end = False
 
     def _set_busy(self, busy: bool) -> None:
         self.process_button.setEnabled(not busy)
@@ -256,6 +277,7 @@ class MainWindow(QMainWindow):
             output_dir=self.output_field.text().strip(),
             model=self.model.currentText(),
             language=self.language.currentData(),
+            language_is_set=True,
             recent_sources=recent[:10],
         )
         self.settings_store.save(self.settings)
@@ -263,13 +285,33 @@ class MainWindow(QMainWindow):
     def _start_thread(self, job: object) -> None:
         thread = QThread(self)
         self._threads.append(thread)
+        self._jobs.append(job)
         job.moveToThread(thread)  # type: ignore[attr-defined]
         thread.started.connect(job.run)  # type: ignore[attr-defined]
         job.finished.connect(thread.quit)  # type: ignore[attr-defined]
         job.finished.connect(job.deleteLater)  # type: ignore[attr-defined]
         thread.finished.connect(thread.deleteLater)
-        thread.finished.connect(lambda: self._threads.remove(thread))
+        thread.finished.connect(lambda: self._thread_finished(thread, job))
         thread.start()
+
+    def _thread_finished(self, thread: QThread, job: object) -> None:
+        if thread in self._threads:
+            self._threads.remove(thread)
+        if job in self._jobs:
+            self._jobs.remove(job)
+        if self._close_pending and not self._threads:
+            QTimer.singleShot(0, self.close)
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        self.preview.player.stop()
+        if not self._threads:
+            event.accept()
+            return
+        self._close_pending = True
+        if self.processing_job:
+            self.processing_job.cancel()
+        self.status.setText("Closing after the current task stops...")
+        event.ignore()
 
 
 def _time_editor() -> QTimeEdit:
