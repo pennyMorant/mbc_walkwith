@@ -3,6 +3,7 @@ import AppInvitationSection from "@/components/AppInvitationSection.vue";
 import ChurchEntranceSection from "@/components/ChurchEntranceSection.vue";
 import ContactFooter from "@/components/ContactFooter.vue";
 import HeroSection from "@/components/HeroSection.vue";
+import LandingLoadState from "@/components/LandingLoadState.vue";
 import MissionSection from "@/components/MissionSection.vue";
 import OpeningIntro from "@/components/OpeningIntro.vue";
 import PeopleSection from "@/components/PeopleSection.vue";
@@ -14,7 +15,7 @@ import { usePublicLocale } from "@/core/locale";
 import { computed, ref, watch } from "vue";
 
 const { locale, t } = usePublicLocale();
-const { content, hasError, isLoading } = useLandingContent(locale);
+const { content, isLoading, retry } = useLandingContent(locale);
 
 const introStorageKey = "mbc_public_intro_seen";
 const introDismissed = ref(hasSeenIntro());
@@ -121,12 +122,16 @@ function setIconLink(rel: string, href: string, type?: string) {
       </v-main>
     </template>
 
-    <v-main v-else class="landing-state">
-      <v-progress-circular v-if="isLoading" indeterminate color="primary" />
-      <div v-else class="landing-state-panel">
-        <v-icon icon="mdi-alert-circle-outline" size="36" />
-        <p>{{ hasError ? t("loadingError") : "" }}</p>
-      </div>
+    <v-main v-else>
+      <LandingLoadState
+        :error-message="t('loadingError')"
+        :error-title="t('loadingErrorTitle')"
+        :is-loading="isLoading"
+        :loading-message="t('loadingMessage')"
+        :loading-title="t('loadingTitle')"
+        :retry-label="t('retry')"
+        @retry="retry"
+      />
     </v-main>
   </v-app>
 </template>

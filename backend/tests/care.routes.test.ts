@@ -778,6 +778,7 @@ const testConfig: AppConfig = {
   port: 0,
   publicApiBaseUrl: "http://localhost:3020/v1",
   adminWebOrigin: "http://localhost:5173",
+  publicWebOrigin: "http://localhost:5174",
   useMockData: true,
   databaseUrl: undefined,
   mediaStorageDriver: "local",

@@ -21,29 +21,45 @@ const localeTitles: Record<SupportedLocale, string> = {
 const publicMessages: Record<SupportedLocale, Record<string, string>> = {
   en: {
     changeLanguage: "Change language",
+    loadingErrorTitle: "We couldn't load the website",
     loadingError:
-      "Website content is temporarily unavailable. Please try again later.",
+      "Please check your connection and try again.",
+    loadingMessage: "Gathering the latest church information for you.",
+    loadingTitle: "Preparing your welcome",
     openNavigation: "Open navigation",
-    primaryNavigation: "Primary navigation"
+    primaryNavigation: "Primary navigation",
+    retry: "Try again"
   },
   es: {
     changeLanguage: "Cambiar idioma",
+    loadingErrorTitle: "No pudimos cargar el sitio",
     loadingError:
-      "El contenido del sitio no está disponible temporalmente. Inténtalo de nuevo más tarde.",
+      "Comprueba tu conexión e inténtalo de nuevo.",
+    loadingMessage: "Reuniendo la información más reciente de la iglesia.",
+    loadingTitle: "Preparando tu bienvenida",
     openNavigation: "Abrir navegación",
-    primaryNavigation: "Navegación principal"
+    primaryNavigation: "Navegación principal",
+    retry: "Reintentar"
   },
   "zh-Hans": {
     changeLanguage: "切换语言",
-    loadingError: "官网内容暂时无法载入，请稍后再试。",
+    loadingErrorTitle: "暂时无法载入官网",
+    loadingError: "请检查网络连接后重试。",
+    loadingMessage: "正在为你获取最新的教会信息。",
+    loadingTitle: "正在准备欢迎页面",
     openNavigation: "打开导航",
-    primaryNavigation: "主要导航"
+    primaryNavigation: "主要导航",
+    retry: "重新载入"
   },
   "zh-Hant": {
     changeLanguage: "切換語言",
-    loadingError: "官網內容暫時無法載入，請稍後再試。",
+    loadingErrorTitle: "暫時無法載入官網",
+    loadingError: "請檢查網路連線後重試。",
+    loadingMessage: "正在為你取得最新的教會資訊。",
+    loadingTitle: "正在準備歡迎頁面",
     openNavigation: "打開導航",
-    primaryNavigation: "主要導航"
+    primaryNavigation: "主要導航",
+    retry: "重新載入"
   }
 };
 

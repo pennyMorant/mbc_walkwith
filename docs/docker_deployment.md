@@ -61,7 +61,7 @@ cp infra/docker/backend.env.example infra/docker/backend.env
 
 - `POSTGRES_PASSWORD` 和完全一致、URL-safe 的 `DATABASE_URL` 密码。
 - 两个互不相同且不少于 32 字符的 JWT secret。
-- 对外 `PUBLIC_API_BASE_URL` 与 `ADMIN_WEB_ORIGIN`。
+- 对外 `PUBLIC_API_BASE_URL`、`ADMIN_WEB_ORIGIN` 与 `PUBLIC_WEB_ORIGIN`。
 - 只覆盖容器私有网段的 `TRUST_PROXY`，不要配置为任意来源。
 - R2、Firebase、Stripe、Resend 等实际启用能力的服务端密钥。
 

@@ -10,9 +10,10 @@ export function useLandingContent(locale: Ref<SupportedLocale>) {
   const isLoading = ref(false);
   let requestVersion = 0;
 
-  watch(locale, async (nextLocale) => {
+  async function load(nextLocale: SupportedLocale) {
     const currentRequest = ++requestVersion;
     isLoading.value = true;
+    hasError.value = false;
     try {
       const nextContent = await getPublicLanding(nextLocale);
       if (currentRequest !== requestVersion) {
@@ -29,11 +30,18 @@ export function useLandingContent(locale: Ref<SupportedLocale>) {
         isLoading.value = false;
       }
     }
-  }, { immediate: true });
+  }
+
+  function retry() {
+    return load(locale.value);
+  }
+
+  watch(locale, load, { immediate: true });
 
   return {
     content,
     hasError,
     isLoading,
+    retry
   };
 }

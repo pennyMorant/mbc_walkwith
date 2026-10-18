@@ -6,6 +6,10 @@ const originalDatabaseUrl = process.env.DATABASE_URL;
 const originalNodeEnv = process.env.NODE_ENV;
 const originalUseMockData = process.env.USE_MOCK_DATA;
 const originalTrustProxy = process.env.TRUST_PROXY;
+const originalWebOriginEnv = {
+  ADMIN_WEB_ORIGIN: process.env.ADMIN_WEB_ORIGIN,
+  PUBLIC_WEB_ORIGIN: process.env.PUBLIC_WEB_ORIGIN
+};
 const originalAiEnv = {
   AI_PROVIDER: process.env.AI_PROVIDER,
   AI_API_KEY: process.env.AI_API_KEY,
@@ -61,6 +65,9 @@ describe("loadConfig", () => {
     restoreEnv("NODE_ENV", originalNodeEnv);
     restoreEnv("USE_MOCK_DATA", originalUseMockData);
     restoreEnv("TRUST_PROXY", originalTrustProxy);
+    for (const [key, value] of Object.entries(originalWebOriginEnv)) {
+      restoreEnv(key, value);
+    }
     for (const [key, value] of Object.entries(originalAiEnv)) {
       restoreEnv(key, value);
     }
@@ -97,6 +104,16 @@ describe("loadConfig", () => {
     process.env.USE_MOCK_DATA = "true";
 
     expect(loadConfig().useMockData).toBe(true);
+  });
+
+  it("loads separate admin and public website origins", () => {
+    process.env.ADMIN_WEB_ORIGIN = "https://control.example.com";
+    process.env.PUBLIC_WEB_ORIGIN = "https://www.example.com";
+
+    expect(loadConfig()).toMatchObject({
+      adminWebOrigin: "https://control.example.com",
+      publicWebOrigin: "https://www.example.com"
+    });
   });
 
   it("trusts only configured reverse proxies in production", () => {

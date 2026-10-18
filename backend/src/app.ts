@@ -119,7 +119,7 @@ export async function buildApp(config: AppConfig) {
 
   await app.register(helmet);
   await app.register(cors, {
-    origin: adminCorsOrigins(config),
+    origin: webCorsOrigins(config),
     credentials: true
   });
   await app.register(sensible);
@@ -434,9 +434,9 @@ export async function buildApp(config: AppConfig) {
   return app;
 }
 
-function adminCorsOrigins(config: AppConfig): string[] {
-  const configuredOrigins = config.adminWebOrigin
-    .split(",")
+function webCorsOrigins(config: AppConfig): string[] {
+  const configuredOrigins = [config.adminWebOrigin, config.publicWebOrigin]
+    .flatMap((value) => value.split(","))
     .map((origin) => origin.trim())
     .filter(Boolean);
 

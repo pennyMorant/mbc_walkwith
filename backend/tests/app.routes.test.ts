@@ -40,6 +40,38 @@ describe("backend core and auth routes", () => {
     await harness.close();
   });
 
+  it("allows browser requests from configured admin and public websites", async () => {
+    const harness = await buildTestApp({
+      adminWebOrigin: "https://control.example.com",
+      publicWebOrigin: "https://www.example.com"
+    });
+    const { app } = harness;
+
+    for (const origin of [
+      "https://control.example.com",
+      "https://www.example.com"
+    ]) {
+      const response = await app.inject({
+        method: "GET",
+        url: "/v1/health",
+        headers: { origin }
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.headers["access-control-allow-origin"]).toBe(origin);
+    }
+
+    const rejectedResponse = await app.inject({
+      method: "GET",
+      url: "/v1/health",
+      headers: { origin: "https://untrusted.example.com" }
+    });
+    expect(
+      rejectedResponse.headers["access-control-allow-origin"]
+    ).toBeUndefined();
+    await harness.close();
+  });
+
   it("returns real admin dashboard metrics", async () => {
     const harness = await buildTestApp();
     const { app } = harness;

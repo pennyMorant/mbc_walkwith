@@ -1392,27 +1392,3 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
-
-.landing-state {
-  min-height: 100svh;
-  display: grid;
-  place-items: center;
-  background:
-    radial-gradient(circle at 50% 24%, rgba(246, 223, 159, 0.14), transparent 30%),
-    linear-gradient(180deg, #07110d, #0b1711);
-}
-
-.landing-state-panel {
-  display: grid;
-  place-items: center;
-  gap: 12px;
-  width: min(420px, calc(100vw - 32px));
-  padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.78);
-  text-align: center;
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-}

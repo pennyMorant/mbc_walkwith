@@ -330,6 +330,7 @@ The `ssl` command:
 - requests certificates with certbot
 - updates:
   - `ADMIN_WEB_ORIGIN`
+  - `PUBLIC_WEB_ORIGIN`
   - `PUBLIC_API_BASE_URL`
 - restarts API
 - reloads nginx
@@ -344,6 +345,7 @@ instead of leaving the browser pointed at an old or localhost API URL.
 
 Current assumption:
 
+- one public website origin
 - one admin origin
 - one API origin
 

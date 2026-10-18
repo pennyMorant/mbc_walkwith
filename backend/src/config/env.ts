@@ -5,6 +5,7 @@ export type AppConfig = {
   trustProxy: false | string[];
   publicApiBaseUrl: string;
   adminWebOrigin: string;
+  publicWebOrigin: string;
   useMockData: boolean;
   databaseUrl: string | undefined;
   mediaStorageDriver: "local" | "s3";
@@ -83,6 +84,7 @@ export function loadConfig(): AppConfig {
     publicApiBaseUrl:
       process.env.PUBLIC_API_BASE_URL ?? "http://localhost:3020/v1",
     adminWebOrigin: process.env.ADMIN_WEB_ORIGIN ?? "http://localhost:5173",
+    publicWebOrigin: process.env.PUBLIC_WEB_ORIGIN ?? "http://localhost:5174",
     databaseUrl: process.env.DATABASE_URL,
     useMockData: boolFromEnv("USE_MOCK_DATA", !process.env.DATABASE_URL),
     mediaStorageDriver:

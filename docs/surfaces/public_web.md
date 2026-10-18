@@ -51,7 +51,10 @@ Public Web does not own:
 - 官网不调用 `GET /v1/sermons` 作为内容列表。
 - 官网不直接调用 `GET /v1/life/posts`；Landing 后端聚合层只读取 canonical Life event 投影。
 - 官网不展开 App 内业务模块清单，只保留公开介绍和入口。
-- API 不可用时显示明确错误状态，不用本地硬编码内容冒充业务记录。
+- 首次请求期间显示使用静态品牌标识的轻量加载状态；静态标识只负责品牌识别，
+  不提供业务内容。
+- API 不可用时显示当前语言的可恢复错误状态和重试操作，不用本地硬编码内容
+  冒充业务记录。
 
 聚会时间、固定日程、人员介绍、地址、社媒、App 下载链接等资源保持 `GET /v1/public/landing?locale=...`
 作为 public web 聚合入口，由后端从 settings 组合返回，不在 public Web
@@ -107,6 +110,13 @@ VPS 测试环境没有域名时，可以显式把 `public_origin` 配成同一�
 - `www.example.org` 服务 public landing。
 - `control.example.org` 服务 Admin Web。
 - `api.example.org` 或同站 `/v1` 服务 Backend API。
+
+Backend CORS 必须同时配置两个独立来源：
+
+- `ADMIN_WEB_ORIGIN`：管理 Web 来源。
+- `PUBLIC_WEB_ORIGIN`：公开官网来源。
+
+两个变量都支持逗号分隔的多个明确 origin；不能用通配符代替生产白名单。
 
 ## 5. Motion Rules
 

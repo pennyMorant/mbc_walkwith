@@ -764,6 +764,7 @@ PORT=${api_port}
 HOST=127.0.0.1
 PUBLIC_API_BASE_URL=http://127.0.0.1:${api_port}/v1
 ADMIN_WEB_ORIGIN=http://127.0.0.1
+PUBLIC_WEB_ORIGIN=http://127.0.0.1
 USE_MOCK_DATA=false
 
 DATABASE_URL=postgres://${db_user}:${db_password}@127.0.0.1:5432/${db_name}
@@ -800,15 +801,19 @@ EOF
     rm -f /tmp/mbcwalkwith-backend.env
   fi
 
-  local runtime_admin_origin runtime_api_base_url
+  local runtime_admin_origin runtime_public_origin runtime_api_base_url
   runtime_admin_origin="$(normalize_origin "$admin_origin")"
+  runtime_public_origin="$(normalize_origin "$public_origin")"
   runtime_api_base_url="$(api_base_url_from_origin "$api_origin")"
   [[ -n "$runtime_admin_origin" ]] || runtime_admin_origin="http://127.0.0.1"
+  [[ -n "$runtime_public_origin" ]] || \
+    runtime_public_origin="$runtime_admin_origin"
   [[ -n "$runtime_api_base_url" ]] || runtime_api_base_url="http://127.0.0.1:${api_port}/v1"
   update_env_value "$backend_env" "PORT" "$api_port"
   update_env_value "$backend_env" "HOST" "127.0.0.1"
   update_env_value "$backend_env" "PUBLIC_API_BASE_URL" "$runtime_api_base_url"
   update_env_value "$backend_env" "ADMIN_WEB_ORIGIN" "$runtime_admin_origin"
+  update_env_value "$backend_env" "PUBLIC_WEB_ORIGIN" "$runtime_public_origin"
   update_env_value "$backend_env" "USE_MOCK_DATA" "false"
   update_env_value "$backend_env" "DATABASE_URL" "postgres://${db_user}:${db_password}@127.0.0.1:5432/${db_name}"
   local configured_media_driver configured_media_upload_dir
@@ -1101,6 +1106,9 @@ load_deploy_env() {
   if [[ -f "$backend_env" ]]; then
     if [[ -z "$admin_origin" ]]; then
       admin_origin="$(read_env_value "$backend_env" "ADMIN_WEB_ORIGIN")"
+    fi
+    if [[ -z "$public_origin" ]]; then
+      public_origin="$(read_env_value "$backend_env" "PUBLIC_WEB_ORIGIN")"
     fi
     if [[ -z "$api_origin" ]]; then
       local api_base_url
