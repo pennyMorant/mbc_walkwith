@@ -139,6 +139,9 @@ Surface rule:
   编辑器。两种编辑方式都通过同一 Settings API 保存，并由后端契约最终校验。
   重复展示项统一编辑 `sort` 优先级，默认 `0`，数值越大越靠前；固定日程和人员
   直接显示数值字段，其他高级配置在受契约校验的 JSON 编辑器中维护。
+- Media management：Media 页面使用 `media:read` 展示统一图片库和对象清理任务；
+  `media:manage` 可上传、编辑无障碍/版权/焦点元数据，并撤销或恢复发布授权。页面不显示
+  storage key，不直连 R2，也不在引用关系尚未规范化时提供物理删除。
 
 ## Verification
 

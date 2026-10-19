@@ -3,6 +3,8 @@ import {
   mediaAssetSchema,
   mediaCleanupListResponseSchema,
   mediaCleanupTaskSchema,
+  type MediaAssetListQuery,
+  type MediaAssetUpdateRequest,
   type MediaCleanupStatus,
   type MediaCleanupTask,
   type MediaAsset
@@ -27,6 +29,24 @@ export async function listMediaImages(): Promise<MediaAsset[]> {
 
 let mediaImageListRequest: Promise<MediaAsset[]> | null = null;
 
+export async function listMediaAssets(
+  filters: Partial<MediaAssetListQuery> = {}
+): Promise<MediaAsset[]> {
+  const params = new URLSearchParams({
+    limit: String(filters.limit ?? 100)
+  });
+  if (filters.kind) params.set("kind", filters.kind);
+  if (filters.visibility) params.set("visibility", filters.visibility);
+  if (filters.consentStatus) {
+    params.set("consentStatus", filters.consentStatus);
+  }
+  const response = await apiClient.getData(
+    `/admin/media?${params.toString()}`,
+    mediaAssetListResponseSchema
+  );
+  return response.items;
+}
+
 export async function uploadMediaImage(
   file: File,
   altText = ""
@@ -45,6 +65,19 @@ export async function uploadMediaImage(
     asset,
     ...items.filter((item) => item.id !== asset.id)
   ]);
+  return asset;
+}
+
+export async function updateMediaAsset(
+  mediaId: string,
+  input: MediaAssetUpdateRequest
+): Promise<MediaAsset> {
+  const asset = await apiClient.patchData(
+    `/admin/media/${pathSegment(mediaId)}`,
+    input,
+    mediaAssetSchema
+  );
+  mediaImageListRequest = null;
   return asset;
 }
 

@@ -57,4 +57,10 @@ GET /v1/media/:mediaId/content
 公开/私有状态切换使用双候选流程：先登记目标副本候选并复制对象，再在同一数据库事务中
 切换 canonical `storageKey`、撤销目标候选并登记旧源对象清理。事务前失败时删除目标副本；
 事务后删除旧源对象失败时保留 `relocated_source` 任务。后台 `/media` 页面按
-`media:read` 展示证据，`media:manage` 执行重试。该恢复链路不引入常驻媒体 worker。
+`media:read` 展示图片库与恢复证据，`media:manage` 上传图片、维护替代文字/说明/版权来源/
+焦点、撤销或恢复发布授权并执行清理重试。授权变化仍由后端完成对象迁移，Admin Web
+不直接访问 bucket 或 object key。该恢复链路不引入常驻媒体 worker。
+
+媒体物理删除暂不开放。生活内容使用数据库外键引用媒体，而官网结构化设置当前保留媒体
+ID；在统一引用登记成为 source of truth 前，管理端只能撤销发布授权，不能通过跨 Feature
+扫描或前端判断执行硬删除。

@@ -2451,8 +2451,22 @@ Object.assign(messages["zh-Hant"], {
 
 Object.assign(messages.en, {
   "nav.media": "Media",
-  "media.title": "Media operations",
-  "media.subtitle": "Review recoverable object-storage operations.",
+  "media.title": "Media",
+  "media.subtitle": "Manage church images, publishing consent, and recoverable storage operations.",
+  "media.libraryTitle": "Image library",
+  "media.librarySubtitle":
+    "Review metadata and revoke or restore publishing consent without breaking content references.",
+  "media.libraryEmpty": "No images match these filters.",
+  "media.editTitle": "Edit image",
+  "media.upload": "Upload image",
+  "media.visibility": "Visibility",
+  "media.consentStatus": "Publishing consent",
+  "media.altText": "Alternative text",
+  "media.caption": "Caption",
+  "media.copyrightSource": "Copyright or source",
+  "media.focalX": "Horizontal focus",
+  "media.focalY": "Vertical focus",
+  "media.size": "Size",
   "media.cleanupTitle": "Media cleanup",
   "media.cleanupSubtitle":
     "Review and retry object deletion after a media upload could not be bound.",
@@ -2473,13 +2487,27 @@ Object.assign(messages.en, {
   "audio_replaced": "Audio replaced",
   "sermon_deleted": "Sermon deleted",
   "unbound_upload": "Unbound upload",
-  "relocated_source": "Relocated source"
+  "relocated_source": "Relocated source",
+  "restricted": "Restricted"
 });
 
 Object.assign(messages["zh-Hans"], {
   "nav.media": "媒体",
-  "media.title": "媒体运维",
-  "media.subtitle": "查看并处理可恢复的对象存储任务。",
+  "media.title": "媒体",
+  "media.subtitle": "管理教会图片、发布授权和可恢复的存储任务。",
+  "media.libraryTitle": "图片库",
+  "media.librarySubtitle": "维护图片资料，并在不破坏内容引用的情况下撤销或恢复发布授权。",
+  "media.libraryEmpty": "当前筛选条件下没有图片。",
+  "media.editTitle": "编辑图片",
+  "media.upload": "上传图片",
+  "media.visibility": "可见性",
+  "media.consentStatus": "发布授权",
+  "media.altText": "替代文字",
+  "media.caption": "图片说明",
+  "media.copyrightSource": "版权或来源",
+  "media.focalX": "水平焦点",
+  "media.focalY": "垂直焦点",
+  "media.size": "大小",
   "media.cleanupTitle": "媒体清理",
   "media.cleanupSubtitle": "查看并重试媒体上传绑定失败后的对象删除任务。",
   "media.cleanupEmpty": "当前状态下没有媒体清理任务。",
@@ -2498,13 +2526,27 @@ Object.assign(messages["zh-Hans"], {
   "audio_replaced": "音频已替换",
   "sermon_deleted": "讲道已删除",
   "unbound_upload": "上传未绑定",
-  "relocated_source": "迁移后的源对象"
+  "relocated_source": "迁移后的源对象",
+  "restricted": "已限制"
 });
 
 Object.assign(messages["zh-Hant"], {
   "nav.media": "媒體",
-  "media.title": "媒體維運",
-  "media.subtitle": "查看並處理可恢復的物件儲存任務。",
+  "media.title": "媒體",
+  "media.subtitle": "管理教會圖片、發布授權和可恢復的儲存任務。",
+  "media.libraryTitle": "圖片庫",
+  "media.librarySubtitle": "維護圖片資料，並在不破壞內容引用的情況下撤銷或恢復發布授權。",
+  "media.libraryEmpty": "目前篩選條件下沒有圖片。",
+  "media.editTitle": "編輯圖片",
+  "media.upload": "上傳圖片",
+  "media.visibility": "可見性",
+  "media.consentStatus": "發布授權",
+  "media.altText": "替代文字",
+  "media.caption": "圖片說明",
+  "media.copyrightSource": "版權或來源",
+  "media.focalX": "水平焦點",
+  "media.focalY": "垂直焦點",
+  "media.size": "大小",
   "media.cleanupTitle": "媒體清理",
   "media.cleanupSubtitle": "查看並重試媒體上傳綁定失敗後的物件刪除任務。",
   "media.cleanupEmpty": "目前狀態下沒有媒體清理任務。",
@@ -2523,13 +2565,28 @@ Object.assign(messages["zh-Hant"], {
   "audio_replaced": "音訊已替換",
   "sermon_deleted": "講道已刪除",
   "unbound_upload": "上傳未綁定",
-  "relocated_source": "遷移後的來源物件"
+  "relocated_source": "遷移後的來源物件",
+  "restricted": "已限制"
 });
 
 Object.assign(messages.es, {
   "nav.media": "Multimedia",
-  "media.title": "Operaciones multimedia",
-  "media.subtitle": "Revisa operaciones recuperables del almacenamiento.",
+  "media.title": "Multimedia",
+  "media.subtitle": "Administra imágenes, permisos de publicación y operaciones recuperables.",
+  "media.libraryTitle": "Biblioteca de imágenes",
+  "media.librarySubtitle":
+    "Revisa los metadatos y revoca o restaura el permiso sin romper las referencias.",
+  "media.libraryEmpty": "No hay imágenes con estos filtros.",
+  "media.editTitle": "Editar imagen",
+  "media.upload": "Subir imagen",
+  "media.visibility": "Visibilidad",
+  "media.consentStatus": "Permiso de publicación",
+  "media.altText": "Texto alternativo",
+  "media.caption": "Descripción",
+  "media.copyrightSource": "Derechos o fuente",
+  "media.focalX": "Enfoque horizontal",
+  "media.focalY": "Enfoque vertical",
+  "media.size": "Tamaño",
   "media.cleanupTitle": "Limpieza multimedia",
   "media.cleanupSubtitle":
     "Revisa y reintenta la eliminación de cargas que no pudieron vincularse.",
@@ -2553,7 +2610,8 @@ Object.assign(messages.es, {
   "audio_replaced": "Audio reemplazado",
   "sermon_deleted": "Sermón eliminado",
   "unbound_upload": "Carga no vinculada",
-  "relocated_source": "Objeto de origen reubicado"
+  "relocated_source": "Objeto de origen reubicado",
+  "restricted": "Restringido"
 });
 
 Object.assign(messages.es, {
