@@ -2450,11 +2450,14 @@ Object.assign(messages["zh-Hant"], {
 });
 
 Object.assign(messages.en, {
-  "settings.mediaCleanupTitle": "Media cleanup",
-  "settings.mediaCleanupSubtitle":
+  "nav.media": "Media",
+  "media.title": "Media operations",
+  "media.subtitle": "Review recoverable object-storage operations.",
+  "media.cleanupTitle": "Media cleanup",
+  "media.cleanupSubtitle":
     "Review and retry object deletion after a media upload could not be bound.",
-  "settings.mediaCleanupEmpty": "No media cleanup tasks match this status.",
-  "settings.mediaAsset": "Media asset",
+  "media.cleanupEmpty": "No media cleanup tasks match this status.",
+  "media.asset": "Media asset",
   "sermons.subtitle":
     "Create, complete, review, publish, archive, and manage church sermon resources.",
   "sermons.librarySubtitle": "Search and filter backend sermon records.",
@@ -2469,14 +2472,18 @@ Object.assign(messages.en, {
   "audio_removed": "Audio removed",
   "audio_replaced": "Audio replaced",
   "sermon_deleted": "Sermon deleted",
-  "unbound_upload": "Unbound upload"
+  "unbound_upload": "Unbound upload",
+  "relocated_source": "Relocated source"
 });
 
 Object.assign(messages["zh-Hans"], {
-  "settings.mediaCleanupTitle": "媒体清理",
-  "settings.mediaCleanupSubtitle": "查看并重试媒体上传绑定失败后的对象删除任务。",
-  "settings.mediaCleanupEmpty": "当前状态下没有媒体清理任务。",
-  "settings.mediaAsset": "媒体资源",
+  "nav.media": "媒体",
+  "media.title": "媒体运维",
+  "media.subtitle": "查看并处理可恢复的对象存储任务。",
+  "media.cleanupTitle": "媒体清理",
+  "media.cleanupSubtitle": "查看并重试媒体上传绑定失败后的对象删除任务。",
+  "media.cleanupEmpty": "当前状态下没有媒体清理任务。",
+  "media.asset": "媒体资源",
   "sermons.subtitle": "创建、补全、审核、发布、归档并管理教会讲道资源。",
   "sermons.librarySubtitle": "搜索和筛选后端讲道记录。",
   "sermons.audioCleanupTitle": "音频清理",
@@ -2490,14 +2497,18 @@ Object.assign(messages["zh-Hans"], {
   "audio_removed": "音频已移除",
   "audio_replaced": "音频已替换",
   "sermon_deleted": "讲道已删除",
-  "unbound_upload": "上传未绑定"
+  "unbound_upload": "上传未绑定",
+  "relocated_source": "迁移后的源对象"
 });
 
 Object.assign(messages["zh-Hant"], {
-  "settings.mediaCleanupTitle": "媒體清理",
-  "settings.mediaCleanupSubtitle": "查看並重試媒體上傳綁定失敗後的物件刪除任務。",
-  "settings.mediaCleanupEmpty": "目前狀態下沒有媒體清理任務。",
-  "settings.mediaAsset": "媒體資源",
+  "nav.media": "媒體",
+  "media.title": "媒體維運",
+  "media.subtitle": "查看並處理可恢復的物件儲存任務。",
+  "media.cleanupTitle": "媒體清理",
+  "media.cleanupSubtitle": "查看並重試媒體上傳綁定失敗後的物件刪除任務。",
+  "media.cleanupEmpty": "目前狀態下沒有媒體清理任務。",
+  "media.asset": "媒體資源",
   "sermons.subtitle": "建立、補全、審核、發布、封存並管理教會講道資源。",
   "sermons.librarySubtitle": "搜尋和篩選後端講道記錄。",
   "sermons.audioCleanupTitle": "音訊清理",
@@ -2511,16 +2522,20 @@ Object.assign(messages["zh-Hant"], {
   "audio_removed": "音訊已移除",
   "audio_replaced": "音訊已替換",
   "sermon_deleted": "講道已刪除",
-  "unbound_upload": "上傳未綁定"
+  "unbound_upload": "上傳未綁定",
+  "relocated_source": "遷移後的來源物件"
 });
 
 Object.assign(messages.es, {
-  "settings.mediaCleanupTitle": "Limpieza multimedia",
-  "settings.mediaCleanupSubtitle":
+  "nav.media": "Multimedia",
+  "media.title": "Operaciones multimedia",
+  "media.subtitle": "Revisa operaciones recuperables del almacenamiento.",
+  "media.cleanupTitle": "Limpieza multimedia",
+  "media.cleanupSubtitle":
     "Revisa y reintenta la eliminación de cargas que no pudieron vincularse.",
-  "settings.mediaCleanupEmpty":
+  "media.cleanupEmpty":
     "No hay tareas de limpieza multimedia con este estado.",
-  "settings.mediaAsset": "Recurso multimedia",
+  "media.asset": "Recurso multimedia",
   "sermons.subtitle":
     "Crea, completa, revisa, publica, archiva y administra los sermones de la iglesia.",
   "sermons.librarySubtitle":
@@ -2537,7 +2552,8 @@ Object.assign(messages.es, {
   "audio_removed": "Audio eliminado",
   "audio_replaced": "Audio reemplazado",
   "sermon_deleted": "Sermón eliminado",
-  "unbound_upload": "Carga no vinculada"
+  "unbound_upload": "Carga no vinculada",
+  "relocated_source": "Objeto de origen reubicado"
 });
 
 Object.assign(messages.es, {

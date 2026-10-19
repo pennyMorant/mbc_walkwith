@@ -52,7 +52,10 @@ export const mediaCleanupStatusSchema = z.enum([
   "succeeded"
 ]);
 
-export const mediaCleanupReasonSchema = z.enum(["unbound_upload"]);
+export const mediaCleanupReasonSchema = z.enum([
+  "unbound_upload",
+  "relocated_source"
+]);
 
 export const mediaCleanupTaskSchema = z.object({
   id: z.string().uuid(),
@@ -60,6 +63,7 @@ export const mediaCleanupTaskSchema = z.object({
   reason: mediaCleanupReasonSchema,
   status: mediaCleanupStatusSchema,
   attempts: z.number().int().nonnegative(),
+  retryable: z.boolean(),
   lastError: z.string().nullable(),
   completedAt: z.string().datetime().nullable(),
   createdAt: z.string().datetime(),

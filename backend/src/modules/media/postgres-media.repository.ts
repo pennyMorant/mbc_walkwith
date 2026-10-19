@@ -13,6 +13,7 @@ import {
 import type {
   CreateMediaAssetInput,
   MediaRepository,
+  RelocateMediaAssetLifecycle,
   UpdateMediaAssetRecordInput
 } from "./media.repository.js";
 
@@ -37,7 +38,13 @@ export class PostgresMediaRepository implements MediaRepository {
         .returning();
       const [discarded] = await transaction
         .delete(mediaObjectCleanupTasks)
-        .where(eq(mediaObjectCleanupTasks.id, cleanupTaskId))
+        .where(
+          and(
+            eq(mediaObjectCleanupTasks.id, cleanupTaskId),
+            eq(mediaObjectCleanupTasks.mediaAssetId, input.id),
+            eq(mediaObjectCleanupTasks.storageKey, input.storageKey)
+          )
+        )
         .returning({ id: mediaObjectCleanupTasks.id });
       if (!discarded) {
         throw new Error("Media cleanup candidate was not found during binding.");
@@ -110,6 +117,54 @@ export class PostgresMediaRepository implements MediaRepository {
       .where(eq(mediaAssets.id, id))
       .returning();
     return row ? mediaAssetFromRow(row) : null;
+  }
+
+  async relocate(
+    id: string,
+    input: UpdateMediaAssetRecordInput,
+    lifecycle: RelocateMediaAssetLifecycle
+  ): Promise<MediaAsset | null> {
+    return this.db.transaction(async (transaction) => {
+      const { storageKey, url, ...metadata } = input;
+      if (!storageKey || storageKey !== lifecycle.targetStorageKey) {
+        throw new Error("Media relocation target does not match lifecycle state.");
+      }
+      const [row] = await transaction
+        .update(mediaAssets)
+        .set({
+          ...metadata,
+          storageKey,
+          publicUrl: url ?? "",
+          updatedAt: new Date()
+        })
+        .where(
+          and(
+            eq(mediaAssets.id, id),
+            eq(mediaAssets.storageKey, lifecycle.sourceStorageKey)
+          )
+        )
+        .returning();
+      if (!row) return null;
+      const [discarded] = await transaction
+        .delete(mediaObjectCleanupTasks)
+        .where(
+          and(
+            eq(mediaObjectCleanupTasks.id, lifecycle.targetCleanupTaskId),
+            eq(mediaObjectCleanupTasks.mediaAssetId, id),
+            eq(mediaObjectCleanupTasks.storageKey, lifecycle.targetStorageKey)
+          )
+        )
+        .returning({ id: mediaObjectCleanupTasks.id });
+      if (!discarded) {
+        throw new Error("Media relocation cleanup candidate was not found.");
+      }
+      await transaction.insert(mediaObjectCleanupTasks).values({
+        mediaAssetId: id,
+        storageKey: lifecycle.sourceStorageKey,
+        reason: "relocated_source"
+      });
+      return mediaAssetFromRow(row);
+    });
   }
 }
 

@@ -25,7 +25,10 @@ export const apiRouteContractRegistry = [
     contractFile: null,
     sdkDocs: ["docs/operations.md"],
     backendRouteFiles: ["backend/src/modules/health/health.routes.ts"],
-    clientFiles: [],
+    clientFiles: [
+      "apps/admin_web/src/core/api/media.ts",
+      "apps/admin_web/src/features/media/pages/MediaPage.vue"
+    ],
     routes: ["GET /v1/health"],
     notes: "Diagnostic endpoint; response is intentionally small and local to the API surface."
   },

@@ -36,6 +36,8 @@ R2 object key；开发和自动化测试可以使用本地 driver，但生产启
 - 私有文件必须放入不绑定公开域名的独立 `S3_PRIVATE_BUCKET`，并通过后端签名 URL 访问。
 - 公开图片通过 `MEDIA_PUBLIC_BASE_URL` 指向的 R2 自定义媒体域名访问；URL 不经过 VPS
   转发，避免把图片流量压到应用服务器。
+- 统一媒体可能撤销授权，因此公开 R2 对象使用 `no-store`，不得使用长期 `immutable`
+  缓存；限制授权后删除公开对象，后续请求不能继续命中持久缓存。
 - 生产必须配置 `MEDIA_STORAGE_DRIVER=s3`、R2 S3 endpoint、公开与私有 bucket、access key、secret
   与 `MEDIA_PUBLIC_BASE_URL`，缺少任一项时后端拒绝启动。
 - 统一媒体元数据由 `media_assets` 管理；API 不暴露 `storageKey`。
@@ -49,6 +51,8 @@ R2 object key；开发和自动化测试可以使用本地 driver，但生产启
 - 删除或替换敏感文件要审计。
 - 业务 feature 必须在 canonical 数据 mutation 中登记可恢复清理记录，不能把“数据库已更新、对象删除失败”返回成虚假的整体失败。
 - 新上传对象在绑定到业务聚合前应先登记清理候选；绑定成功时由同一数据库事务撤销候选，绑定失败时保留候选供恢复。
+- bucket 迁移必须先登记目标候选并复制，再以单一数据库事务切换 canonical key、撤销目标候选并登记旧源对象清理；不得先删除数据库仍引用的源对象。
+- 活跃绑定窗口内的 `pending` 候选禁止人工删除，只有失败任务或超过恢复窗口的陈旧任务可重试。
 - 对象删除应具备幂等语义：目标已经不存在视为成功；provider 或路径校验失败返回结构化错误。
 - 清理记录可以保留内部 `storagePath`，但 API、SDK、Admin Web、App 和审计投影不得暴露它。
 - 清理恢复可以采用请求内 best-effort 尝试和受权限保护的人工重试；这不等于引入媒体处理 worker。

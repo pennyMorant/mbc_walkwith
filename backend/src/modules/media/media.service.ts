@@ -64,24 +64,27 @@ export class MediaService {
       throw error;
     }
     try {
-      return await this.repository.create({
-        id,
-        kind: "image",
-        visibility: input.visibility,
-        consentStatus: input.consentStatus,
-        storageKey: stored.storageKey,
-        url: stored.publicUrl,
-        originalFileName: input.fileName,
-        mimeType,
-        sizeBytes: input.buffer.length,
-        width: null,
-        height: null,
-        focalX: 50,
-        focalY: 50,
-        altText: input.altText,
-        caption: input.caption,
-        copyrightSource: input.copyrightSource
-      }, cleanupTask.id);
+      return await this.repository.create(
+        {
+          id,
+          kind: "image",
+          visibility: input.visibility,
+          consentStatus: input.consentStatus,
+          storageKey: stored.storageKey,
+          url: stored.publicUrl,
+          originalFileName: input.fileName,
+          mimeType,
+          sizeBytes: input.buffer.length,
+          width: null,
+          height: null,
+          focalX: 50,
+          focalY: 50,
+          altText: input.altText,
+          caption: input.caption,
+          copyrightSource: input.copyrightSource
+        },
+        cleanupTask.id
+      );
     } catch (error) {
       await this.cleanupService.processBestEffortByStorageKey(stored.storageKey);
       throw error;
@@ -150,41 +153,70 @@ export class MediaService {
     if (!storageKey) {
       throw mediaAssetNotFound(id);
     }
-    const relocated = await this.storage.relocate(storageKey, {
+    const relocationInput = {
       id: before.id,
       kind: before.kind,
       mimeType: before.mimeType,
       publicAccess: willBePublic
+    };
+    const relocation = this.storage.planRelocation(
+      storageKey,
+      relocationInput
+    );
+    if (!relocation.requiresCopy) {
+      const asset = await this.repository.update(id, {
+        ...input,
+        storageKey: relocation.storageKey,
+        url: relocation.publicUrl
+      });
+      if (!asset) throw mediaAssetNotFound(id);
+      return asset;
+    }
+
+    const targetCleanup = await this.cleanupService.schedule({
+      mediaAssetId: id,
+      storageKey: relocation.storageKey,
+      reason: "unbound_upload"
     });
+    try {
+      await this.storage.copyRelocation(relocation, relocationInput);
+    } catch (error) {
+      await this.cleanupService.processBestEffortByStorageKey(
+        relocation.storageKey
+      );
+      throw error;
+    }
+
     let asset: MediaAsset | null;
     try {
-      asset = await this.repository.update(id, {
-        ...input,
-        storageKey: relocated.storageKey,
-        url: relocated.publicUrl
-      });
+      asset = await this.repository.relocate(
+        id,
+        {
+          ...input,
+          storageKey: relocation.storageKey,
+          url: relocation.publicUrl
+        },
+        {
+          targetCleanupTaskId: targetCleanup.id,
+          targetStorageKey: relocation.storageKey,
+          sourceStorageKey: relocation.sourceStorageKey
+        }
+      );
     } catch (error) {
-      await this.storage
-        .relocate(relocated.storageKey, {
-          id: before.id,
-          kind: before.kind,
-          mimeType: before.mimeType,
-          publicAccess: wasPublic
-        })
-        .catch(() => undefined);
+      await this.cleanupService.processBestEffortByStorageKey(
+        relocation.storageKey
+      );
       throw error;
     }
     if (!asset) {
-      await this.storage
-        .relocate(relocated.storageKey, {
-          id: before.id,
-          kind: before.kind,
-          mimeType: before.mimeType,
-          publicAccess: wasPublic
-        })
-        .catch(() => undefined);
+      await this.cleanupService.processBestEffortByStorageKey(
+        relocation.storageKey
+      );
       throw mediaAssetNotFound(id);
     }
+    await this.cleanupService.processBestEffortByStorageKey(
+      relocation.sourceStorageKey
+    );
     return asset;
   }
 

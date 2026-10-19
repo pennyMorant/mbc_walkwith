@@ -17,6 +17,7 @@ import JobsPage from "./features/jobs/pages/JobsPage.vue";
 import LifePostsPage from "./features/life-posts/pages/LifePostsPage.vue";
 import LoginPage from "./features/auth/pages/LoginPage.vue";
 import MembersPage from "./features/members/pages/MembersPage.vue";
+import MediaPage from "./features/media/pages/MediaPage.vue";
 import NewcomersPage from "./features/newcomers/pages/NewcomersPage.vue";
 import NotificationsPage from "./features/notifications/pages/NotificationsPage.vue";
 import PrayerPage from "./features/prayer/pages/PrayerPage.vue";
@@ -165,6 +166,12 @@ export const router = createRouter({
       name: "notifications",
       component: NotificationsPage,
       meta: adminPageMeta("notifications:read")
+    },
+    {
+      path: "/media",
+      name: "media",
+      component: MediaPage,
+      meta: adminPageMeta("media:read")
     },
     {
       path: "/settings",

@@ -46,6 +46,7 @@ const items: Array<{
     | "nav.ai"
     | "nav.notifications"
     | "nav.jobs"
+    | "nav.media"
     | "nav.settings";
   value: string;
   permission: AdminPermission;
@@ -99,6 +100,7 @@ const items: Array<{
     permission: "notifications:read"
   },
   { titleKey: "nav.jobs", value: "/jobs", permission: "jobs:read" },
+  { titleKey: "nav.media", value: "/media", permission: "media:read" },
   { titleKey: "nav.settings", value: "/settings", permission: "settings:read" }
 ];
 

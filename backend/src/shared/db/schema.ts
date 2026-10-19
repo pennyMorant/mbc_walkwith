@@ -87,7 +87,9 @@ export const mediaObjectCleanupTasks = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     mediaAssetId: uuid("media_asset_id").notNull(),
     storageKey: text("storage_key").notNull(),
-    reason: text("reason", { enum: ["unbound_upload"] }).notNull(),
+    reason: text("reason", {
+      enum: ["unbound_upload", "relocated_source"]
+    }).notNull(),
     status: text("status", { enum: ["pending", "failed", "succeeded"] })
       .notNull()
       .default("pending"),

@@ -2270,7 +2270,9 @@ Media upload recovery is available to administrators through
 `GET /v1/admin/media/cleanup-tasks` and
 `POST /v1/admin/media/cleanup-tasks/:cleanupTaskId/retry`. Responses expose the
 asset ID, lifecycle status, attempt count, safe error, and timestamps, but never
-the internal object-storage key.
+the internal object-storage key. Each task includes backend-owned `retryable`;
+fresh `pending` candidates return `false` and retry requests fail with
+`media_cleanup_not_ready` (409) until the recovery window has elapsed.
 
 `POST /v1/admin/life-posts/:postId/publish` may ask the backend to notify the
 App after the post reaches `published`. Push delivery is a side effect and must

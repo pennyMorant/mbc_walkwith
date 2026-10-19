@@ -51,5 +51,10 @@ GET /v1/media/:mediaId/content
 
 上传对象落盘后，后端会先持久化 `unbound_upload` 清理候选。生产 Postgres 在同一事务中
 创建媒体元数据并撤销候选；绑定失败时立即尝试删除，删除失败则保留不含内部 object key
-的任务投影，供具备 `media:manage` 权限的管理员重试。该恢复链路在请求内执行，不引入
-常驻媒体 worker。
+的任务投影。仍处于正常绑定窗口内的 `pending` 任务不可人工重试，超过恢复窗口后才由
+后端标记 `retryable=true`。
+
+公开/私有状态切换使用双候选流程：先登记目标副本候选并复制对象，再在同一数据库事务中
+切换 canonical `storageKey`、撤销目标候选并登记旧源对象清理。事务前失败时删除目标副本；
+事务后删除旧源对象失败时保留 `relocated_source` 任务。后台 `/media` 页面按
+`media:read` 展示证据，`media:manage` 执行重试。该恢复链路不引入常驻媒体 worker。

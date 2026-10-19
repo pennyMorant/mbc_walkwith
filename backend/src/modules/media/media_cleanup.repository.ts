@@ -4,7 +4,7 @@ import type {
   MediaCleanupTask
 } from "@mbc/api-contracts";
 
-export type MediaCleanupTaskRecord = MediaCleanupTask & {
+export type MediaCleanupTaskRecord = Omit<MediaCleanupTask, "retryable"> & {
   storageKey: string;
 };
 
@@ -16,7 +16,7 @@ export type ScheduleMediaCleanupInput = {
 
 export interface MediaCleanupRepository {
   schedule(input: ScheduleMediaCleanupInput): Promise<MediaCleanupTaskRecord>;
-  list(query: MediaCleanupListQuery): Promise<MediaCleanupTask[]>;
+  list(query: MediaCleanupListQuery): Promise<MediaCleanupTaskRecord[]>;
   getById(id: string): Promise<MediaCleanupTaskRecord | null>;
   getByStorageKey(storageKey: string): Promise<MediaCleanupTaskRecord | null>;
   discardByStorageKey(storageKey: string): Promise<void>;

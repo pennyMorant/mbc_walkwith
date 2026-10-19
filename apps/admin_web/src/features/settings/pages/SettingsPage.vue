@@ -9,7 +9,6 @@ import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n, type AppLocale } from "@/core/i18n/i18n";
 import SettingsFiltersCard from "../components/SettingsFiltersCard.vue";
 import SettingsPageHeader from "../components/SettingsPageHeader.vue";
-import MediaCleanupCard from "../components/MediaCleanupCard.vue";
 import PublicLandingStructuredEditor from "../components/PublicLandingStructuredEditor.vue";
 import { cloneLandingSettingValue, isPublicLandingStructuredSetting } from "../public_landing_editor";
 import {
@@ -410,8 +409,6 @@ function currentSelectItems() {
         </v-card>
       </v-col>
     </v-row>
-
-    <MediaCleanupCard />
 
     <v-navigation-drawer v-model="drawer" location="right" temporary width="560">
       <div v-if="selectedSetting" class="pa-4 pa-sm-5">

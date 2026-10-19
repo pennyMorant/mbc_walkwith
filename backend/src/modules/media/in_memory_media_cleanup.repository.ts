@@ -1,7 +1,4 @@
-import type {
-  MediaCleanupListQuery,
-  MediaCleanupTask
-} from "@mbc/api-contracts";
+import type { MediaCleanupListQuery } from "@mbc/api-contracts";
 import { randomUUID } from "node:crypto";
 
 import type {
@@ -35,12 +32,11 @@ export class InMemoryMediaCleanupRepository
     return task;
   }
 
-  async list(query: MediaCleanupListQuery): Promise<MediaCleanupTask[]> {
+  async list(query: MediaCleanupListQuery): Promise<MediaCleanupTaskRecord[]> {
     return [...this.tasks.values()]
       .filter((task) => !query.status || task.status === query.status)
       .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))
-      .slice(0, query.limit)
-      .map(toPublicTask);
+      .slice(0, query.limit);
   }
 
   async getById(id: string): Promise<MediaCleanupTaskRecord | null> {
@@ -80,9 +76,4 @@ export class InMemoryMediaCleanupRepository
     this.tasks.set(id, updated);
     return updated;
   }
-}
-
-function toPublicTask(task: MediaCleanupTaskRecord): MediaCleanupTask {
-  const { storageKey: _storageKey, ...publicTask } = task;
-  return publicTask;
 }

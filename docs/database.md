@@ -243,6 +243,12 @@ inserts the media row and removes its candidate in one Postgres transaction.
 Failed object deletion remains retryable without exposing `storage_key` through
 API or audit projections.
 
+Consent-driven bucket relocation transforms the target object's
+`unbound_upload` candidate into a `relocated_source` candidate in the same
+transaction that switches `media_assets.storage_key`. Therefore a crash before
+the transaction leaves the old canonical object intact, while a crash after it
+leaves the old object recoverable through the cleanup task.
+
 Current `member_profiles` profile extension fields:
 
 ```text

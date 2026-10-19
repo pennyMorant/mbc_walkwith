@@ -1,7 +1,4 @@
-import type {
-  MediaCleanupListQuery,
-  MediaCleanupTask
-} from "@mbc/api-contracts";
+import type { MediaCleanupListQuery } from "@mbc/api-contracts";
 import { desc, eq, sql } from "drizzle-orm";
 
 import type { AppDb } from "../../shared/db/client.js";
@@ -29,7 +26,7 @@ export class PostgresMediaCleanupRepository implements MediaCleanupRepository {
     return existing;
   }
 
-  async list(query: MediaCleanupListQuery): Promise<MediaCleanupTask[]> {
+  async list(query: MediaCleanupListQuery): Promise<MediaCleanupTaskRecord[]> {
     const rows = await this.db
       .select()
       .from(mediaObjectCleanupTasks)
@@ -40,7 +37,7 @@ export class PostgresMediaCleanupRepository implements MediaCleanupRepository {
       )
       .orderBy(desc(mediaObjectCleanupTasks.updatedAt))
       .limit(query.limit);
-    return rows.map((row) => toPublicTask(toRecord(row)));
+    return rows.map(toRecord);
   }
 
   async getById(id: string): Promise<MediaCleanupTaskRecord | null> {
@@ -104,9 +101,4 @@ function toRecord(row: CleanupRow): MediaCleanupTaskRecord {
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString()
   };
-}
-
-function toPublicTask(task: MediaCleanupTaskRecord): MediaCleanupTask {
-  const { storageKey: _storageKey, ...publicTask } = task;
-  return publicTask;
 }

@@ -30,6 +30,11 @@ export type StoredMediaObject = {
   publicUrl: string | null;
 };
 
+export type MediaRelocationPlan = StoredMediaObject & {
+  sourceStorageKey: string;
+  requiresCopy: boolean;
+};
+
 export type ReadMediaObjectResult = {
   stream: NodeJS.ReadableStream;
   sizeBytes: number;
@@ -38,10 +43,14 @@ export type ReadMediaObjectResult = {
 export interface MediaStorageDriver {
   put(input: StoreMediaObjectInput): Promise<StoredMediaObject>;
   read(storageKey: string): Promise<ReadMediaObjectResult | null>;
-  relocate(
+  planRelocation(
     storageKey: string,
     input: Omit<StoreMediaObjectInput, "buffer" | "fileName">
-  ): Promise<StoredMediaObject>;
+  ): MediaRelocationPlan;
+  copyRelocation(
+    plan: MediaRelocationPlan,
+    input: Omit<StoreMediaObjectInput, "buffer" | "fileName">
+  ): Promise<void>;
   delete(storageKey: string): Promise<void>;
 }
 
@@ -64,11 +73,18 @@ export class MediaStorageService implements MediaStorageDriver {
     return this.driver.read(storageKey);
   }
 
-  relocate(
+  planRelocation(
     storageKey: string,
     input: Omit<StoreMediaObjectInput, "buffer" | "fileName">
   ) {
-    return this.driver.relocate(storageKey, input);
+    return this.driver.planRelocation(storageKey, input);
+  }
+
+  copyRelocation(
+    plan: MediaRelocationPlan,
+    input: Omit<StoreMediaObjectInput, "buffer" | "fileName">
+  ) {
+    return this.driver.copyRelocation(plan, input);
   }
 
   delete(storageKey: string) {
@@ -102,20 +118,24 @@ class LocalMediaStorageDriver implements MediaStorageDriver {
     };
   }
 
-  async relocate(
+  planRelocation(
     storageKey: string,
     input: Omit<StoreMediaObjectInput, "buffer" | "fileName">
-  ): Promise<StoredMediaObject> {
+  ): MediaRelocationPlan {
     if (!localFileName(storageKey)) {
       throw mediaObjectUploadFailed();
     }
     return {
+      sourceStorageKey: storageKey,
       storageKey,
+      requiresCopy: false,
       publicUrl: input.publicAccess
         ? `${this.publicApiBaseUrl}/media/${input.id}/content`
         : null
     };
   }
+
+  async copyRelocation(): Promise<void> {}
 
   async delete(storageKey: string): Promise<void> {
     const fileName = localFileName(storageKey);
@@ -196,10 +216,7 @@ class R2MediaStorageDriver implements MediaStorageDriver {
           Body: input.buffer,
           ContentType: input.mimeType,
           ContentLength: input.buffer.length,
-          CacheControl:
-            input.publicAccess
-              ? "public, max-age=31536000, immutable"
-              : "private, no-store"
+          CacheControl: "no-store"
         })
       );
     } catch {
@@ -243,10 +260,10 @@ class R2MediaStorageDriver implements MediaStorageDriver {
     }
   }
 
-  async relocate(
+  planRelocation(
     storagePath: string,
     input: Omit<StoreMediaObjectInput, "buffer" | "fileName">
-  ): Promise<StoredMediaObject> {
+  ): MediaRelocationPlan {
     const source = this.parseLocation(storagePath);
     if (!source) {
       throw mediaObjectUploadFailed();
@@ -257,42 +274,38 @@ class R2MediaStorageDriver implements MediaStorageDriver {
     const targetBucket = input.publicAccess
       ? this.publicBucket
       : this.privateBucket;
-    if (source.bucket !== targetBucket || source.key !== targetKey) {
-      try {
-        await this.client.send(
-          new CopyObjectCommand({
-            Bucket: targetBucket,
-            Key: targetKey,
-            CopySource: `${source.bucket}/${source.key}`,
-            ContentType: input.mimeType,
-            MetadataDirective: "REPLACE",
-            CacheControl: input.publicAccess
-              ? "public, max-age=31536000, immutable"
-              : "private, no-store"
-          })
-        );
-      } catch {
-        throw mediaObjectUploadFailed();
-      }
-      try {
-        await this.client.send(
-          new DeleteObjectCommand({ Bucket: source.bucket, Key: source.key })
-        );
-      } catch {
-        await this.client
-          .send(
-            new DeleteObjectCommand({ Bucket: targetBucket, Key: targetKey })
-          )
-          .catch(() => undefined);
-        throw mediaObjectUploadFailed();
-      }
-    }
     return {
+      sourceStorageKey: storagePath,
       storageKey: `s3:${targetBucket}:${targetKey}`,
+      requiresCopy: source.bucket !== targetBucket || source.key !== targetKey,
       publicUrl: input.publicAccess
         ? `${this.publicBaseUrl}/${targetKey}`
         : null
     };
+  }
+
+  async copyRelocation(
+    plan: MediaRelocationPlan,
+    input: Omit<StoreMediaObjectInput, "buffer" | "fileName">
+  ): Promise<void> {
+    if (!plan.requiresCopy) return;
+    const source = this.parseLocation(plan.sourceStorageKey);
+    const target = this.parseLocation(plan.storageKey);
+    if (!source || !target) throw mediaObjectUploadFailed();
+    try {
+      await this.client.send(
+        new CopyObjectCommand({
+          Bucket: target.bucket,
+          Key: target.key,
+          CopySource: `${source.bucket}/${source.key}`,
+          ContentType: input.mimeType,
+          MetadataDirective: "REPLACE",
+          CacheControl: "no-store"
+        })
+      );
+    } catch {
+      throw mediaObjectUploadFailed();
+    }
   }
 
   async delete(storagePath: string): Promise<void> {

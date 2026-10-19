@@ -7,6 +7,7 @@ import type {
 import type {
   CreateMediaAssetInput,
   MediaRepository,
+  RelocateMediaAssetLifecycle,
   UpdateMediaAssetRecordInput
 } from "./media.repository.js";
 import type { MediaCleanupRepository } from "./media_cleanup.repository.js";
@@ -26,7 +27,11 @@ export class InMemoryMediaRepository implements MediaRepository {
   ): Promise<MediaAsset> {
     if (cleanupTaskId) {
       const task = await this.cleanupRepository?.getById(cleanupTaskId);
-      if (!task || task.storageKey !== input.storageKey) {
+      if (
+        !task ||
+        task.mediaAssetId !== input.id ||
+        task.storageKey !== input.storageKey
+      ) {
         throw new Error("Media cleanup candidate was not found during binding.");
       }
       await this.cleanupRepository!.discardByStorageKey(input.storageKey);
@@ -100,6 +105,37 @@ export class InMemoryMediaRepository implements MediaRepository {
     };
     this.assets.set(id, updated);
     return publicAsset(updated);
+  }
+
+  async relocate(
+    id: string,
+    input: UpdateMediaAssetRecordInput,
+    lifecycle: RelocateMediaAssetLifecycle
+  ): Promise<MediaAsset | null> {
+    const asset = this.assets.get(id);
+    const targetTask = await this.cleanupRepository?.getById(
+      lifecycle.targetCleanupTaskId
+    );
+    if (
+      !asset ||
+      asset.storageKey !== lifecycle.sourceStorageKey ||
+      !input.storageKey ||
+      input.storageKey !== lifecycle.targetStorageKey ||
+      !targetTask ||
+      targetTask.mediaAssetId !== id ||
+      targetTask.storageKey !== lifecycle.targetStorageKey
+    ) {
+      return null;
+    }
+    await this.cleanupRepository!.discardByStorageKey(
+      lifecycle.targetStorageKey
+    );
+    await this.cleanupRepository!.schedule({
+      mediaAssetId: id,
+      storageKey: lifecycle.sourceStorageKey,
+      reason: "relocated_source"
+    });
+    return this.update(id, input);
   }
 }
 

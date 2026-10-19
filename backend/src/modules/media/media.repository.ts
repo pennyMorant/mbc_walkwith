@@ -16,6 +16,12 @@ export type UpdateMediaAssetRecordInput = MediaAssetUpdateRequest & {
   url?: string | null;
 };
 
+export type RelocateMediaAssetLifecycle = {
+  targetCleanupTaskId: string;
+  targetStorageKey: string;
+  sourceStorageKey: string;
+};
+
 export interface MediaRepository {
   create(
     input: CreateMediaAssetInput,
@@ -28,5 +34,10 @@ export interface MediaRepository {
   update(
     id: string,
     input: UpdateMediaAssetRecordInput
+  ): Promise<MediaAsset | null>;
+  relocate(
+    id: string,
+    input: UpdateMediaAssetRecordInput,
+    lifecycle: RelocateMediaAssetLifecycle
   ): Promise<MediaAsset | null>;
 }

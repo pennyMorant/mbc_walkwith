@@ -62,6 +62,7 @@ page/dialog/table
 | `/ai` | `AiManagementPage` | `ai:read` | `core/api/ai.ts` |
 | `/audit` | `AuditLogsPage` | `audit:read` | `core/api/audit_logs.ts` |
 | `/jobs` | `JobsPage` | `jobs:read` | `core/api/jobs.ts` |
+| `/media` | `MediaPage` | `media:read` | `core/api/media.ts` |
 | `/notifications` | `NotificationsPage` | `notifications:read` | `core/api/notifications.ts` |
 | `/settings` | `SettingsPage` | `settings:read` | `core/api/settings.ts` |
 

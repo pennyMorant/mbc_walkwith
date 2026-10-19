@@ -53,6 +53,7 @@ describe("media cleanup routes", () => {
       reason: "unbound_upload",
       status: "failed",
       attempts: 1,
+      retryable: true,
       lastError: "object_delete_failed",
       completedAt: null,
       createdAt: "2026-10-18T00:00:00.000Z",

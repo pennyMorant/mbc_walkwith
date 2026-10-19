@@ -23,6 +23,20 @@ export function mediaCleanupNotFound(id: string) {
   });
 }
 
+export function mediaCleanupNotReady(id: string, retryAvailableAt: string) {
+  return appError({
+    code: "media_cleanup_not_ready",
+    message: "Pending media cleanup cannot be retried while binding may still be active.",
+    statusCode: 409,
+    category: "state_conflict",
+    sourceLayer: "capability",
+    recoverable: true,
+    retryable: true,
+    details: { id, retryAvailableAt },
+    nextAction: "retry_later"
+  });
+}
+
 export function mediaUploadBodyInvalid() {
   return appError({
     code: "media_upload_body_invalid",
