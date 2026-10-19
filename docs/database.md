@@ -237,6 +237,12 @@ member read states remain separate aggregates and do not advance it.
 `public_posts.image_media_id` references `media_assets`; public image URLs are
 derived projections and are never stored on the Life aggregate.
 
+`media_object_cleanup_tasks` records object-storage cleanup candidates created
+before a new media object is bound to `media_assets`. The production repository
+inserts the media row and removes its candidate in one Postgres transaction.
+Failed object deletion remains retryable without exposing `storage_key` through
+API or audit projections.
+
 Current `member_profiles` profile extension fields:
 
 ```text

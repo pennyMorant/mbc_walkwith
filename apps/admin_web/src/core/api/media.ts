@@ -1,10 +1,15 @@
 import {
   mediaAssetListResponseSchema,
   mediaAssetSchema,
+  mediaCleanupListResponseSchema,
+  mediaCleanupTaskSchema,
+  type MediaCleanupStatus,
+  type MediaCleanupTask,
   type MediaAsset
 } from "@mbc/api-contracts";
 
 import { apiClient } from "./client";
+import { pathSegment } from "./path_segments";
 
 export async function listMediaImages(): Promise<MediaAsset[]> {
   mediaImageListRequest ??= apiClient
@@ -41,4 +46,27 @@ export async function uploadMediaImage(
     ...items.filter((item) => item.id !== asset.id)
   ]);
   return asset;
+}
+
+export async function listMediaCleanupTasks(filters: {
+  status?: MediaCleanupStatus | "";
+  limit?: number;
+} = {}): Promise<MediaCleanupTask[]> {
+  const params = new URLSearchParams({ limit: String(filters.limit ?? 50) });
+  if (filters.status) params.set("status", filters.status);
+  const response = await apiClient.getData(
+    `/admin/media/cleanup-tasks?${params.toString()}`,
+    mediaCleanupListResponseSchema
+  );
+  return response.items;
+}
+
+export function retryMediaCleanupTask(
+  cleanupTaskId: string
+): Promise<MediaCleanupTask> {
+  return apiClient.postData(
+    `/admin/media/cleanup-tasks/${pathSegment(cleanupTaskId)}/retry`,
+    {},
+    mediaCleanupTaskSchema
+  );
 }

@@ -17,7 +17,10 @@ export type UpdateMediaAssetRecordInput = MediaAssetUpdateRequest & {
 };
 
 export interface MediaRepository {
-  create(input: CreateMediaAssetInput): Promise<MediaAsset>;
+  create(
+    input: CreateMediaAssetInput,
+    cleanupTaskId?: string
+  ): Promise<MediaAsset>;
   getById(id: string): Promise<MediaAsset | null>;
   getStorageKey(id: string): Promise<string | null>;
   getByIds(ids: string[]): Promise<MediaAsset[]>;

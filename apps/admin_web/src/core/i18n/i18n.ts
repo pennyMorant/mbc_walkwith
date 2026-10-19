@@ -2450,6 +2450,11 @@ Object.assign(messages["zh-Hant"], {
 });
 
 Object.assign(messages.en, {
+  "settings.mediaCleanupTitle": "Media cleanup",
+  "settings.mediaCleanupSubtitle":
+    "Review and retry object deletion after a media upload could not be bound.",
+  "settings.mediaCleanupEmpty": "No media cleanup tasks match this status.",
+  "settings.mediaAsset": "Media asset",
   "sermons.subtitle":
     "Create, complete, review, publish, archive, and manage church sermon resources.",
   "sermons.librarySubtitle": "Search and filter backend sermon records.",
@@ -2468,6 +2473,10 @@ Object.assign(messages.en, {
 });
 
 Object.assign(messages["zh-Hans"], {
+  "settings.mediaCleanupTitle": "媒体清理",
+  "settings.mediaCleanupSubtitle": "查看并重试媒体上传绑定失败后的对象删除任务。",
+  "settings.mediaCleanupEmpty": "当前状态下没有媒体清理任务。",
+  "settings.mediaAsset": "媒体资源",
   "sermons.subtitle": "创建、补全、审核、发布、归档并管理教会讲道资源。",
   "sermons.librarySubtitle": "搜索和筛选后端讲道记录。",
   "sermons.audioCleanupTitle": "音频清理",
@@ -2485,6 +2494,10 @@ Object.assign(messages["zh-Hans"], {
 });
 
 Object.assign(messages["zh-Hant"], {
+  "settings.mediaCleanupTitle": "媒體清理",
+  "settings.mediaCleanupSubtitle": "查看並重試媒體上傳綁定失敗後的物件刪除任務。",
+  "settings.mediaCleanupEmpty": "目前狀態下沒有媒體清理任務。",
+  "settings.mediaAsset": "媒體資源",
   "sermons.subtitle": "建立、補全、審核、發布、封存並管理教會講道資源。",
   "sermons.librarySubtitle": "搜尋和篩選後端講道記錄。",
   "sermons.audioCleanupTitle": "音訊清理",
@@ -2502,6 +2515,12 @@ Object.assign(messages["zh-Hant"], {
 });
 
 Object.assign(messages.es, {
+  "settings.mediaCleanupTitle": "Limpieza multimedia",
+  "settings.mediaCleanupSubtitle":
+    "Revisa y reintenta la eliminación de cargas que no pudieron vincularse.",
+  "settings.mediaCleanupEmpty":
+    "No hay tareas de limpieza multimedia con este estado.",
+  "settings.mediaAsset": "Recurso multimedia",
   "sermons.subtitle":
     "Crea, completa, revisa, publica, archiva y administra los sermones de la iglesia.",
   "sermons.librarySubtitle":

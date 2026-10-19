@@ -13,6 +13,8 @@
 GET   /v1/admin/media
 POST  /v1/admin/media/images
 PATCH /v1/admin/media/:mediaId
+GET   /v1/admin/media/cleanup-tasks
+POST  /v1/admin/media/cleanup-tasks/:cleanupTaskId/retry
 ```
 
 图片上传使用原始 binary body：
@@ -46,3 +48,8 @@ GET /v1/media/:mediaId/content
 - 创建和更新时间。
 
 `storageKey` 只存在于后端 repository，不能出现在 API、SDK、Admin Web 状态或审计投影中。
+
+上传对象落盘后，后端会先持久化 `unbound_upload` 清理候选。生产 Postgres 在同一事务中
+创建媒体元数据并撤销候选；绑定失败时立即尝试删除，删除失败则保留不含内部 object key
+的任务投影，供具备 `media:manage` 权限的管理员重试。该恢复链路在请求内执行，不引入
+常驻媒体 worker。

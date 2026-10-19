@@ -2266,6 +2266,12 @@ canonical `mediaId` plus a transient preview `imageUrl`. Life post mutation
 requests save only `imageMediaId`; read responses project `imageUrl` through the
 Media service. Production stores the object in R2.
 
+Media upload recovery is available to administrators through
+`GET /v1/admin/media/cleanup-tasks` and
+`POST /v1/admin/media/cleanup-tasks/:cleanupTaskId/retry`. Responses expose the
+asset ID, lifecycle status, attempt count, safe error, and timestamps, but never
+the internal object-storage key.
+
 `POST /v1/admin/life-posts/:postId/publish` may ask the backend to notify the
 App after the post reaches `published`. Push delivery is a side effect and must
 not roll back the publish state if FCM is unavailable.

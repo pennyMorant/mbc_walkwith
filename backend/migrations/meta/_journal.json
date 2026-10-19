@@ -477,6 +477,13 @@
       "when": 1792362309490,
       "tag": "0069_windy_havok",
       "breakpoints": true
+    },
+    {
+      "idx": 70,
+      "version": "7",
+      "when": 1792381516894,
+      "tag": "0070_slim_star_brand",
+      "breakpoints": true
     }
   ]
 }

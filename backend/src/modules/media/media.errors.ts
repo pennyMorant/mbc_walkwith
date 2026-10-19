@@ -11,6 +11,18 @@ export function mediaAssetNotFound(id: string) {
   });
 }
 
+export function mediaCleanupNotFound(id: string) {
+  return appError({
+    code: "media_cleanup_not_found",
+    message: "Media cleanup task was not found.",
+    statusCode: 404,
+    category: "not_found",
+    sourceLayer: "capability",
+    details: { id },
+    nextAction: "refresh"
+  });
+}
+
 export function mediaUploadBodyInvalid() {
   return appError({
     code: "media_upload_body_invalid",

@@ -76,7 +76,9 @@ export const apiRouteContractRegistry = [
       "GET /v1/media/:mediaId/content",
       "GET /v1/admin/media",
       "POST /v1/admin/media/images",
-      "PATCH /v1/admin/media/:mediaId"
+      "PATCH /v1/admin/media/:mediaId",
+      "GET /v1/admin/media/cleanup-tasks",
+      "POST /v1/admin/media/cleanup-tasks/:cleanupTaskId/retry"
     ],
     notes:
       "Canonical media metadata and upload boundary. Production objects live in R2; feature clients consume safe projections and never receive storage keys."

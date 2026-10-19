@@ -46,6 +46,35 @@ export const mediaAssetListResponseSchema = z.object({
   items: z.array(mediaAssetSchema)
 });
 
+export const mediaCleanupStatusSchema = z.enum([
+  "pending",
+  "failed",
+  "succeeded"
+]);
+
+export const mediaCleanupReasonSchema = z.enum(["unbound_upload"]);
+
+export const mediaCleanupTaskSchema = z.object({
+  id: z.string().uuid(),
+  mediaAssetId: z.string().uuid(),
+  reason: mediaCleanupReasonSchema,
+  status: mediaCleanupStatusSchema,
+  attempts: z.number().int().nonnegative(),
+  lastError: z.string().nullable(),
+  completedAt: z.string().datetime().nullable(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime()
+});
+
+export const mediaCleanupListQuerySchema = z.object({
+  status: mediaCleanupStatusSchema.optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(50)
+});
+
+export const mediaCleanupListResponseSchema = z.object({
+  items: z.array(mediaCleanupTaskSchema)
+});
+
 export const mediaAssetUploadMetadataSchema = z.object({
   kind: mediaAssetKindSchema.default("image"),
   visibility: mediaVisibilitySchema.default("public"),
@@ -73,6 +102,12 @@ export type MediaConsentStatus = z.infer<typeof mediaConsentStatusSchema>;
 export type MediaAssetListQuery = z.infer<typeof mediaAssetListQuerySchema>;
 export type MediaAssetListResponse = z.infer<
   typeof mediaAssetListResponseSchema
+>;
+export type MediaCleanupStatus = z.infer<typeof mediaCleanupStatusSchema>;
+export type MediaCleanupReason = z.infer<typeof mediaCleanupReasonSchema>;
+export type MediaCleanupTask = z.infer<typeof mediaCleanupTaskSchema>;
+export type MediaCleanupListQuery = z.infer<
+  typeof mediaCleanupListQuerySchema
 >;
 export type MediaAssetUploadMetadata = z.infer<
   typeof mediaAssetUploadMetadataSchema

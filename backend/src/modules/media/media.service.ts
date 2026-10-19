@@ -8,6 +8,7 @@ import { randomUUID } from "node:crypto";
 
 import type { MediaRepository } from "./media.repository.js";
 import type { MediaStorageService } from "./media-storage.service.js";
+import type { MediaCleanupService } from "./media_cleanup.service.js";
 import {
   mediaAssetNotFound,
   mediaImageInvalid,
@@ -32,7 +33,8 @@ export type UploadMediaImageInput = MediaAssetUploadMetadata & {
 export class MediaService {
   constructor(
     private readonly repository: MediaRepository,
-    private readonly storage: MediaStorageService
+    private readonly storage: MediaStorageService,
+    private readonly cleanupService: MediaCleanupService
   ) {}
 
   async uploadImage(input: UploadMediaImageInput): Promise<MediaAsset> {
@@ -50,6 +52,17 @@ export class MediaService {
       mimeType,
       buffer: input.buffer
     });
+    let cleanupTask;
+    try {
+      cleanupTask = await this.cleanupService.schedule({
+        mediaAssetId: id,
+        storageKey: stored.storageKey,
+        reason: "unbound_upload"
+      });
+    } catch (error) {
+      await this.storage.delete(stored.storageKey).catch(() => undefined);
+      throw error;
+    }
     try {
       return await this.repository.create({
         id,
@@ -68,9 +81,9 @@ export class MediaService {
         altText: input.altText,
         caption: input.caption,
         copyrightSource: input.copyrightSource
-      });
+      }, cleanupTask.id);
     } catch (error) {
-      await this.storage.delete(stored.storageKey).catch(() => undefined);
+      await this.cleanupService.processBestEffortByStorageKey(stored.storageKey);
       throw error;
     }
   }

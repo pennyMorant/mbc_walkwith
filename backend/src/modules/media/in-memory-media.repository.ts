@@ -9,13 +9,28 @@ import type {
   MediaRepository,
   UpdateMediaAssetRecordInput
 } from "./media.repository.js";
+import type { MediaCleanupRepository } from "./media_cleanup.repository.js";
 
 type StoredMediaAsset = MediaAsset & { storageKey: string };
 
 export class InMemoryMediaRepository implements MediaRepository {
   private readonly assets = new Map<string, StoredMediaAsset>();
 
-  async create(input: CreateMediaAssetInput): Promise<MediaAsset> {
+  constructor(
+    private readonly cleanupRepository?: MediaCleanupRepository
+  ) {}
+
+  async create(
+    input: CreateMediaAssetInput,
+    cleanupTaskId?: string
+  ): Promise<MediaAsset> {
+    if (cleanupTaskId) {
+      const task = await this.cleanupRepository?.getById(cleanupTaskId);
+      if (!task || task.storageKey !== input.storageKey) {
+        throw new Error("Media cleanup candidate was not found during binding.");
+      }
+      await this.cleanupRepository!.discardByStorageKey(input.storageKey);
+    }
     const timestamp = new Date().toISOString();
     const asset: StoredMediaAsset = {
       ...input,

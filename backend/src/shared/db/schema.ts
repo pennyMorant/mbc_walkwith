@@ -81,6 +81,40 @@ export const mediaAssets = pgTable(
   })
 );
 
+export const mediaObjectCleanupTasks = pgTable(
+  "media_object_cleanup_tasks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    mediaAssetId: uuid("media_asset_id").notNull(),
+    storageKey: text("storage_key").notNull(),
+    reason: text("reason", { enum: ["unbound_upload"] }).notNull(),
+    status: text("status", { enum: ["pending", "failed", "succeeded"] })
+      .notNull()
+      .default("pending"),
+    attempts: integer("attempts").notNull().default(0),
+    lastError: text("last_error"),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+  },
+  (table) => ({
+    storageKeyIdx: uniqueIndex("idx_media_object_cleanup_storage_key").on(
+      table.storageKey
+    ),
+    statusUpdatedIdx: index("idx_media_object_cleanup_status_updated").on(
+      table.status,
+      table.updatedAt
+    ),
+    mediaAssetIdx: index("idx_media_object_cleanup_media_asset").on(
+      table.mediaAssetId
+    )
+  })
+);
+
 export const sermons = pgTable(
   "sermons",
   {

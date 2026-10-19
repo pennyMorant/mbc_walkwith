@@ -65,6 +65,9 @@ import { InMemoryMediaRepository } from "./modules/media/in-memory-media.reposit
 import { MediaService } from "./modules/media/media.service.js";
 import { MediaStorageService } from "./modules/media/media-storage.service.js";
 import { PostgresMediaRepository } from "./modules/media/postgres-media.repository.js";
+import { InMemoryMediaCleanupRepository } from "./modules/media/in_memory_media_cleanup.repository.js";
+import { PostgresMediaCleanupRepository } from "./modules/media/postgres_media_cleanup.repository.js";
+import { MediaCleanupService } from "./modules/media/media_cleanup.service.js";
 import { InMemoryMemberAuthRepository } from "./modules/members/auth/in-memory-member-auth.repository.js";
 import { PostgresMemberAuthRepository } from "./modules/members/auth/postgres-member-auth.repository.js";
 import { MemberAuthService } from "./modules/members/auth/member-auth.service.js";
@@ -192,9 +195,20 @@ export async function buildApp(config: AppConfig) {
     ? new PostgresJobRepository(db)
     : new InMemoryJobRepository();
   const jobService = new JobService(jobRepository);
+  const mediaStorageService = MediaStorageService.fromConfig(config);
+  const mediaCleanupRepository = db
+    ? new PostgresMediaCleanupRepository(db)
+    : new InMemoryMediaCleanupRepository();
+  const mediaCleanupService = new MediaCleanupService(
+    mediaCleanupRepository,
+    mediaStorageService
+  );
   const mediaService = new MediaService(
-    db ? new PostgresMediaRepository(db) : new InMemoryMediaRepository(),
-    MediaStorageService.fromConfig(config)
+    db
+      ? new PostgresMediaRepository(db)
+      : new InMemoryMediaRepository(mediaCleanupRepository),
+    mediaStorageService,
+    mediaCleanupService
   );
   const lifePostRepository = db
     ? new PostgresLifePostRepository(db)
@@ -424,6 +438,7 @@ export async function buildApp(config: AppConfig) {
     jobService,
     lifePostService,
     mediaService,
+    mediaCleanupService,
     memberAuthService,
     memberAuthRateLimiter,
     memberService,

@@ -6,7 +6,10 @@ import type {
 import { and, desc, eq, inArray } from "drizzle-orm";
 
 import type { AppDb } from "../../shared/db/client.js";
-import { mediaAssets } from "../../shared/db/schema.js";
+import {
+  mediaAssets,
+  mediaObjectCleanupTasks
+} from "../../shared/db/schema.js";
 import type {
   CreateMediaAssetInput,
   MediaRepository,
@@ -16,29 +19,31 @@ import type {
 export class PostgresMediaRepository implements MediaRepository {
   constructor(private readonly db: AppDb) {}
 
-  async create(input: CreateMediaAssetInput): Promise<MediaAsset> {
-    const [row] = await this.db
-      .insert(mediaAssets)
-      .values({
-        id: input.id,
-        kind: input.kind,
-        visibility: input.visibility,
-        consentStatus: input.consentStatus,
-        storageKey: input.storageKey,
-        publicUrl: input.url ?? "",
-        originalFileName: input.originalFileName,
-        mimeType: input.mimeType,
-        sizeBytes: input.sizeBytes,
-        width: input.width,
-        height: input.height,
-        focalX: input.focalX,
-        focalY: input.focalY,
-        altText: input.altText,
-        caption: input.caption,
-        copyrightSource: input.copyrightSource
-      })
-      .returning();
-    return mediaAssetFromRow(row!);
+  async create(
+    input: CreateMediaAssetInput,
+    cleanupTaskId?: string
+  ): Promise<MediaAsset> {
+    if (!cleanupTaskId) {
+      const [row] = await this.db
+        .insert(mediaAssets)
+        .values(toInsertValues(input))
+        .returning();
+      return mediaAssetFromRow(row!);
+    }
+    return this.db.transaction(async (transaction) => {
+      const [row] = await transaction
+        .insert(mediaAssets)
+        .values(toInsertValues(input))
+        .returning();
+      const [discarded] = await transaction
+        .delete(mediaObjectCleanupTasks)
+        .where(eq(mediaObjectCleanupTasks.id, cleanupTaskId))
+        .returning({ id: mediaObjectCleanupTasks.id });
+      if (!discarded) {
+        throw new Error("Media cleanup candidate was not found during binding.");
+      }
+      return mediaAssetFromRow(row!);
+    });
   }
 
   async getById(id: string): Promise<MediaAsset | null> {
@@ -106,6 +111,27 @@ export class PostgresMediaRepository implements MediaRepository {
       .returning();
     return row ? mediaAssetFromRow(row) : null;
   }
+}
+
+function toInsertValues(input: CreateMediaAssetInput) {
+  return {
+    id: input.id,
+    kind: input.kind,
+    visibility: input.visibility,
+    consentStatus: input.consentStatus,
+    storageKey: input.storageKey,
+    publicUrl: input.url ?? "",
+    originalFileName: input.originalFileName,
+    mimeType: input.mimeType,
+    sizeBytes: input.sizeBytes,
+    width: input.width,
+    height: input.height,
+    focalX: input.focalX,
+    focalY: input.focalY,
+    altText: input.altText,
+    caption: input.caption,
+    copyrightSource: input.copyrightSource
+  };
 }
 
 type MediaAssetRow = typeof mediaAssets.$inferSelect;
