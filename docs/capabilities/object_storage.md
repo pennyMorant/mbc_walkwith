@@ -36,7 +36,7 @@ R2 object key；开发和自动化测试可以使用本地 driver，但生产启
 - 私有文件必须放入不绑定公开域名的独立 `S3_PRIVATE_BUCKET`，并通过后端签名 URL 访问。
 - 公开图片通过 `MEDIA_PUBLIC_BASE_URL` 指向的 R2 自定义媒体域名访问；URL 不经过 VPS
   转发，避免把图片流量压到应用服务器。
-- 统一媒体可能撤销授权，因此公开 R2 对象使用 `no-store`，不得使用长期 `immutable`
+- 统一媒体可能撤销授权，因此公开 R2 对象与本地公开媒体响应都使用 `no-store`，不得使用长期 `immutable`
   缓存；限制授权后删除公开对象，后续请求不能继续命中持久缓存。
 - 生产必须配置 `MEDIA_STORAGE_DRIVER=s3`、R2 S3 endpoint、公开与私有 bucket、access key、secret
   与 `MEDIA_PUBLIC_BASE_URL`，缺少任一项时后端拒绝启动。

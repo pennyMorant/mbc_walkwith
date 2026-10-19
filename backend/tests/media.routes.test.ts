@@ -43,6 +43,7 @@ describe("media routes", () => {
       expect(contentResponse.headers["cross-origin-resource-policy"]).toBe(
         "cross-origin"
       );
+      expect(contentResponse.headers["cache-control"]).toBe("no-store");
       expect(contentResponse.rawPayload.equals(onePixelPng)).toBe(true);
 
       const listResponse = await harness.app.inject({
