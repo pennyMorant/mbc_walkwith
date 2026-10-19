@@ -11,6 +11,7 @@ import { computed, ref } from "vue";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import {
   listMediaAssets,
+  listMediaAssetUsages,
   updateMediaAsset,
   uploadMediaImage
 } from "@/core/api/media";
@@ -63,6 +64,14 @@ const uploadMutation = useMutation({
   onSuccess: () => queryClient.invalidateQueries({ queryKey })
 });
 const assets = computed(() => assetsQuery.data.value ?? []);
+const usageQuery = useQuery({
+  queryKey: [
+    "admin-media-asset-usages",
+    computed(() => selectedAsset.value?.id ?? "")
+  ],
+  enabled: computed(() => editDialog.value && Boolean(selectedAsset.value)),
+  queryFn: () => listMediaAssetUsages(selectedAsset.value!.id)
+});
 const updateError = computed(() =>
   updateMutation.error.value
     ? formatApiErrorMessage(updateMutation.error.value, t("common.error"))
@@ -177,6 +186,9 @@ async function onFileChange(event: Event) {
     :asset="selectedAsset"
     :saving="updateMutation.isPending.value"
     :error="updateError"
+    :usages="usageQuery.data.value ?? []"
+    :usages-loading="usageQuery.isPending.value"
+    :usages-error="usageQuery.error.value ? formatApiErrorMessage(usageQuery.error.value, t('common.error')) : ''"
     @save="save"
   />
 </template>

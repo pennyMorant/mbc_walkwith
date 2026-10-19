@@ -2274,6 +2274,12 @@ the internal object-storage key. Each task includes backend-owned `retryable`;
 fresh `pending` candidates return `false` and retry requests fail with
 `media_cleanup_not_ready` (409) until the recovery window has elapsed.
 
+`GET /v1/admin/media/:mediaId/usages` returns canonical content references for
+one media asset under `media:read`. Each item contains only a safe source type,
+source ID, display label, and image slot. Life and Public Landing resolve their
+own references through feature-owned providers; the response never exposes a
+database table, object key, bucket, or private setting payload.
+
 `POST /v1/admin/life-posts/:postId/publish` may ask the backend to notify the
 App after the post reaches `published`. Push delivery is a side effect and must
 not roll back the publish state if FCM is unavailable.

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type {
   MediaAsset,
+  MediaAssetUsage,
   MediaAssetUpdateRequest,
   MediaConsentStatus
 } from "@mbc/api-contracts";
@@ -13,6 +14,9 @@ const props = defineProps<{
   asset: MediaAsset | null;
   saving: boolean;
   error: string;
+  usages: MediaAssetUsage[];
+  usagesLoading: boolean;
+  usagesError: string;
 }>();
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
@@ -127,6 +131,33 @@ function save() {
           </div>
           <v-slider v-model="form.focalY" :min="0" :max="100" :step="1" />
         </div>
+        <v-divider class="my-2" />
+        <div class="d-flex align-center justify-space-between ga-3">
+          <div>
+            <div class="text-subtitle-2 font-weight-bold">
+              {{ t("media.usagesTitle") }}
+            </div>
+            <div class="text-body-2 text-medium-emphasis">
+              {{ t("media.usagesSubtitle") }}
+            </div>
+          </div>
+          <v-chip size="small" variant="tonal">{{ usages.length }}</v-chip>
+        </div>
+        <v-progress-linear v-if="usagesLoading" indeterminate color="primary" />
+        <v-alert v-else-if="usagesError" type="error" variant="tonal">
+          {{ usagesError }}
+        </v-alert>
+        <v-alert v-else-if="usages.length === 0" type="info" variant="tonal">
+          {{ t("media.usagesEmpty") }}
+        </v-alert>
+        <v-list v-else density="compact" class="usage-list">
+          <v-list-item
+            v-for="usage in usages"
+            :key="`${usage.source}:${usage.sourceId}:${usage.slot}`"
+            :title="usage.sourceLabel"
+            :subtitle="`${t(usage.source)} · ${t(usage.slot)}`"
+          />
+        </v-list>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
@@ -152,6 +183,11 @@ function save() {
   display: grid;
   place-items: center;
   overflow: hidden;
+  border-radius: 8px;
+  background: rgb(var(--v-theme-surface-variant));
+}
+
+.usage-list {
   border-radius: 8px;
   background: rgb(var(--v-theme-surface-variant));
 }

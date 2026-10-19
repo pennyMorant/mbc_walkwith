@@ -124,6 +124,15 @@ export class PostgresLifePostRepository implements LifePostRepository {
     return row ? postFromRow(row) : null;
   }
 
+  async listByImageMediaId(mediaId: string): Promise<LifePost[]> {
+    const rows = await this.db
+      .select()
+      .from(publicPosts)
+      .where(eq(publicPosts.imageMediaId, mediaId))
+      .orderBy(desc(publicPosts.updatedAt), asc(publicPosts.id));
+    return rows.map(postFromRow);
+  }
+
   async create(input: LifePostUpsertRequest): Promise<LifePost> {
     const [row] = await this.db
       .insert(publicPosts)

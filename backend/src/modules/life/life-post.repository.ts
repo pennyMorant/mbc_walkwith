@@ -12,6 +12,7 @@ export interface LifePostRepository extends EventRegistrationRepository {
   countPosts(): Promise<number>;
   summarizeEventParticipation(): Promise<EventParticipationSummary>;
   getById(id: string): Promise<LifePost | null>;
+  listByImageMediaId(mediaId: string): Promise<LifePost[]>;
   create(input: LifePostUpsertRequest): Promise<LifePost>;
   update(
     id: string,

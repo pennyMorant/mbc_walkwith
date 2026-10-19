@@ -1,10 +1,12 @@
 import {
   mediaAssetListResponseSchema,
   mediaAssetSchema,
+  mediaAssetUsageListResponseSchema,
   mediaCleanupListResponseSchema,
   mediaCleanupTaskSchema,
   type MediaAssetListQuery,
   type MediaAssetUpdateRequest,
+  type MediaAssetUsage,
   type MediaCleanupStatus,
   type MediaCleanupTask,
   type MediaAsset
@@ -79,6 +81,16 @@ export async function updateMediaAsset(
   );
   mediaImageListRequest = null;
   return asset;
+}
+
+export async function listMediaAssetUsages(
+  mediaId: string
+): Promise<MediaAssetUsage[]> {
+  const response = await apiClient.getData(
+    `/admin/media/${pathSegment(mediaId)}/usages`,
+    mediaAssetUsageListResponseSchema
+  );
+  return response.items;
 }
 
 export async function listMediaCleanupTasks(filters: {

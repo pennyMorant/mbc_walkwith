@@ -55,6 +55,8 @@ R2 object key；开发和自动化测试可以使用本地 driver，但生产启
 - 活跃绑定窗口内的 `pending` 候选禁止人工删除，只有失败任务或超过恢复窗口的陈旧任务可重试。
 - 对象删除应具备幂等语义：目标已经不存在视为成功；provider 或路径校验失败返回结构化错误。
 - 清理记录可以保留内部 `storagePath`，但 API、SDK、Admin Web、App 和审计投影不得暴露它。
+- 媒体使用位置由引用方 Feature 的 provider 从 canonical repository 实时解析；Object Storage
+  和 Media surface 只消费安全 usage 投影，不维护第二份业务引用真相。
 - 清理恢复可以采用请求内 best-effort 尝试和受权限保护的人工重试；这不等于引入媒体处理 worker。
 - 本地存储 driver 必须把 `MEDIA_UPLOAD_DIR` 解析为明确 root；相对路径基于后端
   工作目录，绝对路径保持绝对路径。

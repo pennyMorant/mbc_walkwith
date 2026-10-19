@@ -79,6 +79,12 @@ export class InMemoryLifePostRepository implements LifePostRepository {
     return this.posts.get(id) ?? null;
   }
 
+  async listByImageMediaId(mediaId: string): Promise<LifePost[]> {
+    return [...this.posts.values()].filter(
+      (post) => post.imageMediaId === mediaId
+    );
+  }
+
   async create(input: LifePostUpsertRequest): Promise<LifePost> {
     const now = new Date().toISOString();
     const post: LifePost = {

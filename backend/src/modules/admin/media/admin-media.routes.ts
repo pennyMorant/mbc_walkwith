@@ -16,6 +16,7 @@ import {
 } from "../../media/media.errors.js";
 import type { MediaService } from "../../media/media.service.js";
 import type { MediaCleanupService } from "../../media/media_cleanup.service.js";
+import type { MediaUsageService } from "../../media/media_usage.service.js";
 
 type AdminPreHandler = (
   request: FastifyRequest,
@@ -28,6 +29,7 @@ export async function registerAdminMediaRoutes(
   app: FastifyInstance,
   service: MediaService,
   cleanupService: MediaCleanupService,
+  usageService: MediaUsageService,
   auditService: AuditService,
   permissionPreHandler: PermissionPreHandler
 ) {
@@ -37,6 +39,16 @@ export async function registerAdminMediaRoutes(
     async (request) => {
       const query = mediaAssetListQuerySchema.parse(request.query);
       return ok({ items: await service.list(query) });
+    }
+  );
+
+  app.get(
+    "/v1/admin/media/:mediaId/usages",
+    { preHandler: permissionPreHandler("media:read") },
+    async (request) => {
+      const { mediaId } = mediaParamsSchema.parse(request.params);
+      await service.getById(mediaId);
+      return ok({ items: await usageService.list(mediaId) });
     }
   );
 

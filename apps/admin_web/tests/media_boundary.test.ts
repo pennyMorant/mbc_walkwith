@@ -18,6 +18,7 @@ describe("admin media boundary", () => {
     expect(page).toContain("MediaLibraryCard");
     expect(page).toContain("MediaCleanupCard");
     expect(api).toContain("listMediaAssets");
+    expect(api).toContain("listMediaAssetUsages");
     expect(api).toContain("updateMediaAsset");
     expect(api).toContain("apiClient.patchData");
     for (const key of [
@@ -41,7 +42,17 @@ describe("admin media boundary", () => {
       "media.focalX",
       "media.focalY",
       "media.size",
+      "media.usagesTitle",
+      "media.usagesSubtitle",
+      "media.usagesEmpty",
       "restricted",
+      "life_post",
+      "public_landing",
+      "life_post_image",
+      "landing_hero_image",
+      "landing_service_image",
+      "landing_person_image",
+      "landing_gallery_image",
       "relocated_source"
     ]) {
       expect(messages.match(new RegExp(`"${key}"`, "g"))?.length).toBe(4);

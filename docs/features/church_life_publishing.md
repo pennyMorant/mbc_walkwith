@@ -81,6 +81,8 @@ App 展示 Life 首页、分类筛选、详情、报名/课程/小组等行动�
 后台创建内容并设置展示优先级 -> 后端保存草稿、`sort` 和初始 `revision=0` -> 审核发布 intent 携带当前 revision、内容快照和通知选择 -> 后端原子校验并保存 published 与下一 revision -> 如果 `notifyApp` 为 true 则创建 `life_post_published` 通知任务 -> App Life 拉取后端已排序且不含 revision 的可见内容 -> 会友进入详情和相关行动。
 
 Life 图片上传进入统一 Media service；`public_posts` 只保存 `image_media_id`，读取时批量解析当前已批准的公开 URL。媒体变为 pending、restricted 或 private 后，Life 投影立即停止返回图片 URL。
+Life repository 同时实现 Feature-owned media usage provider，按 canonical
+`image_media_id` 返回安全的内容 ID、标题和图片槽位；Media 模块不直接查询 Life 表。
 
 会友打开详情 -> App 提交 mark-read intent -> 后端写入 `life_post_reads.read_at` -> member list/detail 返回 `isRead/readAt` -> App 以同一后端投影更新卡片已读样式、周报 Hero 和各分类未读 badge。
 

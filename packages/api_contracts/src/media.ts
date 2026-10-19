@@ -46,6 +46,30 @@ export const mediaAssetListResponseSchema = z.object({
   items: z.array(mediaAssetSchema)
 });
 
+export const mediaUsageSourceSchema = z.enum([
+  "life_post",
+  "public_landing"
+]);
+
+export const mediaUsageSlotSchema = z.enum([
+  "life_post_image",
+  "landing_hero_image",
+  "landing_service_image",
+  "landing_person_image",
+  "landing_gallery_image"
+]);
+
+export const mediaAssetUsageSchema = z.object({
+  source: mediaUsageSourceSchema,
+  sourceId: z.string().min(1),
+  sourceLabel: z.string().min(1),
+  slot: mediaUsageSlotSchema
+});
+
+export const mediaAssetUsageListResponseSchema = z.object({
+  items: z.array(mediaAssetUsageSchema)
+});
+
 export const mediaCleanupStatusSchema = z.enum([
   "pending",
   "failed",
@@ -106,6 +130,12 @@ export type MediaConsentStatus = z.infer<typeof mediaConsentStatusSchema>;
 export type MediaAssetListQuery = z.infer<typeof mediaAssetListQuerySchema>;
 export type MediaAssetListResponse = z.infer<
   typeof mediaAssetListResponseSchema
+>;
+export type MediaUsageSource = z.infer<typeof mediaUsageSourceSchema>;
+export type MediaUsageSlot = z.infer<typeof mediaUsageSlotSchema>;
+export type MediaAssetUsage = z.infer<typeof mediaAssetUsageSchema>;
+export type MediaAssetUsageListResponse = z.infer<
+  typeof mediaAssetUsageListResponseSchema
 >;
 export type MediaCleanupStatus = z.infer<typeof mediaCleanupStatusSchema>;
 export type MediaCleanupReason = z.infer<typeof mediaCleanupReasonSchema>;

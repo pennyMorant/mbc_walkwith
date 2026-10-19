@@ -11,6 +11,7 @@
 
 ```text
 GET   /v1/admin/media
+GET   /v1/admin/media/:mediaId/usages
 POST  /v1/admin/media/images
 PATCH /v1/admin/media/:mediaId
 GET   /v1/admin/media/cleanup-tasks
@@ -62,5 +63,10 @@ GET /v1/media/:mediaId/content
 不直接访问 bucket 或 object key。该恢复链路不引入常驻媒体 worker。
 
 媒体物理删除暂不开放。生活内容使用数据库外键引用媒体，而官网结构化设置当前保留媒体
-ID；在统一引用登记成为 source of truth 前，管理端只能撤销发布授权，不能通过跨 Feature
-扫描或前端判断执行硬删除。
+ID；在所有引用方接入统一查询目录并具备原子删除保护前，管理端只能撤销发布授权，不能
+通过前端判断执行硬删除。
+
+媒体使用位置不保存在第二张引用表。`GET /v1/admin/media/:mediaId/usages` 通过
+Feature-owned provider 实时读取 canonical Life repository 与 Public Landing Settings，返回
+安全的 source、sourceId、sourceLabel 和 slot。Media service 只聚合 provider，不直接读取
+其他 Feature 的表或 JSON。

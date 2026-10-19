@@ -57,6 +57,7 @@ import { JobService } from "./modules/jobs/job.service.js";
 import { PostgresJobRepository } from "./modules/jobs/postgres-job.repository.js";
 import { InMemoryLifePostRepository } from "./modules/life/in-memory-life-post.repository.js";
 import { LifePostService } from "./modules/life/life-post.service.js";
+import { LifePostMediaUsageProvider } from "./modules/life/life_post_media_usage.provider.js";
 import { PostgresLifePostRepository } from "./modules/life/postgres-life-post.repository.js";
 import { InMemoryMemberRepository } from "./modules/members/in-memory-member.repository.js";
 import { MemberService } from "./modules/members/member.service.js";
@@ -68,6 +69,7 @@ import { PostgresMediaRepository } from "./modules/media/postgres-media.reposito
 import { InMemoryMediaCleanupRepository } from "./modules/media/in_memory_media_cleanup.repository.js";
 import { PostgresMediaCleanupRepository } from "./modules/media/postgres_media_cleanup.repository.js";
 import { MediaCleanupService } from "./modules/media/media_cleanup.service.js";
+import { MediaUsageService } from "./modules/media/media_usage.service.js";
 import { InMemoryMemberAuthRepository } from "./modules/members/auth/in-memory-member-auth.repository.js";
 import { PostgresMemberAuthRepository } from "./modules/members/auth/postgres-member-auth.repository.js";
 import { MemberAuthService } from "./modules/members/auth/member-auth.service.js";
@@ -114,6 +116,7 @@ import { PostgresServingRepository } from "./modules/serving/postgres-serving.re
 import { InMemorySettingsRepository } from "./modules/settings/in-memory-settings.repository.js";
 import { PostgresSettingsRepository } from "./modules/settings/postgres-settings.repository.js";
 import { SettingsService } from "./modules/settings/settings.service.js";
+import { PublicLandingMediaUsageProvider } from "./modules/public/public_landing_media_usage.provider.js";
 import { registerErrorHandler } from "./shared/http/error-handler.js";
 
 export async function buildApp(config: AppConfig) {
@@ -222,6 +225,10 @@ export async function buildApp(config: AppConfig) {
     ? new PostgresSettingsRepository(db)
     : new InMemorySettingsRepository();
   const settingsService = new SettingsService(settingsRepository);
+  const mediaUsageService = new MediaUsageService([
+    new LifePostMediaUsageProvider(lifePostRepository),
+    new PublicLandingMediaUsageProvider(settingsRepository)
+  ]);
   const aiManagementService = new AiManagementService(
     config,
     settingsService,
@@ -439,6 +446,7 @@ export async function buildApp(config: AppConfig) {
     lifePostService,
     mediaService,
     mediaCleanupService,
+    mediaUsageService,
     memberAuthService,
     memberAuthRateLimiter,
     memberService,

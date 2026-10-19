@@ -75,6 +75,7 @@ type AppRouteDependencies = {
   lifePostService: Parameters<typeof registerLifeRoutes>[1];
   mediaService: Parameters<typeof registerMediaRoutes>[1];
   mediaCleanupService: Parameters<typeof registerAdminMediaRoutes>[2];
+  mediaUsageService: Parameters<typeof registerAdminMediaRoutes>[3];
   memberAuthService: Parameters<typeof registerMemberAuthRoutes>[1];
   memberService: Parameters<typeof registerMemberAuthRoutes>[2];
   memberAuthRateLimiter: Parameters<typeof registerMemberAuthRoutes>[4];
@@ -236,6 +237,7 @@ export async function registerAppRoutes(
     app,
     dependencies.mediaService,
     dependencies.mediaCleanupService,
+    dependencies.mediaUsageService,
     dependencies.auditService,
     adminPermission
   );

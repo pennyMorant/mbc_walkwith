@@ -2467,6 +2467,9 @@ Object.assign(messages.en, {
   "media.focalX": "Horizontal focus",
   "media.focalY": "Vertical focus",
   "media.size": "Size",
+  "media.usagesTitle": "Used in",
+  "media.usagesSubtitle": "Canonical content that currently references this image.",
+  "media.usagesEmpty": "This image is not currently referenced by supported content.",
   "media.cleanupTitle": "Media cleanup",
   "media.cleanupSubtitle":
     "Review and retry object deletion after a media upload could not be bound.",
@@ -2488,7 +2491,14 @@ Object.assign(messages.en, {
   "sermon_deleted": "Sermon deleted",
   "unbound_upload": "Unbound upload",
   "relocated_source": "Relocated source",
-  "restricted": "Restricted"
+  "restricted": "Restricted",
+  "life_post": "Church life",
+  "public_landing": "Public website",
+  "life_post_image": "Post image",
+  "landing_hero_image": "Hero image",
+  "landing_service_image": "Service image",
+  "landing_person_image": "Person image",
+  "landing_gallery_image": "Gallery image"
 });
 
 Object.assign(messages["zh-Hans"], {
@@ -2508,6 +2518,9 @@ Object.assign(messages["zh-Hans"], {
   "media.focalX": "水平焦点",
   "media.focalY": "垂直焦点",
   "media.size": "大小",
+  "media.usagesTitle": "使用位置",
+  "media.usagesSubtitle": "当前引用这张图片的真实业务内容。",
+  "media.usagesEmpty": "当前支持的内容中没有引用这张图片。",
   "media.cleanupTitle": "媒体清理",
   "media.cleanupSubtitle": "查看并重试媒体上传绑定失败后的对象删除任务。",
   "media.cleanupEmpty": "当前状态下没有媒体清理任务。",
@@ -2527,7 +2540,14 @@ Object.assign(messages["zh-Hans"], {
   "sermon_deleted": "讲道已删除",
   "unbound_upload": "上传未绑定",
   "relocated_source": "迁移后的源对象",
-  "restricted": "已限制"
+  "restricted": "已限制",
+  "life_post": "教会生活",
+  "public_landing": "公开官网",
+  "life_post_image": "内容图片",
+  "landing_hero_image": "首屏图片",
+  "landing_service_image": "聚会图片",
+  "landing_person_image": "人员图片",
+  "landing_gallery_image": "照片墙图片"
 });
 
 Object.assign(messages["zh-Hant"], {
@@ -2547,6 +2567,9 @@ Object.assign(messages["zh-Hant"], {
   "media.focalX": "水平焦點",
   "media.focalY": "垂直焦點",
   "media.size": "大小",
+  "media.usagesTitle": "使用位置",
+  "media.usagesSubtitle": "目前引用這張圖片的真實業務內容。",
+  "media.usagesEmpty": "目前支援的內容中沒有引用這張圖片。",
   "media.cleanupTitle": "媒體清理",
   "media.cleanupSubtitle": "查看並重試媒體上傳綁定失敗後的物件刪除任務。",
   "media.cleanupEmpty": "目前狀態下沒有媒體清理任務。",
@@ -2566,7 +2589,14 @@ Object.assign(messages["zh-Hant"], {
   "sermon_deleted": "講道已刪除",
   "unbound_upload": "上傳未綁定",
   "relocated_source": "遷移後的來源物件",
-  "restricted": "已限制"
+  "restricted": "已限制",
+  "life_post": "教會生活",
+  "public_landing": "公開官網",
+  "life_post_image": "內容圖片",
+  "landing_hero_image": "首屏圖片",
+  "landing_service_image": "聚會圖片",
+  "landing_person_image": "人員圖片",
+  "landing_gallery_image": "照片牆圖片"
 });
 
 Object.assign(messages.es, {
@@ -2587,6 +2617,9 @@ Object.assign(messages.es, {
   "media.focalX": "Enfoque horizontal",
   "media.focalY": "Enfoque vertical",
   "media.size": "Tamaño",
+  "media.usagesTitle": "Usada en",
+  "media.usagesSubtitle": "Contenido canónico que hace referencia a esta imagen.",
+  "media.usagesEmpty": "Esta imagen no está referenciada por contenido compatible.",
   "media.cleanupTitle": "Limpieza multimedia",
   "media.cleanupSubtitle":
     "Revisa y reintenta la eliminación de cargas que no pudieron vincularse.",
@@ -2611,7 +2644,14 @@ Object.assign(messages.es, {
   "sermon_deleted": "Sermón eliminado",
   "unbound_upload": "Carga no vinculada",
   "relocated_source": "Objeto de origen reubicado",
-  "restricted": "Restringido"
+  "restricted": "Restringido",
+  "life_post": "Vida de la iglesia",
+  "public_landing": "Sitio público",
+  "life_post_image": "Imagen de publicación",
+  "landing_hero_image": "Imagen principal",
+  "landing_service_image": "Imagen del culto",
+  "landing_person_image": "Imagen de persona",
+  "landing_gallery_image": "Imagen de galería"
 });
 
 Object.assign(messages.es, {

@@ -74,10 +74,14 @@ export const apiRouteContractRegistry = [
       "backend/src/modules/media/media.routes.ts",
       "backend/src/modules/admin/media/admin-media.routes.ts"
     ],
-    clientFiles: [],
+    clientFiles: [
+      "apps/admin_web/src/core/api/media.ts",
+      "apps/admin_web/src/features/media/pages/MediaPage.vue"
+    ],
     routes: [
       "GET /v1/media/:mediaId/content",
       "GET /v1/admin/media",
+      "GET /v1/admin/media/:mediaId/usages",
       "POST /v1/admin/media/images",
       "PATCH /v1/admin/media/:mediaId",
       "GET /v1/admin/media/cleanup-tasks",
