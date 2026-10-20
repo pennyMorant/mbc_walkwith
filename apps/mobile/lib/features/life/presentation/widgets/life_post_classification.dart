@@ -1,100 +1,30 @@
 import '../../domain/life_post.dart';
 
 bool lifePostIsSundayMain(LifePost post) {
-  final type = _normalized(post.type);
-  final title = _normalized(post.title);
-  return _containsAny(type, const [
-        'sunday',
-        'worship',
-        'service',
-        'weekly_bulletin',
-        'bulletin',
-        '主日',
-        '崇拜',
-        '周报',
-        '週報',
-      ]) ||
-      _containsAny(title, const ['主日', '崇拜', 'sunday worship']);
+  return post.type == 'weekly_bulletin' || post.type == 'sunday';
 }
 
 bool lifePostIsEventLike(LifePost post) {
   if (post.registrationEnabled) {
     return true;
   }
-  final type = _normalized(post.type);
-  return _containsAny(type, const [
-    'event',
-    'activity',
-    'fellowship',
-    'retreat',
-    'camp',
-    'signup',
-    'registration',
-    '活动',
-    '活動',
-    '团契',
-    '團契',
-    '营会',
-    '營會',
-    '报名',
-    '報名',
-  ]);
+  return post.type == 'event' || post.type == 'fellowship';
 }
 
 bool lifePostIsGroupLike(LifePost post) {
-  final source = _normalized('${post.type} ${post.title}');
-  return _containsAny(source, const [
-    'group',
-    'fellowship',
-    'cell',
-    '团契',
-    '團契',
-    '小组',
-    '小組',
-  ]);
+  return post.type == 'group';
 }
 
 bool lifePostIsCourseLike(LifePost post) {
-  final source = _normalized('${post.type} ${post.title}');
-  return _containsAny(source, const [
-    'course',
-    'class',
-    'lesson',
-    'training',
-    '课程',
-    '課程',
-    '课堂',
-    '課堂',
-    '培训',
-    '培訓',
-  ]);
+  return post.type == 'course';
 }
 
 bool lifePostIsServingLike(LifePost post) {
-  final source = _normalized('${post.type} ${post.title}');
-  return _containsAny(source, const [
-    'serving',
-    'service_opportunity',
-    'volunteer',
-    'ministry',
-    '服事',
-    '事奉',
-    '同工',
-  ]);
+  return post.type == 'serving';
 }
 
 bool lifePostIsPrayerLike(LifePost post) {
-  final source = _normalized('${post.type} ${post.title}');
-  return _containsAny(source, const [
-    'prayer',
-    'care',
-    '代祷',
-    '代禱',
-    '祷告',
-    '禱告',
-    '关怀',
-    '關懷',
-  ]);
+  return post.type == 'prayer' || post.type == 'care';
 }
 
 List<LifePost> lifePostWeekTimeline(List<LifePost> posts, {DateTime? now}) {
@@ -177,12 +107,4 @@ bool _postTouchesRange(LifePost post, DateTime start, DateTime end) {
   }
   final postEnd = post.endsAt ?? postStart;
   return postEnd.isAfter(start) && postStart.isBefore(end);
-}
-
-bool _containsAny(String source, List<String> candidates) {
-  return candidates.any((candidate) => source.contains(candidate));
-}
-
-String _normalized(String value) {
-  return value.trim().toLowerCase().replaceAll('-', '_').replaceAll(' ', '_');
 }

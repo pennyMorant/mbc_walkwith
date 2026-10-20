@@ -2,6 +2,7 @@ import type {
   ContentLocale,
   LifePost,
   LifePostStatus,
+  LifePostType,
   LifePostUpdateRequest,
   LifePostUpsertRequest,
   LifePostVisibility
@@ -17,7 +18,7 @@ type Translate = (key: string) => string;
 export function createLifePostEditorForm() {
   return {
     sourceLocale: "zh-Hans" as ContentLocale,
-    type: "sunday",
+    type: "sunday" as LifePostType,
     title: "",
     body: "",
     meta: "",
@@ -70,7 +71,7 @@ export function buildLifePostPreview(
     id: selectedPost?.id ?? "preview",
     revision: selectedPost?.revision ?? 0,
     sourceLocale: form.sourceLocale,
-    type: form.type.trim() || "life",
+    type: form.type,
     title: form.title.trim() || t("New life post"),
     body: form.body.trim(),
     meta: form.meta.trim(),
@@ -132,7 +133,7 @@ export function buildLifePostPayload(
 ): LifePostUpdateRequest | LifePostUpsertRequest {
   return {
     sourceLocale: form.sourceLocale,
-    type: form.type.trim(),
+    type: form.type,
     title: form.title.trim(),
     body: form.body.trim(),
     meta: form.meta.trim(),

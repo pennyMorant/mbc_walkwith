@@ -18,6 +18,22 @@ export const lifePostStatuses = [
 
 export type LifePostStatus = (typeof lifePostStatuses)[number];
 
+export const lifePostTypes = [
+  "weekly_bulletin",
+  "sunday",
+  "announcement",
+  "event",
+  "fellowship",
+  "group",
+  "course",
+  "serving",
+  "prayer",
+  "care",
+  "giving"
+] as const;
+
+export type LifePostType = (typeof lifePostTypes)[number];
+
 export const visibilityLevels = ["public", "members", "group", "private"] as const;
 
 export type VisibilityLevel = (typeof visibilityLevels)[number];

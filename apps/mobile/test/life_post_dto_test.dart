@@ -3,6 +3,13 @@ import 'package:mbc_walkwith/features/life/data/dto/life_post_dto.dart';
 import 'package:mbc_walkwith/features/life/domain/life_post.dart';
 
 void main() {
+  test('rejects unsupported life post type', () {
+    expect(
+      () => LifePostDto.fromJson({..._validLifePostJson(), 'type': 'custom'}),
+      throwsFormatException,
+    );
+  });
+
   test('parses canonical checked-in event state into typed domain values', () {
     final post = LifePostDto.fromJson(_validLifePostJson()).toDomain();
 

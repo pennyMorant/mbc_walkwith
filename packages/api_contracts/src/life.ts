@@ -1,10 +1,15 @@
-import { lifePostStatuses, visibilityLevels } from "@mbc/shared-types";
+import {
+  lifePostStatuses,
+  lifePostTypes,
+  visibilityLevels
+} from "@mbc/shared-types";
 import { z } from "zod";
 import { contentLocaleSchema } from "./content_localization.js";
 import { sortValueSchema } from "./sort.js";
 
 export const lifePostVisibilitySchema = z.enum(visibilityLevels);
 export const lifePostStatusSchema = z.enum(lifePostStatuses);
+export const lifePostTypeSchema = z.enum(lifePostTypes);
 export const lifePostRevisionSchema = z
   .number()
   .int()
@@ -47,7 +52,7 @@ export const lifePostSchema = z.object({
   id: z.string(),
   revision: lifePostRevisionSchema,
   sourceLocale: contentLocaleSchema.default("zh-Hans"),
-  type: z.string(),
+  type: lifePostTypeSchema,
   title: z.string(),
   body: z.string(),
   meta: z.string().default(""),
@@ -84,7 +89,7 @@ export const lifePostListQuerySchema = z.object({
   visibility: lifePostVisibilitySchema.optional(),
   status: lifePostStatusSchema.optional(),
   query: z.string().optional(),
-  type: z.string().optional(),
+  type: lifePostTypeSchema.optional(),
   sort: lifePostSortSchema.optional(),
   from: z.string().datetime().optional(),
   to: z.string().datetime().optional()
@@ -92,7 +97,7 @@ export const lifePostListQuerySchema = z.object({
 
 export const lifePostUpsertRequestSchema = z.object({
   sourceLocale: contentLocaleSchema.default("zh-Hans"),
-  type: z.string().min(1),
+  type: lifePostTypeSchema,
   title: z.string().min(1),
   body: z.string().default(""),
   meta: z.string().default(""),
@@ -245,6 +250,7 @@ export const eventRegistrationExportResponseSchema = z.object({
 
 export type LifePostVisibility = z.infer<typeof lifePostVisibilitySchema>;
 export type LifePostStatus = z.infer<typeof lifePostStatusSchema>;
+export type LifePostType = z.infer<typeof lifePostTypeSchema>;
 export type EventRegistrationStatus = z.infer<
   typeof eventRegistrationStatusSchema
 >;

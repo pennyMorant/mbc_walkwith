@@ -9,7 +9,7 @@ describe("life post ordering", () => {
     for (let day = 1; day <= 13; day += 1) {
       created.push(
         await repository.create({
-          type: "landing_order_test",
+          type: "announcement",
           title: `Event ${day}`,
           body: "Ordering fixture",
           meta: "",
@@ -33,7 +33,7 @@ describe("life post ordering", () => {
 
     const listed = await repository.list({
       limit: 12,
-      type: "landing_order_test",
+      type: "announcement",
       visibility: "private",
       status: "draft",
       sort: "starts_at_asc",

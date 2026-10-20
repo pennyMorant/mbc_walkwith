@@ -84,27 +84,18 @@ String? lifePostVisibilityLabel(AppLocalizations l10n, String visibility) {
 }
 
 String lifePostTypeLabel(AppLocalizations l10n, LifePost post) {
-  final type = _normalized(post.type);
-  return switch (type) {
-    'weekly_bulletin' || 'bulletin' => l10n.lifePostTypeWeeklyBulletin,
-    'sunday' || 'worship' => l10n.lifePostTypeSunday,
-    'announcement' || 'news' => l10n.lifePostTypeAnnouncement,
-    'event' || 'activity' => l10n.lifePostTypeEvent,
-    'group' || 'cell' || '小组' || '小組' => l10n.lifePostTypeGroup,
-    'fellowship' || '团契' || '團契' => l10n.lifePostTypeFellowship,
-    'course' || 'class' || 'lesson' => l10n.lifePostTypeCourse,
-    'serving' ||
-    'service_opportunity' ||
-    'ministry' ||
-    'volunteer' => l10n.lifePostTypeServing,
+  return switch (post.type) {
+    'weekly_bulletin' => l10n.lifePostTypeWeeklyBulletin,
+    'sunday' => l10n.lifePostTypeSunday,
+    'announcement' => l10n.lifePostTypeAnnouncement,
+    'event' => l10n.lifePostTypeEvent,
+    'group' => l10n.lifePostTypeGroup,
+    'fellowship' => l10n.lifePostTypeFellowship,
+    'course' => l10n.lifePostTypeCourse,
+    'serving' => l10n.lifePostTypeServing,
     'prayer' || 'care' => l10n.lifePostTypePrayer,
     'giving' => l10n.lifePostTypeGiving,
-    _ when lifePostIsCourseLike(post) => l10n.lifePostTypeCourse,
-    _ when lifePostIsServingLike(post) => l10n.lifePostTypeServing,
-    _ when lifePostIsPrayerLike(post) => l10n.lifePostTypePrayer,
-    _ when lifePostIsGroupLike(post) => l10n.lifePostTypeGroup,
-    _ when lifePostIsEventLike(post) => l10n.lifePostTypeEvent,
-    _ => post.type.trim().isEmpty ? l10n.lifePostTypeAnnouncement : post.type,
+    _ => l10n.lifePostTypeAnnouncement,
   };
 }
 
@@ -143,8 +134,4 @@ Future<void> openLifePostActionUrl(
   ExternalLinkService linkService,
 ) async {
   await linkService.openExternalUrl(post.ctaUrl);
-}
-
-String _normalized(String value) {
-  return value.trim().toLowerCase().replaceAll('-', '_').replaceAll(' ', '_');
 }

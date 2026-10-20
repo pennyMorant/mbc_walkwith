@@ -1,0 +1,1 @@
+ALTER TABLE "public_posts" ADD CONSTRAINT "public_posts_type_check" CHECK ("public_posts"."type" in ('weekly_bulletin', 'sunday', 'announcement', 'event', 'fellowship', 'group', 'course', 'serving', 'prayer', 'care', 'giving'));

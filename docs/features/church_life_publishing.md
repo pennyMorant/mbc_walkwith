@@ -35,6 +35,11 @@ Life posts do not use sermon/media processing states such as `processing` or
 `failed`. Unpublish is an action that returns a post to `draft` and
 `private` visibility rather than a separate canonical status.
 
+内容类型是共享契约枚举：`weekly_bulletin`、`sunday`、`announcement`、
+`event`、`fellowship`、`group`、`course`、`serving`、`prayer`、`care`、
+`giving`。Admin 只能选择这些类型；App 必须按 `type` 映射展示区域，不能根据
+标题或译文关键词猜测类型。
+
 ## Capability Contracts
 
 - `object_storage` 用于图片和附件。
@@ -102,6 +107,8 @@ Life repository 同时实现 Feature-owned media usage provider，按 canonical
 
 - 草稿、发布、下架、归档状态可追踪。
 - 展示权重只影响排序，不作为 App 端优先级标签显示。
+- 内容类型由共享枚举驱动，Admin、API、数据库约束和 App DTO 保持一致。
+- 多语言标题不会改变内容所属的 Life 分类。
 - App 只显示当前身份可见内容。
 - 已读状态跨设备一致，且本地缓存不制造未读。
 - 附件不暴露私有存储地址。

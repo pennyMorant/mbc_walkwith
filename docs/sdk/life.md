@@ -88,6 +88,9 @@ Mobile repository methods should expose published content only:
 Rules:
 
 - App surfaces must treat backend 404 and `life_post_not_found` as authoritative.
+- `type` is a closed contract enum owned by `@mbc/shared-types`; DTO parsing
+  rejects unknown values and presentation maps tabs from `type` only. Titles,
+  translations, and icon names must never be used to infer business category.
 - `getLifePosts` accepts `LifePostListRequest` for `limit`, `query`, `type`,
   `from`, and `to`. App UI should pass structured requests instead of building
   route query strings in widgets.

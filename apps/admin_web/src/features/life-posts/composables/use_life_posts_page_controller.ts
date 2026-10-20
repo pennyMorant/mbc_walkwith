@@ -1,4 +1,9 @@
-import type { LifePost, LifePostStatus, LifePostVisibility } from "@mbc/api-contracts";
+import {
+  lifePostTypeSchema,
+  type LifePost,
+  type LifePostStatus,
+  type LifePostVisibility
+} from "@mbc/api-contracts";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref } from "vue";
 
@@ -34,15 +39,7 @@ export function useLifePostsPageController() {
     message: "",
     color: "success"
   });
-  const lifePostTypes = [
-    "weekly_bulletin",
-    "sunday",
-    "announcement",
-    "fellowship",
-    "prayer",
-    "giving",
-    "service_opportunity"
-  ];
+  const lifePostTypes = lifePostTypeSchema.options;
   const lifePostIcons = ["church", "groups", "prayer", "giving", "meal", "event"];
   const sortOptions = computed(() => [
     { title: t("life.sort.normal"), value: 0 },

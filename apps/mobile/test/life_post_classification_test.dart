@@ -41,4 +41,19 @@ void main() {
 
     expect(lifePostIsEventLike(post), isTrue);
   });
+
+  test('localized titles do not override the canonical post type', () {
+    const post = LifePost(
+      id: 'announcement',
+      type: 'announcement',
+      title: '小组课程与代祷更新',
+      body: 'A translated announcement title must not change tabs.',
+      meta: '',
+      iconName: 'church',
+    );
+
+    expect(lifePostIsGroupLike(post), isFalse);
+    expect(lifePostIsCourseLike(post), isFalse);
+    expect(lifePostIsPrayerLike(post), isFalse);
+  });
 }

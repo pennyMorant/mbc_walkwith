@@ -163,7 +163,7 @@ Widget _lifeDetailPresentationApp({
 }) {
   final post = LifePost(
     id: 'life-detail-presentation',
-    type: '主日',
+    type: 'sunday',
     title: '本周主日崇拜',
     body: '上午 10:00 在 Main Sanctuary 敬拜。儿童主日学同步进行。',
     meta: '周日 10:00 AM',

@@ -3,6 +3,19 @@ import 'life_post_json_reader.dart';
 
 const _lifePostVisibilities = {'public', 'members', 'group', 'private'};
 const _lifePostStatuses = {'draft', 'needs_review', 'published', 'archived'};
+const _lifePostTypes = {
+  'weekly_bulletin',
+  'sunday',
+  'announcement',
+  'event',
+  'fellowship',
+  'group',
+  'course',
+  'serving',
+  'prayer',
+  'care',
+  'giving',
+};
 const _eventRegistrationStatuses = {
   'confirmed',
   'cancelled',
@@ -80,7 +93,7 @@ class LifePostDto {
     }
     return LifePostDto(
       id: readLifePostString(json, 'id', allowEmpty: false),
-      type: readLifePostString(json, 'type', allowEmpty: false),
+      type: readLifePostEnum(json, 'type', _lifePostTypes),
       title: readLifePostString(json, 'title', allowEmpty: false),
       body: readLifePostString(json, 'body'),
       meta: readLifePostString(json, 'meta'),

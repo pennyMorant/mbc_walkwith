@@ -92,7 +92,7 @@ void registerLifeWidgetChecks() {
             _SingleLifePostRepository(
               LifePost(
                 id: 'life-empty-body',
-                type: '公告',
+                type: 'announcement',
                 title: '临时通知',
                 body: '',
                 meta: '',
@@ -133,7 +133,7 @@ void registerLifeWidgetChecks() {
             child: LifePostCard(
               post: LifePost(
                 id: 'life-summer-meal',
-                type: '团契',
+                type: 'fellowship',
                 title: '夏季爱宴报名',
                 body: '管理员发布的活动说明和报名提醒。',
                 meta: '',
@@ -169,7 +169,7 @@ void registerLifeWidgetChecks() {
             _SingleLifePostRepository(
               LifePost(
                 id: 'registered-retreat',
-                type: '活动',
+                type: 'event',
                 title: '退修会报名',
                 body: '周末退修会交通与餐食安排。',
                 meta: '',
@@ -191,7 +191,7 @@ void registerLifeWidgetChecks() {
               extraPosts: [
                 LifePost(
                   id: 'life-sunday-hero',
-                  type: '主日',
+                  type: 'sunday',
                   title: '本周主日崇拜',
                   body: '主日崇拜安排。',
                   meta: '周日 10:00 AM',
@@ -257,7 +257,7 @@ void registerLifeWidgetChecks() {
             _SingleLifePostRepository(
               LifePost(
                 id: 'locked-registration',
-                type: '活动',
+                type: 'event',
                 title: '已签到活动',
                 body: '报名已经签到。',
                 meta: '',

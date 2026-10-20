@@ -234,7 +234,7 @@ const {
           <template v-if="authStore.can('life_posts:update')">
           <v-row dense>
             <v-col cols="12" md="6">
-              <v-combobox
+              <v-select
                 v-model="form.type"
                 :label="t('Type')"
                 :items="optionItems(lifePostTypes)"

@@ -1,5 +1,6 @@
 import {
   boolean,
+  check,
   index,
   integer,
   jsonb,
@@ -11,7 +12,7 @@ import {
   uuid
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import { lifePostStatuses } from "@mbc/shared-types";
+import { lifePostStatuses, lifePostTypes } from "@mbc/shared-types";
 
 const contentStatuses = [
   "draft",
@@ -635,7 +636,7 @@ export const publicPosts = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     revision: integer("revision").notNull().default(0),
     sourceLocale: text("source_locale").notNull().default("zh-Hans"),
-    type: text("type").notNull(),
+    type: text("type", { enum: lifePostTypes }).notNull(),
     title: text("title").notNull(),
     body: text("body").notNull(),
     meta: text("meta").notNull().default(""),
@@ -668,6 +669,10 @@ export const publicPosts = pgTable(
       .defaultNow()
   },
   (table) => ({
+    typeCheck: check(
+      "public_posts_type_check",
+      sql`${table.type} in ('weekly_bulletin', 'sunday', 'announcement', 'event', 'fellowship', 'group', 'course', 'serving', 'prayer', 'care', 'giving')`
+    ),
     visibilityIdx: index("idx_public_posts_visibility").on(table.visibility),
     statusIdx: index("idx_public_posts_status").on(table.status),
     sortIdx: index("idx_public_posts_sort").on(

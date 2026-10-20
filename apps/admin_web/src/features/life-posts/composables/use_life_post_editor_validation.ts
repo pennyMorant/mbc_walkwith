@@ -16,7 +16,6 @@ export function useLifePostEditorValidation(input: {
   const isCtaUrlValid = computed(() => isLifePostCtaUrlValid(input.form));
   const canSave = computed(
     () =>
-      input.form.type.trim().length > 0 &&
       input.form.title.trim().length > 0 &&
       isScheduleValid.value &&
       isCtaUrlValid.value &&
