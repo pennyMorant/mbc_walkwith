@@ -21,10 +21,10 @@ const { t } = useI18n();
 const dashboardQuery = useQuery({ queryKey: ["admin-dashboard"], queryFn: getAdminDashboard });
 
 const quickActionDefinitions: Array<DashboardQuickAction & { permission: AdminPermission }> = [
-  { titleKey: "dashboard.action.sermon", icon: "mdi-microphone-outline", path: "/sermons", tone: "primary", permission: "sermons:read" },
-  { titleKey: "dashboard.action.event", icon: "mdi-calendar-plus-outline", path: "/life-posts", tone: "info", permission: "life_posts:read" },
-  { titleKey: "dashboard.action.member", icon: "mdi-account-plus-outline", path: "/members", tone: "secondary", permission: "users:read" },
-  { titleKey: "dashboard.action.prayer", icon: "mdi-hands-pray", path: "/prayer", tone: "warning", permission: "prayer:read" }
+  { titleKey: "dashboard.action.sermon", icon: "mdi-microphone-outline", path: "/sermons", tone: "primary", permission: "sermons:create" },
+  { titleKey: "dashboard.action.event", icon: "mdi-calendar-plus-outline", path: "/life-posts", tone: "info", permission: "life_posts:update" },
+  { titleKey: "dashboard.action.member", icon: "mdi-account-plus-outline", path: "/members", tone: "secondary", permission: "users:manage" },
+  { titleKey: "dashboard.action.prayer", icon: "mdi-hands-pray", path: "/prayer", tone: "warning", permission: "prayer:moderate" }
 ];
 const quickActions = computed(() => quickActionDefinitions.filter((action) => authStore.can(action.permission)));
 async function open(path: string) { await router.push(path); }
@@ -34,9 +34,9 @@ async function open(path: string) { await router.push(path); }
   <div class="dashboard-page">
     <DashboardHeader
       :fetching="dashboardQuery.isFetching.value"
-      :can-publish="authStore.can('life_posts:update')"
+      :can-create="authStore.can('life_posts:update')"
       @refresh="dashboardQuery.refetch()"
-      @publish="open('/life-posts')"
+      @create="open('/life-posts')"
     />
 
     <v-progress-linear v-if="dashboardQuery.isPending.value && !dashboardQuery.data.value" indeterminate color="primary" class="mt-7" />

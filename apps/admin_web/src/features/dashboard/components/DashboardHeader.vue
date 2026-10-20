@@ -3,8 +3,8 @@ import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 
-defineProps<{ fetching: boolean; canPublish: boolean }>();
-defineEmits<{ refresh: []; publish: [] }>();
+defineProps<{ fetching: boolean; canCreate: boolean }>();
+defineEmits<{ refresh: []; create: [] }>();
 
 const { locale, t } = useI18n();
 const greetingKey = computed(() => {
@@ -27,8 +27,8 @@ const currentDate = computed(() =>
       <div class="text-body-2 text-medium-emphasis mt-1">{{ currentDate }}</div>
     </div>
     <div class="d-flex align-center ga-2">
-      <v-btn v-if="canPublish" color="primary" prepend-icon="mdi-pencil-outline" @click="$emit('publish')">
-        {{ t("dashboard.publishContent") }}
+      <v-btn v-if="canCreate" color="primary" prepend-icon="mdi-pencil-outline" @click="$emit('create')">
+        {{ t("dashboard.newLifePost") }}
       </v-btn>
       <v-btn icon="mdi-refresh" variant="tonal" color="primary" :loading="fetching" :aria-label="t('common.refresh')" @click="$emit('refresh')" />
     </div>
