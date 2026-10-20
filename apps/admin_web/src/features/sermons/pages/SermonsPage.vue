@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getAdminSermon } from "@/core/api/sermons";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
@@ -104,22 +105,19 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
     <v-alert v-if="deepLink.error.value" type="error" variant="tonal" class="mb-4">
       {{ t("nav.openResourceFailed") }}
     </v-alert>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("nav.sermons") }}</div>
-        <div class="page-subtitle">
-          {{ t("sermons.subtitle") }}
-        </div>
-      </div>
-      <v-btn
-        color="primary"
-        variant="tonal"
-        :loading="sermonsQuery.isFetching.value"
-        @click="refreshList"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('nav.sermons')" :subtitle="t('sermons.subtitle')">
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          :loading="sermonsQuery.isFetching.value"
+          @click="refreshList"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-row class="mt-6" dense>
       <v-col cols="12" lg="4">

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import PrayerModerationDrawer from "../components/PrayerModerationDrawer.vue";
 import PrayerRequestsTable from "../components/PrayerRequestsTable.vue";
 import PrayerSummaryCards from "../components/PrayerSummaryCards.vue";
@@ -35,23 +37,19 @@ const {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
-    >
-      <div>
-        <div class="page-title">{{ t("nav.prayer") }}</div>
-        <div class="page-subtitle">{{ t("prayer.pageSubtitle") }}</div>
-      </div>
-      <v-btn
-        color="primary"
-        variant="tonal"
-        prepend-icon="mdi-refresh"
-        :loading="requestsQuery.isFetching.value"
-        @click="requestsQuery.refetch()"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('nav.prayer')" :subtitle="t('prayer.pageSubtitle')">
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          :loading="requestsQuery.isFetching.value"
+          @click="requestsQuery.refetch()"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="errorMessage"

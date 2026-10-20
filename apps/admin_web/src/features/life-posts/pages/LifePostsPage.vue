@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { getLifePost } from "@/core/api/life_posts";
-import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
-
 import type { ContentLocale } from "@mbc/api-contracts";
 import { ref } from "vue";
-import { translateLifePostNotification } from "@/core/api/life_posts";
+
 import { formatApiErrorMessage } from "@/core/api/api_errors";
+import { getLifePost, translateLifePostNotification } from "@/core/api/life_posts";
+import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
@@ -142,17 +142,12 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
     <v-alert v-if="deepLink.error.value" type="error" variant="tonal" class="mb-4">
       {{ t("nav.openResourceFailed") }}
     </v-alert>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("nav.lifePosts") }}</div>
-        <div class="page-subtitle">
-          {{ t("life.pageSubtitle") }}
-        </div>
-      </div>
-      <div class="d-flex ga-2">
+    <AdminPageHeader :title="t('nav.lifePosts')" :subtitle="t('life.pageSubtitle')">
+      <template #actions>
         <v-btn
           color="primary"
           variant="tonal"
+          prepend-icon="mdi-refresh"
           :loading="postsQuery.isFetching.value"
           @click="postsQuery.refetch()"
         >
@@ -161,12 +156,13 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
         <v-btn
           v-if="authStore.can('life_posts:update')"
           color="primary"
+          prepend-icon="mdi-plus"
           @click="newPost"
         >
           {{ t("New post") }}
         </v-btn>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <LifePostLibraryCard
       :filters="filters"

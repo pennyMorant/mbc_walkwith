@@ -83,6 +83,9 @@ Surface rule:
   checks remain authoritative.
 - Feature pages call `core/api/*` helpers and may only keep local form, drawer,
   selection, snackbar, and table state.
+- Standard feature headers use the shared Core page-header layout for title,
+  subtitle, and responsive action placement. The owning Feature still supplies
+  localized copy, permission checks, loading state, and action handlers.
 - Admin Web UI supports English, Spanish, Simplified Chinese, and Traditional
   Chinese. First load follows the browser/system locale; a manual locale choice
   is persisted in local storage.

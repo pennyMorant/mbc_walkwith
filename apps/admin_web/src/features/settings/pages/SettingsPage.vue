@@ -7,9 +7,10 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { listSettings, updateSetting } from "@/core/api/settings";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n, type AppLocale } from "@/core/i18n/i18n";
-import SettingsFiltersCard from "../components/SettingsFiltersCard.vue";
-import SettingsPageHeader from "../components/SettingsPageHeader.vue";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import PublicLandingStructuredEditor from "../components/PublicLandingStructuredEditor.vue";
+import SettingsFiltersCard from "../components/SettingsFiltersCard.vue";
 import { cloneLandingSettingValue, isPublicLandingStructuredSetting } from "../public_landing_editor";
 import {
   baseSettingCategories,
@@ -300,10 +301,19 @@ function currentSelectItems() {
 
 <template>
   <div>
-    <SettingsPageHeader
-      :is-fetching="settingsQuery.isFetching.value"
-      :refetch="settingsQuery.refetch"
-    />
+    <AdminPageHeader :title="t('settings.title')" :subtitle="t('settings.subtitle')">
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          :loading="settingsQuery.isFetching.value"
+          @click="settingsQuery.refetch()"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <SettingsFiltersCard
       :filters="filters"
