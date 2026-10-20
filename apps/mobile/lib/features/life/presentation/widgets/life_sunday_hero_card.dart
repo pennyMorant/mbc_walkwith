@@ -7,6 +7,7 @@ import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/life_post.dart';
 import '../life_post_detail_presentation.dart';
 import 'life_post_card_parts.dart';
+import 'life_post_image.dart';
 import 'life_post_read_state.dart';
 
 class LifeSundayHeroCard extends ConsumerWidget {
@@ -64,17 +65,7 @@ class _PublishedSundayHeroCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (post.imageUrl case final imageUrl?
-                when imageUrl.trim().isNotEmpty)
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const SizedBox.shrink(),
-                ),
-              ),
+            if (lifePostHasImage(post)) LifePostImage(post: post),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(

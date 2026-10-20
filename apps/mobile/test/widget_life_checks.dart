@@ -158,7 +158,34 @@ void registerLifeWidgetChecks() {
     expect(find.widgetWithText(FilledButton, '报名参加'), findsOneWidget);
     expect(find.text('会众可见'), findsOneWidget);
     expect(find.textContaining('02:30-04:00'), findsOneWidget);
+    expect(find.byType(LifePostImage), findsOneWidget);
     expect(find.byType(Image), findsOneWidget);
+  });
+
+  testWidgets('life activity image keeps its frame when media is unavailable', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: SizedBox(
+          width: 320,
+          child: LifePostImage(
+            post: LifePost(
+              id: 'activity-without-media',
+              type: 'event',
+              title: 'Church picnic',
+              body: 'Body',
+              meta: '',
+              iconName: 'custom',
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final frame = tester.widget<AspectRatio>(find.byType(AspectRatio));
+    expect(frame.aspectRatio, 16 / 9);
+    expect(find.byIcon(Icons.event_outlined), findsOneWidget);
   });
 
   testWidgets('life tab surfaces member event registrations', (tester) async {

@@ -16,7 +16,7 @@ import 'life_post_read_controller.dart';
 import 'widgets/event_registration_card.dart';
 import 'widgets/life_error_view.dart';
 import 'widgets/life_loading_view.dart';
-import 'widgets/life_post_image_fallback.dart';
+import 'widgets/life_post_image.dart';
 
 class LifePostDetailPage extends ConsumerWidget {
   const LifePostDetailPage({super.key, required this.postId});
@@ -121,22 +121,13 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
     return CustomScrollView(
       controller: widget.scrollController,
       slivers: [
-        if (post.imageUrl != null && post.imageUrl!.isNotEmpty)
+        if (lifePostHasImage(post))
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    post.imageUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return LifePostImageFallback(post: post);
-                    },
-                  ),
-                ),
+              child: LifePostImage(
+                post: post,
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
           ),
