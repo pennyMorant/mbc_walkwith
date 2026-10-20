@@ -1,4 +1,7 @@
-import { publicLifePostSchema } from "@mbc/api-contracts";
+import {
+  lifeLatestBulletinQuerySchema,
+  publicLifePostSchema
+} from "@mbc/api-contracts";
 import { describe, expect, it } from "vitest";
 
 import { selectLatestBulletin } from "../src/modules/life/life-post.service.js";
@@ -37,6 +40,15 @@ describe("latest life bulletin selection", () => {
     expect(selectLatestBulletin([post({ id: "event", type: "event" })])).toBe(
       null
     );
+  });
+
+  it("rejects a bulletin range whose end is not after its start", () => {
+    expect(() =>
+      lifeLatestBulletinQuerySchema.parse({
+        from: "2026-10-19T00:00:00.000Z",
+        to: "2026-10-18T00:00:00.000Z"
+      })
+    ).toThrow("from must be earlier than to");
   });
 });
 

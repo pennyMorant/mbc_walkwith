@@ -34,13 +34,22 @@ class GroupMaterialAssignmentDto {
     if (dueValue != null && dueAt == null) {
       throw const FormatException('dueAt must be an ISO date-time or null.');
     }
+    final status = value('status');
+    if (!const {
+      'assigned',
+      'in_progress',
+      'completed',
+      'needs_follow_up',
+    }.contains(status)) {
+      throw const FormatException('Unsupported group material status.');
+    }
     return GroupMaterialAssignmentDto(
       id: value('id'),
       groupId: value('groupId'),
       materialType: type,
       materialId: value('materialId'),
       title: value('title'),
-      status: value('status'),
+      status: status,
       dueAt: dueAt,
     );
   }

@@ -62,7 +62,7 @@ abstract class GroupRepository {
   Future<List<GroupMaterialAssignment>> getMaterialAssignments(
     String groupId,
     MemberSession session,
-  ) async => const [];
+  );
   Future<void> applyToGroup(
     String groupId,
     MemberSession session, {

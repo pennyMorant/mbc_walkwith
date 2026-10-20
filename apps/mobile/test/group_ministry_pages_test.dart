@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mbc_walkwith/features/life/data/group_repository.dart';
 import 'package:mbc_walkwith/features/life/domain/ministry_group.dart';
+import 'package:mbc_walkwith/features/life/domain/group_material_assignment.dart';
 import 'package:mbc_walkwith/features/life/presentation/group_detail_page.dart';
 import 'package:mbc_walkwith/features/member_auth/data/member_session_repository.dart';
 import 'package:mbc_walkwith/features/mine/presentation/my_groups_page.dart';
@@ -117,6 +118,12 @@ Widget _localizedApp({
 
 class _RecordingGroupRepository extends GroupRepository {
   String? withdrawnGroupId;
+
+  @override
+  Future<List<GroupMaterialAssignment>> getMaterialAssignments(
+    String groupId,
+    MemberSession session,
+  ) async => const [];
 
   @override
   Future<void> withdrawApplication(

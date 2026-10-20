@@ -19,11 +19,13 @@ class LifeLocalDataSource {
         (post) => OrderingTerm.desc(post.updatedAt),
       ]);
     final posts = await query.get();
-    return posts
+    final matches = posts
         .map(_postFromRow)
         .where((post) => _matchesRequest(post, request))
-        .take(request.limit)
-        .toList(growable: false);
+        .skip(request.offset);
+    return (request.loadAll ? matches : matches.take(request.limit)).toList(
+      growable: false,
+    );
   }
 
   Future<LifePostDto?> fetchLifePostById(String postId) async {

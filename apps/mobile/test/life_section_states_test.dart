@@ -9,6 +9,7 @@ import 'package:mbc_walkwith/features/life/data/serving_repository.dart';
 import 'package:mbc_walkwith/features/life/domain/course_learning.dart';
 import 'package:mbc_walkwith/features/life/domain/care_request.dart';
 import 'package:mbc_walkwith/features/life/domain/ministry_group.dart';
+import 'package:mbc_walkwith/features/life/domain/group_material_assignment.dart';
 import 'package:mbc_walkwith/features/life/domain/prayer_request.dart';
 import 'package:mbc_walkwith/features/life/domain/serving_assignment.dart';
 import 'package:mbc_walkwith/features/life/domain/serving_availability.dart';
@@ -159,9 +160,8 @@ void main() {
     expect(find.text(_friendlyFailure), findsOneWidget);
     expect(find.textContaining('ApiError'), findsNothing);
 
-    ScaffoldMessenger.of(
-      tester.element(find.text(_friendlyFailure)),
-    ).hideCurrentSnackBar();
+    ScaffoldMessenger.of(tester.element(find.text(_friendlyFailure)))
+        .hideCurrentSnackBar();
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Enroll'));
@@ -169,9 +169,8 @@ void main() {
     expect(find.text(_friendlyFailure), findsOneWidget);
     expect(find.textContaining('ApiError'), findsNothing);
 
-    ScaffoldMessenger.of(
-      tester.element(find.text(_friendlyFailure)),
-    ).hideCurrentSnackBar();
+    ScaffoldMessenger.of(tester.element(find.text(_friendlyFailure)))
+        .hideCurrentSnackBar();
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Confirm'));
@@ -260,6 +259,12 @@ final _scheduledAssignment = ServingAssignment(
 );
 
 class _FailingGroupRepository extends GroupRepository {
+  @override
+  Future<List<GroupMaterialAssignment>> getMaterialAssignments(
+    String groupId,
+    MemberSession session,
+  ) async => throw _apiFailure;
+
   @override
   Future<List<MinistryGroup>> getGroups(MemberSession? session) async {
     return const [_openGroup];

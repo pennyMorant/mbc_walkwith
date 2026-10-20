@@ -29,6 +29,8 @@ Member group learning materials:
 
 - `GET /v1/member/groups/:groupId/materials?limit=100`
 - Only active members or leaders may read the assignment list.
+- Repository adapters must implement this read explicitly; a missing adapter is
+  an implementation error, not an empty assignment list.
 - The assignment references a reading plan, sermon discussion guide, course,
   or manual by canonical type and ID; the App does not copy source content into
   the group model.
@@ -100,11 +102,15 @@ Rules:
 - `type` is a closed contract enum owned by `@mbc/shared-types`; DTO parsing
   rejects unknown values and presentation maps tabs from `type` only. Titles,
   translations, and icon names must never be used to infer business category.
-- `getLifePosts` accepts `LifePostListRequest` for `limit`, `query`, `type`,
-  `offset`, `query`, `type`, `from`, and `to`. App UI should pass structured
+- `getLifePosts` accepts `LifePostListRequest` for `limit`, `offset`, `query`,
+  `type`, `from`, and `to`. App UI should pass structured
   requests instead of building route query strings in widgets. Month feeds and
   member registration history set `loadAll`, causing the remote data source to
   request stable offset pages until the backend returns a partial page.
+- Only a completed unfiltered `loadAll` response may replace the offline Life
+  cache. Bounded pages are upserted and must not delete older cached content.
+  Local fallback applies the same `offset` and `loadAll` semantics as remote
+  reads.
 - Life weekly tab requests the current natural week. Other Life tabs request
   the selected month. The App requests the Sunday/weekly hero through
   `GET /life/bulletin/latest?from=<iso>&to=<iso>` or its authenticated member

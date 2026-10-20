@@ -70,6 +70,7 @@ screen/widget
 | `/mine/groups` | `myGroups` | `MyGroupsPage` | Group repository, canonical active/leader memberships |
 | `/mine/courses` | `myCourses` | `MyCoursesPage` | Course repository, canonical member enrollment history |
 | `/mine/reading-plans` | `myReadingPlans` | `MyReadingPlansPage` | Reading-plan repository, current assignments, immutable attempt history, and lifecycle intents |
+| `/mine/event-registrations` | `myEventRegistrations` | `MyEventRegistrationsPage` | Member Life repository and backend-owned registration summaries |
 | `/mine/serving` | `myServing` | `MyServingPage` | Serving repository, canonical assignment and availability collections |
 | `/mine/serving/:assignmentId` | `servingDetail` | `ServingAssignmentDetailPage` | Serving repository, confirm/leave/check-in intents and canonical check-in state |
 | `/mine` | `mine` | `MineTab` | Member session repository, discipleship repository, preference card, system notification permission, giving entry, and About card |

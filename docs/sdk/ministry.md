@@ -1,5 +1,15 @@
 # Ministry SDK
 
+## Member Group Materials
+
+- `GET /v1/member/groups/:groupId/materials?limit=100` is available only to
+  active group members and leaders.
+- `GroupRepository.getMaterialAssignments` is a required adapter contract; a
+  missing implementation must not degrade to an empty list.
+- Assignments retain canonical `materialType` and `materialId` references. The
+  group feature does not copy the referenced reading plan, sermon guide,
+  course, or manual content.
+
 状态：二阶段第一版已接入，三阶段 v2 可用性、到岗和小组材料基础链路已接入
 
 This document covers event attendance, group ministry, course learning, and serving schedule client boundaries.

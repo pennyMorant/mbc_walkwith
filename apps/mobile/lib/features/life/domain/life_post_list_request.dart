@@ -26,11 +26,15 @@ class LifePostListRequest {
       from == null &&
       to == null;
 
-  bool get canRefreshCache =>
+  bool get isUnfiltered =>
       (query == null || query!.trim().isEmpty) &&
       (type == null || type!.trim().isEmpty) &&
       from == null &&
       to == null;
+
+  bool get canReplaceCache => isUnfiltered && offset == 0 && loadAll;
+
+  bool get canUpsertCachePage => isUnfiltered;
 
   Map<String, String> toQueryParameters() {
     return {

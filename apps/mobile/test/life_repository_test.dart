@@ -134,6 +134,49 @@ void main() {
     },
   );
 
+  test('local life pagination honors offset and loadAll', () async {
+    final database = AppDatabase(openTestDatabaseConnection());
+    addTearDown(database.close);
+    final local = LifeLocalDataSource(database: database);
+    await local.replaceLifePosts([
+      _cachedLifePostDto.copyWith(id: 'first', sort: 30),
+      _cachedLifePostDto.copyWith(id: 'second', sort: 20),
+      _cachedLifePostDto.copyWith(id: 'third', sort: 10),
+    ]);
+
+    final page = await local.fetchLifePosts(
+      request: const LifePostListRequest(limit: 1, offset: 1),
+    );
+    final all = await local.fetchLifePosts(
+      request: const LifePostListRequest(limit: 1, loadAll: true),
+    );
+
+    expect(page.single.id, 'second');
+    expect(all.map((post) => post.id), ['first', 'second', 'third']);
+  });
+
+  test('a partial remote page does not delete older cached posts', () async {
+    final database = AppDatabase(openTestDatabaseConnection());
+    addTearDown(database.close);
+    final local = LifeLocalDataSource(database: database);
+    await local.replaceLifePosts([_cachedLifePostDto]);
+    final newPost = _cachedLifePostDto.copyWith(id: 'new-post', sort: 200);
+    final repository = CachedLifeRepository(
+      remoteDataSource: _StaticLifeRemoteDataSource([newPost]),
+      localDataSource: local,
+    );
+
+    await repository.getLifePosts(request: const LifePostListRequest(limit: 1));
+
+    final cached = await local.fetchLifePosts(
+      request: const LifePostListRequest(loadAll: true),
+    );
+    expect(
+      cached.map((post) => post.id),
+      containsAll(['new-post', 'cached-life-post']),
+    );
+  });
+
   test('uses member token when fetching member-visible life posts', () async {
     final remoteDataSource = _RecordingLifeRemoteDataSource([
       _cachedLifePostDto,

@@ -29,9 +29,8 @@ void main() {
     final detailDio = _GroupDio(
       responseData: const {'data': _groupJson, 'meta': <String, Object?>{}},
     );
-    final group = await _repository(
-      detailDio,
-    ).getGroup('public fellowship', _memberSession);
+    final group = await _repository(detailDio)
+        .getGroup('public fellowship', _memberSession);
 
     expect(group.id, 'public-fellowship');
     expect(detailDio.requests.single.path, '/groups/public%20fellowship');
@@ -76,6 +75,64 @@ void main() {
       '/groups/public-fellowship/applications/application-1',
     );
     expect(withdrawDio.requests.single.data, {'status': 'withdrawn'});
+  });
+
+  test('member materials use the protected group contract', () async {
+    final dio = _GroupDio(
+      responseData: const {
+        'data': {
+          'items': [
+            {
+              'id': 'assignment-1',
+              'groupId': 'public-fellowship',
+              'materialType': 'course',
+              'materialId': 'course-1',
+              'title': 'Foundations',
+              'status': 'assigned',
+              'dueAt': null,
+              'createdAt': '2026-07-01T12:00:00.000Z',
+              'updatedAt': '2026-07-01T12:00:00.000Z',
+            },
+          ],
+        },
+      },
+    );
+
+    final materials = await _repository(dio)
+        .getMaterialAssignments('public fellowship', _memberSession);
+
+    expect(materials.single.title, 'Foundations');
+    expect(
+      dio.requests.single.path,
+      '/member/groups/public%20fellowship/materials?limit=100',
+    );
+    expect(dio.requests.single.authorization, 'Bearer member-token');
+  });
+
+  test('member materials reject unsupported task status', () async {
+    final dio = _GroupDio(
+      responseData: const {
+        'data': {
+          'items': [
+            {
+              'id': 'assignment-1',
+              'groupId': 'public-fellowship',
+              'materialType': 'course',
+              'materialId': 'course-1',
+              'title': 'Foundations',
+              'status': 'unexpected',
+              'dueAt': null,
+            },
+          ],
+        },
+      },
+    );
+
+    await expectLater(
+      _repository(dio)
+          .getMaterialAssignments('public-fellowship', _memberSession),
+      throwsA(isA<FormatException>()),
+    );
   });
 
   test(

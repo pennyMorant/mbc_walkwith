@@ -96,10 +96,15 @@ export const lifePostListQuerySchema = z.object({
   to: z.string().datetime().optional()
 });
 
-export const lifeLatestBulletinQuerySchema = z.object({
-  from: z.string().datetime(),
-  to: z.string().datetime()
-});
+export const lifeLatestBulletinQuerySchema = z
+  .object({
+    from: z.string().datetime(),
+    to: z.string().datetime()
+  })
+  .refine((query) => new Date(query.from) < new Date(query.to), {
+    message: "from must be earlier than to",
+    path: ["to"]
+  });
 
 export const lifePostUpsertRequestSchema = z.object({
   sourceLocale: contentLocaleSchema.default("zh-Hans"),

@@ -305,8 +305,10 @@ export const apiRouteContractRegistry = [
     routes: [
       "GET /v1/life/posts",
       "GET /v1/life/posts/:postId",
+      "GET /v1/life/bulletin/latest",
       "GET /v1/member/life/posts",
       "GET /v1/member/life/posts/:postId",
+      "GET /v1/member/life/bulletin/latest",
       "POST /v1/member/life/posts/:postId/read",
       "POST /v1/member/life/posts/:postId/register",
       "POST /v1/member/life/posts/:postId/registration/cancel",
@@ -540,6 +542,7 @@ export const apiRouteContractRegistry = [
       "GET /v1/groups",
       "GET /v1/groups/:groupId",
       "GET /v1/me/groups",
+      "GET /v1/member/groups/:groupId/materials",
       "POST /v1/groups/:groupId/applications",
       "PATCH /v1/groups/:groupId/applications/:applicationId",
       "GET /v1/admin/groups",

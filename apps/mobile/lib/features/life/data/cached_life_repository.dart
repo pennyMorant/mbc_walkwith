@@ -28,8 +28,10 @@ class CachedLifeRepository extends LifeRepository {
         request: request,
       );
       _rememberMemberPosts(session, postDtos);
-      if (request.canRefreshCache) {
+      if (request.canReplaceCache) {
         await _replaceContentCacheBestEffort(postDtos);
+      } else if (request.canUpsertCachePage) {
+        await _cacheContentPageBestEffort(postDtos);
       }
       return postDtos.map((post) => post.toDomain()).toList();
     } on FormatException {
@@ -262,6 +264,16 @@ class CachedLifeRepository extends LifeRepository {
       await localDataSource.upsertLifePost(post);
     } catch (_) {
       // Member state stays in the partitioned memory cache for this session.
+    }
+  }
+
+  Future<void> _cacheContentPageBestEffort(List<LifePostDto> posts) async {
+    try {
+      for (final post in posts) {
+        await localDataSource.upsertLifePost(post);
+      }
+    } catch (_) {
+      // A content-cache write cannot turn a valid server response into failure.
     }
   }
 }
