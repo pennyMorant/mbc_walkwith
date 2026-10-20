@@ -19,6 +19,7 @@ import {
 } from "@/core/api/care";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -198,23 +199,22 @@ function addCareFollowUp() {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("nav.care") }}</div>
-        <div class="page-subtitle">
-          {{ t("Care request assignment, privacy, follow-up, and audit queue.") }}
-        </div>
-      </div>
-      <v-btn
-        color="primary"
-        variant="tonal"
-        :loading="requestsQuery.isFetching.value"
-        prepend-icon="mdi-refresh"
-        @click="requestsQuery.refetch()"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader
+      :title="t('nav.care')"
+      :subtitle="t('Care request assignment, privacy, follow-up, and audit queue.')"
+    >
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          :loading="requestsQuery.isFetching.value"
+          prepend-icon="mdi-refresh"
+          @click="requestsQuery.refetch()"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert v-if="errorMessage" type="error" variant="tonal" class="mt-4">
       {{ errorMessage }}

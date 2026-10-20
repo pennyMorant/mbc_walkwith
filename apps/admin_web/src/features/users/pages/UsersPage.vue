@@ -20,6 +20,7 @@ import {
 } from "@/core/api/admin_users";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -181,22 +182,19 @@ function resetUserPassword() {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("Users and Roles") }}</div>
-        <div class="page-subtitle">
-          {{ t("users.createSubtitle") }}
-        </div>
-      </div>
-      <v-btn
-        color="primary"
-        variant="tonal"
-        :loading="usersQuery.isFetching.value"
-        @click="usersQuery.refetch()"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('Users and Roles')" :subtitle="t('users.createSubtitle')">
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          :loading="usersQuery.isFetching.value"
+          @click="usersQuery.refetch()"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-row class="mt-6" dense>
       <v-col cols="12" lg="4">

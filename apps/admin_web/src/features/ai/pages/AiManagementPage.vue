@@ -17,6 +17,7 @@ import {
 } from "@/core/api/ai";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -142,15 +143,18 @@ const providerTestResult = computed(() => providerTestMutation.data.value ?? nul
 
 <template>
   <v-container class="pa-4 pa-md-6" fluid>
-    <div class="d-flex flex-wrap align-center justify-space-between ga-3 mb-6">
-      <div>
-        <div class="page-title">{{ t("ai.title") }}</div>
-        <div class="page-subtitle">{{ t("ai.subtitle") }}</div>
-      </div>
-      <v-btn prepend-icon="mdi-refresh" variant="tonal" @click="managementQuery.refetch()">
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader class="mb-6" :title="t('ai.title')" :subtitle="t('ai.subtitle')">
+      <template #actions>
+        <v-btn
+          prepend-icon="mdi-refresh"
+          variant="tonal"
+          :loading="managementQuery.isFetching.value"
+          @click="managementQuery.refetch()"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert v-if="errorMessage" type="error" variant="tonal" class="mb-4">{{ errorMessage }}</v-alert>
     <v-progress-linear v-if="managementQuery.isLoading.value" indeterminate color="primary" class="mb-4" />

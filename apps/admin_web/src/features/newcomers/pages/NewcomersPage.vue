@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import { useNewcomerPage } from "../composables/use_newcomer_page";
 import {
   conversionStatusOptions,
@@ -38,23 +40,19 @@ const {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("nav.newcomers") }}</div>
-        <div class="page-subtitle">
-          {{ t("newcomers.pageSubtitle") }}
-        </div>
-      </div>
-      <v-btn
-        color="primary"
-        variant="tonal"
-        :loading="newcomersQuery.isFetching.value"
-        prepend-icon="mdi-refresh"
-        @click="newcomersQuery.refetch()"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('nav.newcomers')" :subtitle="t('newcomers.pageSubtitle')">
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          :loading="newcomersQuery.isFetching.value"
+          prepend-icon="mdi-refresh"
+          @click="newcomersQuery.refetch()"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert v-if="errorMessage" type="error" variant="tonal" class="mt-4">
       {{ errorMessage }}

@@ -14,13 +14,21 @@ describe("admin page header", () => {
     expect(component).not.toContain("@/core/api/");
   });
 
-  test("is reused by the primary content and settings workspaces", async () => {
+  test("is reused by the primary admin workspaces", async () => {
     const pagePaths = [
       "../src/features/sermons/pages/SermonsPage.vue",
       "../src/features/life-posts/pages/LifePostsPage.vue",
       "../src/features/prayer/pages/PrayerPage.vue",
       "../src/features/media/pages/MediaPage.vue",
-      "../src/features/settings/pages/SettingsPage.vue"
+      "../src/features/settings/pages/SettingsPage.vue",
+      "../src/features/ai/pages/AiManagementPage.vue",
+      "../src/features/audit/pages/AuditLogsPage.vue",
+      "../src/features/jobs/pages/JobsPage.vue",
+      "../src/features/users/pages/UsersPage.vue",
+      "../src/features/members/pages/MembersPage.vue",
+      "../src/features/newcomers/pages/NewcomersPage.vue",
+      "../src/features/care/pages/CarePage.vue",
+      "../src/features/notifications/pages/NotificationsPage.vue"
     ];
     const pages = await Promise.all(
       pagePaths.map((path) => Bun.file(new URL(path, import.meta.url)).text())

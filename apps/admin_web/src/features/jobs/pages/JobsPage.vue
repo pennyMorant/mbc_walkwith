@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { JobStatus } from "@mbc/api-contracts";
 
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import JobFailureDiagnostics from "../components/JobFailureDiagnostics.vue";
 import JobPipelineReadinessCard from "../components/JobPipelineReadinessCard.vue";
 import JobQueueCard from "../components/JobQueueCard.vue";
@@ -39,22 +41,19 @@ const {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("System diagnostics") }}</div>
-        <div class="page-subtitle">
-          {{ t("jobs.subtitle") }}
-        </div>
-      </div>
-      <v-btn
-        color="primary"
-        variant="tonal"
-        :loading="jobsQuery.isFetching.value"
-        @click="resetList"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('System diagnostics')" :subtitle="t('jobs.subtitle')">
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          :loading="jobsQuery.isFetching.value"
+          @click="resetList"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <JobPipelineReadinessCard
       :ready="pipelineStatusQuery.data.value?.ready ?? false"

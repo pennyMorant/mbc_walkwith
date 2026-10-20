@@ -16,6 +16,7 @@ import {
 } from "@/core/api/notifications";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -197,19 +198,12 @@ function cancelTask(task: NotificationDeliveryTask) {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
-    >
-      <div>
-        <div class="page-title">{{ t("nav.notifications") }}</div>
-        <div class="page-subtitle">
-          {{ t("notifications.subtitle") }}
-        </div>
-      </div>
-      <div class="d-flex flex-wrap ga-2">
+    <AdminPageHeader :title="t('nav.notifications')" :subtitle="t('notifications.subtitle')">
+      <template #actions>
         <v-btn
           color="primary"
           variant="tonal"
+          prepend-icon="mdi-refresh"
           :loading="deliveriesQuery.isFetching.value"
           @click="resetList"
         >
@@ -219,14 +213,15 @@ function cancelTask(task: NotificationDeliveryTask) {
           v-if="canManage"
           color="warning"
           variant="tonal"
+          prepend-icon="mdi-reload-alert"
           :disabled="retryDueMutation.isPending.value"
           :loading="retryDueMutation.isPending.value"
           @click="retryDueDeliveries"
         >
           {{ t("notifications.retryDue") }}
         </v-btn>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="retryDueMutation.data.value"

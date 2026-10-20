@@ -6,6 +6,7 @@ import { computed, reactive, ref } from "vue";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { listAuditLogs } from "@/core/api/audit_logs";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 const selectedLog = ref<AuditLog | null>(null);
 const drawer = ref(false);
@@ -38,22 +39,19 @@ function json(value: unknown) {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("nav.audit") }}</div>
-        <div class="page-subtitle">
-          {{ t("audit.subtitle") }}
-        </div>
-      </div>
-      <v-btn
-        color="primary"
-        variant="tonal"
-        :loading="logsQuery.isFetching.value"
-        @click="logsQuery.refetch()"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('nav.audit')" :subtitle="t('audit.subtitle')">
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          :loading="logsQuery.isFetching.value"
+          @click="logsQuery.refetch()"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-card class="mt-6">
       <div class="pa-5">
