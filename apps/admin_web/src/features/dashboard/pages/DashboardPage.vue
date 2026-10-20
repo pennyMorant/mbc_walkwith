@@ -9,8 +9,10 @@ import { getAdminDashboard } from "@/core/api/dashboard";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import DashboardHeader from "../components/DashboardHeader.vue";
+import DashboardActionQueue from "../components/DashboardActionQueue.vue";
 import DashboardMetricGrid from "../components/DashboardMetricGrid.vue";
 import DashboardQuickActions, { type DashboardQuickAction } from "../components/DashboardQuickActions.vue";
+import DashboardRecentContent from "../components/DashboardRecentContent.vue";
 import DashboardSystemHealth from "../components/DashboardSystemHealth.vue";
 
 const router = useRouter();
@@ -50,13 +52,17 @@ async function open(path: string) { await router.push(path); }
         {{ t("dashboard.snapshotStale") }}
       </v-alert>
 
-      <DashboardMetricGrid class="mt-8" :metrics="dashboardQuery.data.value.metrics" />
+      <DashboardActionQueue class="mt-8" :items="dashboardQuery.data.value.actionItems" @open="open" />
+      <DashboardMetricGrid class="mt-7" :metrics="dashboardQuery.data.value.metrics" />
       <v-row class="mt-3" dense>
-        <v-col cols="12" md="6">
-          <DashboardSystemHealth :jobs="dashboardQuery.data.value.jobs" :snapshot="dashboardQuery.data.value.snapshot" />
+        <v-col cols="12" lg="8">
+          <DashboardRecentContent :items="dashboardQuery.data.value.recentContent" @open="open" />
         </v-col>
-        <v-col v-if="quickActions.length > 0" cols="12" md="6">
-          <DashboardQuickActions :actions="quickActions" @open="open" />
+        <v-col cols="12" lg="4">
+          <div class="d-flex flex-column ga-3">
+            <DashboardSystemHealth :health="dashboardQuery.data.value.health" :snapshot="dashboardQuery.data.value.snapshot" @open="open" />
+            <DashboardQuickActions v-if="quickActions.length > 0" :actions="quickActions" @open="open" />
+          </div>
         </v-col>
       </v-row>
     </template>

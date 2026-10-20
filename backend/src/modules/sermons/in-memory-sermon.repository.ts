@@ -97,6 +97,12 @@ export class InMemorySermonRepository implements SermonRepository {
     ).length;
   }
 
+  async listRecentlyUpdated(limit: number): Promise<Sermon[]> {
+    return [...this.sermons.values()]
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+      .slice(0, limit);
+  }
+
   async getById(id: string): Promise<Sermon | null> {
     return this.sermons.get(id) ?? null;
   }

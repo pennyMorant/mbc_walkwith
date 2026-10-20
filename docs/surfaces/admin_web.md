@@ -86,6 +86,9 @@ Surface rule:
 - Admin Web UI supports English, Spanish, Simplified Chinese, and Traditional
   Chinese. First load follows the browser/system locale; a manual locale choice
   is persisted in local storage.
+- The shell groups permission-filtered routes into Dashboard, Content, Ministry,
+  Giving, People, and System workspaces. Its command search uses the same shared
+  navigation registry, so hidden routes cannot reappear through search.
 - The public `app.defaultLocale` setting can be `system`, `en`, `es`,
   `zh-Hans`, or `zh-Hant`. `system` means client surfaces should follow the
   device or browser locale.
@@ -126,8 +129,9 @@ Surface rule:
 - Member profile：会员资料、角色、状态、设备 token 和导出。
 - Pastoral care：Care 页面展示关怀队列，提交负责人、状态、隐私等级、下一步、内部备注和跟进记录 intent；最终权限、状态和审计以后端为准。
 - Notification delivery：通知任务、失败重试、取消和审计。
-- Ministry analytics：Dashboard 展示后端按角色过滤的精确聚合指标、任务健康、
-  fresh/stale 快照和 drill-down；Admin 只负责本地化和格式化，不自行推算指标。
+- Ministry analytics：Dashboard 展示后端按角色过滤的今日待办、精确聚合指标、
+  最近更新内容、任务健康、fresh/stale 快照和 drill-down；Admin 只负责本地化和
+  格式化，不自行推算指标或跨 Feature 合并列表。
   趋势和统计导出尚未接入。
 - Public landing settings：Settings 页面维护官网身份、导航、新朋友入口、
   固定日程、公开人员介绍、聚会地图链接、联系方式、社交媒体和 App 下载入口；

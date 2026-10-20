@@ -5,6 +5,7 @@ import type {
   EventRegistrationMemberUpdateRequest,
   LifePost,
   LifePostListQuery,
+  LifePostStatus,
   LifePostUpdateRequest,
   LifePostUpsertRequest
 } from "@mbc/api-contracts";
@@ -69,6 +70,16 @@ export class InMemoryLifePostRepository implements LifePostRepository {
 
   async countPosts(): Promise<number> {
     return this.posts.size;
+  }
+
+  async countByStatus(status: LifePostStatus): Promise<number> {
+    return [...this.posts.values()].filter((post) => post.status === status).length;
+  }
+
+  async listRecentlyUpdated(limit: number): Promise<LifePost[]> {
+    return [...this.posts.values()]
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+      .slice(0, limit);
   }
 
   async summarizeEventParticipation() {

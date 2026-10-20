@@ -20,12 +20,23 @@ describe("MinistryAnalyticsService", () => {
       review_queue: 37,
       life_posts: 168,
       event_registrants: 284,
+      life_review_queue: 9,
       pending_prayers: 126,
       failed_jobs: 8,
       giving_year_total: 987654,
       giving_transaction_count: 132
     });
     expect(dashboard.jobs).toEqual({ queued: 11, running: 3, failed: 8 });
+    expect(dashboard.actionItems.map((item) => item.id)).toEqual([
+      "review_queue",
+      "life_review_queue",
+      "pending_prayers",
+      "failed_jobs"
+    ]);
+    expect(dashboard.health).toEqual([
+      expect.objectContaining({ id: "active_jobs", status: "warning", value: 14 }),
+      expect.objectContaining({ id: "failed_jobs", status: "error", value: 8 })
+    ]);
     expect(dependencies.giving.summarizeTransactions).toHaveBeenCalledWith(
       expect.objectContaining({ year: 2026 })
     );
@@ -44,6 +55,8 @@ describe("MinistryAnalyticsService", () => {
     expect(dashboard.jobs).toBeNull();
     expect(dependencies.sermons.countByStatus).not.toHaveBeenCalled();
     expect(dependencies.lifePosts.countPosts).not.toHaveBeenCalled();
+    expect(dependencies.lifePosts.countByStatus).not.toHaveBeenCalled();
+    expect(dependencies.lifePosts.listRecentlyUpdated).not.toHaveBeenCalled();
     expect(
       dependencies.lifePosts.summarizeEventParticipation
     ).not.toHaveBeenCalled();
@@ -175,6 +188,7 @@ function fakeDependencies(options: {
 } = {}) {
   return {
     sermons: {
+      listRecentlyUpdated: vi.fn(async () => []),
       countByStatus: vi.fn(async (status: string) => {
         if (status === "draft" && options.countDraftSermons) {
           return options.countDraftSermons();
@@ -185,7 +199,9 @@ function fakeDependencies(options: {
       })
     },
     lifePosts: {
+      listRecentlyUpdated: vi.fn(async () => []),
       countPosts: vi.fn(async () => 168),
+      countByStatus: vi.fn(async () => 9),
       summarizeEventParticipation: vi.fn(async () => ({
         registrationCount: 172,
         attendeeCount: 284,

@@ -33,6 +33,7 @@ describe("life post ordering", () => {
 
     const listed = await repository.list({
       limit: 12,
+      offset: 0,
       type: "announcement",
       visibility: "private",
       status: "draft",

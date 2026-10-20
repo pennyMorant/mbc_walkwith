@@ -2009,6 +2009,12 @@ Response data is validated by `adminDashboardResponseSchema` and includes:
   optional structured error code.
 - `metrics`: exact repository count/summary values with a stable localization key,
   display format, tone, and permitted drill-down path.
+- `actionItems`: non-zero review or failure queues derived from canonical metrics, with
+  role-filtered drill-down paths.
+- `recentContent`: the six most recently updated sermon or church-life records visible
+  to the admin role. It contains operational metadata only, not private body content.
+- `health`: role-filtered operational health summaries with stable localization keys,
+  semantic status, count, and drill-down path.
 - `jobs`: queue health when the role has `jobs:read`, otherwise `null`.
 
 Counts must not be derived from paginated list lengths. If a live refresh fails, the

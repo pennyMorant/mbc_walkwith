@@ -45,7 +45,10 @@
 - 代祷审核队列。
 - 当前年度奉献金额和成功笔数。
 - 任务健康。
-- 按权限过滤的指标、运营关注点和事工工作区入口。
+- 按权限过滤的今日待办、指标、最近更新内容和系统状态。
+- 待办仅显示非零的讲道审核、生活内容审核、代祷审核和失败任务。
+- 最近更新只投影讲道和教会生活的标题、类型、语言、状态及更新时间，
+  不读取正文或会友敏感资料。
 - fresh/stale 快照状态、最近成功时间和最近刷新尝试时间。
 
 趋势和统计导出后续接入。
@@ -55,6 +58,8 @@
 `MinistryAnalyticsService` 负责：
 
 - 从 sermon、life、prayer、jobs 和 giving service 读取精确聚合值。
+- 通过 sermon 和 life feature owner 的 `listRecentlyUpdated` 查询构建最近更新，
+  Dashboard 不直接访问其 repository 或数据库表。
 - 在调用 repository 前按管理员角色权限过滤数据源。
 - 按角色保存当前进程内最后一次成功快照。
 - 刷新失败时返回同角色 stale snapshot；不存在成功快照时返回结构化失败。
@@ -89,8 +94,8 @@ Admin Web 刷新请求失败但已有成功数据时，必须保留当前快照�
 ## Main Logic Chain
 
 管理员打开 Dashboard -> 后端验证 `dashboard:read` -> analytics service 按角色过滤
-可读数据源 -> canonical repository 执行不受列表 limit 影响的 count/summary -> service
-生成 fresh snapshot -> Admin 按 locale 格式化指标 -> 管理员从有权限的指标或工作区入口
+可读数据源 -> canonical repository 执行精确 count/summary 和明确的最近更新查询 -> service
+生成 fresh snapshot -> Admin 按 locale 格式化指标、待办和状态 -> 管理员从有权限的入口
 drill-down 到具体 feature 页面。
 
 ## Failure Chains
@@ -108,6 +113,7 @@ drill-down 到具体 feature 页面。
 - stale 状态可见。
 - route、service 和 repository owner 分离。
 - Admin 四种语言都有指标和 stale 状态文案。
+- 待办、最近更新和健康状态均按角色过滤，且不泄露正文或个人资料。
 - 后续导出必须增加权限和审计后才能启用。
 
 ## Related Docs

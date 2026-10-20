@@ -5,10 +5,11 @@ import type {
   EventRegistrationMemberUpdateRequest,
   LifePost,
   LifePostListQuery,
+  LifePostStatus,
   LifePostUpdateRequest,
   LifePostUpsertRequest
 } from "@mbc/api-contracts";
-import { and, asc, desc, eq, gt, ilike, inArray, lt, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gt, ilike, inArray, lt, or, sql } from "drizzle-orm";
 
 import type { AppDb } from "../../shared/db/client.js";
 import {
@@ -99,6 +100,23 @@ export class PostgresLifePostRepository implements LifePostRepository {
       .select({ value: sql<number>`count(*)` })
       .from(publicPosts);
     return Number(row?.value ?? 0);
+  }
+
+  async countByStatus(status: LifePostStatus): Promise<number> {
+    const [row] = await this.db
+      .select({ value: count() })
+      .from(publicPosts)
+      .where(eq(publicPosts.status, status));
+    return Number(row?.value ?? 0);
+  }
+
+  async listRecentlyUpdated(limit: number): Promise<LifePost[]> {
+    const rows = await this.db
+      .select()
+      .from(publicPosts)
+      .orderBy(desc(publicPosts.updatedAt), asc(publicPosts.id))
+      .limit(limit);
+    return rows.map(postFromRow);
   }
 
   async summarizeEventParticipation() {

@@ -4191,6 +4191,103 @@ Object.assign(messages["zh-Hant"], {
   "dashboard.action.prayer": "審核代禱"
 });
 
+Object.assign(messages.en, {
+  "dashboard.metric.lifeReviewQueue": "Life posts awaiting review",
+  "dashboard.todayQueue": "Today’s work",
+  "dashboard.noPendingWork": "No pending work needs attention.",
+  "dashboard.action.reviewSermons": "Review sermons",
+  "dashboard.action.reviewSermonsSummary": "Sermons waiting for editorial review",
+  "dashboard.action.reviewLifePosts": "Review life content",
+  "dashboard.action.reviewLifePostsSummary": "Church life posts waiting for review",
+  "dashboard.action.reviewPrayers": "Review prayer requests",
+  "dashboard.action.reviewPrayersSummary": "Requests waiting for pastoral moderation",
+  "dashboard.action.failedJobs": "Resolve failed tasks",
+  "dashboard.action.failedJobsSummary": "Background tasks need attention",
+  "dashboard.recentContent": "Recently updated",
+  "dashboard.noRecentContent": "No recently updated content.",
+  "dashboard.column.title": "Title",
+  "dashboard.column.type": "Type",
+  "dashboard.column.language": "Language",
+  "dashboard.column.status": "Status",
+  "dashboard.column.updated": "Updated",
+  "dashboard.resource.sermon": "Sermon",
+  "dashboard.resource.life_post": "Church life",
+  "dashboard.health.activeJobs": "Active tasks",
+  "dashboard.health.failedJobs": "Failed tasks"
+});
+Object.assign(messages["zh-Hans"], {
+  "dashboard.metric.lifeReviewQueue": "待审核生活内容",
+  "dashboard.todayQueue": "今日待办",
+  "dashboard.noPendingWork": "当前没有需要处理的事项。",
+  "dashboard.action.reviewSermons": "待审核讲道",
+  "dashboard.action.reviewSermonsSummary": "等待内容审核的讲道",
+  "dashboard.action.reviewLifePosts": "待审核生活内容",
+  "dashboard.action.reviewLifePostsSummary": "等待审核的教会生活内容",
+  "dashboard.action.reviewPrayers": "待处理代祷",
+  "dashboard.action.reviewPrayersSummary": "等待牧养审核的代祷请求",
+  "dashboard.action.failedJobs": "失败任务",
+  "dashboard.action.failedJobsSummary": "需要处理的后台任务",
+  "dashboard.recentContent": "最近更新",
+  "dashboard.noRecentContent": "暂无最近更新的内容。",
+  "dashboard.column.title": "标题",
+  "dashboard.column.type": "类型",
+  "dashboard.column.language": "语言",
+  "dashboard.column.status": "状态",
+  "dashboard.column.updated": "更新时间",
+  "dashboard.resource.sermon": "讲道",
+  "dashboard.resource.life_post": "教会生活",
+  "dashboard.health.activeJobs": "执行中任务",
+  "dashboard.health.failedJobs": "失败任务"
+});
+Object.assign(messages.es, {
+  "dashboard.metric.lifeReviewQueue": "Contenido pendiente de revisión",
+  "dashboard.todayQueue": "Trabajo de hoy",
+  "dashboard.noPendingWork": "No hay tareas pendientes que requieran atención.",
+  "dashboard.action.reviewSermons": "Revisar sermones",
+  "dashboard.action.reviewSermonsSummary": "Sermones pendientes de revisión editorial",
+  "dashboard.action.reviewLifePosts": "Revisar contenido",
+  "dashboard.action.reviewLifePostsSummary": "Contenido de vida de iglesia pendiente",
+  "dashboard.action.reviewPrayers": "Revisar peticiones",
+  "dashboard.action.reviewPrayersSummary": "Peticiones pendientes de moderación pastoral",
+  "dashboard.action.failedJobs": "Resolver tareas fallidas",
+  "dashboard.action.failedJobsSummary": "Tareas del sistema que requieren atención",
+  "dashboard.recentContent": "Actualizado recientemente",
+  "dashboard.noRecentContent": "No hay contenido actualizado recientemente.",
+  "dashboard.column.title": "Título",
+  "dashboard.column.type": "Tipo",
+  "dashboard.column.language": "Idioma",
+  "dashboard.column.status": "Estado",
+  "dashboard.column.updated": "Actualizado",
+  "dashboard.resource.sermon": "Sermón",
+  "dashboard.resource.life_post": "Vida de iglesia",
+  "dashboard.health.activeJobs": "Tareas activas",
+  "dashboard.health.failedJobs": "Tareas fallidas"
+});
+Object.assign(messages["zh-Hant"], {
+  "dashboard.metric.lifeReviewQueue": "待審核生活內容",
+  "dashboard.todayQueue": "今日待辦",
+  "dashboard.noPendingWork": "目前沒有需要處理的事項。",
+  "dashboard.action.reviewSermons": "待審核講道",
+  "dashboard.action.reviewSermonsSummary": "等待內容審核的講道",
+  "dashboard.action.reviewLifePosts": "待審核生活內容",
+  "dashboard.action.reviewLifePostsSummary": "等待審核的教會生活內容",
+  "dashboard.action.reviewPrayers": "待處理代禱",
+  "dashboard.action.reviewPrayersSummary": "等待牧養審核的代禱請求",
+  "dashboard.action.failedJobs": "失敗任務",
+  "dashboard.action.failedJobsSummary": "需要處理的後台任務",
+  "dashboard.recentContent": "最近更新",
+  "dashboard.noRecentContent": "暫無最近更新的內容。",
+  "dashboard.column.title": "標題",
+  "dashboard.column.type": "類型",
+  "dashboard.column.language": "語言",
+  "dashboard.column.status": "狀態",
+  "dashboard.column.updated": "更新時間",
+  "dashboard.resource.sermon": "講道",
+  "dashboard.resource.life_post": "教會生活",
+  "dashboard.health.activeJobs": "執行中任務",
+  "dashboard.health.failedJobs": "失敗任務"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });

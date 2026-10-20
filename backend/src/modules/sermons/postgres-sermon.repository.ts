@@ -56,6 +56,15 @@ export class PostgresSermonRepository implements SermonRepository {
     return Number(row?.value ?? 0);
   }
 
+  async listRecentlyUpdated(limit: number): Promise<Sermon[]> {
+    const rows = await this.db
+      .select()
+      .from(sermons)
+      .orderBy(desc(sermons.updatedAt), asc(sermons.id))
+      .limit(limit);
+    return Promise.all(rows.map((row) => this.loadChildren(row)));
+  }
+
   async getById(id: string): Promise<Sermon | null> {
     const [row] = await this.db
       .select()

@@ -38,6 +38,10 @@ export class SermonService {
     return this.repository.list(query);
   }
 
+  listRecentlyUpdated(limit: number) {
+    return this.repository.listRecentlyUpdated(limit);
+  }
+
   countByStatus(status: SermonStatus) {
     return this.repository.countByStatus(status);
   }

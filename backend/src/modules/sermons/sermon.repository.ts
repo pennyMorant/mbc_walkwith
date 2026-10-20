@@ -38,6 +38,7 @@ export type SermonUpdateOptions = {
 
 export interface SermonRepository {
   list(query: SermonListQuery): Promise<SermonListResult>;
+  listRecentlyUpdated(limit: number): Promise<Sermon[]>;
   countByStatus(status: SermonStatus): Promise<number>;
   recommendations(query: SermonRecommendationQuery): Promise<Sermon[]>;
   discoveryFacets(): Promise<SermonDiscoveryFacets>;

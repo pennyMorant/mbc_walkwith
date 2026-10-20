@@ -7,6 +7,7 @@ import type {
   EventRegistrationStatus,
   EventRegistrationUpdateRequest,
   LifePost,
+  LifePostStatus,
   LifeLatestBulletinQuery,
   LifePostListQuery,
   LifePostPublishRequest,
@@ -56,6 +57,10 @@ export class LifePostService {
     );
   }
 
+  listRecentlyUpdated(limit: number) {
+    return this.repository.listRecentlyUpdated(limit);
+  }
+
   async listPublic(query: LifePostListQuery) {
     const posts = await this.withRegistrationSummaries(
       this.repository.list(query)
@@ -65,6 +70,10 @@ export class LifePostService {
 
   countPosts() {
     return this.repository.countPosts();
+  }
+
+  countByStatus(status: LifePostStatus) {
+    return this.repository.countByStatus(status);
   }
 
   summarizeEventParticipation() {

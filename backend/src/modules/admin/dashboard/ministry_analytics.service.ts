@@ -12,12 +12,20 @@ import type { PrayerService } from "../../prayer/prayer.service.js";
 import type { SermonService } from "../../sermons/sermon.service.js";
 import type { SettingsService } from "../../settings/settings.service.js";
 import { roleHasPermission } from "../auth/admin-rbac.js";
+import {
+  buildDashboardActionItems,
+  buildDashboardHealthItems,
+  mergeRecentDashboardContent
+} from "./dashboard_projections.js";
 
 type MinistryAnalyticsDependencies = {
-  sermons: Pick<SermonService, "countByStatus">;
+  sermons: Pick<SermonService, "countByStatus" | "listRecentlyUpdated">;
   lifePosts: Pick<
     LifePostService,
-    "countPosts" | "summarizeEventParticipation"
+    | "countPosts"
+    | "countByStatus"
+    | "listRecentlyUpdated"
+    | "summarizeEventParticipation"
   >;
   prayers: Pick<PrayerService, "countAdminByStatus">;
   jobs: Pick<JobService, "stats">;
@@ -80,14 +88,39 @@ export class MinistryAnalyticsService {
     role: AdminRole,
     generatedAt: string
   ): Promise<AdminDashboardResponse> {
-    const [sermonMetrics, lifeMetrics, prayerMetrics, jobMetrics, givingMetrics] =
-      await Promise.all([
+    const [
+      sermonMetrics,
+      lifeMetrics,
+      prayerMetrics,
+      jobMetrics,
+      givingMetrics,
+      recentContent
+    ] = await Promise.all([
         this.sermonMetrics(role),
         this.lifeMetrics(role),
         this.prayerMetrics(role),
         this.jobMetrics(role),
-        this.givingMetrics(role, new Date(generatedAt))
+        this.givingMetrics(role, new Date(generatedAt)),
+        this.recentContent(role)
       ]);
+
+    const metrics = [
+      ...sermonMetrics,
+      ...lifeMetrics,
+      ...prayerMetrics,
+      ...givingMetrics,
+      ...(jobMetrics
+        ? [
+            metric(
+              "failed_jobs",
+              "dashboard.metric.failedJobs",
+              jobMetrics.failed,
+              jobMetrics.failed > 0 ? "error" : "success",
+              "/jobs"
+            )
+          ]
+        : [])
+    ];
 
     return {
       snapshot: {
@@ -96,23 +129,10 @@ export class MinistryAnalyticsService {
         attemptedAt: generatedAt,
         errorCode: null
       },
-      metrics: [
-        ...sermonMetrics,
-        ...lifeMetrics,
-        ...prayerMetrics,
-        ...givingMetrics,
-        ...(jobMetrics
-          ? [
-              metric(
-                "failed_jobs",
-                "dashboard.metric.failedJobs",
-                jobMetrics.failed,
-                jobMetrics.failed > 0 ? "error" : "success",
-                "/jobs"
-              )
-            ]
-          : [])
-      ],
+      metrics,
+      actionItems: buildDashboardActionItems(metrics),
+      recentContent,
+      health: buildDashboardHealthItems(jobMetrics),
       jobs: jobMetrics
     };
   }
@@ -155,8 +175,9 @@ export class MinistryAnalyticsService {
     if (!roleHasPermission(role, "life_posts:read")) {
       return [];
     }
-    const [posts, participation] = await Promise.all([
+    const [posts, review, participation] = await Promise.all([
       this.dependencies.lifePosts.countPosts(),
+      this.dependencies.lifePosts.countByStatus("needs_review"),
       this.dependencies.lifePosts.summarizeEventParticipation()
     ]);
     return [
@@ -173,8 +194,27 @@ export class MinistryAnalyticsService {
         participation.attendeeCount,
         "info",
         "/life-posts"
+      ),
+      metric(
+        "life_review_queue",
+        "dashboard.metric.lifeReviewQueue",
+        review,
+        review > 0 ? "warning" : "success",
+        "/life-posts"
       )
     ];
+  }
+
+  private async recentContent(role: AdminRole) {
+    const [sermons, lifePosts] = await Promise.all([
+      roleHasPermission(role, "sermons:read")
+        ? this.dependencies.sermons.listRecentlyUpdated(6)
+        : Promise.resolve([]),
+      roleHasPermission(role, "life_posts:read")
+        ? this.dependencies.lifePosts.listRecentlyUpdated(6)
+        : Promise.resolve([])
+    ]);
+    return mergeRecentDashboardContent(sermons, lifePosts, 6);
   }
 
   private async prayerMetrics(role: AdminRole): Promise<DashboardMetric[]> {

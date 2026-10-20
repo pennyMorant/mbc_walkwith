@@ -1,6 +1,7 @@
 import type {
   LifePost,
   LifePostListQuery,
+  LifePostStatus,
   LifePostUpdateRequest,
   LifePostUpsertRequest
 } from "@mbc/api-contracts";
@@ -9,7 +10,9 @@ import type { EventRegistrationRepository } from "./event_registration.repositor
 
 export interface LifePostRepository extends EventRegistrationRepository {
   list(query: LifePostListQuery): Promise<LifePost[]>;
+  listRecentlyUpdated(limit: number): Promise<LifePost[]>;
   countPosts(): Promise<number>;
+  countByStatus(status: LifePostStatus): Promise<number>;
   summarizeEventParticipation(): Promise<EventParticipationSummary>;
   getById(id: string): Promise<LifePost | null>;
   listByImageMediaId(mediaId: string): Promise<LifePost[]>;
