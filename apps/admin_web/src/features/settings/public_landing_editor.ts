@@ -1,10 +1,16 @@
-export type PublicLandingStructuredSection = "schedule" | "people" | "events" | "gallery";
+export type PublicLandingStructuredSection =
+  | "hero"
+  | "service"
+  | "schedule"
+  | "people"
+  | "events"
+  | "gallery";
 
 export function publicLandingStructuredSection(
   settingKey: string
 ): PublicLandingStructuredSection | null {
   const match = settingKey.match(
-    /^publicLanding(?:\.(?:en|es|zh-Hans|zh-Hant))?\.(schedule|people|events|gallery)$/
+    /^publicLanding(?:\.(?:en|es|zh-Hans|zh-Hant))?\.(hero|service|schedule|people|events|gallery)$/
   );
   return (match?.[1] as PublicLandingStructuredSection | undefined) ?? null;
 }
