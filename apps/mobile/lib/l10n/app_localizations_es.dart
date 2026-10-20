@@ -1110,6 +1110,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notificationInboxTitle => 'Notificaciones recientes';
 
   @override
+  String get myEventRegistrationsTitle => 'Mis inscripciones';
+
+  @override
+  String get myEventRegistrationsEmpty =>
+      'Tus inscripciones a eventos aparecerán aquí.';
+
+  @override
   String unreadCountSemanticLabel(String label, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -1254,9 +1261,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get lifePostScheduleTbd => 'Horario por definir';
-
-  @override
-  String get myEventRegistrationsTitle => 'Mis inscripciones';
 
   @override
   String get groupsTitle => 'Grupos';

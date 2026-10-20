@@ -2008,6 +2008,18 @@ abstract class AppLocalizations {
   /// **'最近通知'**
   String get notificationInboxTitle;
 
+  /// No description provided for @myEventRegistrationsTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'我的报名'**
+  String get myEventRegistrationsTitle;
+
+  /// No description provided for @myEventRegistrationsEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'已报名的活动会显示在这里。'**
+  String get myEventRegistrationsEmpty;
+
   /// No description provided for @unreadCountSemanticLabel.
   ///
   /// In zh, this message translates to:
@@ -2265,12 +2277,6 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'时间待定'**
   String get lifePostScheduleTbd;
-
-  /// No description provided for @myEventRegistrationsTitle.
-  ///
-  /// In zh, this message translates to:
-  /// **'我的报名'**
-  String get myEventRegistrationsTitle;
 
   /// No description provided for @groupsTitle.
   ///

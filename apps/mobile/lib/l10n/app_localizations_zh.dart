@@ -1012,6 +1012,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notificationInboxTitle => '最近通知';
 
   @override
+  String get myEventRegistrationsTitle => '我的报名';
+
+  @override
+  String get myEventRegistrationsEmpty => '已报名的活动会显示在这里。';
+
+  @override
   String unreadCountSemanticLabel(String label, int count) {
     return '$label，$count 条未读';
   }
@@ -1142,9 +1148,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get lifePostScheduleTbd => '时间待定';
-
-  @override
-  String get myEventRegistrationsTitle => '我的报名';
 
   @override
   String get groupsTitle => '小组与团契';
@@ -2917,6 +2920,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get notificationInboxTitle => '最近通知';
 
   @override
+  String get myEventRegistrationsTitle => '我的报名';
+
+  @override
+  String get myEventRegistrationsEmpty => '已报名的活动会显示在这里。';
+
+  @override
   String unreadCountSemanticLabel(String label, int count) {
     return '$label，$count 条未读';
   }
@@ -3047,9 +3056,6 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get lifePostScheduleTbd => '时间待定';
-
-  @override
-  String get myEventRegistrationsTitle => '我的报名';
 
   @override
   String get groupsTitle => '小组与团契';
@@ -4822,6 +4828,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get notificationInboxTitle => '最近通知';
 
   @override
+  String get myEventRegistrationsTitle => '我的報名';
+
+  @override
+  String get myEventRegistrationsEmpty => '已報名的活動會顯示在這裡。';
+
+  @override
   String unreadCountSemanticLabel(String label, int count) {
     return '$label，$count 條未讀';
   }
@@ -4952,9 +4964,6 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get lifePostScheduleTbd => '時間待定';
-
-  @override
-  String get myEventRegistrationsTitle => '我的報名';
 
   @override
   String get groupsTitle => '小組與團契';

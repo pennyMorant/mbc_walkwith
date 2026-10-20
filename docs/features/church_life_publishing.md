@@ -59,6 +59,12 @@ supplemental Markdown, registration shows its deadline, and prayer cards show
 the public projection's submitter name and creation date. Private author and
 moderation fields remain outside the App contract.
 
+The Mine surface provides explicit navigation to the notification inbox and,
+for signed-in members, their event registrations. Notification unread counts
+come from the notification inbox owner. Registration cards use the member Life
+projection's `registrationSummary`; the App does not persist a second
+registration truth.
+
 App 展示 Life 首页、分类筛选、详情、报名/课程/小组等行动入口。App 不决定内容发布状态、可见性、展示权重或未读状态。展示权重不显示为 App chip；App 只展示本地化后的内容类型和用户状态。
 
 ## Admin Web Surface Boundary

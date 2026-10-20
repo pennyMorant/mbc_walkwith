@@ -477,6 +477,8 @@
   "notificationsTooltip": "Notifications",
   "notificationsPageTitle": "Notifications",
   "notificationInboxTitle": "Recent notifications",
+  "myEventRegistrationsTitle": "My event registrations",
+  "myEventRegistrationsEmpty": "Your event registrations will appear here.",
   "unreadCountSemanticLabel": "{label}, {count, plural, =1{1 unread item} other{{count} unread items}}",
   "@unreadCountSemanticLabel": {
     "placeholders": {

@@ -11,6 +11,7 @@ import '../features/life/presentation/group_detail_page.dart';
 import '../features/life/presentation/life_post_detail_page.dart';
 import '../features/life/presentation/my_serving_page.dart';
 import '../features/life/presentation/notification_center_page.dart';
+import '../features/life/presentation/my_event_registrations_page.dart';
 import '../features/life/presentation/serving_assignment_detail_page.dart';
 import '../features/mine/presentation/member_profile_page.dart';
 import '../features/member_auth/data/member_session_repository.dart';
@@ -241,6 +242,12 @@ GoRouter createAppRouter() {
         path: AppRoutePaths.notifications,
         name: AppRouteNames.notifications,
         builder: (context, state) => const NotificationCenterPage(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: AppRoutePaths.myEventRegistrations,
+        name: AppRouteNames.myEventRegistrations,
+        builder: (context, state) => const MyEventRegistrationsPage(),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,

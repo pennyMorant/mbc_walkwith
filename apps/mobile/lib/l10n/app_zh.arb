@@ -477,6 +477,8 @@
   "notificationsTooltip": "通知",
   "notificationsPageTitle": "通知",
   "notificationInboxTitle": "最近通知",
+  "myEventRegistrationsTitle": "我的活动报名",
+  "myEventRegistrationsEmpty": "已报名的活动会显示在这里。",
   "unreadCountSemanticLabel": "{label}，{count} 条未读",
   "@unreadCountSemanticLabel": {
     "placeholders": {

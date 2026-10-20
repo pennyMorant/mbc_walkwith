@@ -24,12 +24,14 @@ import '../../life/domain/course_learning.dart';
 import '../../life/domain/ministry_group.dart';
 import '../../life/domain/serving_assignment.dart';
 import '../../life/presentation/push_notifications_controller.dart';
+import '../../life/presentation/notification_inbox_provider.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../../shell/widgets/shell_app_bar.dart';
 import '../../study/domain/bible_translation.dart';
 import '../../study/presentation/reader_assist_settings_provider.dart';
 import 'widgets/about_church_card.dart';
 import 'widgets/mine_giving_card.dart';
+import 'widgets/mine_activity_card.dart';
 import 'widgets/mine_reading_plan_card.dart';
 import 'widgets/preference_settings_card.dart';
 
@@ -45,6 +47,7 @@ class MineTab extends ConsumerWidget {
     final textScale = ref.watch(appTextScaleProvider);
     final readerAssistSettings = ref.watch(readerAssistSettingsProvider);
     final pushState = ref.watch(pushNotificationsControllerProvider);
+    final notificationInbox = ref.watch(notificationInboxProvider);
     final memberSessionAsync = ref.watch(memberSessionProvider);
     final memberSession = memberSessionAsync.maybeWhen(
       data: (session) => session,
@@ -71,6 +74,11 @@ class MineTab extends ConsumerWidget {
             groupsAsync: groupsAsync,
             coursesAsync: coursesAsync,
             servingAsync: servingAsync,
+          ),
+          const SizedBox(height: 12),
+          MineActivityCard(
+            unreadNotificationCount: notificationInbox.unreadCount,
+            showRegistrations: memberSession != null,
           ),
           const MineReadingPlanCard(),
           if (memberSession != null) ...[

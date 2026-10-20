@@ -24,6 +24,7 @@ class AppRouteNames {
   static const myReadingPlans = 'myReadingPlans';
   static const servingDetail = 'servingDetail';
   static const notifications = 'notifications';
+  static const myEventRegistrations = 'myEventRegistrations';
   static const givingHistory = 'givingHistory';
   static const annualStatements = 'annualStatements';
 }
@@ -54,6 +55,7 @@ class AppRoutePaths {
   static const myReadingPlans = '/mine/reading-plans';
   static const servingDetail = '/mine/serving/:assignmentId';
   static const notifications = '/life/notifications';
+  static const myEventRegistrations = '/mine/event-registrations';
   static const givingHistory = '/mine/giving';
   static const annualStatements = '/mine/giving/statements';
 }

@@ -477,6 +477,8 @@
   "notificationsTooltip": "通知",
   "notificationsPageTitle": "通知",
   "notificationInboxTitle": "最近通知",
+  "myEventRegistrationsTitle": "我的活動報名",
+  "myEventRegistrationsEmpty": "已報名的活動會顯示在這裡。",
   "unreadCountSemanticLabel": "{label}，{count} 條未讀",
   "@unreadCountSemanticLabel": {
     "placeholders": {
