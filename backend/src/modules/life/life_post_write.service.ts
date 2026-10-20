@@ -10,16 +10,21 @@ import {
   lifePostStateChanged
 } from "./life-post-errors.js";
 import type { LifePostRepository } from "./life-post.repository.js";
+import type { MediaReferenceValidator } from "../media/media_reference.validator.js";
 import {
   type LifePostMutationContext,
   validateLifePostMutation
 } from "./life_post_mutation_policy.js";
 
 export class LifePostWriteService {
-  constructor(private readonly repository: LifePostRepository) {}
+  constructor(
+    private readonly repository: LifePostRepository,
+    private readonly mediaReferenceValidator: MediaReferenceValidator
+  ) {}
 
-  create(input: LifePostUpsertRequest) {
+  async create(input: LifePostUpsertRequest) {
     validateLifePostSchedule(input.startsAt ?? null, input.endsAt ?? null);
+    await this.validateImageReference(input.imageMediaId);
     return this.repository.create(input);
   }
 
@@ -38,6 +43,9 @@ export class LifePostWriteService {
       input.endsAt === undefined ? existing.endsAt : input.endsAt
     );
     validateLifePostMutation(existing, input, context);
+    if (input.imageMediaId !== undefined) {
+      await this.validateImageReference(input.imageMediaId);
+    }
     const updated = await this.repository.update(id, input, {
       expectedRevision: context.expectedRevision
     });
@@ -111,6 +119,12 @@ export class LifePostWriteService {
     }
     validateLifePostMutation(current, {}, context);
     throw lifePostStateChanged(id);
+  }
+
+  private async validateImageReference(mediaId: string | null | undefined) {
+    if (mediaId) {
+      await this.mediaReferenceValidator.assertPublicImageReference(mediaId);
+    }
   }
 }
 

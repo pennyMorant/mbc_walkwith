@@ -5,6 +5,7 @@ import {
   mediaAssetSchema,
   publicLandingResponseSchema
 } from "@mbc/api-contracts";
+import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 import { expectResponseData } from "./contract_assertions.js";
@@ -120,6 +121,35 @@ describe("public landing routes", () => {
       mediaAssetSchema,
       "landing gallery upload"
     );
+
+    const invalidReferenceResponse = await app.inject({
+      method: "PATCH",
+      url: "/v1/admin/settings/publicLanding.gallery",
+      headers,
+      payload: {
+        value: {
+          eyebrow: "教会剪影",
+          title: "无效引用",
+          body: "不存在的媒体不能进入官网配置",
+          items: [
+            {
+              id: "missing",
+              mediaId: randomUUID(),
+              title: "Missing",
+              body: "",
+              altText: "Missing",
+              sort: 0
+            }
+          ]
+        }
+      }
+    });
+    expect(invalidReferenceResponse.statusCode).toBe(409);
+    expect(invalidReferenceResponse.json().error).toMatchObject({
+      code: "media_reference_invalid",
+      category: "state_conflict",
+      sourceLayer: "capability"
+    });
 
     const settingResponse = await app.inject({
       method: "PATCH",

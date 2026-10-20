@@ -11,6 +11,19 @@ export function mediaAssetNotFound(id: string) {
   });
 }
 
+export function mediaReferenceInvalid(id: string) {
+  return appError({
+    code: "media_reference_invalid",
+    message: "Referenced image is not available for public use.",
+    statusCode: 409,
+    category: "state_conflict",
+    sourceLayer: "capability",
+    recoverable: true,
+    details: { id },
+    nextAction: "review_request"
+  });
+}
+
 export function mediaCleanupNotFound(id: string) {
   return appError({
     code: "media_cleanup_not_found",

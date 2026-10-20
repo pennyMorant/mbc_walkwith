@@ -50,6 +50,8 @@ Settings 页面为固定日程、人员介绍、照片墙和近期活动区块�
 
 Public Landing 提供 Feature-owned media usage provider，从通过 schema 校验的 canonical
 Settings 中解析 Hero、聚会、人员和照片墙媒体引用；Media 模块不读取原始 setting payload。
+同一个结构化引用解析器也供 Settings 写入校验使用。更新 Landing 配置时，所有非空媒体 ID
+必须先通过 Media reference validator；失败时整次设置更新拒绝，旧配置继续生效。
 
 所有重复展示项统一使用 `sort` 作为展示优先级，包括 action、宗旨支柱、聚会事实、固定日程、人员、App highlight 和近期活动。`sort` 为非负整数，默认 `0`，数值越大越靠前；相同值保留后台配置中的原始顺序。近期活动的 `sort` 直接来自 Life `public_posts.sort`，官网不复制活动排序状态。
 
@@ -66,6 +68,7 @@ Settings 中解析 Hero、聚会、人员和照片墙媒体引用；Media 模块
 ## 12. Error Model
 
 - 无效配置：`setting_value_invalid`。
+- 不可公开引用的媒体：`media_reference_invalid`。
 - Landing 读取失败：Public Web 显示可恢复错误状态。
 - 活动读取失败：整个聚合请求失败，避免显示来源不明的旧活动。
 
@@ -96,6 +99,7 @@ Settings 中解析 Hero、聚会、人员和照片墙媒体引用；Media 模块
 - 活动时间固定使用 `church.timezone`，不随访客设备时区改变。
 - 日程和人员缺少目标语言条目时回退源语言条目。
 - 人物和照片墙只输出可公开访问的媒体；缺失或受限资源不进入照片墙。
+- Hero、聚会、人物和照片墙不能写入不存在、私有、待授权或受限的媒体 ID。
 - 活动封面上传走统一 Media service，不再创建 VPS 本地图片。
 - Public Web 在空数据时不显示空区块。
 - 桌面和移动布局无溢出。

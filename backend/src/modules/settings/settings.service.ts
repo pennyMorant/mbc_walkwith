@@ -5,11 +5,17 @@ import type {
 } from "@mbc/api-contracts";
 
 import { parsePublicLandingSettingValue } from "../public/public_landing_setting_schemas.js";
+import { publicLandingMediaReferences } from "../public/public_landing_media_references.js";
+import { publicLandingSettingKeyParts } from "../public/public_landing_defaults.js";
+import type { MediaReferenceValidator } from "../media/media_reference.validator.js";
 import { settingValueInvalid } from "./settings-errors.js";
 import type { SettingsRepository } from "./settings.repository.js";
 
 export class SettingsService {
-  constructor(private readonly repository: SettingsRepository) {}
+  constructor(
+    private readonly repository: SettingsRepository,
+    private readonly mediaReferenceValidator: MediaReferenceValidator
+  ) {}
 
   list(query: AppSettingListQuery) {
     return this.repository.list(query);
@@ -31,7 +37,7 @@ export class SettingsService {
     return this.repository.getByKey(key);
   }
 
-  update(key: string, input: AppSettingUpdateRequest) {
+  async update(key: string, input: AppSettingUpdateRequest) {
     if (key === "church.timezone") {
       return this.repository.update(key, {
         ...input,
@@ -40,6 +46,19 @@ export class SettingsService {
     }
     const publicLandingValue = parsePublicLandingSettingValue(key, input.value);
     if (publicLandingValue.handled) {
+      const parts = publicLandingSettingKeyParts(key);
+      if (parts) {
+        const mediaIds = new Set(
+          publicLandingMediaReferences(parts.id, publicLandingValue.value).map(
+            (reference) => reference.mediaId
+          )
+        );
+        await Promise.all(
+          [...mediaIds].map((mediaId) =>
+            this.mediaReferenceValidator.assertPublicImageReference(mediaId)
+          )
+        );
+      }
       return this.repository.update(key, {
         ...input,
         value: publicLandingValue.value

@@ -5,7 +5,7 @@ import type {
   MediaAssetUpdateRequest,
   MediaConsentStatus
 } from "@mbc/api-contracts";
-import { reactive, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 
@@ -36,6 +36,7 @@ const form = reactive({
   focalX: 50,
   focalY: 50
 });
+const restrictionConfirmation = ref(false);
 
 watch(
   [() => props.asset, () => props.modelValue],
@@ -47,6 +48,7 @@ watch(
     form.copyrightSource = asset.copyrightSource ?? "";
     form.focalX = asset.focalX;
     form.focalY = asset.focalY;
+    restrictionConfirmation.value = false;
   },
   { immediate: true }
 );
@@ -55,7 +57,20 @@ function close() {
   if (!props.saving) emit("update:modelValue", false);
 }
 
+function requestSave() {
+  if (
+    props.asset?.consentStatus === "approved" &&
+    form.consentStatus !== "approved" &&
+    props.usages.length > 0
+  ) {
+    restrictionConfirmation.value = true;
+    return;
+  }
+  save();
+}
+
 function save() {
+  restrictionConfirmation.value = false;
   emit("save", {
     consentStatus: form.consentStatus,
     altText: form.altText,
@@ -164,8 +179,30 @@ function save() {
         <v-btn variant="text" :disabled="saving" @click="close">
           {{ t("Cancel") }}
         </v-btn>
-        <v-btn color="primary" :loading="saving" @click="save">
+        <v-btn color="primary" :loading="saving" @click="requestSave">
           {{ t("Save") }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="restrictionConfirmation" max-width="520">
+    <v-card>
+      <v-card-title>{{ t("media.restrictConfirmTitle") }}</v-card-title>
+      <v-card-text>
+        {{
+          t("media.restrictConfirmBody").replace(
+            "{count}",
+            String(usages.length)
+          )
+        }}
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn variant="text" @click="restrictionConfirmation = false">
+          {{ t("Cancel") }}
+        </v-btn>
+        <v-btn color="error" variant="tonal" @click="save">
+          {{ t("media.restrictConfirmAction") }}
         </v-btn>
       </v-card-actions>
     </v-card>

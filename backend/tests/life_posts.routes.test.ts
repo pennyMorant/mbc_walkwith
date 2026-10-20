@@ -6,6 +6,7 @@ import {
   lifePostSchema,
   publicLifePostSchema
 } from "@mbc/api-contracts";
+import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 
 import { expectResponseData } from "./contract_assertions.js";
@@ -88,6 +89,26 @@ describe("life post routes", () => {
       code: "life_post_schedule_invalid",
       category: "validation_error",
       sourceLayer: "domain",
+      nextAction: "review_request"
+    });
+
+    const invalidImageReferenceResponse = await app.inject({
+      method: "POST",
+      url: "/v1/admin/life-posts",
+      headers: { authorization: `Bearer ${accessToken}` },
+      payload: {
+        type: "announcement",
+        title: "Missing image",
+        body: "This reference must not be persisted.",
+        imageMediaId: randomUUID(),
+        visibility: "private"
+      }
+    });
+    expect(invalidImageReferenceResponse.statusCode).toBe(409);
+    expect(invalidImageReferenceResponse.json().error).toMatchObject({
+      code: "media_reference_invalid",
+      category: "state_conflict",
+      sourceLayer: "capability",
       nextAction: "review_request"
     });
 

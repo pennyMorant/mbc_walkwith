@@ -13,8 +13,10 @@ import {
   mediaAssetNotFound,
   mediaImageInvalid,
   mediaImageTooLarge,
-  mediaImageUnsupportedType
+  mediaImageUnsupportedType,
+  mediaReferenceInvalid
 } from "./media.errors.js";
+import type { MediaReferenceValidator } from "./media_reference.validator.js";
 
 const imageMimeTypes = new Set([
   "image/jpeg",
@@ -30,7 +32,7 @@ export type UploadMediaImageInput = MediaAssetUploadMetadata & {
   buffer: Buffer;
 };
 
-export class MediaService {
+export class MediaService implements MediaReferenceValidator {
   constructor(
     private readonly repository: MediaRepository,
     private readonly storage: MediaStorageService,
@@ -128,6 +130,13 @@ export class MediaService {
         )
         .map((asset) => [asset.id, asset])
     );
+  }
+
+  async assertPublicImageReference(mediaId: string) {
+    const asset = await this.findPublicById(mediaId);
+    if (!asset || asset.kind !== "image") {
+      throw mediaReferenceInvalid(mediaId);
+    }
   }
 
   async update(id: string, input: MediaAssetUpdateRequest) {

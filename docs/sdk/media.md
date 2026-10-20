@@ -70,3 +70,13 @@ ID；在所有引用方接入统一查询目录并具备原子删除保护前，
 Feature-owned provider 实时读取 canonical Life repository 与 Public Landing Settings，返回
 安全的 source、sourceId、sourceLabel 和 slot。Media service 只聚合 provider，不直接读取
 其他 Feature 的表或 JSON。
+
+## Reference Validation
+
+Feature 通过 `MediaReferenceValidator.assertPublicImageReference(mediaId)` 写入新的图片引用，
+不自行查询 bucket、URL 或媒体表。校验只接受存在、`kind=image`、`visibility=public`、
+`consentStatus=approved` 且具有公开 URL 的资源；失败返回 `media_reference_invalid`（409）。
+
+该契约保护新写入，不阻止隐私撤销。管理员把已被引用的图片改为 pending/restricted 时，
+后台必须提示受影响位置，但后端仍执行撤销；业务记录保留媒体 ID，公开投影立即隐藏 URL。
+恢复授权后现有引用可重新解析，无需复制或重写业务内容。

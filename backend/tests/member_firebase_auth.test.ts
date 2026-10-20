@@ -152,7 +152,9 @@ function createService(
   return new MemberAuthService(
     testConfig,
     new InMemoryMemberAuthRepository(members),
-    new SettingsService(settingsRepository),
+    new SettingsService(settingsRepository, {
+      assertPublicImageReference: async () => undefined
+    }),
     new AuditService(auditRepository),
     undefined,
     verifier

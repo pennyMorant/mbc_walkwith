@@ -39,7 +39,7 @@ export class LifePostService {
     private readonly repository: LifePostRepository,
     private readonly mediaService: MediaService
   ) {
-    this.writeService = new LifePostWriteService(repository);
+    this.writeService = new LifePostWriteService(repository, mediaService);
     this.eventRegistrationService = new LifeEventRegistrationService(
       repository
     );

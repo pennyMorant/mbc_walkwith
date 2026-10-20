@@ -2470,6 +2470,10 @@ Object.assign(messages.en, {
   "media.usagesTitle": "Used in",
   "media.usagesSubtitle": "Canonical content that currently references this image.",
   "media.usagesEmpty": "This image is not currently referenced by supported content.",
+  "media.restrictConfirmTitle": "Revoke publishing consent?",
+  "media.restrictConfirmBody":
+    "This image is used in {count} content location(s). The content will remain, but the image will stop appearing publicly.",
+  "media.restrictConfirmAction": "Revoke consent",
   "media.cleanupTitle": "Media cleanup",
   "media.cleanupSubtitle":
     "Review and retry object deletion after a media upload could not be bound.",
@@ -2521,6 +2525,10 @@ Object.assign(messages["zh-Hans"], {
   "media.usagesTitle": "使用位置",
   "media.usagesSubtitle": "当前引用这张图片的真实业务内容。",
   "media.usagesEmpty": "当前支持的内容中没有引用这张图片。",
+  "media.restrictConfirmTitle": "撤销发布授权？",
+  "media.restrictConfirmBody":
+    "这张图片目前用于 {count} 处内容。业务内容会保留，但图片将立即停止公开显示。",
+  "media.restrictConfirmAction": "撤销授权",
   "media.cleanupTitle": "媒体清理",
   "media.cleanupSubtitle": "查看并重试媒体上传绑定失败后的对象删除任务。",
   "media.cleanupEmpty": "当前状态下没有媒体清理任务。",
@@ -2570,6 +2578,10 @@ Object.assign(messages["zh-Hant"], {
   "media.usagesTitle": "使用位置",
   "media.usagesSubtitle": "目前引用這張圖片的真實業務內容。",
   "media.usagesEmpty": "目前支援的內容中沒有引用這張圖片。",
+  "media.restrictConfirmTitle": "撤銷發布授權？",
+  "media.restrictConfirmBody":
+    "這張圖片目前用於 {count} 處內容。業務內容會保留，但圖片將立即停止公開顯示。",
+  "media.restrictConfirmAction": "撤銷授權",
   "media.cleanupTitle": "媒體清理",
   "media.cleanupSubtitle": "查看並重試媒體上傳綁定失敗後的物件刪除任務。",
   "media.cleanupEmpty": "目前狀態下沒有媒體清理任務。",
@@ -2620,6 +2632,10 @@ Object.assign(messages.es, {
   "media.usagesTitle": "Usada en",
   "media.usagesSubtitle": "Contenido canónico que hace referencia a esta imagen.",
   "media.usagesEmpty": "Esta imagen no está referenciada por contenido compatible.",
+  "media.restrictConfirmTitle": "¿Revocar el permiso de publicación?",
+  "media.restrictConfirmBody":
+    "Esta imagen se usa en {count} ubicación(es). El contenido permanecerá, pero la imagen dejará de mostrarse públicamente.",
+  "media.restrictConfirmAction": "Revocar permiso",
   "media.cleanupTitle": "Limpieza multimedia",
   "media.cleanupSubtitle":
     "Revisa y reintenta la eliminación de cargas que no pudieron vincularse.",

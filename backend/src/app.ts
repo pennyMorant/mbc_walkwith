@@ -224,7 +224,7 @@ export async function buildApp(config: AppConfig) {
   const settingsRepository = db
     ? new PostgresSettingsRepository(db)
     : new InMemorySettingsRepository();
-  const settingsService = new SettingsService(settingsRepository);
+  const settingsService = new SettingsService(settingsRepository, mediaService);
   const mediaUsageService = new MediaUsageService([
     new LifePostMediaUsageProvider(lifePostRepository),
     new PublicLandingMediaUsageProvider(settingsRepository)
