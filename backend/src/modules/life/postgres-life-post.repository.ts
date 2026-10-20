@@ -89,7 +89,8 @@ export class PostgresLifePostRepository implements LifePostRepository {
       .from(publicPosts)
       .where(filters.length > 0 ? and(...filters) : undefined)
       .orderBy(...ordering)
-      .limit(query.limit);
+      .limit(query.limit)
+      .offset(query.offset);
     return rows.map(postFromRow);
   }
 

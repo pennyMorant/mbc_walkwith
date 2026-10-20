@@ -86,6 +86,7 @@ export const lifePostSortSchema = z.enum([
 
 export const lifePostListQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(100).default(20),
+  offset: z.coerce.number().int().nonnegative().default(0),
   visibility: lifePostVisibilitySchema.optional(),
   status: lifePostStatusSchema.optional(),
   query: z.string().optional(),

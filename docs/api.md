@@ -1390,13 +1390,13 @@ means that no public guide is available.
 ### 7.1 List Life Posts
 
 ```text
-GET /v1/life/posts?limit=20&visibility=&type=&query=&sort=&from=&to=
+GET /v1/life/posts?limit=20&offset=0&visibility=&type=&query=&sort=&from=&to=
 ```
 
 Member-aware lists use the same query contract:
 
 ```text
-GET /v1/member/life/posts?limit=20&type=&query=&sort=&from=&to=
+GET /v1/member/life/posts?limit=20&offset=0&type=&query=&sort=&from=&to=
 ```
 
 `from` and `to` are optional ISO 8601 UTC timestamps. Public and member life

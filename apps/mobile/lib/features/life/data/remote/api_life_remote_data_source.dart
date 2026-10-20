@@ -14,6 +14,26 @@ class ApiLifeRemoteDataSource extends LifeRemoteDataSource {
     String? accessToken,
     LifePostListRequest request = const LifePostListRequest(),
   }) async {
+    if (request.loadAll) {
+      final posts = <LifePostDto>[];
+      var offset = request.offset;
+      while (true) {
+        final page = await _fetchLifePostPage(
+          accessToken: accessToken,
+          request: request.page(offset),
+        );
+        posts.addAll(page);
+        if (page.length < request.limit) return posts;
+        offset += page.length;
+      }
+    }
+    return _fetchLifePostPage(accessToken: accessToken, request: request);
+  }
+
+  Future<List<LifePostDto>> _fetchLifePostPage({
+    String? accessToken,
+    required LifePostListRequest request,
+  }) async {
     final query = Uri(queryParameters: request.toQueryParameters()).query;
     final querySuffix = query.isEmpty ? '' : '?$query';
     final path = accessToken == null

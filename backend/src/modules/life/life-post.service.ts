@@ -75,11 +75,15 @@ export class LifePostService {
     const [publicPosts, memberPosts] = await Promise.all([
       this.repository.list({
         ...query,
+        offset: 0,
+        limit: query.offset + query.limit,
         visibility: "public",
         status: "published"
       }),
       this.repository.list({
         ...query,
+        offset: 0,
+        limit: query.offset + query.limit,
         visibility: "members",
         status: "published"
       })
@@ -87,8 +91,8 @@ export class LifePostService {
     const posts = await this.withRegistrationSummaries(
       Promise.resolve(
         dedupeAndSortLifePosts([...publicPosts, ...memberPosts]).slice(
-          0,
-          query.limit
+          query.offset,
+          query.offset + query.limit
         )
       ),
       userId
@@ -104,6 +108,7 @@ export class LifePostService {
     const posts = await this.listPublic({
       ...query,
       limit: 100,
+      offset: 0,
       visibility: "public",
       status: "published"
     });
@@ -114,7 +119,10 @@ export class LifePostService {
     query: LifeLatestBulletinQuery,
     userId: string
   ) {
-    const posts = await this.listForMember({ ...query, limit: 100 }, userId);
+    const posts = await this.listForMember(
+      { ...query, limit: 100, offset: 0 },
+      userId
+    );
     return selectLatestBulletin(posts);
   }
 

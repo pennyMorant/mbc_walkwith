@@ -64,7 +64,7 @@ export class InMemoryLifePostRepository implements LifePostRepository {
           ? compareLifePostsByStartAsc
           : compareLifePosts
       )
-      .slice(0, query.limit);
+      .slice(query.offset, query.offset + query.limit);
   }
 
   async countPosts(): Promise<number> {

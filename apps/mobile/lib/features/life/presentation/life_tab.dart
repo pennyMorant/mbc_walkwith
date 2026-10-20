@@ -49,6 +49,7 @@ class _LifeTabState extends ConsumerState<LifeTab> {
   LifePostListRequest _requestForPeriod(DatePeriod period) {
     return LifePostListRequest(
       limit: 80,
+      loadAll: true,
       from: period.queryFrom,
       to: period.queryTo,
     );

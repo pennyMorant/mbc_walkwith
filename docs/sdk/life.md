@@ -101,8 +101,10 @@ Rules:
   rejects unknown values and presentation maps tabs from `type` only. Titles,
   translations, and icon names must never be used to infer business category.
 - `getLifePosts` accepts `LifePostListRequest` for `limit`, `query`, `type`,
-  `from`, and `to`. App UI should pass structured requests instead of building
-  route query strings in widgets.
+  `offset`, `query`, `type`, `from`, and `to`. App UI should pass structured
+  requests instead of building route query strings in widgets. Month feeds and
+  member registration history set `loadAll`, causing the remote data source to
+  request stable offset pages until the backend returns a partial page.
 - Life weekly tab requests the current natural week. Other Life tabs request
   the selected month. The App requests the Sunday/weekly hero through
   `GET /life/bulletin/latest?from=<iso>&to=<iso>` or its authenticated member

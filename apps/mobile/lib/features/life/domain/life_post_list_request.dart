@@ -1,6 +1,8 @@
 class LifePostListRequest {
   const LifePostListRequest({
     this.limit = 20,
+    this.offset = 0,
+    this.loadAll = false,
     this.query,
     this.type,
     this.from,
@@ -8,6 +10,8 @@ class LifePostListRequest {
   });
 
   final int limit;
+  final int offset;
+  final bool loadAll;
   final String? query;
   final String? type;
   final DateTime? from;
@@ -15,6 +19,8 @@ class LifePostListRequest {
 
   bool get isDefault =>
       limit == 20 &&
+      offset == 0 &&
+      !loadAll &&
       (query == null || query!.trim().isEmpty) &&
       (type == null || type!.trim().isEmpty) &&
       from == null &&
@@ -29,6 +35,7 @@ class LifePostListRequest {
   Map<String, String> toQueryParameters() {
     return {
       'limit': '$limit',
+      'offset': '$offset',
       if (query != null && query!.trim().isNotEmpty) 'query': query!.trim(),
       if (type != null && type!.trim().isNotEmpty) 'type': type!.trim(),
       if (from != null) 'from': from!.toUtc().toIso8601String(),
@@ -42,6 +49,8 @@ class LifePostListRequest {
         other is LifePostListRequest &&
             runtimeType == other.runtimeType &&
             limit == other.limit &&
+            offset == other.offset &&
+            loadAll == other.loadAll &&
             query == other.query &&
             type == other.type &&
             from == other.from &&
@@ -49,5 +58,16 @@ class LifePostListRequest {
   }
 
   @override
-  int get hashCode => Object.hash(limit, query, type, from, to);
+  int get hashCode =>
+      Object.hash(limit, offset, loadAll, query, type, from, to);
+
+  LifePostListRequest page(int nextOffset) => LifePostListRequest(
+    limit: limit,
+    offset: nextOffset,
+    loadAll: loadAll,
+    query: query,
+    type: type,
+    from: from,
+    to: to,
+  );
 }

@@ -11,7 +11,7 @@ import 'widgets/life_error_view.dart';
 import 'widgets/life_loading_view.dart';
 import 'widgets/life_post_card.dart';
 
-const _myRegistrationRequest = LifePostListRequest(limit: 100);
+const _myRegistrationRequest = LifePostListRequest(limit: 100, loadAll: true);
 
 class MyEventRegistrationsPage extends ConsumerWidget {
   const MyEventRegistrationsPage({super.key});

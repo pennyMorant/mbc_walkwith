@@ -71,6 +71,11 @@ to the backend; the App requests assignments only after the group projection
 confirms active membership and renders the assignment title and due date inside
 the group detail surface.
 
+Life list reads use stable `limit` and `offset` pages. The App drains all pages
+for selected-month feeds and member registration history, so a high-content
+month cannot silently hide later records. Ordinary compact surfaces may still
+request a bounded page deliberately.
+
 App 展示 Life 首页、分类筛选、详情、报名/课程/小组等行动入口。App 不决定内容发布状态、可见性、展示权重或未读状态。展示权重不显示为 App chip；App 只展示本地化后的内容类型和用户状态。
 
 ## Admin Web Surface Boundary

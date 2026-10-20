@@ -44,6 +44,7 @@ async function listLandingEvents(
 ): Promise<PublicLandingEvent[]> {
   const posts = await lifePostService.list({
     limit: 100,
+    offset: 0,
     type: "event",
     sort: "starts_at_asc",
     from: new Date().toISOString(),
