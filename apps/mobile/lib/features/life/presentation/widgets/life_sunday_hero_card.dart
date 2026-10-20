@@ -61,68 +61,85 @@ class _PublishedSundayHeroCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onOpen,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  AppChip(label: l10n.weeklyBulletinTitle),
-                  AppChip(label: lifePostTypeLabel(l10n, post)),
-                  if (showUnreadBadge && readState.isUnread)
-                    AppChip(label: l10n.lifePostUnread, selected: true),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                post.title,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: colorScheme.onSecondaryContainer,
-                  fontWeight: readState.emphasisWeight,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (post.imageUrl case final imageUrl?
+                when imageUrl.trim().isNotEmpty)
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const SizedBox.shrink(),
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                bodyPreview,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSecondaryContainer,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 14),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.schedule_outlined,
-                    size: 18,
-                    color: colorScheme.onSecondaryContainer,
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      AppChip(label: l10n.weeklyBulletinTitle),
+                      AppChip(label: lifePostTypeLabel(l10n, post)),
+                      if (showUnreadBadge && readState.isUnread)
+                        AppChip(label: l10n.lifePostUnread, selected: true),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      scheduleLabel,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: colorScheme.onSecondaryContainer,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  const SizedBox(height: 12),
+                  Text(
+                    post.title,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: colorScheme.onSecondaryContainer,
+                      fontWeight: readState.emphasisWeight,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  FilledButton.tonalIcon(
-                    onPressed: onOpen,
-                    icon: const Icon(Icons.arrow_forward),
-                    label: Text(l10n.lifeOpenDetailAction),
+                  const SizedBox(height: 8),
+                  Text(
+                    bodyPreview,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSecondaryContainer,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.schedule_outlined,
+                        size: 18,
+                        color: colorScheme.onSecondaryContainer,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          scheduleLabel,
+                          style: Theme.of(context).textTheme.labelLarge
+                              ?.copyWith(
+                                color: colorScheme.onSecondaryContainer,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      FilledButton.tonalIcon(
+                        onPressed: onOpen,
+                        icon: const Icon(Icons.arrow_forward),
+                        label: Text(l10n.lifeOpenDetailAction),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -176,9 +193,8 @@ class _EmptySundayHeroCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     l10n.lifeSundayHeroEmptyBody,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSecondaryContainer,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium
+                        ?.copyWith(color: colorScheme.onSecondaryContainer),
                   ),
                 ],
               ),

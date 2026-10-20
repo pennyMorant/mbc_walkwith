@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/utils/app_formatters.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/prayer_request.dart';
 
@@ -34,9 +35,8 @@ class PrayerRequestCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     request.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
                   ),
                 ),
               ],
@@ -44,11 +44,26 @@ class PrayerRequestCard extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               request.body,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (request.submitterName.trim().isNotEmpty)
+                  AppChip(
+                    label: request.submitterName.trim(),
+                    icon: Icons.person_outline,
+                  ),
+                AppChip(
+                  label: formatDateOnly(context, request.createdAt),
+                  icon: Icons.calendar_today_outlined,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             Wrap(
               spacing: 8,
               runSpacing: 8,

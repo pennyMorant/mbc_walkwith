@@ -145,9 +145,8 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
             child: Text(
               post.title,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
           ),
         ),
@@ -161,6 +160,19 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
             ),
           ),
         ),
+        if (post.meta.trim().isNotEmpty)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              child: Card(
+                margin: EdgeInsets.zero,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: AppMarkdownBody(data: post.meta),
+                ),
+              ),
+            ),
+          ),
         if (detailDateLabel != null)
           SliverToBoxAdapter(
             child: Padding(
@@ -241,9 +253,8 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
 
   Future<void> _updateEventRegistration(MemberSession session) async {
     await _runRegistrationAction(
-      successMessage: AppLocalizations.of(
-        context,
-      )!.eventRegistrationUpdateSuccess,
+      successMessage: AppLocalizations.of(context)!
+          .eventRegistrationUpdateSuccess,
       action: () => ref
           .read(lifeRepositoryProvider)
           .updateEventRegistration(
@@ -257,9 +268,8 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
 
   Future<void> _cancelEventRegistration(MemberSession session) async {
     await _runRegistrationAction(
-      successMessage: AppLocalizations.of(
-        context,
-      )!.eventRegistrationCancelSuccess,
+      successMessage: AppLocalizations.of(context)!
+          .eventRegistrationCancelSuccess,
       action: () => ref
           .read(lifeRepositoryProvider)
           .cancelEventRegistration(widget.post.id, session),
@@ -288,9 +298,8 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(successMessage)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(successMessage)));
     } catch (error) {
       if (!mounted) {
         return;
@@ -299,9 +308,8 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
         AppLocalizations.of(context)!,
         error,
       );
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     } finally {
       if (mounted) {
         setState(() => _isSubmittingRegistration = false);

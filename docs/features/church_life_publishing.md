@@ -53,6 +53,12 @@ App sends current week boundaries to the latest-bulletin endpoint and shows an
 empty hero when that range has no bulletin. The `This week` tab keeps those
 fixed boundaries; month selection is available only for category tabs.
 
+Published presentation data is not discarded by the App: the weekly hero may
+show the admin-managed cover image, detail renders non-empty `meta` as
+supplemental Markdown, registration shows its deadline, and prayer cards show
+the public projection's submitter name and creation date. Private author and
+moderation fields remain outside the App contract.
+
 App 展示 Life 首页、分类筛选、详情、报名/课程/小组等行动入口。App 不决定内容发布状态、可见性、展示权重或未读状态。展示权重不显示为 App chip；App 只展示本地化后的内容类型和用户状态。
 
 ## Admin Web Surface Boundary

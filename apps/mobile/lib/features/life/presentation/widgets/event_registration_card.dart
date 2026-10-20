@@ -83,9 +83,8 @@ class EventRegistrationCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.eventRegistrationTitle,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
                   ),
                 ),
               ],
@@ -110,6 +109,11 @@ class EventRegistrationCard extends StatelessWidget {
                   AppChip(
                     label: l10n.eventRegistrationClosed,
                     icon: Icons.lock_clock_outlined,
+                  ),
+                if (post.registrationDeadline != null)
+                  AppChip(
+                    label: formatDateTime(context, post.registrationDeadline!),
+                    icon: Icons.event_busy_outlined,
                   ),
                 if (isRegistered)
                   AppChip(
@@ -139,9 +143,8 @@ class EventRegistrationCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 l10n.eventRegistrationSignInBody,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurfaceVariant),
               ),
             ],
             if (isSignedIn &&
