@@ -10,6 +10,7 @@ import '../../member_auth/data/member_session_repository.dart';
 import '../data/life_repository.dart';
 import '../domain/life_post.dart';
 import 'event_check_in_error_message.dart';
+import 'life_post_read_controller.dart';
 
 class EventCheckInScanPage extends ConsumerStatefulWidget {
   const EventCheckInScanPage({super.key});
@@ -92,9 +93,7 @@ class _EventCheckInScanPageState extends ConsumerState<EventCheckInScanPage> {
       final post = await ref
           .read(lifeRepositoryProvider)
           .checkInEventRegistrationWithCode(code, session);
-      ref.invalidate(lifePostByIdProvider(post.id));
-      ref.invalidate(lifePostsProvider);
-      ref.invalidate(lifePostListProvider);
+      invalidateLifePostProjections(ref, postId: post.id);
       if (!mounted) {
         return;
       }
@@ -241,9 +240,8 @@ class _CheckInSuccessView extends StatelessWidget {
                 const SizedBox(height: 14),
                 Text(
                   l10n.eventCheckInScanSuccessTitle,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                  style: Theme.of(context).textTheme.titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -295,9 +293,8 @@ class _SignInRequiredView extends StatelessWidget {
                 Text(
                   l10n.eventCheckInScanSignInRequired,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 16),
                 FilledButton.icon(

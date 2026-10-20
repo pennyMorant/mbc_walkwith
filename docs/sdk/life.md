@@ -108,7 +108,8 @@ Rules:
   member registration history set `loadAll`, causing the remote data source to
   request stable offset pages until the backend returns a partial page.
 - Only a completed unfiltered `loadAll` response may replace the offline Life
-  cache. Bounded pages are upserted and must not delete older cached content.
+  cache. Bounded and filtered pages are upserted and must not delete older
+  cached content, allowing week and month feeds to remain available offline.
   Local fallback applies the same `offset` and `loadAll` semantics as remote
   reads.
 - Life weekly tab requests the current natural week. Other Life tabs request

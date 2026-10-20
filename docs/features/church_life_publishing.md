@@ -120,6 +120,8 @@ Life repository 同时实现 Feature-owned media usage provider，按 canonical
 
 会友打开详情 -> App 提交 mark-read intent -> 后端写入 `life_post_reads.read_at` -> member list/detail 返回 `isRead/readAt` -> App 以同一后端投影更新卡片已读样式、周报 Hero 和各分类未读 badge。
 
+App 对周、月或分类列表的成功响应只增量写入离线内容缓存；只有完整、无筛选的 `loadAll` 快照可以替换缓存。会友专属的已读和报名状态保留在后端投影及按会话隔离的内存缓存中，不写入共享 SQLite 内容字段。读、报名和签到成功后，App 必须统一失效详情、列表和最新周报投影。
+
 ## Failure Chains
 
 - 内容下架后 App 详情返回 not found 并清理缓存。

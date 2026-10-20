@@ -110,7 +110,7 @@ void main() {
   });
 
   test(
-    'does not replace offline content cache for a date-range request',
+    'upserts date-range responses without replacing older offline content',
     () async {
       final database = AppDatabase(openTestDatabaseConnection());
       addTearDown(database.close);
@@ -130,7 +130,10 @@ void main() {
       );
 
       final cached = await localDataSource.fetchLifePosts();
-      expect(cached.map((post) => post.id), ['cached-life-post']);
+      expect(
+        cached.map((post) => post.id),
+        containsAll(['current-week-post', 'cached-life-post']),
+      );
     },
   );
 

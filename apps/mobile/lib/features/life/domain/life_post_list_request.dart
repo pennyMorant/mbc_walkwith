@@ -34,8 +34,6 @@ class LifePostListRequest {
 
   bool get canReplaceCache => isUnfiltered && offset == 0 && loadAll;
 
-  bool get canUpsertCachePage => isUnfiltered;
-
   Map<String, String> toQueryParameters() {
     return {
       'limit': '$limit',

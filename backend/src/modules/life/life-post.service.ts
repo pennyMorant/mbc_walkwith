@@ -105,25 +105,34 @@ export class LifePostService {
   }
 
   async latestBulletinPublic(query: LifeLatestBulletinQuery) {
-    const posts = await this.listPublic({
-      ...query,
-      limit: 100,
-      offset: 0,
-      visibility: "public",
-      status: "published"
-    });
-    return selectLatestBulletin(posts);
+    const posts = await Promise.all(
+      bulletinTypes.map((type) =>
+        this.listPublic({
+          ...query,
+          type,
+          limit: 100,
+          offset: 0,
+          visibility: "public",
+          status: "published"
+        })
+      )
+    );
+    return selectLatestBulletin(posts.flat());
   }
 
   async latestBulletinForMember(
     query: LifeLatestBulletinQuery,
     userId: string
   ) {
-    const posts = await this.listForMember(
-      { ...query, limit: 100, offset: 0 },
-      userId
+    const posts = await Promise.all(
+      bulletinTypes.map((type) =>
+        this.listForMember(
+          { ...query, type, limit: 100, offset: 0 },
+          userId
+        )
+      )
     );
-    return selectLatestBulletin(posts);
+    return selectLatestBulletin(posts.flat());
   }
 
   async getById(id: string) {
@@ -381,6 +390,8 @@ export function selectLatestBulletin<T extends PublicLifePost>(posts: T[]) {
       .sort(compareLatestBulletin)[0] ?? null
   );
 }
+
+const bulletinTypes = ["weekly_bulletin", "sunday"] as const;
 
 function compareLatestBulletin(a: PublicLifePost, b: PublicLifePost) {
   if (a.sort !== b.sort) {

@@ -292,9 +292,7 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
     try {
       await action();
       _registrationNoteController.clear();
-      ref.invalidate(lifePostByIdProvider(widget.post.id));
-      ref.invalidate(lifePostsProvider);
-      ref.invalidate(lifePostListProvider);
+      invalidateLifePostProjections(ref, postId: widget.post.id);
       if (!mounted) {
         return;
       }

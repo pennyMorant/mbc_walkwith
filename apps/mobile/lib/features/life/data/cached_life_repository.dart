@@ -30,7 +30,7 @@ class CachedLifeRepository extends LifeRepository {
       _rememberMemberPosts(session, postDtos);
       if (request.canReplaceCache) {
         await _replaceContentCacheBestEffort(postDtos);
-      } else if (request.canUpsertCachePage) {
+      } else {
         await _cacheContentPageBestEffort(postDtos);
       }
       return postDtos.map((post) => post.toDomain()).toList();

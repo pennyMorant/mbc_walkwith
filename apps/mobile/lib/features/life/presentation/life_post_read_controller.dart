@@ -11,7 +11,14 @@ Future<void> markLifePostReadAndRefresh(
   required MemberSession session,
 }) async {
   await ref.read(lifeRepositoryProvider).markLifePostRead(post.id, session);
+  invalidateLifePostProjections(ref, postId: post.id);
+}
+
+void invalidateLifePostProjections(WidgetRef ref, {String? postId}) {
   ref.invalidate(lifePostsProvider);
   ref.invalidate(lifePostListProvider);
-  ref.invalidate(lifePostByIdProvider(post.id));
+  ref.invalidate(latestLifeBulletinProvider);
+  if (postId != null) {
+    ref.invalidate(lifePostByIdProvider(postId));
+  }
 }

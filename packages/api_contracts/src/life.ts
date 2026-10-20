@@ -84,17 +84,28 @@ export const lifePostSortSchema = z.enum([
   "starts_at_asc"
 ]);
 
-export const lifePostListQuerySchema = z.object({
-  limit: z.coerce.number().int().positive().max(100).default(20),
-  offset: z.coerce.number().int().nonnegative().default(0),
-  visibility: lifePostVisibilitySchema.optional(),
-  status: lifePostStatusSchema.optional(),
-  query: z.string().optional(),
-  type: lifePostTypeSchema.optional(),
-  sort: lifePostSortSchema.optional(),
-  from: z.string().datetime().optional(),
-  to: z.string().datetime().optional()
-});
+export const lifePostListQuerySchema = z
+  .object({
+    limit: z.coerce.number().int().positive().max(100).default(20),
+    offset: z.coerce.number().int().nonnegative().default(0),
+    visibility: lifePostVisibilitySchema.optional(),
+    status: lifePostStatusSchema.optional(),
+    query: z.string().optional(),
+    type: lifePostTypeSchema.optional(),
+    sort: lifePostSortSchema.optional(),
+    from: z.string().datetime().optional(),
+    to: z.string().datetime().optional()
+  })
+  .refine(
+    (query) =>
+      query.from === undefined ||
+      query.to === undefined ||
+      new Date(query.from) < new Date(query.to),
+    {
+      message: "from must be earlier than to",
+      path: ["to"]
+    }
+  );
 
 export const lifeLatestBulletinQuerySchema = z
   .object({
