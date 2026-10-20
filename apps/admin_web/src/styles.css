@@ -36,6 +36,26 @@ body {
   overflow-x: auto;
 }
 
+.v-card {
+  border-radius: 16px !important;
+}
+
+.v-btn:not(.v-btn--icon) {
+  border-radius: 12px;
+}
+
+.v-field {
+  border-radius: 12px;
+}
+
+.v-navigation-drawer {
+  border-inline-end-color: rgba(25, 28, 26, 0.08) !important;
+}
+
+.v-list-item {
+  border-radius: 12px !important;
+}
+
 @media (max-width: 600px) {
   .page-title {
     font-size: 24px;

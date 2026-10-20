@@ -12,10 +12,15 @@ export const vuetify = createVuetify({
         colors: {
           background: "#f8faf8",
           surface: "#ffffff",
+          "surface-variant": "#edf1ea",
+          "on-surface": "#191c1a",
           primary: "#386a20",
           "primary-container": "#b8f397",
           secondary: "#56624c",
           "secondary-container": "#dae7ca",
+          info: "#32658f",
+          warning: "#9a6700",
+          success: "#2f6b2f",
           error: "#ba1a1a"
         }
       }
@@ -23,11 +28,10 @@ export const vuetify = createVuetify({
   },
   defaults: {
     VCard: {
-      rounded: "lg",
       elevation: 0
     },
     VBtn: {
-      rounded: "lg"
+      elevation: 0
     }
   }
 });

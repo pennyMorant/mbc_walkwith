@@ -3841,6 +3841,39 @@ Object.assign(messages["zh-Hans"], { "localization.generateMissing": "生成缺�
 Object.assign(messages["zh-Hant"], { "localization.generateMissing": "生成缺失語言", "localization.failed": "失敗", "localization.generationFailed": "翻譯生成失敗，請重試該語言。", "localization.someGenerationFailed": "部分翻譯失敗，請重試已標記的語言。" });
 
 Object.assign(messages.en, {
+  "nav.group.content": "Content",
+  "nav.group.ministry": "Ministry",
+  "nav.group.giving": "Giving",
+  "nav.group.people": "People",
+  "nav.group.system": "System",
+  "nav.searchPlaceholder": "Search admin tools"
+});
+Object.assign(messages["zh-Hans"], {
+  "nav.group.content": "内容",
+  "nav.group.ministry": "事工",
+  "nav.group.giving": "奉献",
+  "nav.group.people": "人员",
+  "nav.group.system": "系统",
+  "nav.searchPlaceholder": "搜索后台功能"
+});
+Object.assign(messages.es, {
+  "nav.group.content": "Contenido",
+  "nav.group.ministry": "Ministerio",
+  "nav.group.giving": "Ofrendas",
+  "nav.group.people": "Personas",
+  "nav.group.system": "Sistema",
+  "nav.searchPlaceholder": "Buscar herramientas"
+});
+Object.assign(messages["zh-Hant"], {
+  "nav.group.content": "內容",
+  "nav.group.ministry": "事工",
+  "nav.group.giving": "奉獻",
+  "nav.group.people": "人員",
+  "nav.group.system": "系統",
+  "nav.searchPlaceholder": "搜尋後台功能"
+});
+
+Object.assign(messages.en, {
   "settings.landing.eyebrow": "Section label",
   "settings.landing.sectionTitle": "Section title",
   "settings.landing.sectionBody": "Section introduction",
