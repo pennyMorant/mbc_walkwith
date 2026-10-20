@@ -4134,6 +4134,63 @@ Object.assign(messages["zh-Hant"], {
     "活動資料在生活內容中建立、審核和發佈。這裡只設定區塊文案和顯示數量。"
 });
 
+Object.assign(messages.en, {
+  "dashboard.greeting.morning": "Good morning, team",
+  "dashboard.greeting.afternoon": "Good afternoon, team",
+  "dashboard.greeting.evening": "Good evening, team",
+  "dashboard.publishContent": "Publish content",
+  "dashboard.metricsTitle": "Overview",
+  "dashboard.systemStatus": "System status",
+  "dashboard.dataSnapshot": "Dashboard data",
+  "dashboard.quickActions": "Quick actions",
+  "dashboard.action.sermon": "New sermon",
+  "dashboard.action.event": "Create event",
+  "dashboard.action.member": "Add member",
+  "dashboard.action.prayer": "Review prayer"
+});
+Object.assign(messages["zh-Hans"], {
+  "dashboard.greeting.morning": "早上好，同工",
+  "dashboard.greeting.afternoon": "下午好，同工",
+  "dashboard.greeting.evening": "晚上好，同工",
+  "dashboard.publishContent": "发布内容",
+  "dashboard.metricsTitle": "运营概览",
+  "dashboard.systemStatus": "系统状态",
+  "dashboard.dataSnapshot": "看板数据",
+  "dashboard.quickActions": "快捷操作",
+  "dashboard.action.sermon": "新建讲道",
+  "dashboard.action.event": "创建活动",
+  "dashboard.action.member": "添加会友",
+  "dashboard.action.prayer": "审核代祷"
+});
+Object.assign(messages.es, {
+  "dashboard.greeting.morning": "Buenos días, equipo",
+  "dashboard.greeting.afternoon": "Buenas tardes, equipo",
+  "dashboard.greeting.evening": "Buenas noches, equipo",
+  "dashboard.publishContent": "Publicar contenido",
+  "dashboard.metricsTitle": "Resumen operativo",
+  "dashboard.systemStatus": "Estado del sistema",
+  "dashboard.dataSnapshot": "Datos del panel",
+  "dashboard.quickActions": "Acciones rápidas",
+  "dashboard.action.sermon": "Nuevo sermón",
+  "dashboard.action.event": "Crear evento",
+  "dashboard.action.member": "Añadir miembro",
+  "dashboard.action.prayer": "Revisar oración"
+});
+Object.assign(messages["zh-Hant"], {
+  "dashboard.greeting.morning": "早安，同工",
+  "dashboard.greeting.afternoon": "午安，同工",
+  "dashboard.greeting.evening": "晚安，同工",
+  "dashboard.publishContent": "發布內容",
+  "dashboard.metricsTitle": "營運概覽",
+  "dashboard.systemStatus": "系統狀態",
+  "dashboard.dataSnapshot": "看板資料",
+  "dashboard.quickActions": "快速操作",
+  "dashboard.action.sermon": "新增講道",
+  "dashboard.action.event": "建立活動",
+  "dashboard.action.member": "新增會友",
+  "dashboard.action.prayer": "審核代禱"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });

@@ -2,9 +2,15 @@ import { describe, expect, test } from "bun:test";
 
 describe("admin media boundary", () => {
   test("uses media permissions, API helpers, and complete locale copy", async () => {
-    const [router, shell, messages, page, api, landingEditor] =
+    const [router, navigation, shell, messages, page, api, landingEditor] =
       await Promise.all([
         Bun.file(new URL("../src/router.ts", import.meta.url)).text(),
+        Bun.file(
+          new URL(
+            "../src/core/navigation/admin_navigation.ts",
+            import.meta.url
+          )
+        ).text(),
         Bun.file(
           new URL("../src/layouts/AdminShell.vue", import.meta.url)
         ).text(),
@@ -23,7 +29,8 @@ describe("admin media boundary", () => {
 
     expect(router).toContain('path: "/media"');
     expect(router).toContain('meta: adminPageMeta("media:read")');
-    expect(shell).toContain('permission: "media:read"');
+    expect(navigation).toContain('permission: "media:read"');
+    expect(shell).toContain("authStore.can(item.permission)");
     expect(page).toContain("MediaLibraryCard");
     expect(page).toContain("MediaCleanupCard");
     expect(api).toContain("listMediaAssets");
