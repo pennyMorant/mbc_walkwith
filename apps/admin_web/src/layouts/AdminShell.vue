@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useMutation } from "@tanstack/vue-query";
-import { computed } from "vue";
-import { reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 
@@ -9,6 +8,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { changeAdminPassword, logoutAdmin } from "@/core/api/auth";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminCommandSearch from "@/core/navigation/AdminCommandSearch.vue";
 import { adminNavigationGroups } from "@/core/navigation/admin_navigation";
 
 const router = useRouter();
@@ -33,14 +33,6 @@ const visibleGroups = computed(() =>
 );
 
 const visibleItems = computed(() => visibleGroups.value.flatMap((group) => group.items));
-const searchPath = ref<string | null>(null);
-const searchItems = computed(() =>
-  visibleItems.value.map((item) => ({
-    title: t(item.titleKey),
-    value: item.value,
-    props: { prependIcon: item.icon }
-  }))
-);
 
 const currentTitle = computed(() => {
   const active = visibleItems.value.find((item) => item.value === route.path);
@@ -60,12 +52,6 @@ async function navigateTo(path: string) {
   if (mobile.value) {
     navigationDrawer.value = false;
   }
-}
-
-async function navigateFromSearch(path: string | null) {
-  if (!path) return;
-  await navigateTo(path);
-  searchPath.value = null;
 }
 
 async function logout() {
@@ -144,18 +130,10 @@ const changePasswordMutation = useMutation({
       <v-app-bar-title class="font-weight-bold text-truncate">
         {{ currentTitle }}
       </v-app-bar-title>
-      <v-autocomplete
+      <AdminCommandSearch
         v-if="!mobile"
-        v-model="searchPath"
-        :items="searchItems"
-        :placeholder="t('nav.searchPlaceholder')"
-        prepend-inner-icon="mdi-magnify"
-        variant="solo-filled"
-        density="compact"
-        hide-details
-        clearable
-        class="admin-command-search"
-        @update:model-value="navigateFromSearch"
+        :items="visibleItems"
+        @navigate="navigateTo"
       />
       <template #append>
         <div class="d-flex align-center ga-2 ga-sm-3 pr-1 pr-sm-3">
@@ -288,12 +266,6 @@ const changePasswordMutation = useMutation({
   color: rgba(var(--v-theme-on-surface), 0.58);
   font-size: 12px;
   font-weight: 700;
-}
-
-.admin-command-search {
-  width: min(38vw, 520px);
-  max-width: 520px;
-  margin-inline: 24px;
 }
 
 .admin-account-button {

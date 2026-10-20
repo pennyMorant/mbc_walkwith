@@ -1,5 +1,6 @@
 export * from "./auth.js";
 export * from "./ai.js";
+export * from "./admin_search.js";
 export * from "./audit.js";
 export * from "./bible-knowledge.js";
 export * from "./bible-verse-notes.js";

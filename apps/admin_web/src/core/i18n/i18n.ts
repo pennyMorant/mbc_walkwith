@@ -3846,7 +3846,8 @@ Object.assign(messages.en, {
   "nav.group.giving": "Giving",
   "nav.group.people": "People",
   "nav.group.system": "System",
-  "nav.searchPlaceholder": "Search admin tools"
+  "nav.searchPlaceholder": "Search content, members, or tools",
+  "nav.searchEmpty": "No matching results"
 });
 Object.assign(messages["zh-Hans"], {
   "nav.group.content": "内容",
@@ -3854,7 +3855,8 @@ Object.assign(messages["zh-Hans"], {
   "nav.group.giving": "奉献",
   "nav.group.people": "人员",
   "nav.group.system": "系统",
-  "nav.searchPlaceholder": "搜索后台功能"
+  "nav.searchPlaceholder": "搜索内容、会友或功能",
+  "nav.searchEmpty": "没有匹配结果"
 });
 Object.assign(messages.es, {
   "nav.group.content": "Contenido",
@@ -3862,7 +3864,8 @@ Object.assign(messages.es, {
   "nav.group.giving": "Ofrendas",
   "nav.group.people": "Personas",
   "nav.group.system": "Sistema",
-  "nav.searchPlaceholder": "Buscar herramientas"
+  "nav.searchPlaceholder": "Buscar contenido, miembros o herramientas",
+  "nav.searchEmpty": "No hay resultados"
 });
 Object.assign(messages["zh-Hant"], {
   "nav.group.content": "內容",
@@ -3870,7 +3873,8 @@ Object.assign(messages["zh-Hant"], {
   "nav.group.giving": "奉獻",
   "nav.group.people": "人員",
   "nav.group.system": "系統",
-  "nav.searchPlaceholder": "搜尋後台功能"
+  "nav.searchPlaceholder": "搜尋內容、會友或功能",
+  "nav.searchEmpty": "沒有符合結果"
 });
 
 Object.assign(messages.en, {
@@ -4212,6 +4216,7 @@ Object.assign(messages.en, {
   "dashboard.column.updated": "Updated",
   "dashboard.resource.sermon": "Sermon",
   "dashboard.resource.life_post": "Church life",
+  "dashboard.resource.member": "Member",
   "dashboard.health.activeJobs": "Active tasks",
   "dashboard.health.failedJobs": "Failed tasks"
 });
@@ -4236,6 +4241,7 @@ Object.assign(messages["zh-Hans"], {
   "dashboard.column.updated": "更新时间",
   "dashboard.resource.sermon": "讲道",
   "dashboard.resource.life_post": "教会生活",
+  "dashboard.resource.member": "会友",
   "dashboard.health.activeJobs": "执行中任务",
   "dashboard.health.failedJobs": "失败任务"
 });
@@ -4260,6 +4266,7 @@ Object.assign(messages.es, {
   "dashboard.column.updated": "Actualizado",
   "dashboard.resource.sermon": "Sermón",
   "dashboard.resource.life_post": "Vida de iglesia",
+  "dashboard.resource.member": "Miembro",
   "dashboard.health.activeJobs": "Tareas activas",
   "dashboard.health.failedJobs": "Tareas fallidas"
 });
@@ -4284,6 +4291,7 @@ Object.assign(messages["zh-Hant"], {
   "dashboard.column.updated": "更新時間",
   "dashboard.resource.sermon": "講道",
   "dashboard.resource.life_post": "教會生活",
+  "dashboard.resource.member": "會友",
   "dashboard.health.activeJobs": "執行中任務",
   "dashboard.health.failedJobs": "失敗任務"
 });

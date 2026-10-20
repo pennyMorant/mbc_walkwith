@@ -88,7 +88,8 @@ Surface rule:
   is persisted in local storage.
 - The shell groups permission-filtered routes into Dashboard, Content, Ministry,
   Giving, People, and System workspaces. Its command search uses the same shared
-  navigation registry, so hidden routes cannot reappear through search.
+  navigation registry and the role-filtered `/v1/admin/search` projection, so hidden
+  routes or unauthorized resources cannot reappear through search.
 - The public `app.defaultLocale` setting can be `system`, `en`, `es`,
   `zh-Hans`, or `zh-Hant`. `system` means client surfaces should follow the
   device or browser locale.

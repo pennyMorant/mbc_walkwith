@@ -2021,6 +2021,18 @@ Counts must not be derived from paginated list lengths. If a live refresh fails,
 backend returns the last successful in-process snapshot for that role as `stale`. If no
 successful snapshot exists, it returns `analytics_build_failed` with HTTP 503.
 
+Admin shell search uses:
+
+```text
+GET /v1/admin/search?query=...
+```
+
+Requires `dashboard:read`. The backend queries sermons, church-life content, and
+members only when the authenticated role owns the corresponding read permission.
+The response is validated by `adminSearchResponseSchema` and returns at most 15
+title-level projections with a resource type and permitted destination path. It does
+not search giving, prayer text, care notes, or other sensitive content.
+
 ### 11.3 Sermon Admin
 
 ```text

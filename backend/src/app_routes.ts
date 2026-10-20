@@ -9,6 +9,7 @@ import { registerAdminBibleKnowledgeRoutes } from "./modules/admin/bible-knowled
 import { registerAdminCareRoutes } from "./modules/admin/care/admin_care.routes.js";
 import { registerAdminCourseRoutes } from "./modules/admin/courses/admin-courses.routes.js";
 import { registerAdminDashboardRoutes } from "./modules/admin/dashboard/admin-dashboard.routes.js";
+import { registerAdminSearchRoutes } from "./modules/admin/search/admin_search.routes.js";
 import { registerAdminDiscipleshipRoutes } from "./modules/admin/discipleship/admin-discipleship.routes.js";
 import { registerAdminGivingRoutes } from "./modules/admin/giving/admin-giving.routes.js";
 import { registerAdminGroupRoutes } from "./modules/admin/groups/admin-groups.routes.js";
@@ -53,6 +54,7 @@ import { registerSettingsRoutes } from "./modules/settings/settings.routes.js";
 
 type AppRouteDependencies = {
   adminAuthService: Parameters<typeof registerAdminAuthRoutes>[1];
+  adminSearchService: Parameters<typeof registerAdminSearchRoutes>[1];
   aiRateLimiter: Parameters<typeof registerAiRoutes>[4];
   aiManagementService: Parameters<typeof registerAiRoutes>[5];
   contentLocalizationService: Parameters<typeof registerContentLocalizationRoutes>[1];
@@ -225,6 +227,11 @@ export async function registerAppRoutes(
   await registerAdminDashboardRoutes(
     app,
     dependencies.ministryAnalyticsService,
+    adminPermission
+  );
+  await registerAdminSearchRoutes(
+    app,
+    dependencies.adminSearchService,
     adminPermission
   );
   await registerAdminMemberRoutes(

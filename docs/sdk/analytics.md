@@ -31,9 +31,17 @@ This document covers admin dashboard analytics, stale snapshots, exports, and dr
 - `metrics[]`：稳定 `id`、本地化 `labelKey`、整数 `value`、tone、
   `count/currency` format、可选 currency 和受权限保护的 drill-down path。
 - `jobs`：仅有 `jobs:read` 时返回，否则为 `null`。
+- `actionItems[]`：从非零 canonical 指标生成的待处理入口。
+- `recentContent[]`：按权限过滤的讲道和生活内容最近更新投影。
+- `health[]`：任务健康状态及对应 drill-down。
 
 Admin helper `apps/admin_web/src/core/api/dashboard.ts` 必须通过 shared schema 解析。
 Admin 页面不能根据角色自行补造后端未返回的指标。
+
+`GET /v1/admin/search` 使用 `adminSearchQuerySchema` 和
+`adminSearchResponseSchema`。`apps/admin_web/src/core/api/admin_search.ts` 只提交查询词；
+后端按角色决定是否查询 sermon、life post 和 member owner。前端可以把返回结果与
+本地共享导航 registry 合并，但不能自行跨 Feature 请求并拼接业务数据。
 
 当前年度财务指标由后端按 `church.timezone` 计算。Admin refetch transport 失败但
 query cache 仍有成功数据时，应保留当前 snapshot 并显示错误，不能用 error 分支隐藏

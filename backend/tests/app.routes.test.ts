@@ -1,5 +1,6 @@
 import {
   adminDashboardResponseSchema,
+  adminSearchResponseSchema,
   adminLoginResponseSchema,
   adminRefreshTokenResponseSchema,
   adminSessionSchema,
@@ -145,6 +146,31 @@ describe("backend core and auth routes", () => {
       "giving_transaction_count"
     ]);
     expect(dashboard.jobs).toBeNull();
+    await harness.close();
+  });
+
+  it("searches authorized admin resources through one contract", async () => {
+    const harness = await buildTestApp();
+    const { app } = harness;
+    const { accessToken } = await login(app);
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/v1/admin/search?query=Hope",
+      headers: { authorization: `Bearer ${accessToken}` }
+    });
+
+    expect(response.statusCode).toBe(200);
+    const search = expectResponseData(
+      response,
+      adminSearchResponseSchema,
+      "admin search"
+    );
+    expect(search.items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ resourceType: "sermon" })
+      ])
+    );
     await harness.close();
   });
 

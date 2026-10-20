@@ -11,6 +11,7 @@ import { InMemoryAdminAuthRepository } from "./modules/admin/auth/in-memory-admi
 import { PostgresAdminAuthRepository } from "./modules/admin/auth/postgres-admin-auth.repository.js";
 import { AdminAuthService } from "./modules/admin/auth/admin-auth.service.js";
 import { MinistryAnalyticsService } from "./modules/admin/dashboard/ministry_analytics.service.js";
+import { AdminSearchService } from "./modules/admin/search/admin_search.service.js";
 import { AuditService } from "./modules/audit/audit.service.js";
 import { InMemoryAuditRepository } from "./modules/audit/in-memory-audit.repository.js";
 import { PostgresAuditRepository } from "./modules/audit/postgres-audit.repository.js";
@@ -282,6 +283,11 @@ export async function buildApp(config: AppConfig) {
     ? new PostgresMemberRepository(db)
     : new InMemoryMemberRepository();
   const memberService = new MemberService(memberRepository);
+  const adminSearchService = new AdminSearchService({
+    sermons: sermonService,
+    lifePosts: lifePostService,
+    members: memberService
+  });
   const readingPlanUserDirectory = new RepositoryReadingPlanUserDirectory(
     memberRepository
   );
@@ -420,6 +426,7 @@ export async function buildApp(config: AppConfig) {
 
   await registerAppRoutes(app, config, {
     adminAuthService,
+    adminSearchService,
     aiRateLimiter,
     aiManagementService,
     contentLocalizationService,

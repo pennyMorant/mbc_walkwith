@@ -697,9 +697,15 @@ export const apiRouteContractRegistry = [
     owner: "dashboard",
     contractFile: "packages/api_contracts/src/dashboard.ts",
     sdkDocs: ["docs/sdk/analytics.md", "docs/sdk/admin.md"],
-    backendRouteFiles: ["backend/src/modules/admin/dashboard/admin-dashboard.routes.ts"],
-    clientFiles: ["apps/admin_web/src/core/api/dashboard.ts"],
-    routes: ["GET /v1/admin/dashboard"]
+    backendRouteFiles: [
+      "backend/src/modules/admin/dashboard/admin-dashboard.routes.ts",
+      "backend/src/modules/admin/search/admin_search.routes.ts"
+    ],
+    clientFiles: [
+      "apps/admin_web/src/core/api/dashboard.ts",
+      "apps/admin_web/src/core/api/admin_search.ts"
+    ],
+    routes: ["GET /v1/admin/dashboard", "GET /v1/admin/search"]
   },
   {
     featureId: "jobs",
