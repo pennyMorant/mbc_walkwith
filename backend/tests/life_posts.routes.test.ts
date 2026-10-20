@@ -153,6 +153,18 @@ describe("life post routes", () => {
     expect(createdPost.imageUrl).toBe(imageUrl);
     const postId = createdPost.id;
 
+    const adminDetailResponse = await app.inject({
+      method: "GET",
+      url: `/v1/admin/life-posts/${postId}`,
+      headers: { authorization: `Bearer ${accessToken}` }
+    });
+    expect(adminDetailResponse.statusCode).toBe(200);
+    expectResponseData(
+      adminDetailResponse,
+      lifePostSchema,
+      "admin life post detail"
+    );
+
     const submitReviewResponse = await app.inject({
       method: "POST",
       url: `/v1/admin/life-posts/${postId}/submit-review`,

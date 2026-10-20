@@ -22,6 +22,7 @@ import { InMemoryEventRegistrationRepository } from "./in_memory_event_registrat
 import { seedLifePosts } from "./in_memory_life_post_seed.js";
 import type { LifePostRepository } from "./life-post.repository.js";
 import type {
+  LifePostSummary,
   LifePostMutationOptions,
   LifePostReadState
 } from "./life-post.repository.js";
@@ -76,10 +77,15 @@ export class InMemoryLifePostRepository implements LifePostRepository {
     return [...this.posts.values()].filter((post) => post.status === status).length;
   }
 
-  async listRecentlyUpdated(limit: number): Promise<LifePost[]> {
+  async searchSummaries(query: string, limit: number): Promise<LifePostSummary[]> {
+    return (await this.list({ query, limit, offset: 0 })).map(toLifePostSummary);
+  }
+
+  async listRecentlyUpdatedSummaries(limit: number): Promise<LifePostSummary[]> {
     return [...this.posts.values()]
       .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-      .slice(0, limit);
+      .slice(0, limit)
+      .map(toLifePostSummary);
   }
 
   async summarizeEventParticipation() {
@@ -347,6 +353,11 @@ export class InMemoryLifePostRepository implements LifePostRepository {
     this.readStates.set(readStateKey(lifePostId, userId), state);
     return state;
   }
+}
+
+function toLifePostSummary(post: LifePost): LifePostSummary {
+  const { id, title, type, status, sourceLocale, updatedAt } = post;
+  return { id, title, type, status, sourceLocale, updatedAt };
 }
 
 function readStateKey(lifePostId: string, userId: string) {

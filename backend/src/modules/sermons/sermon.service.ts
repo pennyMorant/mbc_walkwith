@@ -38,8 +38,12 @@ export class SermonService {
     return this.repository.list(query);
   }
 
-  listRecentlyUpdated(limit: number) {
-    return this.repository.listRecentlyUpdated(limit);
+  searchSummaries(query: string, limit: number) {
+    return this.repository.searchSummaries(query, limit);
+  }
+
+  listRecentlyUpdatedSummaries(limit: number) {
+    return this.repository.listRecentlyUpdatedSummaries(limit);
   }
 
   countByStatus(status: SermonStatus) {

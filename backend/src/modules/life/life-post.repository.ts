@@ -8,9 +8,15 @@ import type {
 
 import type { EventRegistrationRepository } from "./event_registration.repository.js";
 
+export type LifePostSummary = Pick<
+  LifePost,
+  "id" | "title" | "type" | "status" | "sourceLocale" | "updatedAt"
+>;
+
 export interface LifePostRepository extends EventRegistrationRepository {
   list(query: LifePostListQuery): Promise<LifePost[]>;
-  listRecentlyUpdated(limit: number): Promise<LifePost[]>;
+  searchSummaries(query: string, limit: number): Promise<LifePostSummary[]>;
+  listRecentlyUpdatedSummaries(limit: number): Promise<LifePostSummary[]>;
   countPosts(): Promise<number>;
   countByStatus(status: LifePostStatus): Promise<number>;
   summarizeEventParticipation(): Promise<EventParticipationSummary>;

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { getLifePost } from "@/core/api/life_posts";
+import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
+
 import type { ContentLocale } from "@mbc/api-contracts";
 import { ref } from "vue";
 import { translateLifePostNotification } from "@/core/api/life_posts";
@@ -130,10 +133,15 @@ const {
   requestDelete,
   confirmPendingAction
 } = useLifePostsPageController();
+const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
 </script>
 
 <template>
   <div>
+    <v-progress-linear v-if="deepLink.pending.value" indeterminate color="primary" class="mb-4" />
+    <v-alert v-if="deepLink.error.value" type="error" variant="tonal" class="mb-4">
+      {{ t("nav.openResourceFailed") }}
+    </v-alert>
     <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
       <div>
         <div class="page-title">{{ t("nav.lifePosts") }}</div>

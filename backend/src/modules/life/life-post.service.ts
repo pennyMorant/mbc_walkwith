@@ -57,8 +57,12 @@ export class LifePostService {
     );
   }
 
-  listRecentlyUpdated(limit: number) {
-    return this.repository.listRecentlyUpdated(limit);
+  searchSummaries(query: string, limit: number) {
+    return this.repository.searchSummaries(query, limit);
+  }
+
+  listRecentlyUpdatedSummaries(limit: number) {
+    return this.repository.listRecentlyUpdatedSummaries(limit);
   }
 
   async listPublic(query: LifePostListQuery) {

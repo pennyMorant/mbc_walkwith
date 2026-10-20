@@ -42,6 +42,8 @@ Admin 页面不能根据角色自行补造后端未返回的指标。
 `adminSearchResponseSchema`。`apps/admin_web/src/core/api/admin_search.ts` 只提交查询词；
 后端按角色决定是否查询 sermon、life post 和 member owner。前端可以把返回结果与
 本地共享导航 registry 合并，但不能自行跨 Feature 请求并拼接业务数据。
+搜索与最近内容只读取标题级摘要，不得复用包含完整讲道文稿或生活正文的聚合列表。
+资源结果使用 `?open=<resourceId>`，由目标页面通过自己的详情 API 加载并打开记录。
 
 当前年度财务指标由后端按 `church.timezone` 计算。Admin refetch transport 失败但
 query cache 仍有成功数据时，应保留当前 snapshot 并显示错误，不能用 error 分支隐藏

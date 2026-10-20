@@ -3847,7 +3847,9 @@ Object.assign(messages.en, {
   "nav.group.people": "People",
   "nav.group.system": "System",
   "nav.searchPlaceholder": "Search content, members, or tools",
-  "nav.searchEmpty": "No matching results"
+  "nav.searchEmpty": "No matching results",
+  "nav.searchFailed": "Search is temporarily unavailable.",
+  "nav.openResourceFailed": "This record could not be opened."
 });
 Object.assign(messages["zh-Hans"], {
   "nav.group.content": "内容",
@@ -3856,7 +3858,9 @@ Object.assign(messages["zh-Hans"], {
   "nav.group.people": "人员",
   "nav.group.system": "系统",
   "nav.searchPlaceholder": "搜索内容、会友或功能",
-  "nav.searchEmpty": "没有匹配结果"
+  "nav.searchEmpty": "没有匹配结果",
+  "nav.searchFailed": "搜索暂时不可用。",
+  "nav.openResourceFailed": "无法打开这条记录。"
 });
 Object.assign(messages.es, {
   "nav.group.content": "Contenido",
@@ -3865,7 +3869,9 @@ Object.assign(messages.es, {
   "nav.group.people": "Personas",
   "nav.group.system": "Sistema",
   "nav.searchPlaceholder": "Buscar contenido, miembros o herramientas",
-  "nav.searchEmpty": "No hay resultados"
+  "nav.searchEmpty": "No hay resultados",
+  "nav.searchFailed": "La búsqueda no está disponible temporalmente.",
+  "nav.openResourceFailed": "No se pudo abrir este registro."
 });
 Object.assign(messages["zh-Hant"], {
   "nav.group.content": "內容",
@@ -3874,7 +3880,9 @@ Object.assign(messages["zh-Hant"], {
   "nav.group.people": "人員",
   "nav.group.system": "系統",
   "nav.searchPlaceholder": "搜尋內容、會友或功能",
-  "nav.searchEmpty": "沒有符合結果"
+  "nav.searchEmpty": "沒有符合結果",
+  "nav.searchFailed": "搜尋暫時無法使用。",
+  "nav.openResourceFailed": "無法開啟這筆資料。"
 });
 
 Object.assign(messages.en, {

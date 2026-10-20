@@ -5,6 +5,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import { adminSessionClearedEventName } from "./core/auth/auth_storage";
 import { useAdminAuthStore } from "./core/auth/auth_store";
+import { createAdminQueryCacheGuard } from "./core/query/admin_query_cache";
 import { vuetify } from "./plugins/vuetify";
 import { router } from "./router";
 import "./styles.css";
@@ -13,13 +14,14 @@ const pinia = createPinia();
 const app = createApp(App);
 const authStore = useAdminAuthStore(pinia);
 const queryClient = new QueryClient();
-let activeAccessToken = authStore.accessToken;
+const updateQueryCacheSession = createAdminQueryCacheGuard(
+  authStore.accessToken,
+  () => queryClient.clear()
+);
 
 authStore.$subscribe(
   (_mutation, state) => {
-    if (state.accessToken === activeAccessToken) return;
-    activeAccessToken = state.accessToken;
-    queryClient.clear();
+    updateQueryCacheSession(state.accessToken);
   },
   { detached: true }
 );

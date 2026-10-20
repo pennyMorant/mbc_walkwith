@@ -20,6 +20,7 @@ import {
 } from "@/core/api/members";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -104,6 +105,8 @@ const errorMessage = computed(
       t("common.error")
     )
 );
+
+const deepLink = useAdminResourceDeepLink(getMember, applyMember);
 
 async function openMember(member: MemberListItem) {
   selectedMember.value = null;
@@ -218,6 +221,10 @@ function statusColor(status: MemberStatus) {
 
 <template>
   <div>
+    <v-progress-linear v-if="deepLink.pending.value" indeterminate color="primary" class="mb-4" />
+    <v-alert v-if="deepLink.error.value" type="error" variant="tonal" class="mb-4">
+      {{ t("nav.openResourceFailed") }}
+    </v-alert>
     <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
       <div>
         <div class="page-title">{{ t("nav.members") }}</div>

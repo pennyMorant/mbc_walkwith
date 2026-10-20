@@ -3,10 +3,10 @@ import type {
   DashboardActionItem,
   DashboardHealthItem,
   DashboardMetric,
-  DashboardRecentContent,
-  LifePost,
-  Sermon
+  DashboardRecentContent
 } from "@mbc/api-contracts";
+import type { LifePostSummary } from "../../life/life-post.repository.js";
+import type { SermonSummary } from "../../sermons/sermon.repository.js";
 
 const actionMetricDefinitions: Record<
   string,
@@ -71,8 +71,8 @@ export function buildDashboardHealthItems(
 }
 
 export function mergeRecentDashboardContent(
-  sermons: Sermon[],
-  lifePosts: LifePost[],
+  sermons: SermonSummary[],
+  lifePosts: LifePostSummary[],
   limit: number
 ): DashboardRecentContent[] {
   return [
@@ -83,7 +83,7 @@ export function mergeRecentDashboardContent(
       status: sermon.status,
       sourceLocale: sermon.sourceLocale,
       updatedAt: sermon.updatedAt,
-      path: "/sermons"
+      path: resourcePath("/sermons", sermon.id)
     })),
     ...lifePosts.map((post) => ({
       id: post.id,
@@ -92,9 +92,13 @@ export function mergeRecentDashboardContent(
       status: post.status,
       sourceLocale: post.sourceLocale,
       updatedAt: post.updatedAt,
-      path: "/life-posts"
+      path: resourcePath("/life-posts", post.id)
     }))
   ]
     .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
     .slice(0, limit);
+}
+
+function resourcePath(basePath: string, resourceId: string) {
+  return `${basePath}?open=${encodeURIComponent(resourceId)}`;
 }

@@ -62,6 +62,13 @@ export async function listLifePosts(
   ).items;
 }
 
+export async function getLifePost(postId: string): Promise<LifePost> {
+  return apiClient.getData(
+    `/admin/life-posts/${pathSegment(postId)}`,
+    lifePostSchema
+  );
+}
+
 export async function createLifePost(
   input: LifePostUpsertRequest
 ): Promise<LifePost> {

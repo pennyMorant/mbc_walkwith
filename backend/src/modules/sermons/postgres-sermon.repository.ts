@@ -21,6 +21,7 @@ import type {
   SermonAudioRecord,
   SermonListResult,
   SermonRepository,
+  SermonSummary,
   SermonUpdateOptions
 } from "./sermon.repository.js";
 import { replaceSermonChildren } from "./postgres_sermon_aggregate.js";
@@ -56,13 +57,18 @@ export class PostgresSermonRepository implements SermonRepository {
     return Number(row?.value ?? 0);
   }
 
-  async listRecentlyUpdated(limit: number): Promise<Sermon[]> {
+  async searchSummaries(query: string, limit: number): Promise<SermonSummary[]> {
+    const result = await listSermonDiscoveryRows(this.db, { query, limit });
+    return result.rows.map(sermonSummaryFromRow);
+  }
+
+  async listRecentlyUpdatedSummaries(limit: number): Promise<SermonSummary[]> {
     const rows = await this.db
       .select()
       .from(sermons)
       .orderBy(desc(sermons.updatedAt), asc(sermons.id))
       .limit(limit);
-    return Promise.all(rows.map((row) => this.loadChildren(row)));
+    return rows.map(sermonSummaryFromRow);
   }
 
   async getById(id: string): Promise<Sermon | null> {
@@ -409,6 +415,17 @@ export class PostgresSermonRepository implements SermonRepository {
     };
   }
 
+}
+
+function sermonSummaryFromRow(row: SermonRow): SermonSummary {
+  return {
+    id: row.id,
+    title: row.title,
+    speaker: row.speaker,
+    status: row.status,
+    sourceLocale: row.sourceLocale as SermonSummary["sourceLocale"],
+    updatedAt: row.updatedAt.toISOString()
+  };
 }
 
 type SermonRow = typeof sermons.$inferSelect;

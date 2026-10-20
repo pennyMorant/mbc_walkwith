@@ -26,6 +26,7 @@ import type {
 } from "./event_registration.repository.js";
 import type { LifePostRepository } from "./life-post.repository.js";
 import type {
+  LifePostSummary,
   LifePostMutationOptions,
   LifePostReadState
 } from "./life-post.repository.js";
@@ -110,13 +111,29 @@ export class PostgresLifePostRepository implements LifePostRepository {
     return Number(row?.value ?? 0);
   }
 
-  async listRecentlyUpdated(limit: number): Promise<LifePost[]> {
+  async searchSummaries(query: string, limit: number): Promise<LifePostSummary[]> {
     const rows = await this.db
-      .select()
+      .select(lifePostSummarySelection)
+      .from(publicPosts)
+      .where(
+        or(
+          ilike(publicPosts.type, `%${query}%`),
+          ilike(publicPosts.title, `%${query}%`),
+          ilike(publicPosts.body, `%${query}%`)
+        )
+      )
+      .orderBy(desc(publicPosts.updatedAt), asc(publicPosts.id))
+      .limit(limit);
+    return rows.map(lifePostSummaryFromRow);
+  }
+
+  async listRecentlyUpdatedSummaries(limit: number): Promise<LifePostSummary[]> {
+    const rows = await this.db
+      .select(lifePostSummarySelection)
       .from(publicPosts)
       .orderBy(desc(publicPosts.updatedAt), asc(publicPosts.id))
       .limit(limit);
-    return rows.map(postFromRow);
+    return rows.map(lifePostSummaryFromRow);
   }
 
   async summarizeEventParticipation() {
@@ -442,6 +459,32 @@ export class PostgresLifePostRepository implements LifePostRepository {
       return action(transaction, existing);
     });
   }
+}
+
+const lifePostSummarySelection = {
+  id: publicPosts.id,
+  title: publicPosts.title,
+  type: publicPosts.type,
+  status: publicPosts.status,
+  sourceLocale: publicPosts.sourceLocale,
+  updatedAt: publicPosts.updatedAt
+};
+
+function lifePostSummaryFromRow(
+  row: {
+    id: string;
+    title: string;
+    type: LifePostSummary["type"];
+    status: LifePostSummary["status"];
+    sourceLocale: string;
+    updatedAt: Date;
+  }
+): LifePostSummary {
+  return {
+    ...row,
+    sourceLocale: row.sourceLocale as LifePostSummary["sourceLocale"],
+    updatedAt: row.updatedAt.toISOString()
+  };
 }
 
 type AppTransaction = Parameters<Parameters<AppDb["transaction"]>[0]>[0];

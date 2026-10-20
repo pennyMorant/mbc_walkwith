@@ -10,10 +10,12 @@ describe("AdminSearchService", () => {
     const response = await service.search("owner", "hope");
 
     expect(response.items).toEqual([
-      expect.objectContaining({ resourceType: "sermon", path: "/sermons" }),
-      expect.objectContaining({ resourceType: "life_post", path: "/life-posts" }),
-      expect.objectContaining({ resourceType: "member", path: "/members" })
+      expect.objectContaining({ resourceType: "sermon", path: "/sermons?open=sermon-1" }),
+      expect.objectContaining({ resourceType: "life_post", path: "/life-posts?open=life-1" }),
+      expect.objectContaining({ resourceType: "member", path: "/members?open=member-1" })
     ]);
+    expect(dependencies.sermons.searchSummaries).toHaveBeenCalledWith("hope", 5);
+    expect(dependencies.lifePosts.searchSummaries).toHaveBeenCalledWith("hope", 5);
   });
 
   it("does not query content or member services for finance admins", async () => {
@@ -23,8 +25,8 @@ describe("AdminSearchService", () => {
     const response = await service.search("finance", "hope");
 
     expect(response.items).toEqual([]);
-    expect(dependencies.sermons.list).not.toHaveBeenCalled();
-    expect(dependencies.lifePosts.list).not.toHaveBeenCalled();
+    expect(dependencies.sermons.searchSummaries).not.toHaveBeenCalled();
+    expect(dependencies.lifePosts.searchSummaries).not.toHaveBeenCalled();
     expect(dependencies.members.list).not.toHaveBeenCalled();
   });
 });
@@ -32,13 +34,12 @@ describe("AdminSearchService", () => {
 function fakeDependencies() {
   return {
     sermons: {
-      list: vi.fn(async () => ({
-        sermons: [{ id: "sermon-1", title: "Hope", speaker: "Pastor", status: "published" }],
-        nextCursor: null
-      }))
+      searchSummaries: vi.fn(async () => [
+        { id: "sermon-1", title: "Hope", speaker: "Pastor", status: "published" }
+      ])
     },
     lifePosts: {
-      list: vi.fn(async () => [
+      searchSummaries: vi.fn(async () => [
         { id: "life-1", title: "Hope gathering", type: "event", status: "published" }
       ])
     },

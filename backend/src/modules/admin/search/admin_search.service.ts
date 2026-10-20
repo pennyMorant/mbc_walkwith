@@ -9,8 +9,8 @@ import type { SermonService } from "../../sermons/sermon.service.js";
 import { roleHasPermission } from "../auth/admin-rbac.js";
 
 type AdminSearchDependencies = {
-  sermons: Pick<SermonService, "list">;
-  lifePosts: Pick<LifePostService, "list">;
+  sermons: Pick<SermonService, "searchSummaries">;
+  lifePosts: Pick<LifePostService, "searchSummaries">;
   members: Pick<MemberService, "list">;
 };
 
@@ -20,10 +20,10 @@ export class AdminSearchService {
   async search(role: AdminRole, query: string): Promise<AdminSearchResponse> {
     const [sermons, lifePosts, members] = await Promise.all([
       roleHasPermission(role, "sermons:read")
-        ? this.dependencies.sermons.list({ query, limit: 5 })
-        : Promise.resolve({ sermons: [], nextCursor: null }),
+        ? this.dependencies.sermons.searchSummaries(query, 5)
+        : Promise.resolve([]),
       roleHasPermission(role, "life_posts:read")
-        ? this.dependencies.lifePosts.list({ query, limit: 5, offset: 0 })
+        ? this.dependencies.lifePosts.searchSummaries(query, 5)
         : Promise.resolve([]),
       roleHasPermission(role, "users:read")
         ? this.dependencies.members.list({ query, limit: 5 })
@@ -32,28 +32,32 @@ export class AdminSearchService {
 
     return {
       items: [
-        ...sermons.sermons.map((sermon) => ({
+        ...sermons.map((sermon) => ({
           id: sermon.id,
           resourceType: "sermon" as const,
           title: sermon.title,
           subtitle: sermon.speaker,
-          path: "/sermons"
+          path: resourcePath("/sermons", sermon.id)
         })),
         ...lifePosts.map((post) => ({
           id: post.id,
           resourceType: "life_post" as const,
           title: post.title,
           subtitle: post.type,
-          path: "/life-posts"
+          path: resourcePath("/life-posts", post.id)
         })),
         ...members.map((member) => ({
           id: member.id,
           resourceType: "member" as const,
           title: member.displayName,
           subtitle: member.email,
-          path: "/members"
+          path: resourcePath("/members", member.id)
         }))
       ].slice(0, 15)
     };
   }
+}
+
+function resourcePath(basePath: string, resourceId: string) {
+  return `${basePath}?open=${encodeURIComponent(resourceId)}`;
 }

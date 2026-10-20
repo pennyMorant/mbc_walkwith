@@ -14,6 +14,11 @@ export type SermonListResult = {
   nextCursor: string | null;
 };
 
+export type SermonSummary = Pick<
+  Sermon,
+  "id" | "title" | "speaker" | "status" | "sourceLocale" | "updatedAt"
+>;
+
 export type SermonAudioInput = {
   storagePath: string;
   url: string;
@@ -38,7 +43,8 @@ export type SermonUpdateOptions = {
 
 export interface SermonRepository {
   list(query: SermonListQuery): Promise<SermonListResult>;
-  listRecentlyUpdated(limit: number): Promise<Sermon[]>;
+  searchSummaries(query: string, limit: number): Promise<SermonSummary[]>;
+  listRecentlyUpdatedSummaries(limit: number): Promise<SermonSummary[]>;
   countByStatus(status: SermonStatus): Promise<number>;
   recommendations(query: SermonRecommendationQuery): Promise<Sermon[]>;
   discoveryFacets(): Promise<SermonDiscoveryFacets>;

@@ -90,6 +90,9 @@ Surface rule:
   Giving, People, and System workspaces. Its command search uses the same shared
   navigation registry and the role-filtered `/v1/admin/search` projection, so hidden
   routes or unauthorized resources cannot reappear through search.
+- Admin authentication changes clear the shared query cache before another session
+  can render role-scoped results. Search and recent-content links identify a record
+  with `?open=<resourceId>`; the destination Feature owns detail loading and errors.
 - The public `app.defaultLocale` setting can be `system`, `en`, `es`,
   `zh-Hans`, or `zh-Hant`. `system` means client surfaces should follow the
   device or browser locale.

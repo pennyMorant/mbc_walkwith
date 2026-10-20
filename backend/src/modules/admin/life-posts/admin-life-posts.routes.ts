@@ -96,6 +96,19 @@ export async function registerAdminLifePostRoutes(
     }
   );
 
+  app.get(
+    "/v1/admin/life-posts/:postId",
+    { preHandler: permissionPreHandler("life_posts:read") },
+    async (request) => {
+      const params = postParamsSchema.parse(request.params);
+      const post = await service.getById(params.postId);
+      if (!post) {
+        throw lifePostNotFound(params.postId);
+      }
+      return ok(post);
+    }
+  );
+
   app.post(
     "/v1/admin/life-posts/images",
     {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
+import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 
 import type { AdminNavigationItem } from "./admin_navigation";
@@ -11,11 +12,15 @@ const emit = defineEmits<{ navigate: [path: string] }>();
 const { t } = useI18n();
 const {
   clear,
+  error,
   isFetching,
   options,
   searchText,
   selectedOption
 } = useAdminSearch(computed(() => props.items), t);
+const errorMessage = computed(() =>
+  error.value ? formatApiErrorMessage(error.value, t("nav.searchFailed")) : ""
+);
 
 function select(option: AdminSearchOption | null) {
   if (!option) return;
@@ -32,10 +37,11 @@ function select(option: AdminSearchOption | null) {
     :placeholder="t('nav.searchPlaceholder')"
     :no-data-text="t('nav.searchEmpty')"
     :loading="isFetching"
+    :error-messages="errorMessage"
     prepend-inner-icon="mdi-magnify"
     variant="solo-filled"
     density="compact"
-    hide-details
+    hide-details="auto"
     clearable
     return-object
     class="admin-command-search"

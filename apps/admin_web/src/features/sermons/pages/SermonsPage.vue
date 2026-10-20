@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { getAdminSermon } from "@/core/api/sermons";
+import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
+
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
 import SermonAudioCleanupCard from "../components/SermonAudioCleanupCard.vue";
@@ -92,10 +95,15 @@ const {
   applySermonSummaryDraft,
   applySermonOutlineDraft
 } = useSermonsPageController();
+const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
 </script>
 
 <template>
   <div>
+    <v-progress-linear v-if="deepLink.pending.value" indeterminate color="primary" class="mb-4" />
+    <v-alert v-if="deepLink.error.value" type="error" variant="tonal" class="mb-4">
+      {{ t("nav.openResourceFailed") }}
+    </v-alert>
     <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
       <div>
         <div class="page-title">{{ t("nav.sermons") }}</div>

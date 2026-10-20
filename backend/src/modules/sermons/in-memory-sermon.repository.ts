@@ -12,6 +12,7 @@ import type {
   SermonAudioRecord,
   SermonListResult,
   SermonRepository,
+  SermonSummary,
   SermonUpdateOptions
 } from "./sermon.repository.js";
 import type { SermonAudioCleanupRepository } from "./sermon_audio_cleanup.repository.js";
@@ -97,10 +98,16 @@ export class InMemorySermonRepository implements SermonRepository {
     ).length;
   }
 
-  async listRecentlyUpdated(limit: number): Promise<Sermon[]> {
+  async searchSummaries(query: string, limit: number): Promise<SermonSummary[]> {
+    const result = await this.list({ query, limit });
+    return result.sermons.map(toSermonSummary);
+  }
+
+  async listRecentlyUpdatedSummaries(limit: number): Promise<SermonSummary[]> {
     return [...this.sermons.values()]
       .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
-      .slice(0, limit);
+      .slice(0, limit)
+      .map(toSermonSummary);
   }
 
   async getById(id: string): Promise<Sermon | null> {
@@ -346,6 +353,11 @@ export class InMemorySermonRepository implements SermonRepository {
       options.audioCleanupCandidateStoragePath
     );
   }
+}
+
+function toSermonSummary(sermon: Sermon): SermonSummary {
+  const { id, title, speaker, status, sourceLocale, updatedAt } = sermon;
+  return { id, title, speaker, status, sourceLocale, updatedAt };
 }
 
 function matchesRevision(

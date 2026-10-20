@@ -83,6 +83,7 @@ export function useAdminSearch(
 
   return {
     clear,
+    error: query.error,
     isFetching: query.isFetching,
     options,
     searchText,

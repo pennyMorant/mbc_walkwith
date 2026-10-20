@@ -2030,8 +2030,18 @@ GET /v1/admin/search?query=...
 Requires `dashboard:read`. The backend queries sermons, church-life content, and
 members only when the authenticated role owns the corresponding read permission.
 The response is validated by `adminSearchResponseSchema` and returns at most 15
-title-level projections with a resource type and permitted destination path. It does
+title-level projections with a resource type and a destination path that identifies
+the selected record through the `open` query parameter. It does
 not search giving, prayer text, care notes, or other sensitive content.
+
+Admin church-life detail loading uses:
+
+```text
+GET /v1/admin/life-posts/:postId
+```
+
+It requires `life_posts:read` and supports exact record opening from Dashboard and
+global search results.
 
 ### 11.3 Sermon Admin
 

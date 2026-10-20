@@ -19,12 +19,15 @@ import {
 } from "./dashboard_projections.js";
 
 type MinistryAnalyticsDependencies = {
-  sermons: Pick<SermonService, "countByStatus" | "listRecentlyUpdated">;
+  sermons: Pick<
+    SermonService,
+    "countByStatus" | "listRecentlyUpdatedSummaries"
+  >;
   lifePosts: Pick<
     LifePostService,
     | "countPosts"
     | "countByStatus"
-    | "listRecentlyUpdated"
+    | "listRecentlyUpdatedSummaries"
     | "summarizeEventParticipation"
   >;
   prayers: Pick<PrayerService, "countAdminByStatus">;
@@ -208,10 +211,10 @@ export class MinistryAnalyticsService {
   private async recentContent(role: AdminRole) {
     const [sermons, lifePosts] = await Promise.all([
       roleHasPermission(role, "sermons:read")
-        ? this.dependencies.sermons.listRecentlyUpdated(6)
+        ? this.dependencies.sermons.listRecentlyUpdatedSummaries(6)
         : Promise.resolve([]),
       roleHasPermission(role, "life_posts:read")
-        ? this.dependencies.lifePosts.listRecentlyUpdated(6)
+        ? this.dependencies.lifePosts.listRecentlyUpdatedSummaries(6)
         : Promise.resolve([])
     ]);
     return mergeRecentDashboardContent(sermons, lifePosts, 6);

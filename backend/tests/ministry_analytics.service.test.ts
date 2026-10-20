@@ -37,6 +37,16 @@ describe("MinistryAnalyticsService", () => {
       expect.objectContaining({ id: "active_jobs", status: "warning", value: 14 }),
       expect.objectContaining({ id: "failed_jobs", status: "error", value: 8 })
     ]);
+    expect(dashboard.recentContent).toEqual([
+      expect.objectContaining({
+        id: "life-1",
+        path: "/life-posts?open=life-1"
+      }),
+      expect.objectContaining({
+        id: "sermon-1",
+        path: "/sermons?open=sermon-1"
+      })
+    ]);
     expect(dependencies.giving.summarizeTransactions).toHaveBeenCalledWith(
       expect.objectContaining({ year: 2026 })
     );
@@ -56,7 +66,7 @@ describe("MinistryAnalyticsService", () => {
     expect(dependencies.sermons.countByStatus).not.toHaveBeenCalled();
     expect(dependencies.lifePosts.countPosts).not.toHaveBeenCalled();
     expect(dependencies.lifePosts.countByStatus).not.toHaveBeenCalled();
-    expect(dependencies.lifePosts.listRecentlyUpdated).not.toHaveBeenCalled();
+    expect(dependencies.lifePosts.listRecentlyUpdatedSummaries).not.toHaveBeenCalled();
     expect(
       dependencies.lifePosts.summarizeEventParticipation
     ).not.toHaveBeenCalled();
@@ -188,7 +198,16 @@ function fakeDependencies(options: {
 } = {}) {
   return {
     sermons: {
-      listRecentlyUpdated: vi.fn(async () => []),
+      listRecentlyUpdatedSummaries: vi.fn(async () => [
+        {
+          id: "sermon-1",
+          title: "Hope",
+          speaker: "Pastor",
+          status: "published",
+          sourceLocale: "en",
+          updatedAt: "2026-07-13T10:00:00.000Z"
+        }
+      ]),
       countByStatus: vi.fn(async (status: string) => {
         if (status === "draft" && options.countDraftSermons) {
           return options.countDraftSermons();
@@ -199,7 +218,16 @@ function fakeDependencies(options: {
       })
     },
     lifePosts: {
-      listRecentlyUpdated: vi.fn(async () => []),
+      listRecentlyUpdatedSummaries: vi.fn(async () => [
+        {
+          id: "life-1",
+          title: "Church gathering",
+          type: "event",
+          status: "published",
+          sourceLocale: "en",
+          updatedAt: "2026-07-13T11:00:00.000Z"
+        }
+      ]),
       countPosts: vi.fn(async () => 168),
       countByStatus: vi.fn(async () => 9),
       summarizeEventParticipation: vi.fn(async () => ({
