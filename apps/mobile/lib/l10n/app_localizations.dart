@@ -2020,6 +2020,18 @@ abstract class AppLocalizations {
   /// **'已报名的活动会显示在这里。'**
   String get myEventRegistrationsEmpty;
 
+  /// No description provided for @groupMaterialsTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'小组学习资料'**
+  String get groupMaterialsTitle;
+
+  /// No description provided for @groupMaterialsEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'目前还没有分配学习资料。'**
+  String get groupMaterialsEmpty;
+
   /// No description provided for @unreadCountSemanticLabel.
   ///
   /// In zh, this message translates to:

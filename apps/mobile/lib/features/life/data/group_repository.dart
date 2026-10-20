@@ -4,7 +4,9 @@ import '../../../core/api/api_client.dart';
 import '../../../core/config/app_config.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../domain/ministry_group.dart';
+import '../domain/group_material_assignment.dart';
 import 'dto/ministry_group_dto.dart';
+import 'dto/group_material_assignment_dto.dart';
 
 final groupRepositoryProvider = Provider<GroupRepository>((ref) {
   final config = ref.watch(appConfigProvider);
@@ -39,10 +41,28 @@ final myMinistryGroupsProvider = FutureProvider<List<MinistryGroup>>((
   return ref.watch(groupRepositoryProvider).getMyGroups(session);
 });
 
+final groupMaterialAssignmentsProvider =
+    FutureProvider.family<List<GroupMaterialAssignment>, String>((
+      ref,
+      groupId,
+    ) async {
+      final session = await ref.watch(memberSessionProvider.future);
+      if (session == null) return const [];
+      return ref
+          .watch(groupRepositoryProvider)
+          .getMaterialAssignments(groupId, session);
+    });
+
 abstract class GroupRepository {
+  const GroupRepository();
+
   Future<List<MinistryGroup>> getGroups(MemberSession? session);
   Future<MinistryGroup> getGroup(String groupId, MemberSession? session);
   Future<List<MinistryGroup>> getMyGroups(MemberSession session);
+  Future<List<GroupMaterialAssignment>> getMaterialAssignments(
+    String groupId,
+    MemberSession session,
+  ) async => const [];
   Future<void> applyToGroup(
     String groupId,
     MemberSession session, {
@@ -51,7 +71,7 @@ abstract class GroupRepository {
   Future<void> withdrawApplication(MinistryGroup group, MemberSession session);
 }
 
-class ApiGroupRepository implements GroupRepository {
+class ApiGroupRepository extends GroupRepository {
   const ApiGroupRepository({required this.apiClient});
 
   final ApiClient apiClient;
@@ -89,6 +109,28 @@ class ApiGroupRepository implements GroupRepository {
   }
 
   @override
+  Future<List<GroupMaterialAssignment>> getMaterialAssignments(
+    String groupId,
+    MemberSession session,
+  ) async {
+    final response = await apiClient.getJsonMapWithBearer(
+      '/member/groups/${Uri.encodeComponent(groupId)}/materials?limit=100',
+      session.accessToken,
+    );
+    final data = _groupDataFromEnvelope(response);
+    final items = data['items'];
+    if (items is! List<Object?> ||
+        items.any((item) => item is! Map<String, Object?>)) {
+      throw const FormatException('Group material items must be objects.');
+    }
+    return items
+        .cast<Map<String, Object?>>()
+        .map(GroupMaterialAssignmentDto.fromJson)
+        .map((item) => item.toDomain())
+        .toList(growable: false);
+  }
+
+  @override
   Future<void> applyToGroup(
     String groupId,
     MemberSession session, {
@@ -120,7 +162,7 @@ class ApiGroupRepository implements GroupRepository {
   }
 }
 
-class MockGroupRepository implements GroupRepository {
+class MockGroupRepository extends GroupRepository {
   final Set<String> _submittedGroups = <String>{};
 
   @override
@@ -163,6 +205,12 @@ class MockGroupRepository implements GroupRepository {
     final groups = await getGroups(session);
     return groups.where((group) => group.isMember).toList(growable: false);
   }
+
+  @override
+  Future<List<GroupMaterialAssignment>> getMaterialAssignments(
+    String groupId,
+    MemberSession session,
+  ) async => const [];
 
   @override
   Future<void> applyToGroup(

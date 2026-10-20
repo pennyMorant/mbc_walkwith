@@ -259,7 +259,7 @@ final _scheduledAssignment = ServingAssignment(
   responseNote: '',
 );
 
-class _FailingGroupRepository implements GroupRepository {
+class _FailingGroupRepository extends GroupRepository {
   @override
   Future<List<MinistryGroup>> getGroups(MemberSession? session) async {
     return const [_openGroup];

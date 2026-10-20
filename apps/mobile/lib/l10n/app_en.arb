@@ -479,6 +479,8 @@
   "notificationInboxTitle": "Recent notifications",
   "myEventRegistrationsTitle": "My event registrations",
   "myEventRegistrationsEmpty": "Your event registrations will appear here.",
+  "groupMaterialsTitle": "Group learning materials",
+  "groupMaterialsEmpty": "No learning materials have been assigned yet.",
   "unreadCountSemanticLabel": "{label}, {count, plural, =1{1 unread item} other{{count} unread items}}",
   "@unreadCountSemanticLabel": {
     "placeholders": {

@@ -9,6 +9,8 @@ import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/group_repository.dart';
 import '../domain/ministry_group.dart';
+import '../domain/group_material_assignment.dart';
+import '../../../shared/utils/app_formatters.dart';
 import 'widgets/life_error_view.dart';
 import 'widgets/ministry_group_card.dart';
 
@@ -27,7 +29,6 @@ class _GroupDetailPageState extends ConsumerState<GroupDetailPage> {
   @override
   Widget build(BuildContext context) {
     final groupAsync = ref.watch(ministryGroupByIdProvider(widget.groupId));
-
     return Scaffold(
       appBar: SecondaryAppBar(title: '', onBack: () => _goBack(context)),
       body: groupAsync.when(
@@ -36,25 +37,47 @@ class _GroupDetailPageState extends ConsumerState<GroupDetailPage> {
           onRetry: () =>
               ref.invalidate(ministryGroupByIdProvider(widget.groupId)),
         ),
-        data: (group) => RefreshIndicator(
-          onRefresh: () =>
-              ref.refresh(ministryGroupByIdProvider(widget.groupId).future),
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
-            children: [
-              MinistryGroupCard(
-                group: group,
-                isSubmitting: _isSubmitting,
-                descriptionMaxLines: null,
-                onApply: group.canApply ? () => _apply(group) : null,
-                onWithdraw: group.hasSubmittedApplication
-                    ? () => _withdraw(group)
-                    : null,
-              ),
-            ],
-          ),
-        ),
+        data: (group) {
+          final materialsAsync = group.isMember
+              ? ref.watch(groupMaterialAssignmentsProvider(widget.groupId))
+              : const AsyncData<List<GroupMaterialAssignment>>([]);
+          return RefreshIndicator(
+            onRefresh: () async {
+              final groupRefresh = ref.refresh(
+                ministryGroupByIdProvider(widget.groupId).future,
+              );
+              if (group.isMember) {
+                await Future.wait([
+                  groupRefresh,
+                  ref.refresh(
+                    groupMaterialAssignmentsProvider(widget.groupId).future,
+                  ),
+                ]);
+              } else {
+                await groupRefresh;
+              }
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+              children: [
+                MinistryGroupCard(
+                  group: group,
+                  isSubmitting: _isSubmitting,
+                  descriptionMaxLines: null,
+                  onApply: group.canApply ? () => _apply(group) : null,
+                  onWithdraw: group.hasSubmittedApplication
+                      ? () => _withdraw(group)
+                      : null,
+                ),
+                if (group.isMember) ...[
+                  const SizedBox(height: 16),
+                  _GroupMaterialsSection(materialsAsync: materialsAsync),
+                ],
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -103,9 +126,8 @@ class _GroupDetailPageState extends ConsumerState<GroupDetailPage> {
       ref.invalidate(ministryGroupsProvider);
       ref.invalidate(myMinistryGroupsProvider);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(successMessage)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(successMessage)));
       }
     } catch (error) {
       if (mounted) {
@@ -126,5 +148,53 @@ class _GroupDetailPageState extends ConsumerState<GroupDetailPage> {
       return;
     }
     context.goNamed(AppRouteNames.life);
+  }
+}
+
+class _GroupMaterialsSection extends StatelessWidget {
+  const _GroupMaterialsSection({required this.materialsAsync});
+
+  final AsyncValue<List<GroupMaterialAssignment>> materialsAsync;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.groupMaterialsTitle,
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 10),
+            materialsAsync.when(
+              loading: () => const LinearProgressIndicator(),
+              error: (error, stackTrace) => Text(formatApiErrorMessage(error)),
+              data: (materials) => materials.isEmpty
+                  ? Text(l10n.groupMaterialsEmpty)
+                  : Column(
+                      children: [
+                        for (final material in materials)
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: const Icon(Icons.menu_book_outlined),
+                            title: Text(material.title),
+                            subtitle: material.dueAt == null
+                                ? null
+                                : Text(
+                                    formatDateOnly(context, material.dueAt!),
+                                  ),
+                          ),
+                      ],
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

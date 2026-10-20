@@ -72,7 +72,7 @@ void main() {
   });
 }
 
-class _FailingGroupRepository implements GroupRepository {
+class _FailingGroupRepository extends GroupRepository {
   @override
   Future<List<MinistryGroup>> getGroups(MemberSession? session) async {
     throw StateError('group list failed');

@@ -25,6 +25,14 @@ This document covers church life content, weekly bulletin cards, event registrat
 
 ## Event Registration SDK
 
+Member group learning materials:
+
+- `GET /v1/member/groups/:groupId/materials?limit=100`
+- Only active members or leaders may read the assignment list.
+- The assignment references a reading plan, sermon discussion guide, course,
+  or manual by canonical type and ID; the App does not copy source content into
+  the group model.
+
 Mobile repository methods:
 
 - `getLifePosts`

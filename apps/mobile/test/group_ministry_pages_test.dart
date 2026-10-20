@@ -115,7 +115,7 @@ Widget _localizedApp({
   );
 }
 
-class _RecordingGroupRepository implements GroupRepository {
+class _RecordingGroupRepository extends GroupRepository {
   String? withdrawnGroupId;
 
   @override

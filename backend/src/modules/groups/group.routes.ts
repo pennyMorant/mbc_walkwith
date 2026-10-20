@@ -1,6 +1,7 @@
 import {
   groupApplicationRequestSchema,
   groupApplicationWithdrawalRequestSchema,
+  groupMaterialAssignmentListQuerySchema,
   ministryGroupListQuerySchema,
   type GroupApplication
 } from "@mbc/api-contracts";
@@ -54,6 +55,22 @@ export async function registerGroupRoutes(
     "/v1/me/groups",
     { preHandler: memberPreHandler },
     async (request) => ok({ items: await service.listMine(request.member!.id) })
+  );
+
+  app.get(
+    "/v1/member/groups/:groupId/materials",
+    { preHandler: memberPreHandler },
+    async (request) => {
+      const params = groupParamsSchema.parse(request.params);
+      const query = groupMaterialAssignmentListQuerySchema.parse(request.query);
+      return ok({
+        items: await service.listMaterialAssignmentsForMember(
+          params.groupId,
+          request.member!.id,
+          query
+        )
+      });
+    }
   );
 
   app.post(

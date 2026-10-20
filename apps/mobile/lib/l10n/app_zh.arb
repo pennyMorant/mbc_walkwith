@@ -479,6 +479,8 @@
   "notificationInboxTitle": "最近通知",
   "myEventRegistrationsTitle": "我的活动报名",
   "myEventRegistrationsEmpty": "已报名的活动会显示在这里。",
+  "groupMaterialsTitle": "小组学习资料",
+  "groupMaterialsEmpty": "目前还没有分配学习资料。",
   "unreadCountSemanticLabel": "{label}，{count} 条未读",
   "@unreadCountSemanticLabel": {
     "placeholders": {

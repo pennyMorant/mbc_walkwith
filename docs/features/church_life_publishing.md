@@ -65,6 +65,12 @@ come from the notification inbox owner. Registration cards use the member Life
 projection's `registrationSummary`; the App does not persist a second
 registration truth.
 
+Active group members may read assignments through
+`GET /v1/member/groups/:groupId/materials`. Membership authorization belongs
+to the backend; the App requests assignments only after the group projection
+confirms active membership and renders the assignment title and due date inside
+the group detail surface.
+
 App 展示 Life 首页、分类筛选、详情、报名/课程/小组等行动入口。App 不决定内容发布状态、可见性、展示权重或未读状态。展示权重不显示为 App chip；App 只展示本地化后的内容类型和用户状态。
 
 ## Admin Web Surface Boundary

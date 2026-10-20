@@ -1018,6 +1018,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get myEventRegistrationsEmpty => '已报名的活动会显示在这里。';
 
   @override
+  String get groupMaterialsTitle => '小组学习资料';
+
+  @override
+  String get groupMaterialsEmpty => '目前还没有分配学习资料。';
+
+  @override
   String unreadCountSemanticLabel(String label, int count) {
     return '$label，$count 条未读';
   }
@@ -2926,6 +2932,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get myEventRegistrationsEmpty => '已报名的活动会显示在这里。';
 
   @override
+  String get groupMaterialsTitle => '小组学习资料';
+
+  @override
+  String get groupMaterialsEmpty => '目前还没有分配学习资料。';
+
+  @override
   String unreadCountSemanticLabel(String label, int count) {
     return '$label，$count 条未读';
   }
@@ -4832,6 +4844,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get myEventRegistrationsEmpty => '已報名的活動會顯示在這裡。';
+
+  @override
+  String get groupMaterialsTitle => '小組學習資料';
+
+  @override
+  String get groupMaterialsEmpty => '目前還沒有分配學習資料。';
 
   @override
   String unreadCountSemanticLabel(String label, int count) {

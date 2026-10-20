@@ -1117,6 +1117,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Tus inscripciones a eventos aparecerán aquí.';
 
   @override
+  String get groupMaterialsTitle => 'Materiales de aprendizaje del grupo';
+
+  @override
+  String get groupMaterialsEmpty =>
+      'Aún no se han asignado materiales de aprendizaje.';
+
+  @override
   String unreadCountSemanticLabel(String label, int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

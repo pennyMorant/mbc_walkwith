@@ -235,6 +235,21 @@ export class GroupService {
     return this.repository.listMaterialAssignments(groupId, query);
   }
 
+  async listMaterialAssignmentsForMember(
+    groupId: string,
+    userId: string,
+    query: GroupMaterialAssignmentListQuery
+  ) {
+    const membership = await this.repository.getMembershipStatus(
+      groupId,
+      userId
+    );
+    if (membership !== "active" && membership !== "leader") {
+      throw groupNotFound(groupId);
+    }
+    return this.repository.listMaterialAssignments(groupId, query);
+  }
+
   async listMemberships(groupId: string, query: GroupMembershipListQuery) {
     await this.requireGroup(groupId);
     return this.repository.listMemberships(groupId, query);
