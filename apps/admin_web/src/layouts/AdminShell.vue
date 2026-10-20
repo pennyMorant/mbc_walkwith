@@ -99,6 +99,13 @@ const changePasswordMutation = useMutation({
           </div>
         </div>
       </div>
+      <div v-if="mobile" class="px-4 pb-4">
+        <AdminCommandSearch
+          fluid
+          :items="visibleItems"
+          @navigate="navigateTo"
+        />
+      </div>
       <div class="admin-navigation px-2 pb-5">
         <section v-for="group in visibleGroups" :key="group.id" class="admin-navigation__group">
           <div v-if="group.titleKey" class="admin-navigation__label px-3 mb-1">

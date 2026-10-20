@@ -89,7 +89,9 @@ Surface rule:
 - The shell groups permission-filtered routes into Dashboard, Content, Ministry,
   Giving, People, and System workspaces. Its command search uses the same shared
   navigation registry and the role-filtered `/v1/admin/search` projection, so hidden
-  routes or unauthorized resources cannot reappear through search.
+  routes or unauthorized resources cannot reappear through search. Desktop keeps
+  search in the app bar; compact layouts reuse the same component and query inside
+  the navigation drawer instead of maintaining a second mobile search flow.
 - Admin authentication changes clear the shared query cache before another session
   can render role-scoped results. Search and recent-content links identify a record
   with `?open=<resourceId>`; the destination Feature owns detail loading and errors.
@@ -135,7 +137,8 @@ Surface rule:
 - Notification delivery：通知任务、失败重试、取消和审计。
 - Ministry analytics：Dashboard 展示后端按角色过滤的今日待办、精确聚合指标、
   最近更新内容、任务健康、fresh/stale 快照和 drill-down；Admin 只负责本地化和
-  格式化，不自行推算指标或跨 Feature 合并列表。
+  格式化，不自行推算指标或跨 Feature 合并列表。最近更新在桌面使用表格，在窄屏
+  使用同一数据源的紧凑信息行，二者必须打开同一条 Feature 深链。
   趋势和统计导出尚未接入。
 - Public landing settings：Settings 页面维护官网身份、导航、新朋友入口、
   固定日程、公开人员介绍、聚会地图链接、联系方式、社交媒体和 App 下载入口；

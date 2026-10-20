@@ -7,7 +7,13 @@ import { useI18n } from "@/core/i18n/i18n";
 import type { AdminNavigationItem } from "./admin_navigation";
 import { type AdminSearchOption, useAdminSearch } from "./use_admin_search";
 
-const props = defineProps<{ items: AdminNavigationItem[] }>();
+const props = withDefaults(
+  defineProps<{
+    fluid?: boolean;
+    items: AdminNavigationItem[];
+  }>(),
+  { fluid: false }
+);
 const emit = defineEmits<{ navigate: [path: string] }>();
 const { t } = useI18n();
 const {
@@ -44,7 +50,10 @@ function select(option: AdminSearchOption | null) {
     hide-details="auto"
     clearable
     return-object
-    class="admin-command-search"
+    :class="[
+      'admin-command-search',
+      { 'admin-command-search--fluid': fluid }
+    ]"
     @update:model-value="select"
   />
 </template>
@@ -54,5 +63,11 @@ function select(option: AdminSearchOption | null) {
   width: min(38vw, 520px);
   max-width: 520px;
   margin-inline: 24px;
+}
+
+.admin-command-search--fluid {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
 }
 </style>
