@@ -3897,6 +3897,11 @@ Object.assign(messages.en, {
   "settings.landing.actionKind.email": "Email",
   "settings.landing.actionTarget.same_tab": "Current tab",
   "settings.landing.actionTarget.new_tab": "New tab",
+  "settings.landing.brandAction": "Brand home action",
+  "settings.landing.navigation": "Desktop navigation",
+  "settings.landing.headerActions": "Header actions",
+  "settings.landing.mobileActions": "Mobile navigation",
+  "settings.landing.footerActions": "Footer actions",
   "settings.landing.eventsManagedInLife":
     "Event records are created, reviewed, and published in Life Posts. This setting only controls section copy and display count."
 });
@@ -3957,6 +3962,11 @@ Object.assign(messages.es, {
   "settings.landing.actionKind.email": "Correo electrónico",
   "settings.landing.actionTarget.same_tab": "Pestaña actual",
   "settings.landing.actionTarget.new_tab": "Nueva pestaña",
+  "settings.landing.brandAction": "Acción de inicio de la marca",
+  "settings.landing.navigation": "Navegación de escritorio",
+  "settings.landing.headerActions": "Acciones del encabezado",
+  "settings.landing.mobileActions": "Navegación móvil",
+  "settings.landing.footerActions": "Acciones del pie de página",
   "settings.landing.eventsManagedInLife":
     "Los eventos se crean, revisan y publican en Contenido de vida. Aquí solo se configura el texto de la sección y la cantidad mostrada."
 });
@@ -4017,6 +4027,11 @@ Object.assign(messages["zh-Hans"], {
   "settings.landing.actionKind.email": "邮箱",
   "settings.landing.actionTarget.same_tab": "当前页面",
   "settings.landing.actionTarget.new_tab": "新页面",
+  "settings.landing.brandAction": "品牌首页按钮",
+  "settings.landing.navigation": "桌面导航",
+  "settings.landing.headerActions": "顶部按钮",
+  "settings.landing.mobileActions": "移动端导航",
+  "settings.landing.footerActions": "页脚按钮",
   "settings.landing.eventsManagedInLife":
     "活动资料在生活内容中创建、审核和发布。这里仅设置区块文案和显示数量。"
 });
@@ -4077,6 +4092,11 @@ Object.assign(messages["zh-Hant"], {
   "settings.landing.actionKind.email": "電子郵件",
   "settings.landing.actionTarget.same_tab": "目前頁面",
   "settings.landing.actionTarget.new_tab": "新頁面",
+  "settings.landing.brandAction": "品牌首頁按鈕",
+  "settings.landing.navigation": "桌面導覽",
+  "settings.landing.headerActions": "頂部按鈕",
+  "settings.landing.mobileActions": "行動版導覽",
+  "settings.landing.footerActions": "頁尾按鈕",
   "settings.landing.eventsManagedInLife":
     "活動資料在生活內容中建立、審核和發佈。這裡只設定區塊文案和顯示數量。"
 });

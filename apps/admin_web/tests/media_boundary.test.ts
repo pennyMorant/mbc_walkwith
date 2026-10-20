@@ -90,6 +90,11 @@ describe("admin media boundary", () => {
       "settings.landing.actionKind.email",
       "settings.landing.actionTarget.same_tab",
       "settings.landing.actionTarget.new_tab",
+      "settings.landing.brandAction",
+      "settings.landing.navigation",
+      "settings.landing.headerActions",
+      "settings.landing.mobileActions",
+      "settings.landing.footerActions",
       "relocated_source"
     ]) {
       expect(messages.match(new RegExp(`"${key}"`, "g"))?.length).toBe(4);

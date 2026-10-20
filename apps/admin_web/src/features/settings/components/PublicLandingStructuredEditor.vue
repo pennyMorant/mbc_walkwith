@@ -10,6 +10,7 @@ import type {
 import { computed } from "vue";
 
 import { publicLandingStructuredSection } from "../public_landing_editor";
+import PublicLandingActionSettingEditor from "./PublicLandingActionSettingEditor.vue";
 import PublicLandingEventsEditor from "./PublicLandingEventsEditor.vue";
 import PublicLandingGalleryEditor from "./PublicLandingGalleryEditor.vue";
 import PublicLandingHeroEditor from "./PublicLandingHeroEditor.vue";
@@ -47,7 +48,18 @@ const gallery = computed({
 </script>
 
 <template>
-  <PublicLandingHeroEditor v-if="section === 'hero'" v-model="hero" />
+  <PublicLandingActionSettingEditor
+    v-if="
+      section === 'brandAction' ||
+      section === 'navigation' ||
+      section === 'headerActions' ||
+      section === 'mobileActions' ||
+      section === 'footerActions'
+    "
+    v-model="model"
+    :section="section"
+  />
+  <PublicLandingHeroEditor v-else-if="section === 'hero'" v-model="hero" />
   <PublicLandingServiceEditor
     v-else-if="section === 'service'"
     v-model="service"

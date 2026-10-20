@@ -9,6 +9,15 @@ import {
 
 describe("public landing structured editor", () => {
   test("recognizes base and localized structured settings", () => {
+    expect(publicLandingStructuredSection("publicLanding.brandAction")).toBe(
+      "brandAction"
+    );
+    expect(publicLandingStructuredSection("publicLanding.es.navigation")).toBe(
+      "navigation"
+    );
+    expect(
+      publicLandingStructuredSection("publicLanding.zh-Hant.footerActions")
+    ).toBe("footerActions");
     expect(publicLandingStructuredSection("publicLanding.hero")).toBe("hero");
     expect(publicLandingStructuredSection("publicLanding.en.service")).toBe(
       "service"

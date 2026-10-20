@@ -42,7 +42,7 @@
 
 ## 8. Admin Web Surface Boundary
 
-Settings 页面为 Hero、主日聚会、固定日程、人员介绍、照片墙和近期活动区块提供结构化编辑器。Hero、主日聚会、人物和照片墙通过统一媒体选择器上传或复用 R2 图片，不手填 object key。Hero 与主日聚会的行动按钮、聚会事实和展示顺序同样由结构化控件维护，保存时仍一次提交完整 setting。活动继续在 Life 内容页面创建、审核和发布，不在 Settings 中重复录入。
+Settings 页面为品牌首页按钮、桌面/移动导航、顶部/页脚入口、Hero、主日聚会、固定日程、人员介绍、照片墙和近期活动区块提供结构化编辑器。所有行动入口共享同一个字段组件，统一维护标题、说明、目标、类型、打开方式、图标和排序。Hero、主日聚会、人物和照片墙通过统一媒体选择器上传或复用 R2 图片，不手填 object key。Hero 与主日聚会的行动按钮、聚会事实和展示顺序同样由结构化控件维护，保存时仍一次提交完整 setting。活动继续在 Life 内容页面创建、审核和发布，不在 Settings 中重复录入。
 
 ## 9. Backend Service Boundary
 
@@ -95,6 +95,7 @@ Settings 中解析 Hero、聚会、人员和照片墙媒体引用；Media 模块
 - 四种 locale 均返回完整 Landing contract。
 - Settings 可校验 schedule、people 和 events 配置。
 - Admin 可结构化维护 Hero 与主日聚会的文案、媒体、行动按钮和聚会事实，无需编辑原始 JSON。
+- 品牌首页、桌面/移动导航、顶部和页脚行动入口复用同一结构化编辑契约。
 - 只有公开、已发布、未结束的 event 被聚合。
 - 活动按 `sort` 高值优先；相同优先级按开始时间升序、再按稳定 ID 排序，并受 `maxItems` 限制。
 - 活动时间固定使用 `church.timezone`，不随访客设备时区改变。

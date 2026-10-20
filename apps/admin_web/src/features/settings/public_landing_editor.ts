@@ -1,4 +1,9 @@
 export type PublicLandingStructuredSection =
+  | "brandAction"
+  | "navigation"
+  | "headerActions"
+  | "mobileActions"
+  | "footerActions"
   | "hero"
   | "service"
   | "schedule"
@@ -10,7 +15,7 @@ export function publicLandingStructuredSection(
   settingKey: string
 ): PublicLandingStructuredSection | null {
   const match = settingKey.match(
-    /^publicLanding(?:\.(?:en|es|zh-Hans|zh-Hant))?\.(hero|service|schedule|people|events|gallery)$/
+    /^publicLanding(?:\.(?:en|es|zh-Hans|zh-Hant))?\.(brandAction|navigation|headerActions|mobileActions|footerActions|hero|service|schedule|people|events|gallery)$/
   );
   return (match?.[1] as PublicLandingStructuredSection | undefined) ?? null;
 }
