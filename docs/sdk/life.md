@@ -83,6 +83,7 @@ Mobile repository methods should expose published content only:
 
 - `getLifePosts`
 - `getLifePostById`
+- `getLatestBulletin`
 - `markLifePostRead`
 
 Rules:
@@ -94,9 +95,11 @@ Rules:
 - `getLifePosts` accepts `LifePostListRequest` for `limit`, `query`, `type`,
   `from`, and `to`. App UI should pass structured requests instead of building
   route query strings in widgets.
-- Life weekly tab requests the selected week. Other Life tabs request the
-  selected month. The Sunday/weekly hero loads from the latest visible life
-  posts and is not filtered by the currently selected tab period.
+- Life weekly tab requests the current natural week. Other Life tabs request
+  the selected month. The App requests the Sunday/weekly hero through
+  `GET /life/bulletin/latest?from=<iso>&to=<iso>` or its authenticated member
+  equivalent. The backend selects the highest-priority current-week bulletin;
+  the App must not infer it from a truncated general feed or show an older week.
 - Public life content may be cached; member-only or group-only content must respect visibility rules before use.
 - `sort` is backend-owned display ordering metadata. App repositories
   may cache and preserve it for ordered fallback lists, but App UI must not

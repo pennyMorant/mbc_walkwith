@@ -4,7 +4,7 @@ import '../dto/life_post_dto.dart';
 import '../mock_life_data.dart' as mock;
 import 'life_remote_data_source.dart';
 
-class MockLifeRemoteDataSource implements LifeRemoteDataSource {
+class MockLifeRemoteDataSource extends LifeRemoteDataSource {
   final Map<String, _MockRegistration> _registrations =
       <String, _MockRegistration>{};
   final Map<String, DateTime> _readAtByPostId = <String, DateTime>{};

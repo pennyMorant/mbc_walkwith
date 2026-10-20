@@ -15,7 +15,7 @@ const _cachedLifePostDto = LifePostDto(
   ctaUrl: 'https://example.com/fellowship',
 );
 
-class _EmptyLifeRemoteDataSource implements LifeRemoteDataSource {
+class _EmptyLifeRemoteDataSource extends LifeRemoteDataSource {
   @override
   Future<List<LifePostDto>> fetchLifePosts({
     String? accessToken,
@@ -82,7 +82,7 @@ class _EmptyLifeRemoteDataSource implements LifeRemoteDataSource {
   }
 }
 
-class _FailingLifeRemoteDataSource implements LifeRemoteDataSource {
+class _FailingLifeRemoteDataSource extends LifeRemoteDataSource {
   @override
   Future<List<LifePostDto>> fetchLifePosts({
     String? accessToken,
@@ -185,7 +185,7 @@ class _ContractFailingLifeRemoteDataSource
   }
 }
 
-class _NotFoundLifeRemoteDataSource implements LifeRemoteDataSource {
+class _NotFoundLifeRemoteDataSource extends LifeRemoteDataSource {
   @override
   Future<List<LifePostDto>> fetchLifePosts({
     String? accessToken,
@@ -256,7 +256,7 @@ class _NotFoundLifeRemoteDataSource implements LifeRemoteDataSource {
   }
 }
 
-class _StaticLifeRemoteDataSource implements LifeRemoteDataSource {
+class _StaticLifeRemoteDataSource extends LifeRemoteDataSource {
   const _StaticLifeRemoteDataSource(this.posts);
 
   final List<LifePostDto> posts;
@@ -333,7 +333,7 @@ class _StaticLifeRemoteDataSource implements LifeRemoteDataSource {
   }
 }
 
-class _RecordingLifeRemoteDataSource implements LifeRemoteDataSource {
+class _RecordingLifeRemoteDataSource extends LifeRemoteDataSource {
   const _RecordingLifeRemoteDataSource(this.posts);
 
   final List<LifePostDto> posts;

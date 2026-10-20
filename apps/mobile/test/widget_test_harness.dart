@@ -540,7 +540,7 @@ class _TestHarness {
   Future<void> close() => database.close();
 }
 
-class _SingleLifePostRepository implements LifeRepository {
+class _SingleLifePostRepository extends LifeRepository {
   const _SingleLifePostRepository(
     this.post, {
     this.updateError,

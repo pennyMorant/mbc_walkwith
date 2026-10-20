@@ -9,6 +9,7 @@ import '../../../core/settings/app_settings_repository.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/utils/date_period.dart';
 import '../../../shared/widgets/period_picker_button.dart';
+import '../../../shared/widgets/app_chip.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../../shell/widgets/shell_app_bar.dart';
 import '../data/care_repository.dart';
@@ -23,7 +24,6 @@ import 'widgets/life_dashboard_tab_bar.dart';
 import 'widgets/life_dashboard_view.dart';
 import 'widgets/life_error_view.dart';
 import 'widgets/life_loading_view.dart';
-import 'widgets/life_post_classification.dart';
 
 class LifeTab extends ConsumerStatefulWidget {
   const LifeTab({super.key});
@@ -68,8 +68,8 @@ class _LifeTabState extends ConsumerState<LifeTab> {
       ref.watch(lifePostListProvider(monthRequest)),
     );
     final heroPost = ref
-        .watch(lifePostListProvider(_latestHeroRequest))
-        .maybeWhen(data: lifePostHero, orElse: () => null);
+        .watch(latestLifeBulletinProvider(weekRequest))
+        .maybeWhen(data: (post) => post, orElse: () => null);
     final memberSession = ref
         .watch(memberSessionProvider)
         .maybeWhen(data: (session) => session, orElse: () => null);
@@ -91,11 +91,16 @@ class _LifeTabState extends ConsumerState<LifeTab> {
           ),
           Padding(
             padding: const EdgeInsetsDirectional.only(end: 8),
-            child: PeriodPickerButton(
-              period: _monthPeriod,
-              onChanged: _changeMonth,
-              labelBuilder: _lifeMonthLabel,
-            ),
+            child: _selectedTab == LifeDashboardTab.week
+                ? AppChip(
+                    label: l10n.lifeTabWeek,
+                    variant: AppChipVariant.filled,
+                  )
+                : PeriodPickerButton(
+                    period: _monthPeriod,
+                    onChanged: _changeMonth,
+                    labelBuilder: _lifeMonthLabel,
+                  ),
           ),
         ],
       ),
@@ -165,7 +170,7 @@ Future<void> _refreshLife(
     lifePostListProvider(monthRequest).future,
   );
   final refreshedHero = ref.refresh(
-    lifePostListProvider(_latestHeroRequest).future,
+    latestLifeBulletinProvider(weekRequest).future,
   );
   await Future.wait([refreshedWeekPosts, refreshedMonthPosts, refreshedHero]);
   _refreshLifeSupportData(ref);
@@ -190,8 +195,6 @@ bool _lifeRefreshNotificationPredicate(ScrollNotification notification) {
 }
 
 const _refreshTopEdgeTolerance = 24.0;
-const _latestHeroRequest = LifePostListRequest(limit: 50);
-
 List<LifePost> _postsOrEmpty(AsyncValue<List<LifePost>> postsAsync) {
   return postsAsync.maybeWhen(data: (posts) => posts, orElse: () => const []);
 }

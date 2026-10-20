@@ -53,6 +53,16 @@ final lifePostsProvider = FutureProvider<List<LifePost>>((ref) {
   return ref.watch(lifeRepositoryProvider).getLifePosts(session: session);
 });
 
+final latestLifeBulletinProvider =
+    FutureProvider.family<LifePost?, LifePostListRequest>((ref, request) {
+      final session = ref
+          .watch(memberSessionProvider)
+          .maybeWhen(data: (session) => session, orElse: () => null);
+      return ref
+          .watch(lifeRepositoryProvider)
+          .getLatestBulletin(session: session, request: request);
+    });
+
 final lifePostByIdProvider = FutureProvider.family<LifePost?, String>((
   ref,
   postId,

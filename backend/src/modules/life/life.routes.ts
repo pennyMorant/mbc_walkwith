@@ -3,6 +3,7 @@ import {
   eventCheckInCodeCheckInRequestSchema,
   eventRegistrationMemberUpdateRequestSchema,
   eventRegistrationRequestSchema,
+  lifeLatestBulletinQuerySchema,
   lifePostListQuerySchema
 } from "@mbc/api-contracts";
 import type { FastifyInstance } from "fastify";
@@ -36,6 +37,21 @@ export async function registerLifeRoutes(
     return ok(await localizePosts(posts, contentLocaleFromHeader(request.headers["accept-language"]), service, contentLocalizationService));
   });
 
+  app.get("/v1/life/bulletin/latest", async (request) => {
+    const query = lifeLatestBulletinQuerySchema.parse(request.query);
+    const post = await service.latestBulletinPublic(query);
+    return ok(
+      post
+        ? await localizePost(
+            post,
+            contentLocaleFromHeader(request.headers["accept-language"]),
+            service,
+            contentLocalizationService
+          )
+        : null
+    );
+  });
+
   app.get("/v1/life/posts/:postId", async (request, reply) => {
     const params = postParamsSchema.parse(request.params);
     const post = await service.getByIdForMember(params.postId);
@@ -51,6 +67,28 @@ export async function registerLifeRoutes(
     async (request) => {
       const query = lifePostListQuerySchema.parse(request.query);
       return ok(await localizePosts(await service.listForMember(query, request.member!.id), contentLocaleFromHeader(request.headers["accept-language"]), service, contentLocalizationService));
+    }
+  );
+
+  app.get(
+    "/v1/member/life/bulletin/latest",
+    { preHandler: memberPreHandler },
+    async (request) => {
+      const query = lifeLatestBulletinQuerySchema.parse(request.query);
+      const post = await service.latestBulletinForMember(
+        query,
+        request.member!.id
+      );
+      return ok(
+        post
+          ? await localizePost(
+              post,
+              contentLocaleFromHeader(request.headers["accept-language"]),
+              service,
+              contentLocalizationService
+            )
+          : null
+      );
     }
   );
 

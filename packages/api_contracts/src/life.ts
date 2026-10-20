@@ -95,6 +95,11 @@ export const lifePostListQuerySchema = z.object({
   to: z.string().datetime().optional()
 });
 
+export const lifeLatestBulletinQuerySchema = z.object({
+  from: z.string().datetime(),
+  to: z.string().datetime()
+});
+
 export const lifePostUpsertRequestSchema = z.object({
   sourceLocale: contentLocaleSchema.default("zh-Hans"),
   type: lifePostTypeSchema,
@@ -263,6 +268,9 @@ export type EventRegistrationSummary = z.infer<
 export type LifePost = z.infer<typeof lifePostSchema>;
 export type PublicLifePost = z.infer<typeof publicLifePostSchema>;
 export type LifePostListQuery = z.infer<typeof lifePostListQuerySchema>;
+export type LifeLatestBulletinQuery = z.infer<
+  typeof lifeLatestBulletinQuerySchema
+>;
 export type LifePostSort = z.infer<typeof lifePostSortSchema>;
 export type LifePostUpsertRequest = z.infer<
   typeof lifePostUpsertRequestSchema

@@ -138,7 +138,7 @@ Future<void> _pumpUntilFound(
   throw TestFailure('Timed out waiting for $finder');
 }
 
-class _RefreshAwareLifeRepository implements LifeRepository {
+class _RefreshAwareLifeRepository extends LifeRepository {
   bool _nextCallIsRefresh = false;
   final List<LifePostListRequest> requests = [];
   final List<Completer<List<LifePost>>> _refreshCompleters = [];

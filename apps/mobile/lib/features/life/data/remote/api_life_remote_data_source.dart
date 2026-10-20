@@ -4,7 +4,7 @@ import '../dto/life_post_dto.dart';
 import '../dto/life_post_json_reader.dart';
 import 'life_remote_data_source.dart';
 
-class ApiLifeRemoteDataSource implements LifeRemoteDataSource {
+class ApiLifeRemoteDataSource extends LifeRemoteDataSource {
   const ApiLifeRemoteDataSource({required this.apiClient});
 
   final ApiClient apiClient;
@@ -46,6 +46,31 @@ class ApiLifeRemoteDataSource implements LifeRemoteDataSource {
   }
 
   @override
+  Future<LifePostDto?> fetchLatestBulletin({
+    String? accessToken,
+    required LifePostListRequest request,
+  }) async {
+    final parameters = request.toQueryParameters();
+    final query = Uri(
+      queryParameters: {'from': parameters['from'], 'to': parameters['to']},
+    ).query;
+    final path = accessToken == null
+        ? '/life/bulletin/latest?$query'
+        : '/member/life/bulletin/latest?$query';
+    final response = accessToken == null
+        ? await apiClient.getJsonMap(path)
+        : await apiClient.getJsonMapWithBearer(path, accessToken);
+    final data = response['data'];
+    if (data == null) return null;
+    if (data is! Map<String, Object?>) {
+      throw const FormatException(
+        'Latest bulletin response data must be an object or null.',
+      );
+    }
+    return LifePostDto.fromJson(data);
+  }
+
+  @override
   Future<LifePostDto> markLifePostRead(
     String postId,
     String accessToken,
@@ -71,11 +96,14 @@ class ApiLifeRemoteDataSource implements LifeRemoteDataSource {
     String? note,
   }) async {
     final encodedPostId = _lifePostPathSegment(postId);
-    final response = await apiClient
-        .postJsonMapWithBearer('/member/life/posts/$encodedPostId/register', {
-          'partySize': partySize,
-          if (note != null && note.trim().isNotEmpty) 'note': note.trim(),
-        }, accessToken);
+    final response = await apiClient.postJsonMapWithBearer(
+      '/member/life/posts/$encodedPostId/register',
+      {
+        'partySize': partySize,
+        if (note != null && note.trim().isNotEmpty) 'note': note.trim(),
+      },
+      accessToken,
+    );
     final data = response['data'];
     if (data is! Map<String, Object?>) {
       throw const FormatException('Life post response data must be an object.');

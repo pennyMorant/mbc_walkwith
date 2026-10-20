@@ -7,7 +7,7 @@ import 'life_repository_contract.dart';
 import 'local/life_local_data_source.dart';
 import 'remote/life_remote_data_source.dart';
 
-class CachedLifeRepository implements LifeRepository {
+class CachedLifeRepository extends LifeRepository {
   CachedLifeRepository({
     required this.remoteDataSource,
     required this.localDataSource,
@@ -92,6 +92,32 @@ class CachedLifeRepository implements LifeRepository {
         return null;
       }
       return cachedDto?.toDomain();
+    }
+  }
+
+  @override
+  Future<LifePost?> getLatestBulletin({
+    MemberSession? session,
+    required LifePostListRequest request,
+  }) async {
+    try {
+      final postDto = await remoteDataSource.fetchLatestBulletin(
+        accessToken: session?.accessToken,
+        request: request,
+      );
+      if (postDto == null) return null;
+      _rememberMemberPost(session, postDto);
+      await _cacheContentBestEffort(postDto);
+      return postDto.toDomain();
+    } on FormatException {
+      rethrow;
+    } catch (_) {
+      final cachedDtos = await localDataSource.fetchLifePosts(request: request);
+      final visiblePosts = cachedDtos
+          .where((post) => _isVisibleForSession(post, session))
+          .map((post) => _memberPostFor(session, post.id) ?? post)
+          .map((post) => post.toDomain());
+      return selectLatestLifeBulletin(visiblePosts);
     }
   }
 

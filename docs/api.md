@@ -1401,10 +1401,8 @@ GET /v1/member/life/posts?limit=20&type=&query=&sort=&from=&to=
 
 `from` and `to` are optional ISO 8601 UTC timestamps. Public and member life
 lists return posts that touch the requested half-open range `[from, to)`.
-The mobile Life tab uses the selected week for the weekly tab and the selected
-month for the other life tabs. The weekly bulletin hero is loaded separately
-from the latest visible life posts, so changing a tab period does not hide the
-latest Sunday bulletin.
+The mobile Life tab uses the current natural week for the weekly tab and the
+selected month for the other life tabs.
 
 Response:
 
@@ -1436,14 +1434,20 @@ is an admin-owned ordering field, not a user-facing App label. Callers that
 need the nearest upcoming records, such as Public Landing aggregation, use
 `sort=starts_at_asc`; the default remains `priority_desc`.
 
-Post types:
+Canonical post types:
 
 ```text
 announcement
 event
 fellowship
-service_opportunity
-bulletin_item
+weekly_bulletin
+sunday
+group
+course
+serving
+prayer
+care
+giving
 ```
 
 ### 7.2 Get Life Post
@@ -1455,43 +1459,28 @@ GET /v1/life/posts/:postId
 Only public posts are returned. Private, member-only, group-only, or unpublished
 posts return 404 from the public endpoint.
 
-### 7.3 Current Bulletin
+### 7.3 Latest Bulletin In A Week
 
 ```text
-GET /v1/life/bulletins/current
+GET /v1/life/bulletin/latest?from=<iso>&to=<iso>
+GET /v1/member/life/bulletin/latest?from=<iso>&to=<iso>
 ```
 
-Response:
-
-```json
-{
-  "data": {
-    "weekOf": "2026-05-10",
-    "sections": [
-      {
-        "title": "本周聚会",
-        "items": [
-          {
-            "type": "event",
-            "title": "主日崇拜",
-            "timeText": "周日 10:00 AM",
-            "location": "Main Sanctuary"
-          }
-        ]
-      }
-    ]
-  },
-  "meta": {}
-}
-```
+Both boundaries are required ISO 8601 timestamps and define a half-open natural
+week range. The backend returns the highest-priority published
+`weekly_bulletin` or `sunday` post in that range, or `data: null`. The member
+route also projects member visibility and read/registration state. Clients must
+not select a hero from a truncated general feed.
 
 ### 7.5 Member Life, Events, Groups, Courses, and Serving
 
 ```text
 GET   /v1/life/posts
 GET   /v1/life/posts/:postId
+GET   /v1/life/bulletin/latest
 GET   /v1/member/life/posts
 GET   /v1/member/life/posts/:postId
+GET   /v1/member/life/bulletin/latest
 POST  /v1/member/life/posts/:postId/read
 POST  /v1/member/life/posts/:postId/register
 PATCH /v1/member/life/posts/:postId/registration

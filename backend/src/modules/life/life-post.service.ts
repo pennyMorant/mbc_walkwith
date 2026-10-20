@@ -7,6 +7,7 @@ import type {
   EventRegistrationStatus,
   EventRegistrationUpdateRequest,
   LifePost,
+  LifeLatestBulletinQuery,
   LifePostListQuery,
   LifePostPublishRequest,
   LifePostUpdateRequest,
@@ -97,6 +98,24 @@ export class LifePostService {
       (await this.withMedia(posts)).map(toPublicLifePost),
       userId
     );
+  }
+
+  async latestBulletinPublic(query: LifeLatestBulletinQuery) {
+    const posts = await this.listPublic({
+      ...query,
+      limit: 100,
+      visibility: "public",
+      status: "published"
+    });
+    return selectLatestBulletin(posts);
+  }
+
+  async latestBulletinForMember(
+    query: LifeLatestBulletinQuery,
+    userId: string
+  ) {
+    const posts = await this.listForMember({ ...query, limit: 100 }, userId);
+    return selectLatestBulletin(posts);
   }
 
   async getById(id: string) {
@@ -343,4 +362,31 @@ export class LifePostService {
   private async withMediaPost<T extends LifePost>(post: T): Promise<T> {
     return (await this.withMedia([post]))[0]!;
   }
+}
+
+export function selectLatestBulletin<T extends PublicLifePost>(posts: T[]) {
+  return (
+    posts
+      .filter(
+        (post) => post.type === "weekly_bulletin" || post.type === "sunday"
+      )
+      .sort(compareLatestBulletin)[0] ?? null
+  );
+}
+
+function compareLatestBulletin(a: PublicLifePost, b: PublicLifePost) {
+  if (a.sort !== b.sort) {
+    return b.sort - a.sort;
+  }
+  const startsAt = compareOptionalDateDesc(a.startsAt, b.startsAt);
+  return startsAt !== 0
+    ? startsAt
+    : compareOptionalDateDesc(a.updatedAt, b.updatedAt);
+}
+
+function compareOptionalDateDesc(a: string | null, b: string | null) {
+  if (a === b) return 0;
+  if (a === null) return 1;
+  if (b === null) return -1;
+  return b.localeCompare(a);
 }

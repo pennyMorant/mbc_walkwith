@@ -48,6 +48,11 @@ Life posts do not use sermon/media processing states such as `processing` or
 
 ## App Surface Boundary
 
+The Life hero is a current-natural-week projection owned by the backend. The
+App sends current week boundaries to the latest-bulletin endpoint and shows an
+empty hero when that range has no bulletin. The `This week` tab keeps those
+fixed boundaries; month selection is available only for category tabs.
+
 App 展示 Life 首页、分类筛选、详情、报名/课程/小组等行动入口。App 不决定内容发布状态、可见性、展示权重或未读状态。展示权重不显示为 App chip；App 只展示本地化后的内容类型和用户状态。
 
 ## Admin Web Surface Boundary

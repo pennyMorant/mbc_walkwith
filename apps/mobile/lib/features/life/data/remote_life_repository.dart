@@ -4,7 +4,7 @@ import '../domain/life_post_list_request.dart';
 import 'life_repository_contract.dart';
 import 'remote/life_remote_data_source.dart';
 
-class RemoteLifeRepository implements LifeRepository {
+class RemoteLifeRepository extends LifeRepository {
   const RemoteLifeRepository({required this.remoteDataSource});
 
   final LifeRemoteDataSource remoteDataSource;
@@ -29,6 +29,18 @@ class RemoteLifeRepository implements LifeRepository {
     final postDto = await remoteDataSource.fetchLifePostById(
       postId,
       accessToken: session?.accessToken,
+    );
+    return postDto?.toDomain();
+  }
+
+  @override
+  Future<LifePost?> getLatestBulletin({
+    MemberSession? session,
+    required LifePostListRequest request,
+  }) async {
+    final postDto = await remoteDataSource.fetchLatestBulletin(
+      accessToken: session?.accessToken,
+      request: request,
     );
     return postDto?.toDomain();
   }
