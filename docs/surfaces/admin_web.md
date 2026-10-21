@@ -110,6 +110,8 @@ Surface rule:
 - AI content assist：讲道、生活内容和发布通知编辑器只提交受控 draft intent；
   AI 管理工作台以响应式摘要和使用记录展示 token 用量，时间遵循后台当前语言，
   不展示完整 prompt、正文或 API Key，也不在 UI 内计算费用。
+  Provider 编辑器只允许对已持久化记录执行连接测试；切换记录会清除旧测试结果，
+  保存后仍以 Backend 返回的 Provider 为准。
   可编辑结果必须由管理员明确应用或丢弃，切换对象、task、locale 或源内容后旧结果
   失效。正式保存、审核和发布仍归原 feature，Admin Web 不直连 provider。
 - Sermon publishing：创建草稿、上传、审核、发布，并查看或重试后端拥有的音频对象清理任务；管理 Web 不读取私有对象路径，也不把重试结果当成本地讲道状态。

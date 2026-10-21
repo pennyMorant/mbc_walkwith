@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type {
-  AiManagedProviderType,
   AiModelPolicy,
   AiProviderConfig
 } from "@mbc/api-contracts";
@@ -20,18 +19,21 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
+import type { AiProviderForm } from "../ai_management_models";
+import AiProviderWorkspace from "../components/AiProviderWorkspace.vue";
 import AiUsagePanel from "../components/AiUsagePanel.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
 const { t } = useI18n();
 const selectedProviderId = ref("");
+const providerTestTargetId = ref("");
 const activeTab = ref("providers");
 const policyForms = ref<AiModelPolicy[]>([]);
-const providerForm = reactive({
+const providerForm = reactive<AiProviderForm>({
   id: "",
   label: "",
-  type: "openai" as AiManagedProviderType,
+  type: "openai",
   enabled: true,
   baseUrl: "",
   apiKey: "",
@@ -57,8 +59,9 @@ const overviewMetrics = computed(() => [
 
 const providerMutation = useMutation({
   mutationFn: () => saveAiProvider({ ...providerForm }),
-  onSuccess: async () => {
+  onSuccess: async (provider) => {
     providerForm.apiKey = "";
+    selectedProviderId.value = provider.id;
     await queryClient.invalidateQueries({ queryKey: ["ai-management"] });
   }
 });
@@ -118,6 +121,8 @@ function populateProvider(provider: AiProviderConfig) {
 }
 
 function newProvider() {
+  providerTestMutation.reset();
+  providerTestTargetId.value = "";
   selectedProviderId.value = "";
   Object.assign(providerForm, {
     id: `provider_${Date.now()}`,
@@ -131,17 +136,34 @@ function newProvider() {
 }
 
 function selectProvider(id: string) {
+  providerTestMutation.reset();
+  providerTestTargetId.value = "";
   selectedProviderId.value = id;
 }
 
+function testSelectedProvider() {
+  if (!selectedProviderId.value) return;
+  providerTestTargetId.value = selectedProviderId.value;
+  providerTestMutation.mutate(selectedProviderId.value);
+}
+
+const visibleProviderTestResult = computed(() =>
+  providerTestTargetId.value === selectedProviderId.value
+    ? providerTestMutation.data.value ?? null
+    : null
+);
+
 const errorMessage = computed(() =>
   formatApiErrorMessage(
-    providerMutation.error.value || policyMutation.error.value || budgetMutation.error.value || providerTestMutation.error.value,
+    providerMutation.error.value ||
+      policyMutation.error.value ||
+      budgetMutation.error.value ||
+      (providerTestTargetId.value === selectedProviderId.value
+        ? providerTestMutation.error.value
+        : null),
     t("common.error")
   )
 );
-
-const providerTestResult = computed(() => providerTestMutation.data.value ?? null);
 
 </script>
 
@@ -173,10 +195,19 @@ const providerTestResult = computed(() => providerTestMutation.data.value ?? nul
     </v-tabs>
     <v-window v-model="activeTab" class="mt-4">
       <v-window-item value="providers">
-        <v-row>
-          <v-col cols="12" md="4"><v-card><v-list density="comfortable"><v-list-item v-for="provider in providers" :key="provider.id" :title="provider.label" :subtitle="`${provider.type} · ${provider.defaultModel}`" :active="provider.id === selectedProviderId" @click="selectProvider(provider.id)"><template #append><v-chip size="x-small" :color="provider.enabled ? 'success' : 'warning'">{{ provider.enabled ? t("common.enabled") : t("common.disabled") }}</v-chip></template></v-list-item></v-list><v-card-actions v-if="canManage"><v-btn prepend-icon="mdi-plus" variant="text" @click="newProvider">{{ t("ai.addProvider") }}</v-btn></v-card-actions></v-card></v-col>
-          <v-col cols="12" md="8"><v-card><v-card-title>{{ t("ai.connection") }}</v-card-title><v-card-text><v-row><v-col cols="12" sm="6"><v-text-field v-model="providerForm.id" :label="t('common.internalKey')" :disabled="!canManage" /></v-col><v-col cols="12" sm="6"><v-text-field v-model="providerForm.label" :label="t('ai.displayName')" :disabled="!canManage" /></v-col><v-col cols="12" sm="6"><v-select v-model="providerForm.type" :items="['openai', 'gemini', 'openai_compatible']" :label="t('ai.providerType')" :disabled="!canManage" /></v-col><v-col cols="12" sm="6"><v-text-field v-model="providerForm.defaultModel" :label="t('ai.defaultModel')" :disabled="!canManage" /></v-col><v-col cols="12"><v-text-field v-model="providerForm.baseUrl" :label="t('ai.baseUrl')" :disabled="!canManage" /></v-col><v-col cols="12"><v-text-field v-model="providerForm.apiKey" type="password" :label="t('ai.apiKey')" :hint="t('ai.apiKeyHint')" persistent-hint :disabled="!canManage" /></v-col><v-col cols="12"><v-switch v-model="providerForm.enabled" :label="t('common.enabled')" :disabled="!canManage" /></v-col></v-row><v-alert v-if="providerTestResult" :type="providerTestResult.ok ? 'success' : 'error'" variant="tonal">{{ providerTestResult.ok ? t('ai.testSucceeded') : t('ai.testFailed') }} · {{ providerTestResult.provider }}{{ providerTestResult.model ? ` / ${providerTestResult.model}` : '' }}{{ providerTestResult.errorCode ? ` (${providerTestResult.errorCode})` : '' }}</v-alert></v-card-text><v-card-actions><v-btn color="primary" :loading="providerMutation.isPending.value" :disabled="!canManage || !providerForm.id || !providerForm.label || !providerForm.defaultModel" @click="providerMutation.mutate()">{{ t("common.save") }}</v-btn><v-btn variant="tonal" :loading="providerTestMutation.isPending.value" :disabled="!canManage || !providerForm.id" @click="providerTestMutation.mutate(providerForm.id)">{{ t("ai.testConnection") }}</v-btn></v-card-actions></v-card></v-col>
-        </v-row>
+        <AiProviderWorkspace
+          v-model:form="providerForm"
+          :providers="providers"
+          :selected-provider-id="selectedProviderId"
+          :can-manage="canManage"
+          :save-pending="providerMutation.isPending.value"
+          :test-pending="providerTestMutation.isPending.value"
+          :test-result="visibleProviderTestResult"
+          @select="selectProvider"
+          @create="newProvider"
+          @save="providerMutation.mutate()"
+          @test="testSelectedProvider"
+        />
       </v-window-item>
       <v-window-item value="policies"><v-card><v-card-title>{{ t("ai.taskPolicies") }}</v-card-title><v-table><thead><tr><th>{{ t("ai.capability") }}</th><th>{{ t("ai.provider") }}</th><th>{{ t("ai.model") }}</th><th>{{ t("ai.fallbackProvider") }}</th><th>{{ t("ai.fallbackModel") }}</th><th>{{ t("ai.timeout") }}</th><th>{{ t("ai.maxOutput") }}</th><th /></tr></thead><tbody><tr v-for="policy in policyForms" :key="policy.capability"><td>{{ policy.capability }}</td><td><v-select v-model="policy.providerId" :items="providers.map((item) => ({ title: item.label, value: item.id }))" density="compact" hide-details :disabled="!canManage" /></td><td><v-text-field v-model="policy.model" density="compact" hide-details :disabled="!canManage" /></td><td><v-select v-model="policy.fallbackProviderId" :items="[{ title: t('common.notSet'), value: null }, ...providers.filter((item) => item.id !== policy.providerId).map((item) => ({ title: item.label, value: item.id }))]" density="compact" hide-details :disabled="!canManage" /></td><td><v-text-field v-model="policy.fallbackModel" density="compact" hide-details :disabled="!canManage || !policy.fallbackProviderId" /></td><td><v-text-field v-model.number="policy.timeoutMs" type="number" density="compact" hide-details :disabled="!canManage" /></td><td><v-text-field v-model.number="policy.maxOutputTokens" type="number" density="compact" hide-details :disabled="!canManage" /></td><td><v-btn icon="mdi-content-save" variant="text" :disabled="!canManage" :loading="policyMutation.isPending.value" @click="policyMutation.mutate(policy)" /></td></tr></tbody></v-table></v-card></v-window-item>
       <v-window-item value="usage">
