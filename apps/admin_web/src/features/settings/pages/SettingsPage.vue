@@ -8,10 +8,10 @@ import { listSettings, updateSetting } from "@/core/api/settings";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n, type AppLocale } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
-import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
-import PublicLandingStructuredEditor from "../components/PublicLandingStructuredEditor.vue";
+import SettingsEditorDrawer from "../components/SettingsEditorDrawer.vue";
 import SettingsFiltersCard from "../components/SettingsFiltersCard.vue";
+import SettingsGroupGrid from "../components/SettingsGroupGrid.vue";
 import { cloneLandingSettingValue, isPublicLandingStructuredSetting } from "../public_landing_editor";
 import {
   baseSettingCategories,
@@ -347,212 +347,39 @@ function currentSelectItems() {
       {{ t("settings.empty") }}
     </v-alert>
 
-    <v-row v-else class="mt-4" dense>
-      <v-col
-        v-for="group in groupedSettings"
-        :key="group.category"
-        cols="12"
-        lg="6"
-      >
-        <v-card class="h-100">
-          <div class="pa-4 pa-sm-5">
-            <div class="d-flex align-start ga-3">
-              <v-avatar
-                :color="categoryColor(group.category)"
-                variant="tonal"
-                rounded="lg"
-              >
-                <v-icon :icon="categoryIcon(group.category)" />
-              </v-avatar>
-              <div class="min-w-0">
-                <div class="text-subtitle-1 font-weight-bold">
-                  {{ categoryTitle(group.category, t) }}
-                </div>
-                <div class="text-body-2 text-medium-emphasis">
-                  {{ categoryDescription(group.category, t) }}
-                </div>
-              </div>
-            </div>
-          </div>
+    <SettingsGroupGrid
+      v-else
+      :groups="groupedSettings"
+      :category-title="(category) => categoryTitle(category, t)"
+      :category-description="(category) => categoryDescription(category, t)"
+      :category-color="categoryColor"
+      :category-icon="categoryIcon"
+      :setting-title="(setting) => settingTitle(setting, t)"
+      :setting-description="(setting) => settingDescription(setting, t)"
+      :setting-icon="settingIcon"
+      :setting-preview="settingPreview"
+      :setting-preview-color="settingPreviewColor"
+      :edit-label="t('common.edit')"
+      @open="openSetting"
+    />
 
-          <v-divider />
-
-          <v-list lines="three" class="pa-0">
-            <v-list-item
-              v-for="setting in group.items"
-              :key="setting.key"
-              class="setting-item"
-              @click="openSetting(setting)"
-            >
-              <template #prepend>
-                <v-avatar color="secondary" variant="tonal" size="36">
-                  <v-icon :icon="settingIcon(setting)" size="20" />
-                </v-avatar>
-              </template>
-
-              <v-list-item-title class="font-weight-bold">
-                {{ settingTitle(setting, t) }}
-              </v-list-item-title>
-              <v-list-item-subtitle>
-                {{ settingDescription(setting, t) }}
-              </v-list-item-subtitle>
-
-              <template #append>
-                <div class="setting-actions">
-                  <v-chip
-                    size="small"
-                    variant="tonal"
-                    :color="settingPreviewColor(setting)"
-                    class="setting-chip"
-                  >
-                    {{ settingPreview(setting) }}
-                  </v-chip>
-                  <v-btn
-                    icon="mdi-pencil"
-                    size="small"
-                    variant="text"
-                    :aria-label="t('common.edit')"
-                  />
-                </div>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <AdminResponsiveDrawer v-model="drawer" :desktop-width="560">
-      <div v-if="selectedSetting" class="pa-4 pa-sm-5">
-        <div class="d-flex align-start justify-space-between ga-4">
-          <div>
-            <div class="text-h6 font-weight-bold">
-              {{ settingTitle(selectedSetting, t) }}
-            </div>
-            <div class="text-body-2 text-medium-emphasis mt-1">
-              {{ settingDescription(selectedSetting, t) }}
-            </div>
-          </div>
-          <v-btn
-            icon="mdi-close"
-            variant="text"
-            :aria-label="t('common.close')"
-            @click="drawer = false"
-          />
-        </div>
-
-        <div class="d-flex flex-wrap ga-2 mt-4">
-          <v-chip size="small" variant="tonal">
-            {{ categoryTitle(selectedSetting.category, t) }}
-          </v-chip>
-          <v-chip size="small" variant="tonal" color="secondary">
-            {{ t("common.internalKey") }}: {{ selectedSetting.key }}
-          </v-chip>
-        </div>
-
-        <v-form class="mt-5" @submit.prevent="saveSetting">
-          <v-switch
-            v-if="currentEditorType() === 'boolean'"
-            v-model="valueBoolean"
-            :label="
-              valueBoolean ? t('settings.featureOn') : t('settings.featureOff')
-            "
-            color="primary"
-            inset
-          />
-          <v-select
-            v-else-if="currentEditorType() === 'select'"
-            v-model="valueText"
-            :items="currentSelectItems()"
-            :label="t('settings.value')"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-text-field
-            v-else-if="currentEditorType() === 'number'"
-            v-model.number="valueNumber"
-            :label="t('settings.value')"
-            type="number"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-text-field
-            v-else-if="currentEditorType() === 'string'"
-            v-model="valueText"
-            :label="t('settings.value')"
-            density="comfortable"
-            variant="outlined"
-          />
-          <PublicLandingStructuredEditor
-            v-else-if="currentEditorType() === 'landing'"
-            v-model="structuredValue"
-            :setting-key="selectedSetting.key"
-          />
-          <v-textarea
-            v-else
-            v-model="valueText"
-            :label="t('settings.jsonAdvanced')"
-            rows="10"
-            density="comfortable"
-            variant="outlined"
-          />
-
-          <div class="text-caption text-medium-emphasis mb-4">
-            {{ t("settings.lastUpdated") }}:
-            {{ formattedUpdatedAt(selectedSetting) }}
-          </div>
-
-          <v-alert v-if="errorMessage" type="error" variant="tonal" class="mb-4">
-            {{ errorMessage }}
-          </v-alert>
-
-          <div class="d-flex flex-column flex-sm-row justify-end ga-3">
-            <v-btn variant="text" @click="drawer = false">
-              {{ t("common.cancel") }}
-            </v-btn>
-            <v-btn
-              type="submit"
-              color="primary"
-              :disabled="!canUpdate"
-              :loading="updateMutation.isPending.value"
-            >
-              {{ t("common.save") }}
-            </v-btn>
-          </div>
-        </v-form>
-      </div>
-    </AdminResponsiveDrawer>
+    <SettingsEditorDrawer
+      v-model="drawer"
+      v-model:value-text="valueText"
+      v-model:value-boolean="valueBoolean"
+      v-model:value-number="valueNumber"
+      v-model:structured-value="structuredValue"
+      :setting="selectedSetting"
+      :editor-type="currentEditorType()"
+      :select-items="currentSelectItems()"
+      :can-update="canUpdate"
+      :save-pending="updateMutation.isPending.value"
+      :error-message="errorMessage"
+      :updated-at="selectedSetting ? formattedUpdatedAt(selectedSetting) : ''"
+      :setting-title="(setting) => settingTitle(setting, t)"
+      :setting-description="(setting) => settingDescription(setting, t)"
+      :category-title="(category) => categoryTitle(category, t)"
+      @save="saveSetting"
+    />
   </div>
 </template>
-
-<style scoped>
-.min-w-0 {
-  min-width: 0;
-}
-
-.setting-item {
-  cursor: pointer;
-}
-
-.setting-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: 220px;
-}
-
-.setting-chip {
-  max-width: 160px;
-}
-
-@media (max-width: 600px) {
-  .setting-actions {
-    align-items: flex-end;
-    flex-direction: column;
-    max-width: 120px;
-  }
-
-  .setting-chip {
-    max-width: 112px;
-  }
-}
-</style>
