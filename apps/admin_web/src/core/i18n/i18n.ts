@@ -3818,6 +3818,35 @@ Object.assign(messages.es, { "ai.noUsage": "Todavía no se ha registrado uso de 
 Object.assign(messages["zh-Hans"], { "ai.noUsage": "尚未记录 AI 使用数据。" });
 Object.assign(messages["zh-Hant"], { "ai.noUsage": "尚未記錄 AI 使用資料。" });
 
+Object.assign(messages.en, {
+  "ai.capability.content_translation": "Content translation",
+  "ai.capability.admin_drafts": "Admin content drafts",
+  "ai.capability.member_study": "Member Bible study",
+  "ai.policyHelp": "Choose the primary and fallback model used by each AI capability.",
+  "ai.tokenLimitsHelp": "Set optional token limits. Leave a field empty for no limit."
+});
+Object.assign(messages.es, {
+  "ai.capability.content_translation": "Traducción de contenido",
+  "ai.capability.admin_drafts": "Borradores de administración",
+  "ai.capability.member_study": "Estudio bíblico de miembros",
+  "ai.policyHelp": "Elija el modelo principal y alternativo para cada capacidad de IA.",
+  "ai.tokenLimitsHelp": "Defina límites opcionales de tokens. Deje un campo vacío para no limitarlo."
+});
+Object.assign(messages["zh-Hans"], {
+  "ai.capability.content_translation": "内容翻译",
+  "ai.capability.admin_drafts": "后台内容草稿",
+  "ai.capability.member_study": "会友查经辅助",
+  "ai.policyHelp": "为每项 AI 能力选择首选模型和备用模型。",
+  "ai.tokenLimitsHelp": "设置可选的 Token 限额；留空表示不限制。"
+});
+Object.assign(messages["zh-Hant"], {
+  "ai.capability.content_translation": "內容翻譯",
+  "ai.capability.admin_drafts": "後台內容草稿",
+  "ai.capability.member_study": "會友查經輔助",
+  "ai.policyHelp": "為每項 AI 能力選擇首選模型和備用模型。",
+  "ai.tokenLimitsHelp": "設定可選的 Token 限額；留空表示不限制。"
+});
+
 Object.assign(messages.es, {
   "ai.fallbackProvider": "Proveedor alternativo",
   "ai.fallbackModel": "Modelo alternativo",

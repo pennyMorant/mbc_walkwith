@@ -20,6 +20,8 @@ import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import type { AiProviderForm } from "../ai_management_models";
+import AiBudgetPanel from "../components/AiBudgetPanel.vue";
+import AiPolicyPanel from "../components/AiPolicyPanel.vue";
 import AiProviderWorkspace from "../components/AiProviderWorkspace.vue";
 import AiUsagePanel from "../components/AiUsagePanel.vue";
 
@@ -209,11 +211,26 @@ const errorMessage = computed(() =>
           @test="testSelectedProvider"
         />
       </v-window-item>
-      <v-window-item value="policies"><v-card><v-card-title>{{ t("ai.taskPolicies") }}</v-card-title><v-table><thead><tr><th>{{ t("ai.capability") }}</th><th>{{ t("ai.provider") }}</th><th>{{ t("ai.model") }}</th><th>{{ t("ai.fallbackProvider") }}</th><th>{{ t("ai.fallbackModel") }}</th><th>{{ t("ai.timeout") }}</th><th>{{ t("ai.maxOutput") }}</th><th /></tr></thead><tbody><tr v-for="policy in policyForms" :key="policy.capability"><td>{{ policy.capability }}</td><td><v-select v-model="policy.providerId" :items="providers.map((item) => ({ title: item.label, value: item.id }))" density="compact" hide-details :disabled="!canManage" /></td><td><v-text-field v-model="policy.model" density="compact" hide-details :disabled="!canManage" /></td><td><v-select v-model="policy.fallbackProviderId" :items="[{ title: t('common.notSet'), value: null }, ...providers.filter((item) => item.id !== policy.providerId).map((item) => ({ title: item.label, value: item.id }))]" density="compact" hide-details :disabled="!canManage" /></td><td><v-text-field v-model="policy.fallbackModel" density="compact" hide-details :disabled="!canManage || !policy.fallbackProviderId" /></td><td><v-text-field v-model.number="policy.timeoutMs" type="number" density="compact" hide-details :disabled="!canManage" /></td><td><v-text-field v-model.number="policy.maxOutputTokens" type="number" density="compact" hide-details :disabled="!canManage" /></td><td><v-btn icon="mdi-content-save" variant="text" :disabled="!canManage" :loading="policyMutation.isPending.value" @click="policyMutation.mutate(policy)" /></td></tr></tbody></v-table></v-card></v-window-item>
+      <v-window-item value="policies">
+        <AiPolicyPanel
+          v-model:policies="policyForms"
+          :providers="providers"
+          :can-manage="canManage"
+          :saving-capability="policyMutation.isPending.value ? policyMutation.variables.value?.capability ?? null : null"
+          @save="policyMutation.mutate"
+        />
+      </v-window-item>
       <v-window-item value="usage">
         <AiUsagePanel :records="managementQuery.data.value?.usage ?? []" />
       </v-window-item>
-      <v-window-item value="budget"><v-card><v-card-title>{{ t("ai.tokenLimits") }}</v-card-title><v-card-text><v-row><v-col cols="12" md="6"><v-text-field v-model.number="budgetForm.monthlyTokenLimit" type="number" :label="t('ai.monthlyTokenLimit')" :disabled="!canManage" /></v-col><v-col cols="12" md="6"><v-text-field v-model.number="budgetForm.dailyTokenLimit" type="number" :label="t('ai.dailyTokenLimit')" :disabled="!canManage" /></v-col></v-row></v-card-text><v-card-actions><v-btn color="primary" :loading="budgetMutation.isPending.value" :disabled="!canManage" @click="budgetMutation.mutate()">{{ t("common.save") }}</v-btn></v-card-actions></v-card></v-window-item>
+      <v-window-item value="budget">
+        <AiBudgetPanel
+          v-model="budgetForm"
+          :can-manage="canManage"
+          :pending="budgetMutation.isPending.value"
+          @save="budgetMutation.mutate()"
+        />
+      </v-window-item>
     </v-window>
   </div>
 </template>

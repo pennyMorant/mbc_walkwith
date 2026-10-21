@@ -13,6 +13,14 @@ const providerWorkspace = readFileSync(
   new URL("../src/features/ai/components/AiProviderWorkspace.vue", import.meta.url),
   "utf8"
 );
+const policyPanel = readFileSync(
+  new URL("../src/features/ai/components/AiPolicyPanel.vue", import.meta.url),
+  "utf8"
+);
+const budgetPanel = readFileSync(
+  new URL("../src/features/ai/components/AiBudgetPanel.vue", import.meta.url),
+  "utf8"
+);
 const messages = readFileSync(
   new URL("../src/core/i18n/i18n.ts", import.meta.url),
   "utf8"
@@ -44,6 +52,23 @@ describe("AI management workspace", () => {
     expect(providerWorkspace).toContain('!canManage || !selectedProviderId');
     expect(providerWorkspace).not.toContain("@/core/api");
     expect(providerWorkspace).not.toContain("auth_store");
+  });
+
+  test("uses responsive policy and token limit panels without transport ownership", () => {
+    expect(page).toContain("<AiPolicyPanel");
+    expect(page).toContain("<AiBudgetPanel");
+    expect(page).not.toContain("<v-table");
+    expect(policyPanel).toContain("ai.capability.${capability}");
+    expect(policyPanel).not.toContain("@/core/api");
+    expect(budgetPanel).not.toContain("@/core/api");
+  });
+
+  test("localizes AI capability and policy guidance in every locale", () => {
+    expect(messages.match(/ai\.capability\.content_translation/g)).toHaveLength(4);
+    expect(messages.match(/ai\.capability\.admin_drafts/g)).toHaveLength(4);
+    expect(messages.match(/ai\.capability\.member_study/g)).toHaveLength(4);
+    expect(messages.match(/ai\.policyHelp/g)).toHaveLength(4);
+    expect(messages.match(/ai\.tokenLimitsHelp/g)).toHaveLength(4);
   });
 
   test("provides the empty usage message in every supported locale", () => {

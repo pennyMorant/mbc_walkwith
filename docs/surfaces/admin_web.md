@@ -112,6 +112,8 @@ Surface rule:
   不展示完整 prompt、正文或 API Key，也不在 UI 内计算费用。
   Provider 编辑器只允许对已持久化记录执行连接测试；切换记录会清除旧测试结果，
   保存后仍以 Backend 返回的 Provider 为准。
+  模型策略以每项 capability 的响应式卡片编辑，Token 限额独立呈现；组件只发出
+  保存 intent，权限、mutation、缓存失效和最终校验仍由页面及 Backend 持有。
   可编辑结果必须由管理员明确应用或丢弃，切换对象、task、locale 或源内容后旧结果
   失效。正式保存、审核和发布仍归原 feature，Admin Web 不直连 provider。
 - Sermon publishing：创建草稿、上传、审核、发布，并查看或重试后端拥有的音频对象清理任务；管理 Web 不读取私有对象路径，也不把重试结果当成本地讲道状态。
