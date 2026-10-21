@@ -16,6 +16,7 @@ import {
 } from "@/core/api/bible_verse_notes";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -140,22 +141,19 @@ function restoreSelectedNote() {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("nav.bibleNotes") }}</div>
-        <div class="page-subtitle">
-          {{ t("bibleNotes.pageSubtitle") }}
-        </div>
-      </div>
-      <v-btn
-        color="primary"
-        variant="tonal"
-        :loading="notesQuery.isFetching.value"
-        @click="notesQuery.refetch()"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('nav.bibleNotes')" :subtitle="t('bibleNotes.pageSubtitle')">
+      <template #actions>
+        <v-btn
+          color="primary"
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          :loading="notesQuery.isFetching.value"
+          @click="notesQuery.refetch()"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="queryErrorMessage"

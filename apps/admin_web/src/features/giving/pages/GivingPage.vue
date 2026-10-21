@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { formatApiErrorMessage } from "@/core/api/api_errors";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import GivingCategoryReportCard from "../components/GivingCategoryReportCard.vue";
 import GivingFundDrawer from "../components/GivingFundDrawer.vue";
@@ -90,19 +91,12 @@ const {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
-    >
-      <div>
-        <div class="page-title">{{ t("nav.giving") }}</div>
-        <div class="page-subtitle">
-          {{ t("giving.pageSubtitle") }}
-        </div>
-      </div>
-      <div class="d-flex ga-2">
+    <AdminPageHeader :title="t('nav.giving')" :subtitle="t('giving.pageSubtitle')">
+      <template #actions>
         <v-btn
           color="primary"
           variant="tonal"
+          prepend-icon="mdi-refresh"
           :loading="isRefreshing"
           @click="refreshAll"
         >
@@ -110,14 +104,15 @@ const {
         </v-btn>
         <v-btn
           color="primary"
+          prepend-icon="mdi-download"
           :disabled="!canExport"
           :loading="isExportingTransactions"
           @click="exportTransactions"
         >
           {{ t("Export CSV") }}
         </v-btn>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <GivingSummaryCards :summary="summary" :dollars="dollars" />
 

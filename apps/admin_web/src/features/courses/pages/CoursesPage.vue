@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import CourseEditorDrawer from "../components/CourseEditorDrawer.vue";
 import CourseWorkspaceCard from "../components/CourseWorkspaceCard.vue";
 import { useCoursePageController } from "../composables/use_course_page_controller";
@@ -39,24 +41,21 @@ const {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+    <AdminPageHeader
+      :title="t('Courses')"
+      :subtitle="t('Manage classes, lessons, enrollments, and learning progress.')"
     >
-      <div>
-        <div class="text-h5 font-weight-bold">{{ t("Courses") }}</div>
-        <div class="text-body-2 text-medium-emphasis">
-          {{ t("Manage classes, lessons, enrollments, and learning progress.") }}
-        </div>
-      </div>
-      <v-btn
-        v-if="canManage"
-        color="primary"
-        prepend-icon="mdi-plus"
-        @click="newCourse"
-      >
-        {{ t("New course") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn
+          v-if="canManage"
+          color="primary"
+          prepend-icon="mdi-plus"
+          @click="newCourse"
+        >
+          {{ t("New course") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="errorMessage"

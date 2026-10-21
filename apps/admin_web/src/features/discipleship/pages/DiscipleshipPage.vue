@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import { useDiscipleshipPageController } from "../composables/use_discipleship_page_controller";
 import DiscipleshipAssignmentsPanel from "../components/DiscipleshipAssignmentsPanel.vue";
 import DiscipleshipJourneyEditor from "../components/DiscipleshipJourneyEditor.vue";
@@ -51,24 +53,18 @@ const {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
-    >
-      <div>
-        <div class="page-title">{{ t("nav.discipleship") }}</div>
-        <div class="page-subtitle">
-          {{ t("discipleship.subtitle") }}
-        </div>
-      </div>
-      <v-btn
-        v-if="canManage"
-        color="primary"
-        prepend-icon="mdi-plus"
-        @click="newJourney"
-      >
-        {{ t("New journey") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('nav.discipleship')" :subtitle="t('discipleship.subtitle')">
+      <template #actions>
+        <v-btn
+          v-if="canManage"
+          color="primary"
+          prepend-icon="mdi-plus"
+          @click="newJourney"
+        >
+          {{ t("New journey") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="errorMessage"

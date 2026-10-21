@@ -22,6 +22,8 @@ import {
 } from "@/core/api/sermon_discussion_guides";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
 import SermonDiscussionGuideEditor from "../components/SermonDiscussionGuideEditor.vue";
 import SermonDiscussionResponsesPanel from "../components/SermonDiscussionResponsesPanel.vue";
@@ -330,24 +332,18 @@ function hideResponse(responseId: string) {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
-    >
-      <div>
-        <div class="page-title">{{ t("nav.sermonGuides") }}</div>
-        <div class="page-subtitle">
-          {{ t("sermonGuides.subtitle") }}
-        </div>
-      </div>
-      <v-btn
-        v-if="canManage"
-        color="primary"
-        prepend-icon="mdi-plus"
-        @click="newGuide"
-      >
-        {{ t("New discussion guide") }}
-      </v-btn>
-    </div>
+    <AdminPageHeader :title="t('nav.sermonGuides')" :subtitle="t('sermonGuides.subtitle')">
+      <template #actions>
+        <v-btn
+          v-if="canManage"
+          color="primary"
+          prepend-icon="mdi-plus"
+          @click="newGuide"
+        >
+          {{ t("New discussion guide") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="errorMessage"

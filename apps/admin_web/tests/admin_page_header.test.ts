@@ -28,7 +28,16 @@ describe("admin page header", () => {
       "../src/features/members/pages/MembersPage.vue",
       "../src/features/newcomers/pages/NewcomersPage.vue",
       "../src/features/care/pages/CarePage.vue",
-      "../src/features/notifications/pages/NotificationsPage.vue"
+      "../src/features/notifications/pages/NotificationsPage.vue",
+      "../src/features/bible-knowledge/pages/BibleKnowledgePage.vue",
+      "../src/features/bible-notes/pages/BibleNotesPage.vue",
+      "../src/features/discipleship/pages/DiscipleshipPage.vue",
+      "../src/features/giving/pages/GivingPage.vue",
+      "../src/features/sermon-discussion-guides/pages/SermonDiscussionGuidesPage.vue",
+      "../src/features/groups/pages/GroupsPage.vue",
+      "../src/features/courses/pages/CoursesPage.vue",
+      "../src/features/serving/pages/ServingPage.vue",
+      "../src/features/reading-plans/pages/ReadingPlansPage.vue"
     ];
     const pages = await Promise.all(
       pagePaths.map((path) => Bun.file(new URL(path, import.meta.url)).text())

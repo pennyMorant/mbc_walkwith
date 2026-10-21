@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import GroupEditorDrawer from "../components/GroupEditorDrawer.vue";
 import GroupWorkspaceCard from "../components/GroupWorkspaceCard.vue";
 import { useGroupMinistryPage } from "../composables/use_group_ministry_page";
@@ -49,24 +51,21 @@ const {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+    <AdminPageHeader
+      :title="t('Groups')"
+      :subtitle="t('Manage fellowship groups, applications, and member assignment.')"
     >
-      <div>
-        <div class="text-h5 font-weight-bold">{{ t("Groups") }}</div>
-        <div class="text-body-2 text-medium-emphasis">
-          {{ t("Manage fellowship groups, applications, and member assignment.") }}
-        </div>
-      </div>
-      <v-btn
-        v-if="canManage"
-        color="primary"
-        prepend-icon="mdi-plus"
-        @click="newGroup"
-      >
-        {{ t("New group") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn
+          v-if="canManage"
+          color="primary"
+          prepend-icon="mdi-plus"
+          @click="newGroup"
+        >
+          {{ t("New group") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="errorMessage"

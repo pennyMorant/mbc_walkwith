@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import ServingAssignmentsCard from "../components/ServingAssignmentsCard.vue";
 import ServingAvailabilityPanel from "../components/ServingAvailabilityPanel.vue";
 import ServingCheckInsPanel from "../components/ServingCheckInsPanel.vue";
@@ -64,27 +66,20 @@ const {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+    <AdminPageHeader
+      :title="t('Serving schedule')"
+      :subtitle="t('Manage teams, roles, assignments, availability, and arrival status.')"
     >
-      <div>
-        <div class="text-h5 font-weight-bold">{{ t("Serving schedule") }}</div>
-        <div class="text-body-2 text-medium-emphasis">
-          {{
-            t(
-              "Manage teams, roles, assignments, availability, and arrival status."
-            )
-          }}
-        </div>
-      </div>
-      <v-btn
-        variant="tonal"
-        prepend-icon="mdi-refresh"
-        @click="refreshAll"
-      >
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn
+          variant="tonal"
+          prepend-icon="mdi-refresh"
+          @click="refreshAll"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="errorMessage"

@@ -25,6 +25,8 @@ import {
 } from "@/core/api/reading_plans";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import ReadingPlanAssignmentsPanel from "../components/ReadingPlanAssignmentsPanel.vue";
 import ReadingPlanDaysPanel from "../components/ReadingPlanDaysPanel.vue";
 import { useReadingPlanDayForm } from "../composables/use_reading_plan_day_form";
@@ -302,24 +304,21 @@ function assignPlan() {
 
 <template>
   <div>
-    <div
-      class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+    <AdminPageHeader
+      :title="t('Reading plans')"
+      :subtitle="t('Manage church reading plans, scripture references, and assignments.')"
     >
-      <div>
-        <div class="text-h5 font-weight-bold">{{ t("Reading plans") }}</div>
-        <div class="text-body-2 text-medium-emphasis">
-          {{ t("Manage church reading plans, scripture references, and assignments.") }}
-        </div>
-      </div>
-      <v-btn
-        v-if="canManage"
-        color="primary"
-        prepend-icon="mdi-plus"
-        @click="newPlan"
-      >
-        {{ t("New reading plan") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn
+          v-if="canManage"
+          color="primary"
+          prepend-icon="mdi-plus"
+          @click="newPlan"
+        >
+          {{ t("New reading plan") }}
+        </v-btn>
+      </template>
+    </AdminPageHeader>
 
     <v-alert
       v-if="errorMessage"

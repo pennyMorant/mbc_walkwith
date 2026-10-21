@@ -19,6 +19,8 @@ import {
 } from "@/core/api/bible_knowledge";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+
 import BibleKnowledgeEntityListCard from "../components/BibleKnowledgeEntityListCard.vue";
 
 const queryClient = useQueryClient();
@@ -291,17 +293,12 @@ function deleteCurrentEntity() {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="page-title">{{ t("nav.bibleKnowledge") }}</div>
-        <div class="page-subtitle">
-          {{ t("bible.entitySubtitle") }}
-        </div>
-      </div>
-      <div class="d-flex ga-2">
+    <AdminPageHeader :title="t('nav.bibleKnowledge')" :subtitle="t('bible.entitySubtitle')">
+      <template #actions>
         <v-btn
           color="primary"
           variant="tonal"
+          prepend-icon="mdi-refresh"
           :loading="entitiesQuery.isFetching.value"
           @click="entitiesQuery.refetch()"
         >
@@ -310,12 +307,13 @@ function deleteCurrentEntity() {
         <v-btn
           v-if="canManageKnowledge"
           color="primary"
+          prepend-icon="mdi-plus"
           @click="newEntity"
         >
           {{ t("New entity") }}
         </v-btn>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <BibleKnowledgeEntityListCard
       :filters="filters"
