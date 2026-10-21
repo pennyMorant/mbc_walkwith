@@ -156,6 +156,8 @@ Surface rule:
   不展示完整 prompt、正文或 API Key，也不在 UI 内计算费用。
   Provider 编辑器只允许对已持久化记录执行连接测试；切换记录会清除旧测试结果，
   保存后仍以 Backend 返回的 Provider 为准。
+  管理数据加载使用共享可重试状态；Provider、策略、预算和连接测试错误保持为
+  操作级反馈，不会以零指标或空面板掩盖查询失败。
   模型策略以每项 capability 的响应式卡片编辑，Token 限额独立呈现；组件只发出
   保存 intent，权限、mutation、缓存失效和最终校验仍由页面及 Backend 持有。
   可编辑结果必须由管理员明确应用或丢弃，切换对象、task、locale 或源内容后旧结果

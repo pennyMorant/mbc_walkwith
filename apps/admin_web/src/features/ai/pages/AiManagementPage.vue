@@ -16,6 +16,7 @@ import {
 } from "@/core/api/ai";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
@@ -166,6 +167,11 @@ const errorMessage = computed(() =>
     t("common.error")
   )
 );
+const queryErrorMessage = computed(() =>
+  managementQuery.error.value
+    ? formatApiErrorMessage(managementQuery.error.value, t("common.error"))
+    : ""
+);
 
 </script>
 
@@ -185,52 +191,60 @@ const errorMessage = computed(() =>
     </AdminPageHeader>
 
     <v-alert v-if="errorMessage" type="error" variant="tonal" class="mt-4">{{ errorMessage }}</v-alert>
-    <v-progress-linear v-if="managementQuery.isLoading.value" indeterminate color="primary" class="mt-4" />
+    <AdminDataState
+      class="mt-4"
+      :pending="managementQuery.isLoading.value"
+      :error-message="queryErrorMessage"
+      :empty="false"
+      empty-title=""
+      :retry-label="t('common.refresh')"
+      @retry="managementQuery.refetch()"
+    >
+      <AdminMetricGrid :items="overviewMetrics" />
 
-    <AdminMetricGrid :items="overviewMetrics" />
-
-    <v-tabs v-model="activeTab" class="ai-management-tabs mt-6" color="primary" show-arrows>
-      <v-tab value="providers" prepend-icon="mdi-connection">{{ t("ai.providers") }}</v-tab>
-      <v-tab value="policies" prepend-icon="mdi-tune-variant">{{ t("ai.policies") }}</v-tab>
-      <v-tab value="usage" prepend-icon="mdi-chart-timeline-variant">{{ t("ai.usage") }}</v-tab>
-      <v-tab value="budget" prepend-icon="mdi-speedometer">{{ t("ai.budget") }}</v-tab>
-    </v-tabs>
-    <v-window v-model="activeTab" class="mt-4">
-      <v-window-item value="providers">
-        <AiProviderWorkspace
-          v-model:form="providerForm"
-          :providers="providers"
-          :selected-provider-id="selectedProviderId"
-          :can-manage="canManage"
-          :save-pending="providerMutation.isPending.value"
-          :test-pending="providerTestMutation.isPending.value"
-          :test-result="visibleProviderTestResult"
-          @select="selectProvider"
-          @create="newProvider"
-          @save="providerMutation.mutate()"
-          @test="testSelectedProvider"
-        />
-      </v-window-item>
-      <v-window-item value="policies">
-        <AiPolicyPanel
-          v-model:policies="policyForms"
-          :providers="providers"
-          :can-manage="canManage"
-          :saving-capability="policyMutation.isPending.value ? policyMutation.variables.value?.capability ?? null : null"
-          @save="policyMutation.mutate"
-        />
-      </v-window-item>
-      <v-window-item value="usage">
-        <AiUsagePanel :records="managementQuery.data.value?.usage ?? []" />
-      </v-window-item>
-      <v-window-item value="budget">
-        <AiBudgetPanel
-          v-model="budgetForm"
-          :can-manage="canManage"
-          :pending="budgetMutation.isPending.value"
-          @save="budgetMutation.mutate()"
-        />
-      </v-window-item>
-    </v-window>
+      <v-tabs v-model="activeTab" class="ai-management-tabs mt-6" color="primary" show-arrows>
+        <v-tab value="providers" prepend-icon="mdi-connection">{{ t("ai.providers") }}</v-tab>
+        <v-tab value="policies" prepend-icon="mdi-tune-variant">{{ t("ai.policies") }}</v-tab>
+        <v-tab value="usage" prepend-icon="mdi-chart-timeline-variant">{{ t("ai.usage") }}</v-tab>
+        <v-tab value="budget" prepend-icon="mdi-speedometer">{{ t("ai.budget") }}</v-tab>
+      </v-tabs>
+      <v-window v-model="activeTab" class="mt-4">
+        <v-window-item value="providers">
+          <AiProviderWorkspace
+            v-model:form="providerForm"
+            :providers="providers"
+            :selected-provider-id="selectedProviderId"
+            :can-manage="canManage"
+            :save-pending="providerMutation.isPending.value"
+            :test-pending="providerTestMutation.isPending.value"
+            :test-result="visibleProviderTestResult"
+            @select="selectProvider"
+            @create="newProvider"
+            @save="providerMutation.mutate()"
+            @test="testSelectedProvider"
+          />
+        </v-window-item>
+        <v-window-item value="policies">
+          <AiPolicyPanel
+            v-model:policies="policyForms"
+            :providers="providers"
+            :can-manage="canManage"
+            :saving-capability="policyMutation.isPending.value ? policyMutation.variables.value?.capability ?? null : null"
+            @save="policyMutation.mutate"
+          />
+        </v-window-item>
+        <v-window-item value="usage">
+          <AiUsagePanel :records="managementQuery.data.value?.usage ?? []" />
+        </v-window-item>
+        <v-window-item value="budget">
+          <AiBudgetPanel
+            v-model="budgetForm"
+            :can-manage="canManage"
+            :pending="budgetMutation.isPending.value"
+            @save="budgetMutation.mutate()"
+          />
+        </v-window-item>
+      </v-window>
+    </AdminDataState>
   </div>
 </template>

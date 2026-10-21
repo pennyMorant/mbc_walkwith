@@ -28,11 +28,20 @@ const messages = readFileSync(
 
 describe("AI management workspace", () => {
   test("uses shared metrics and stable tab identifiers", () => {
+    expect(page).toContain("AdminDataState");
+    expect(page).toContain('@retry="managementQuery.refetch()"');
+    expect(page).toContain(":error-message=\"queryErrorMessage\"");
     expect(page).toContain("<AdminMetricGrid :items=\"overviewMetrics\"");
     expect(page).toContain('value="providers"');
     expect(page).toContain('value="policies"');
     expect(page).toContain('value="usage"');
     expect(page).toContain('value="budget"');
+  });
+
+  test("keeps management query errors separate from command errors", () => {
+    expect(page).toContain("managementQuery.error.value");
+    expect(page).toContain('v-if="errorMessage"');
+    expect(page).toContain("providerMutation.error.value");
   });
 
   test("keeps usage presentation responsive and outside transport ownership", () => {
