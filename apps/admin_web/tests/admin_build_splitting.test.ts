@@ -9,7 +9,7 @@ describe("admin build splitting", () => {
       (match) => match[1]?.trim()
     );
 
-    expect(routeComponents).toHaveLength(24);
+    expect(routeComponents).toHaveLength(25);
     expect(routeComponents.every((component) => component?.startsWith("() => import("))).toBe(true);
     expect(router).not.toMatch(/import\s+\w+Page\s+from/);
   });

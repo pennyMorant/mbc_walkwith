@@ -42,6 +42,7 @@ page/dialog/table
 | Route | Page | Permission | API helper |
 | --- | --- | --- | --- |
 | `/login` | `LoginPage` | `auth-layout` | `core/api/auth.ts` |
+| `/access-denied` | `AccessDeniedPage` | authenticated fallback | none |
 | `/` | `DashboardPage` | `dashboard:read` | `core/api/dashboard.ts` |
 | `/sermons` | `SermonsPage` | `sermons:read` | `core/api/sermons.ts` |
 | `/sermon-discussion-guides` | `SermonDiscussionGuidesPage` | `sermon_guides:read` | `core/api/sermon_discussion_guides.ts` |
@@ -79,12 +80,12 @@ Surface rule:
   Stable framework, Vuetify, and content-tool dependencies use separate vendor
   chunks; route permissions and backend authorization remain unchanged.
 - `router.beforeEach` enforces authentication and redirects users without page
-  permission to the first allowed admin route.
+  permission to the first allowed admin route. Authenticated accounts with no
+  readable workspace land on `/access-denied` instead of an aborted navigation;
+  the backend remains authoritative for every protected request.
 - Admin Web can be deployed at `/` on its own domain or at `/admin/` on a
   one-IP test server. `VITE_ADMIN_BASE_PATH` is the single frontend source of
   truth for the router history base and Vite asset base.
-- Page-level permission fallback is still a UX polish area; backend permission
-  checks remain authoritative.
 - Feature pages call `core/api/*` helpers and may only keep local form, drawer,
   selection, snackbar, and table state.
 - Standard feature headers use the shared Core page-header layout for title,

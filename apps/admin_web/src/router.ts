@@ -18,6 +18,12 @@ export const router = createRouter({
       meta: { layout: "auth" }
     },
     {
+      path: "/access-denied",
+      name: "access-denied",
+      component: () => import("./features/auth/pages/AccessDeniedPage.vue"),
+      meta: { requiresAuth: true }
+    },
+    {
       path: "/",
       name: "dashboard",
       component: () => import("./features/dashboard/pages/DashboardPage.vue"),
@@ -170,13 +176,17 @@ router.beforeEach((to) => {
     };
   }
 
-  const permission = to.meta.permission as AdminPermission | undefined;
-  if (permission && !authStore.can(permission)) {
-    return firstAllowedAdminPath(authStore.can) ?? false;
+  if (to.path === "/login" && authStore.isAuthenticated) {
+    return firstAllowedAdminPath(authStore.can) ?? "/access-denied";
   }
 
-  if (to.path === "/login" && authStore.isAuthenticated) {
-    return "/";
+  if (to.path === "/access-denied") {
+    return firstAllowedAdminPath(authStore.can) ?? true;
+  }
+
+  const permission = to.meta.permission as AdminPermission | undefined;
+  if (permission && !authStore.can(permission)) {
+    return firstAllowedAdminPath(authStore.can) ?? "/access-denied";
   }
 
   return true;

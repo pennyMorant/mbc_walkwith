@@ -73,6 +73,11 @@ const messages: Record<AppLocale, Record<string, string>> = {
     "nav.settings": "Settings",
     "nav.users": "Admin Users",
     "auth.changePassword": "Change password",
+    "auth.accessDeniedHelp":
+      "Ask an administrator to assign the permissions required for your ministry role.",
+    "auth.accessDeniedMessage":
+      "Your account is signed in, but it does not have access to an admin workspace.",
+    "auth.accessDeniedTitle": "No admin access",
     "auth.currentPassword": "Current password",
     "auth.email": "Email",
     "auth.logout": "Sign out",
@@ -209,6 +214,9 @@ const messages: Record<AppLocale, Record<string, string>> = {
     "nav.settings": "系统设置",
     "nav.users": "后台用户",
     "auth.changePassword": "修改密码",
+    "auth.accessDeniedHelp": "请联系管理员，为你的服事角色分配所需权限。",
+    "auth.accessDeniedMessage": "账号已登录，但暂时没有可访问的管理模块。",
+    "auth.accessDeniedTitle": "暂无管理权限",
     "auth.currentPassword": "当前密码",
     "auth.email": "邮箱",
     "auth.logout": "退出登录",
@@ -1704,6 +1712,11 @@ Object.assign(messages.es, messages.en, {
   "nav.settings": "Configuración",
   "nav.users": "Usuarios admin",
   "auth.changePassword": "Cambiar contraseña",
+  "auth.accessDeniedHelp":
+    "Pide a un administrador que asigne los permisos necesarios para tu función ministerial.",
+  "auth.accessDeniedMessage":
+    "Tu cuenta ha iniciado sesión, pero no tiene acceso a ningún espacio administrativo.",
+  "auth.accessDeniedTitle": "Sin acceso administrativo",
   "auth.currentPassword": "Contraseña actual",
   "auth.email": "Correo",
   "auth.logout": "Cerrar sesión",
@@ -1922,6 +1935,9 @@ Object.assign(messages["zh-Hant"], messages["zh-Hans"], {
   "nav.settings": "系統設定",
   "nav.users": "後台使用者",
   "auth.changePassword": "修改密碼",
+  "auth.accessDeniedHelp": "請聯絡管理員，為你的服事角色分配所需權限。",
+  "auth.accessDeniedMessage": "帳號已登入，但目前沒有可存取的管理模組。",
+  "auth.accessDeniedTitle": "暫無管理權限",
   "auth.currentPassword": "目前密碼",
   "auth.logout": "登出",
   "auth.newPassword": "新密碼",
