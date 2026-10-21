@@ -93,7 +93,7 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
       {{ t("No discussion guide selected.") }}
     </v-alert>
 
-    <v-table v-else class="mt-4" density="comfortable">
+    <v-table v-else class="mt-4 d-none d-md-block" density="comfortable">
       <thead>
         <tr>
           <th>{{ t("User") }}</th>
@@ -145,6 +145,56 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
         </tr>
       </tbody>
     </v-table>
+
+    <div
+      v-if="!pending && selectedGuide"
+      class="discussion-response-list d-md-none mt-4"
+    >
+      <article
+        v-for="response in responses"
+        :key="response.id"
+        class="discussion-response-record"
+      >
+        <div class="discussion-response-record__heading">
+          <div>
+            <div class="font-weight-bold">{{ t(response.userType) }}</div>
+            <div class="text-caption text-medium-emphasis">
+              {{ response.userId }}
+            </div>
+          </div>
+          <v-chip
+            size="small"
+            variant="tonal"
+            :color="responseStatusColor(response.status)"
+          >
+            {{ t(response.status) }}
+          </v-chip>
+        </div>
+        <div class="text-caption text-medium-emphasis mt-3">
+          {{ t("Question") }} · {{ response.questionId || t("common.notSet") }}
+        </div>
+        <div class="discussion-response-record__content mt-1">
+          {{ response.content }}
+        </div>
+        <div class="discussion-response-record__footer mt-3">
+          <span class="text-caption text-medium-emphasis">{{ response.createdAt }}</span>
+          <v-btn
+            v-if="canManage && response.status !== 'hidden'"
+            color="warning"
+            size="small"
+            variant="tonal"
+            :disabled="Boolean(hidingResponseId)"
+            :loading="hidingResponseId === response.id"
+            @click="$emit('hideResponse', response.id)"
+          >
+            {{ t("Hide") }}
+          </v-btn>
+        </div>
+      </article>
+      <div v-if="responses.length === 0" class="discussion-response-empty">
+        {{ t("No responses match the current filters.") }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -153,4 +203,9 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
   max-width: 360px;
   white-space: pre-wrap;
 }
+.discussion-response-list { border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08); }
+.discussion-response-record { padding: 16px 2px; border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.08); }
+.discussion-response-record__heading, .discussion-response-record__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.discussion-response-record__content { line-height: 1.55; white-space: pre-wrap; }
+.discussion-response-empty { padding: 24px 0; color: rgba(var(--v-theme-on-surface), 0.62); text-align: center; }
 </style>

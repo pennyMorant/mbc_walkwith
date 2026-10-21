@@ -20,6 +20,8 @@ import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import BibleNoteResults from "../components/BibleNoteResults.vue";
+
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
 const { optionItems, t } = useI18n();
@@ -175,11 +177,6 @@ function restoreSelectedNote() {
     <AdminMetricGrid :items="summaryMetrics" />
 
     <v-card class="mt-6">
-      <v-progress-linear
-        v-if="notesQuery.isPending.value"
-        indeterminate
-        color="primary"
-      />
       <div class="pa-5">
         <v-row dense>
           <v-col cols="12" md="3">
@@ -240,47 +237,12 @@ function restoreSelectedNote() {
 
       <v-divider />
 
-      <v-table>
-        <thead>
-          <tr>
-            <th>{{ t("Verse") }}</th>
-            <th>{{ t("Author") }}</th>
-            <th>{{ t("Content") }}</th>
-            <th>{{ t("Status") }}</th>
-            <th>{{ t("common.updated") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="note in notes"
-            :key="note.id"
-            class="cursor-pointer"
-            @click="openNote(note)"
-          >
-            <td class="font-weight-bold">{{ note.verseId }}</td>
-            <td>
-              <div>{{ note.authorDisplayName }}</div>
-              <div class="text-caption text-medium-emphasis">
-                {{ t(note.authorType) }}
-              </div>
-            </td>
-            <td class="text-truncate" style="max-width: 420px">
-              {{ note.content }}
-            </td>
-            <td>
-              <v-chip size="small" :color="statusColor(note.status)" variant="tonal">
-                {{ t(note.status) }}
-              </v-chip>
-            </td>
-            <td>{{ new Date(note.updatedAt).toLocaleDateString() }}</td>
-          </tr>
-          <tr v-if="!notesQuery.isPending.value && notes.length === 0">
-            <td colspan="5" class="text-center text-medium-emphasis py-8">
-              {{ t("bibleNotes.empty") }}
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
+      <BibleNoteResults
+        :notes="notes"
+        :pending="notesQuery.isPending.value"
+        :status-color="statusColor"
+        @open="openNote"
+      />
     </v-card>
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="520">
