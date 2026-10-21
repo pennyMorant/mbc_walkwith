@@ -2,6 +2,7 @@
 import type { Job, JobStatus, JobType } from "@mbc/api-contracts";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 
 defineProps<{
@@ -24,7 +25,7 @@ defineProps<{
   openJob: (job: Job) => void;
 }>();
 
-const { optionItems, t } = useI18n();
+const { locale, optionItems, t } = useI18n();
 </script>
 
 <template>
@@ -124,7 +125,7 @@ const { optionItems, t } = useI18n();
             </div>
           </td>
           <td>{{ job.attempts }} / {{ job.maxAttempts }}</td>
-          <td>{{ job.createdAt }}</td>
+          <td>{{ formatAdminDateTime(job.createdAt, locale) }}</td>
         </tr>
       </tbody>
     </v-table>

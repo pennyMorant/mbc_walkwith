@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { AuditLog } from "@mbc/api-contracts";
 
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 
 defineProps<{ logs: AuditLog[]; pending: boolean; errorMessage: string }>();
 defineEmits<{ open: [log: AuditLog] }>();
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 </script>
 
 <template>
@@ -39,7 +40,7 @@ const { t } = useI18n();
           <td class="font-weight-bold">{{ log.action }}</td>
           <td>{{ log.resourceType }} · {{ log.resourceId }}</td>
           <td>{{ log.actorUserId || "system" }}</td>
-          <td>{{ log.createdAt }}</td>
+          <td>{{ formatAdminDateTime(log.createdAt, locale) }}</td>
         </tr>
       </tbody>
     </v-table>
@@ -55,7 +56,7 @@ const { t } = useI18n();
         <span class="audit-record__main">
           <strong>{{ log.action }}</strong>
           <span>{{ log.resourceType }} · {{ log.resourceId }}</span>
-          <span>{{ log.actorUserId || "system" }} · {{ log.createdAt }}</span>
+          <span>{{ log.actorUserId || "system" }} · {{ formatAdminDateTime(log.createdAt, locale) }}</span>
         </span>
         <v-icon icon="mdi-chevron-right" size="20" />
       </button>

@@ -4,6 +4,7 @@ import type {
   NotificationDeliveryTask
 } from "@mbc/api-contracts";
 
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 
 defineProps<{
@@ -14,7 +15,7 @@ defineProps<{
 }>();
 defineEmits<{ open: [delivery: NotificationDeliveryTask] }>();
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 </script>
 
 <template>
@@ -55,7 +56,7 @@ const { t } = useI18n();
             </div>
           </td>
           <td>{{ delivery.attempts }}</td>
-          <td>{{ delivery.updatedAt }}</td>
+          <td>{{ formatAdminDateTime(delivery.updatedAt, locale) }}</td>
         </tr>
         <tr v-if="deliveries.length === 0">
           <td colspan="6" class="text-center text-medium-emphasis py-8">
@@ -76,7 +77,7 @@ const { t } = useI18n();
         <span class="notification-record__main">
           <strong>{{ delivery.payload.title }}</strong>
           <span>{{ delivery.type }} · {{ t(delivery.audience) }}</span>
-          <span>{{ delivery.updatedAt }}</span>
+          <span>{{ formatAdminDateTime(delivery.updatedAt, locale) }}</span>
         </span>
         <span class="notification-record__status">
           <v-chip size="small" :color="statusColor(delivery.status)">

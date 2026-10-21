@@ -4,6 +4,7 @@ import type {
   BibleVerseNoteStatus
 } from "@mbc/api-contracts";
 
+import { formatAdminDate } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 
 defineProps<{
@@ -13,7 +14,7 @@ defineProps<{
 }>();
 defineEmits<{ open: [note: AdminBibleVerseNote] }>();
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 </script>
 
 <template>
@@ -49,7 +50,7 @@ const { t } = useI18n();
               {{ t(note.status) }}
             </v-chip>
           </td>
-          <td>{{ new Date(note.updatedAt).toLocaleDateString() }}</td>
+          <td>{{ formatAdminDate(note.updatedAt, locale) }}</td>
         </tr>
         <tr v-if="notes.length === 0">
           <td colspan="5" class="text-center text-medium-emphasis py-8">
@@ -69,7 +70,7 @@ const { t } = useI18n();
       >
         <span class="bible-note-record__main">
           <strong>{{ note.verseId }} · {{ note.authorDisplayName }}</strong>
-          <span>{{ t(note.authorType) }} · {{ new Date(note.updatedAt).toLocaleDateString() }}</span>
+          <span>{{ t(note.authorType) }} · {{ formatAdminDate(note.updatedAt, locale) }}</span>
           <span class="bible-note-record__content">{{ note.content }}</span>
         </span>
         <v-chip size="small" :color="statusColor(note.status)" variant="tonal">

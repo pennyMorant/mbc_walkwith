@@ -124,6 +124,9 @@ Surface rule:
 - Sermon Discussion Guides delegates filters and guide results to presentation
   components. The page retains revision-safe guide mutations, status rules,
   localization, response queries, and moderation commands.
+- Shared Admin date helpers format API timestamps with the active interface
+  locale and preserve invalid source values for diagnosis. Desktop and mobile
+  projections must not render raw ISO timestamps or browser-default dates.
   Mobile projections never widen content visibility or duplicate moderation state;
   they invoke the same page-owned detail or hide command used by desktop views.
 - Admin authentication changes clear the shared query cache before another session

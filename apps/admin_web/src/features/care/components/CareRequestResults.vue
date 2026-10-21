@@ -5,6 +5,7 @@ import type {
   CareRequestStatus
 } from "@mbc/api-contracts";
 
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 
 defineProps<{
@@ -15,7 +16,7 @@ defineProps<{
 }>();
 defineEmits<{ open: [request: CareRequestAdmin] }>();
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 </script>
 
 <template>
@@ -60,7 +61,7 @@ const { t } = useI18n();
             </v-chip>
           </td>
           <td>{{ request.assigneeName || t("common.notSet") }}</td>
-          <td>{{ request.updatedAt }}</td>
+          <td>{{ formatAdminDateTime(request.updatedAt, locale) }}</td>
         </tr>
       </tbody>
     </v-table>

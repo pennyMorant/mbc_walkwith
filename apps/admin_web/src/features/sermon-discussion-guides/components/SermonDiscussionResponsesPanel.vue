@@ -7,6 +7,7 @@ import type {
 import {
   sermonDiscussionResponseUserTypeOptions
 } from "@/core/api/sermon_discussion_guides";
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 
 type ResponseFilters = {
@@ -27,7 +28,7 @@ defineEmits<{
   refresh: [];
 }>();
 
-const { optionItems, t } = useI18n();
+const { locale, optionItems, t } = useI18n();
 
 function responseStatusColor(status: SermonDiscussionResponse["status"]) {
   return {
@@ -128,7 +129,7 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
               {{ t(response.status) }}
             </v-chip>
           </td>
-          <td>{{ response.createdAt }}</td>
+          <td>{{ formatAdminDateTime(response.createdAt, locale) }}</td>
           <td class="text-right">
             <v-btn
               v-if="canManage && response.status !== 'hidden'"
@@ -177,7 +178,7 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
           {{ response.content }}
         </div>
         <div class="discussion-response-record__footer mt-3">
-          <span class="text-caption text-medium-emphasis">{{ response.createdAt }}</span>
+          <span class="text-caption text-medium-emphasis">{{ formatAdminDateTime(response.createdAt, locale) }}</span>
           <v-btn
             v-if="canManage && response.status !== 'hidden'"
             color="warning"
