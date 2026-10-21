@@ -107,6 +107,7 @@ function json(value: unknown) {
         :pending="logsQuery.isPending.value"
         :error-message="logsQuery.error.value ? formatApiErrorMessage(logsQuery.error.value, t('common.error')) : ''"
         @open="openLog"
+        @retry="logsQuery.refetch()"
       />
     </v-card>
 

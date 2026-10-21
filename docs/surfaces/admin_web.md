@@ -111,6 +111,9 @@ Surface rule:
 - System workspaces apply the same rule to notification deliveries, admin users,
   and audit logs. Operational commands and sensitive detail remain page-owned;
   responsive result components only present records and emit detail intents.
+- System result projections use the shared Admin data-state presentation for
+  loading, error, retry, and empty feedback. The shared component owns no query,
+  permission, or transport state; each page connects retry to its own query.
 - Bible note and sermon discussion moderation preserve the same responsive rule.
 - The Life post editor delegates details, publish readiness, and notification
   fields to presentation-only components. `LifePostsPage` and its controller

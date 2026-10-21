@@ -311,6 +311,7 @@ function cancelTask(task: NotificationDeliveryTask) {
         :error-message="deliveriesQuery.error.value ? formatApiErrorMessage(deliveriesQuery.error.value, t('common.error')) : ''"
         :status-color="statusColor"
         @open="openTask"
+        @retry="deliveriesQuery.refetch()"
       />
       <v-divider v-if="nextCursor" />
       <div v-if="nextCursor" class="pa-4 text-center">

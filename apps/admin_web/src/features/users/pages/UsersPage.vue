@@ -282,6 +282,7 @@ function resetUserPassword() {
             :error-message="usersQuery.error.value ? formatApiErrorMessage(usersQuery.error.value, t('common.error')) : ''"
             :status-color="statusColor"
             @open="openUser"
+            @retry="usersQuery.refetch()"
           />
         </v-card>
       </v-col>

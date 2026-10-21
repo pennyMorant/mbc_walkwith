@@ -12,6 +12,18 @@ const notificationResults = await Bun.file(
 const auditResults = await Bun.file(
   new URL("../src/features/audit/components/AuditLogResults.vue", import.meta.url)
 ).text();
+const dataState = await Bun.file(
+  new URL("../src/core/ui/AdminDataState.vue", import.meta.url)
+).text();
+const systemPages = await Promise.all(
+  [
+    "users/pages/UsersPage.vue",
+    "notifications/pages/NotificationsPage.vue",
+    "audit/pages/AuditLogsPage.vue"
+  ].map((path) =>
+    Bun.file(new URL(`../src/features/${path}`, import.meta.url)).text()
+  )
+);
 const messages = await Bun.file(
   new URL("../src/core/i18n/i18n.ts", import.meta.url)
 ).text();
@@ -33,5 +45,18 @@ describe("system workspace responsive results", () => {
   test("localizes system empty states in every supported locale", () => {
     expect(messages.match(/users\.empty/g)).toHaveLength(4);
     expect(messages.match(/audit\.empty/g)).toHaveLength(4);
+  });
+
+  test("shares query presentation while pages retain retry ownership", () => {
+    for (const source of [userResults, notificationResults, auditResults]) {
+      expect(source).toContain("AdminDataState");
+      expect(source).toContain("$emit('retry')");
+    }
+    expect(dataState).not.toContain("@/core/api");
+    expect(dataState).not.toContain("useQuery");
+    expect(dataState).not.toContain("useAdminAuthStore");
+    for (const page of systemPages) {
+      expect(page).toMatch(/@retry="\w+Query\.refetch\(\)"/);
+    }
   });
 });
