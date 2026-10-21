@@ -3813,6 +3813,11 @@ Object.assign(messages["zh-Hant"], {
   "ai.providers": "Provider", "ai.policies": "模型策略", "ai.usage": "使用紀錄", "ai.budget": "限額", "ai.addProvider": "新增 Provider", "ai.connection": "Provider 連線", "ai.displayName": "顯示名稱", "ai.providerType": "Provider 類型", "ai.defaultModel": "預設模型", "ai.baseUrl": "API 基礎網址", "ai.apiKey": "API 金鑰", "ai.apiKeyHint": "留空會保留已儲存的金鑰，金鑰不會傳回瀏覽器。", "ai.testConnection": "測試連線", "ai.testSucceeded": "連線成功", "ai.testFailed": "連線失敗", "ai.taskPolicies": "任務模型策略", "ai.capability": "能力", "ai.provider": "Provider", "ai.model": "模型", "ai.maxOutput": "最大輸出", "ai.time": "時間", "ai.task": "任務", "ai.tokens": "Token", "ai.inputTokens": "輸入", "ai.outputTokens": "輸出", "ai.totalTokens": "總計", "ai.status": "狀態", "ai.tokenLimits": "Token 限額"
 });
 
+Object.assign(messages.en, { "ai.noUsage": "No AI usage has been recorded yet." });
+Object.assign(messages.es, { "ai.noUsage": "Todavía no se ha registrado uso de IA." });
+Object.assign(messages["zh-Hans"], { "ai.noUsage": "尚未记录 AI 使用数据。" });
+Object.assign(messages["zh-Hant"], { "ai.noUsage": "尚未記錄 AI 使用資料。" });
+
 Object.assign(messages.es, {
   "ai.fallbackProvider": "Proveedor alternativo",
   "ai.fallbackModel": "Modelo alternativo",
