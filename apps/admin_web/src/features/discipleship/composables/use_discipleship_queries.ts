@@ -76,9 +76,8 @@ export function useDiscipleshipQueries(
       Boolean(selectedJourney.value) &&
       (stagesQuery.isPending.value || tasksQuery.isPending.value)
   );
-  const queryError = computed(
+  const workspaceQueryError = computed(
     () =>
-      journeysQuery.error.value ||
       assignmentsQuery.error.value ||
       stagesQuery.error.value ||
       tasksQuery.error.value
@@ -91,7 +90,7 @@ export function useDiscipleshipQueries(
     journeys,
     journeysPending,
     journeysQuery,
-    queryError,
+    workspaceQueryError,
     stages,
     structurePending,
     tasks

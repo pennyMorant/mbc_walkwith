@@ -3,6 +3,7 @@ import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import { useDiscipleshipPageController } from "../composables/use_discipleship_page_controller";
 import DiscipleshipAssignmentsPanel from "../components/DiscipleshipAssignmentsPanel.vue";
+import DiscipleshipJourneyCatalogCard from "../components/DiscipleshipJourneyCatalogCard.vue";
 import DiscipleshipJourneyEditor from "../components/DiscipleshipJourneyEditor.vue";
 
 const {
@@ -21,13 +22,12 @@ const {
   canSaveJourney,
   discipleshipJourneyStatusOptions,
   discipleshipTaskReferenceTypeOptions,
-  errorMessage,
   filters,
   hasSelectedJourney,
   journeyForm,
   journeys,
-  journeyStatusColor,
   journeysPending,
+  listErrorMessage,
   lastCreatedStageId,
   newJourney,
   optionItems,
@@ -47,7 +47,8 @@ const {
   t,
   taskForm,
   tasks,
-  updateProgress
+  updateProgress,
+  workspaceErrorMessage
 } = useDiscipleshipPageController();
 </script>
 
@@ -67,12 +68,12 @@ const {
     </AdminPageHeader>
 
     <v-alert
-      v-if="errorMessage"
+      v-if="workspaceErrorMessage"
       class="mt-4"
       type="error"
       variant="tonal"
     >
-      {{ errorMessage }}
+      {{ workspaceErrorMessage }}
     </v-alert>
 
     <v-card class="mt-5" variant="outlined">
@@ -110,39 +111,14 @@ const {
 
     <v-row class="mt-2" dense>
       <v-col cols="12" lg="4">
-        <v-card variant="outlined">
-          <v-list lines="three">
-            <v-list-item v-if="journeysPending">
-              <v-progress-linear color="primary" indeterminate />
-            </v-list-item>
-            <v-list-item v-else-if="journeys.length === 0">
-              {{ t("No discipleship journeys match the current filters.") }}
-            </v-list-item>
-            <v-list-item
-              v-for="journey in journeys"
-              :key="journey.id"
-              :active="selectedJourney?.id === journey.id"
-              @click="selectJourney(journey)"
-            >
-              <template #title>
-                <div class="font-weight-bold">{{ journey.title }}</div>
-              </template>
-              <template #subtitle>
-                <div>{{ journey.description || t("common.notSet") }}</div>
-                <div class="d-flex align-center ga-2 mt-1">
-                  <v-chip
-                    size="x-small"
-                    variant="tonal"
-                    :color="journeyStatusColor(journey.status)"
-                  >
-                    {{ t(journey.status) }}
-                  </v-chip>
-                  <span class="text-caption">{{ journey.id }}</span>
-                </div>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <DiscipleshipJourneyCatalogCard
+          :error-message="listErrorMessage"
+          :journeys="journeys"
+          :pending="journeysPending"
+          :selected-journey-id="selectedJourney?.id ?? null"
+          @retry="refreshJourneys"
+          @select="selectJourney"
+        />
       </v-col>
 
       <v-col cols="12" lg="8">

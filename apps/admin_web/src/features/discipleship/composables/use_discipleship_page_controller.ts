@@ -32,7 +32,6 @@ import {
   createDiscipleshipJourneyForm,
   createDiscipleshipStageForm,
   createDiscipleshipTaskForm,
-  discipleshipJourneyStatusColor,
   resetDiscipleshipAssignmentForm,
   resetDiscipleshipWorkForms
 } from "../discipleship_workspace_models";
@@ -69,10 +68,10 @@ export function useDiscipleshipPageController() {
     journeys,
     journeysPending,
     journeysQuery,
-    queryError,
     stages,
     structurePending,
-    tasks
+    tasks,
+    workspaceQueryError
   } = useDiscipleshipQueries(selectedJourney, filters, assignmentFilters);
 
   const saveJourneyMutation = useMutation({
@@ -259,12 +258,15 @@ export function useDiscipleshipPageController() {
       (assignmentForm.sourceType === "member" ||
         Boolean(assignmentForm.sourceId?.trim()))
   );
-  const queryErrorMessage = computed(() => {
-    const error = queryError.value;
+  const listErrorMessage = computed(() => {
+    const error = journeysQuery.error.value;
     return error ? formatApiErrorMessage(error, t("common.error")) : "";
   });
-  const errorMessage = computed(
-    () => queryErrorMessage.value || mutationError.message.value
+  const workspaceErrorMessage = computed(
+    () =>
+      (workspaceQueryError.value
+        ? formatApiErrorMessage(workspaceQueryError.value, t("common.error"))
+        : "") || mutationError.message.value
   );
 
   function selectJourney(journey: DiscipleshipJourney) {
@@ -376,13 +378,12 @@ export function useDiscipleshipPageController() {
     canSaveJourney,
     discipleshipJourneyStatusOptions,
     discipleshipTaskReferenceTypeOptions,
-    errorMessage,
     filters,
     hasSelectedJourney,
     journeyForm,
     journeys,
-    journeyStatusColor: discipleshipJourneyStatusColor,
     journeysPending,
+    listErrorMessage,
     lastCreatedStageId,
     newJourney,
     optionItems,
@@ -402,6 +403,7 @@ export function useDiscipleshipPageController() {
     t,
     taskForm,
     tasks,
-    updateProgress
+    updateProgress,
+    workspaceErrorMessage
   };
 }
