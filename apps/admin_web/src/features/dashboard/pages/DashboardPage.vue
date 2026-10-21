@@ -8,6 +8,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { getAdminDashboard } from "@/core/api/dashboard";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 import DashboardHeader from "../components/DashboardHeader.vue";
 import DashboardActionQueue from "../components/DashboardActionQueue.vue";
 import DashboardMetricGrid from "../components/DashboardMetricGrid.vue";
@@ -27,6 +28,11 @@ const quickActionDefinitions: Array<DashboardQuickAction & { permission: AdminPe
   { titleKey: "dashboard.action.prayer", icon: "mdi-hands-pray", path: "/prayer", tone: "warning", permission: "prayer:moderate" }
 ];
 const quickActions = computed(() => quickActionDefinitions.filter((action) => authStore.can(action.permission)));
+const initialErrorMessage = computed(() =>
+  dashboardQuery.error.value && !dashboardQuery.data.value
+    ? formatApiErrorMessage(dashboardQuery.error.value, t("common.error"))
+    : ""
+);
 async function open(path: string) { await router.push(path); }
 </script>
 
@@ -39,33 +45,39 @@ async function open(path: string) { await router.push(path); }
       @create="open('/life-posts')"
     />
 
-    <v-progress-linear v-if="dashboardQuery.isPending.value && !dashboardQuery.data.value" indeterminate color="primary" class="mt-7" />
-    <v-alert v-if="dashboardQuery.error.value && !dashboardQuery.data.value" type="error" variant="tonal" class="mt-7">
-      {{ formatApiErrorMessage(dashboardQuery.error.value, t("common.error")) }}
-    </v-alert>
+    <div class="mt-7">
+      <AdminDataState
+        :pending="dashboardQuery.isPending.value && !dashboardQuery.data.value"
+        :error-message="initialErrorMessage"
+        :empty="false"
+        empty-title=""
+        :retry-label="t('common.refresh')"
+        @retry="dashboardQuery.refetch()"
+      >
+        <template v-if="dashboardQuery.data.value">
+          <v-alert v-if="dashboardQuery.error.value" type="error" variant="tonal">
+            {{ formatApiErrorMessage(dashboardQuery.error.value, t("common.error")) }}
+          </v-alert>
+          <v-alert v-if="dashboardQuery.data.value.snapshot.status === 'stale'" type="warning" variant="tonal" class="mt-4">
+            {{ t("dashboard.snapshotStale") }}
+          </v-alert>
 
-    <template v-if="dashboardQuery.data.value">
-      <v-alert v-if="dashboardQuery.error.value" type="error" variant="tonal" class="mt-7">
-        {{ formatApiErrorMessage(dashboardQuery.error.value, t("common.error")) }}
-      </v-alert>
-      <v-alert v-if="dashboardQuery.data.value.snapshot.status === 'stale'" type="warning" variant="tonal" class="mt-7">
-        {{ t("dashboard.snapshotStale") }}
-      </v-alert>
-
-      <DashboardActionQueue class="mt-8" :items="dashboardQuery.data.value.actionItems" @open="open" />
-      <DashboardMetricGrid class="mt-7" :metrics="dashboardQuery.data.value.metrics" />
-      <v-row class="mt-3" dense>
-        <v-col cols="12" lg="8">
-          <DashboardRecentContent :items="dashboardQuery.data.value.recentContent" @open="open" />
-        </v-col>
-        <v-col cols="12" lg="4">
-          <div class="d-flex flex-column ga-3">
-            <DashboardSystemHealth :health="dashboardQuery.data.value.health" :snapshot="dashboardQuery.data.value.snapshot" @open="open" />
-            <DashboardQuickActions v-if="quickActions.length > 0" :actions="quickActions" @open="open" />
-          </div>
-        </v-col>
-      </v-row>
-    </template>
+          <DashboardActionQueue class="mt-8" :items="dashboardQuery.data.value.actionItems" @open="open" />
+          <DashboardMetricGrid class="mt-7" :metrics="dashboardQuery.data.value.metrics" />
+          <v-row class="mt-3" dense>
+            <v-col cols="12" lg="8">
+              <DashboardRecentContent :items="dashboardQuery.data.value.recentContent" @open="open" />
+            </v-col>
+            <v-col cols="12" lg="4">
+              <div class="d-flex flex-column ga-3">
+                <DashboardSystemHealth :health="dashboardQuery.data.value.health" :snapshot="dashboardQuery.data.value.snapshot" @open="open" />
+                <DashboardQuickActions v-if="quickActions.length > 0" :actions="quickActions" @open="open" />
+              </div>
+            </v-col>
+          </v-row>
+        </template>
+      </AdminDataState>
+    </div>
   </div>
 </template>
 
