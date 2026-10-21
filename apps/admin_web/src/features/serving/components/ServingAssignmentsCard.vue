@@ -10,6 +10,7 @@ import { computed } from "vue";
 
 import type { ServingAssignmentFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 import {
   formatServingDateTime,
   servingMemberLabel
@@ -25,6 +26,7 @@ const props = defineProps<{
   members: ServingMemberOption[];
   teams: ServingTeam[];
   roles: ServingRole[];
+  errorMessage: string;
   loading: boolean;
   canManage: boolean;
   canCreate: boolean;
@@ -34,6 +36,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   create: [];
   refresh: [];
+  retry: [];
   updateStatus: [
     assignment: ServingAssignment,
     status: ServingAssignmentStatus
@@ -60,8 +63,15 @@ const memberItems = computed(() =>
 <template>
   <v-card variant="outlined">
     <v-card-title>{{ t("Assignments") }}</v-card-title>
-    <v-progress-linear v-if="loading" indeterminate color="primary" />
-    <v-card-text v-if="canManage">
+    <AdminDataState
+      :pending="loading"
+      :error-message="errorMessage"
+      :empty="false"
+      empty-title=""
+      :retry-label="t('common.refresh')"
+      @retry="emit('retry')"
+    >
+      <v-card-text v-if="canManage">
       <v-row dense>
         <v-col cols="12" md="6">
           <v-select
@@ -143,10 +153,10 @@ const memberItems = computed(() =>
       >
         {{ t("Create assignment") }}
       </v-btn>
-    </v-card-text>
+      </v-card-text>
 
-    <v-divider />
-    <v-card-text>
+      <v-divider />
+      <v-card-text>
       <v-row dense class="mb-3">
         <v-col cols="12" md="7">
           <v-text-field
@@ -238,6 +248,7 @@ const memberItems = computed(() =>
           </tr>
         </tbody>
       </v-table>
-    </v-card-text>
+      </v-card-text>
+    </AdminDataState>
   </v-card>
 </template>

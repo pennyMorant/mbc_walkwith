@@ -8,6 +8,7 @@ import { computed } from "vue";
 
 import type { ServingCheckInFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 import {
   formatServingDateTime,
   servingAssignmentLabel,
@@ -23,13 +24,14 @@ const props = defineProps<{
   records: ServingCheckInRecord[];
   assignments: ServingAssignment[];
   members: ServingMemberOption[];
+  errorMessage: string;
   loading: boolean;
   canManage: boolean;
   canSave: boolean;
   needsReason: boolean;
   savePending: boolean;
 }>();
-const emit = defineEmits<{ save: []; refresh: [] }>();
+const emit = defineEmits<{ save: []; refresh: []; retry: [] }>();
 const { locale, optionItems, t } = useI18n();
 
 const assignmentItems = computed(() =>
@@ -51,8 +53,15 @@ function assignmentById(assignmentId: string) {
 
 <template>
   <div>
-    <v-progress-linear v-if="loading" indeterminate color="primary" />
-    <v-row v-if="canManage" dense>
+    <AdminDataState
+      :pending="loading"
+      :error-message="errorMessage"
+      :empty="false"
+      empty-title=""
+      :retry-label="t('common.refresh')"
+      @retry="emit('retry')"
+    >
+      <v-row v-if="canManage" dense>
       <v-col cols="12" md="5">
         <v-select
           v-model="form.assignmentId"
@@ -92,10 +101,10 @@ function assignmentById(assignmentId: string) {
           {{ t("Save arrival status") }}
         </v-btn>
       </v-col>
-    </v-row>
+      </v-row>
 
-    <v-divider v-if="canManage" class="my-4" />
-    <v-row dense class="mb-3">
+      <v-divider v-if="canManage" class="my-4" />
+      <v-row dense class="mb-3">
       <v-col cols="12" md="4">
         <v-select
           v-model="filters.assignmentId"
@@ -131,9 +140,9 @@ function assignmentById(assignmentId: string) {
           {{ t("common.go") }}
         </v-btn>
       </v-col>
-    </v-row>
+      </v-row>
 
-    <v-table density="compact">
+      <v-table density="compact">
       <thead>
         <tr>
           <th>{{ t("Assignment") }}</th>
@@ -157,6 +166,7 @@ function assignmentById(assignmentId: string) {
           <td>{{ formatServingDateTime(record.checkedInAt, locale) }}</td>
         </tr>
       </tbody>
-    </v-table>
+      </v-table>
+    </AdminDataState>
   </div>
 </template>

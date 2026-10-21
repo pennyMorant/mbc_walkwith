@@ -13,11 +13,14 @@ const workspaceTab = ref("availability");
 const {
   activeMembers,
   assignmentDirectory,
+  assignmentDirectoryQuery,
   assignmentFilters,
   assignmentForm,
   assignments,
+  assignmentsErrorMessage,
   assignmentsQuery,
   availability,
+  availabilityErrorMessage,
   availabilityFilters,
   availabilityForm,
   availabilityQuery,
@@ -30,8 +33,11 @@ const {
   checkInFilters,
   checkInForm,
   checkInNeedsReason,
+  checkInDirectoryQuery,
   checkIns,
+  checkInsErrorMessage,
   checkInsQuery,
+  commandErrorMessage,
   createAssignment,
   createAssignmentMutation,
   createAvailability,
@@ -40,16 +46,20 @@ const {
   createRoleMutation,
   createTeam,
   createTeamMutation,
-  errorMessage,
   members,
   membersQuery,
   refreshAll,
+  refreshAssignments,
+  refreshAvailability,
+  refreshCheckIns,
+  refreshSetup,
   roleForm,
   roles,
   rolesQuery,
   saveCheckIn,
   successMessage,
   successVisible,
+  setupErrorMessage,
   t,
   teamForm,
   teams,
@@ -82,13 +92,13 @@ const {
     </AdminPageHeader>
 
     <v-alert
-      v-if="errorMessage"
+      v-if="commandErrorMessage"
       class="mt-4"
       type="error"
       variant="tonal"
       density="comfortable"
     >
-      {{ errorMessage }}
+      {{ commandErrorMessage }}
     </v-alert>
 
     <v-row class="mt-4" dense>
@@ -98,6 +108,7 @@ const {
           v-model:role-form="roleForm"
           :teams="teams"
           :roles="roles"
+          :error-message="setupErrorMessage"
           :loading="teamsQuery.isPending.value || rolesQuery.isPending.value"
           :can-manage="canManage"
           :can-create-team="canCreateTeam"
@@ -111,6 +122,7 @@ const {
           @create-role="createRole"
           @update-team-status="updateTeamStatus"
           @update-role-status="updateRoleStatus"
+          @retry="refreshSetup"
         />
       </v-col>
 
@@ -122,8 +134,12 @@ const {
           :members="activeMembers"
           :teams="teams"
           :roles="roles"
+          :error-message="assignmentsErrorMessage"
           :loading="
-            assignmentsQuery.isPending.value || membersQuery.isPending.value
+            assignmentsQuery.isPending.value ||
+            membersQuery.isPending.value ||
+            teamsQuery.isPending.value ||
+            rolesQuery.isPending.value
           "
           :can-manage="canManage"
           :can-create="canCreateAssignment"
@@ -131,6 +147,7 @@ const {
           :update-pending="updateAssignmentMutation.isPending.value"
           @create="createAssignment"
           @refresh="assignmentsQuery.refetch()"
+          @retry="refreshAssignments"
           @update-status="updateAssignmentStatus"
         />
       </v-col>
@@ -151,12 +168,16 @@ const {
               :records="availability"
               :members="members"
               :selectable-members="activeMembers"
-              :loading="availabilityQuery.isPending.value"
+              :error-message="availabilityErrorMessage"
+              :loading="
+                availabilityQuery.isPending.value || membersQuery.isPending.value
+              "
               :can-manage="canManage"
               :can-create="canCreateAvailability"
               :create-pending="createAvailabilityMutation.isPending.value"
               @create="createAvailability"
               @refresh="availabilityQuery.refetch()"
+              @retry="refreshAvailability"
             />
           </v-window-item>
           <v-window-item value="check-ins">
@@ -166,13 +187,20 @@ const {
               :records="checkIns"
               :assignments="assignmentDirectory"
               :members="members"
-              :loading="checkInsQuery.isPending.value"
+              :error-message="checkInsErrorMessage"
+              :loading="
+                checkInsQuery.isPending.value ||
+                assignmentDirectoryQuery.isPending.value ||
+                checkInDirectoryQuery.isPending.value ||
+                membersQuery.isPending.value
+              "
               :can-manage="canManage"
               :can-save="canSaveCheckIn"
               :needs-reason="checkInNeedsReason"
               :save-pending="updateCheckInMutation.isPending.value"
               @save="saveCheckIn"
               @refresh="checkInsQuery.refetch()"
+              @retry="refreshCheckIns"
             />
           </v-window-item>
         </v-window>

@@ -218,24 +218,41 @@ export function useServingPage() {
     onError: mutationFeedback.capture
   });
 
-  const queryErrorMessage = computed(() =>
-    formatApiErrorMessage(
-      firstError([
-        workspace.membersQuery.error.value,
-        workspace.teamsQuery.error.value,
-        workspace.rolesQuery.error.value,
-        workspace.assignmentsQuery.error.value,
-        workspace.assignmentDirectoryQuery.error.value,
-        workspace.availabilityQuery.error.value,
-        workspace.checkInsQuery.error.value,
-        workspace.checkInDirectoryQuery.error.value
-      ]),
-      t("common.error")
-    )
+  const setupErrorMessage = computed(() =>
+    formatQueryError([
+      workspace.teamsQuery.error.value,
+      workspace.rolesQuery.error.value
+    ])
   );
-  const errorMessage = computed(
-    () => queryErrorMessage.value || mutationFeedback.errorMessage.value
+  const assignmentsErrorMessage = computed(() =>
+    formatQueryError([
+      workspace.assignmentsQuery.error.value,
+      workspace.membersQuery.error.value,
+      workspace.teamsQuery.error.value,
+      workspace.rolesQuery.error.value
+    ])
   );
+  const availabilityErrorMessage = computed(() =>
+    formatQueryError([
+      workspace.availabilityQuery.error.value,
+      workspace.membersQuery.error.value
+    ])
+  );
+  const checkInsErrorMessage = computed(() =>
+    formatQueryError([
+      workspace.checkInsQuery.error.value,
+      workspace.assignmentDirectoryQuery.error.value,
+      workspace.checkInDirectoryQuery.error.value,
+      workspace.membersQuery.error.value
+    ])
+  );
+  const commandErrorMessage = computed(
+    () => mutationFeedback.errorMessage.value
+  );
+
+  function formatQueryError(errors: unknown[]) {
+    return formatApiErrorMessage(firstError(errors), t("common.error"));
+  }
 
   function mutateWhen(allowed: boolean, action: () => void) {
     if (canManage.value && allowed) action();
@@ -270,10 +287,42 @@ export function useServingPage() {
       workspace.checkInDirectoryQuery.refetch()
     ]);
   }
+  async function refreshSetup() {
+    await Promise.all([
+      workspace.teamsQuery.refetch(),
+      workspace.rolesQuery.refetch()
+    ]);
+  }
+  async function refreshAssignments() {
+    await Promise.all([
+      workspace.assignmentsQuery.refetch(),
+      workspace.membersQuery.refetch(),
+      workspace.teamsQuery.refetch(),
+      workspace.rolesQuery.refetch()
+    ]);
+  }
+  async function refreshAvailability() {
+    await Promise.all([
+      workspace.availabilityQuery.refetch(),
+      workspace.membersQuery.refetch()
+    ]);
+  }
+  async function refreshCheckIns() {
+    await Promise.all([
+      workspace.checkInsQuery.refetch(),
+      workspace.assignmentDirectoryQuery.refetch(),
+      workspace.checkInDirectoryQuery.refetch(),
+      workspace.membersQuery.refetch()
+    ]);
+  }
 
   return {
     ...workspace,
+    assignmentsErrorMessage,
+    availabilityErrorMessage,
     canManage,
+    checkInsErrorMessage,
+    commandErrorMessage,
     createAssignment: () =>
       mutateWhen(workspace.canCreateAssignment.value, () => {
         const payload = assignmentPayload(workspace.assignmentForm);
@@ -296,15 +345,19 @@ export function useServingPage() {
         createTeamMutation.mutate(teamPayload(workspace.teamForm))
       ),
     createTeamMutation,
-    errorMessage,
     optionItems,
     refreshAll,
+    refreshAssignments,
+    refreshAvailability,
+    refreshCheckIns,
+    refreshSetup,
     saveCheckIn: () =>
       mutateWhen(workspace.canSaveCheckIn.value, () =>
         updateCheckInMutation.mutate(checkInPayload(workspace.checkInForm))
       ),
     successMessage,
     successVisible,
+    setupErrorMessage,
     t,
     updateAssignmentMutation,
     updateAssignmentStatus,

@@ -7,6 +7,7 @@ import { computed } from "vue";
 
 import type { ServingAvailabilityFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 import {
   formatServingDateTime,
   servingMemberLabel,
@@ -22,12 +23,13 @@ const props = defineProps<{
   records: ServingAvailabilityRecord[];
   members: ServingMemberOption[];
   selectableMembers: ServingMemberOption[];
+  errorMessage: string;
   loading: boolean;
   canManage: boolean;
   canCreate: boolean;
   createPending: boolean;
 }>();
-const emit = defineEmits<{ create: []; refresh: [] }>();
+const emit = defineEmits<{ create: []; refresh: []; retry: [] }>();
 const { locale, optionItems, t } = useI18n();
 
 const memberItems = computed(() =>
@@ -46,8 +48,15 @@ const filterMemberItems = computed(() =>
 
 <template>
   <div>
-    <v-progress-linear v-if="loading" indeterminate color="primary" />
-    <v-row v-if="canManage" dense>
+    <AdminDataState
+      :pending="loading"
+      :error-message="errorMessage"
+      :empty="false"
+      empty-title=""
+      :retry-label="t('common.refresh')"
+      @retry="emit('retry')"
+    >
+      <v-row v-if="canManage" dense>
       <v-col cols="12" md="4">
         <v-select
           v-model="form.userId"
@@ -103,10 +112,10 @@ const filterMemberItems = computed(() =>
           {{ t("Save") }}
         </v-btn>
       </v-col>
-    </v-row>
+      </v-row>
 
-    <v-divider v-if="canManage" class="mb-4" />
-    <v-row dense class="mb-3">
+      <v-divider v-if="canManage" class="mb-4" />
+      <v-row dense class="mb-3">
       <v-col cols="12" md="5">
         <v-select
           v-model="filters.userId"
@@ -132,9 +141,9 @@ const filterMemberItems = computed(() =>
           {{ t("common.go") }}
         </v-btn>
       </v-col>
-    </v-row>
+      </v-row>
 
-    <v-table density="compact">
+      <v-table density="compact">
       <thead>
         <tr>
           <th>{{ t("Member") }}</th>
@@ -161,6 +170,7 @@ const filterMemberItems = computed(() =>
           <td>{{ record.note || t("common.notSet") }}</td>
         </tr>
       </tbody>
-    </v-table>
+      </v-table>
+    </AdminDataState>
   </div>
 </template>
