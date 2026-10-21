@@ -118,6 +118,9 @@ Surface rule:
 - Reading Plans keeps filters, plan results, and base fields in focused
   presentation components. The page remains the owner of queries, mutations,
   permission checks, content locks, day rules, and assignment eligibility.
+- Bible Knowledge delegates entity fields and section editing to a
+  presentation-only editor. The page retains CRUD, permissions, section
+  normalization, verse-alias JSON parsing, and canonical request payloads.
   Mobile projections never widen content visibility or duplicate moderation state;
   they invoke the same page-owned detail or hide command used by desktop views.
 - Admin authentication changes clear the shared query cache before another session
