@@ -2268,6 +2268,23 @@ Object.assign(messages["zh-Hant"], {
 });
 
 Object.assign(messages.en, {
+  "users.empty": "No admin users are available.",
+  "audit.empty": "No audit records match the current filters."
+});
+Object.assign(messages.es, {
+  "users.empty": "No hay usuarios administradores disponibles.",
+  "audit.empty": "Ningún registro de auditoría coincide con los filtros actuales."
+});
+Object.assign(messages["zh-Hans"], {
+  "users.empty": "暂无后台用户。",
+  "audit.empty": "当前筛选条件下没有审计记录。"
+});
+Object.assign(messages["zh-Hant"], {
+  "users.empty": "暫無後台使用者。",
+  "audit.empty": "目前篩選條件下沒有稽核紀錄。"
+});
+
+Object.assign(messages.en, {
   "Check-in QR": "Check-in QR",
   "Check-in QR is ready.": "Check-in QR is ready.",
   "Expires": "Expires",

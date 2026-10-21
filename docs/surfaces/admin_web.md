@@ -104,6 +104,9 @@ Surface rule:
 - People workspaces render member, newcomer, and care result arrays as desktop
   tables and compact mobile records. Both projections emit the same page-owned
   detail intent and do not own API, selection, permission, or mutation state.
+- System workspaces apply the same rule to notification deliveries, admin users,
+  and audit logs. Operational commands and sensitive detail remain page-owned;
+  responsive result components only present records and emit detail intents.
 - Admin authentication changes clear the shared query cache before another session
   can render role-scoped results. Search and recent-content links identify a record
   with `?open=<resourceId>`; the destination Feature owns detail loading and errors.

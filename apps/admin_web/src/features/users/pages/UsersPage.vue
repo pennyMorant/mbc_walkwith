@@ -23,6 +23,8 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import AdminUserResults from "../components/AdminUserResults.vue";
+
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
 const { optionItems, t } = useI18n();
@@ -274,46 +276,13 @@ function resetUserPassword() {
             <v-chip>{{ users.length }}</v-chip>
           </div>
           <v-divider />
-          <v-progress-linear
-            v-if="usersQuery.isPending.value"
-            indeterminate
-            color="primary"
+          <AdminUserResults
+            :users="users"
+            :pending="usersQuery.isPending.value"
+            :error-message="usersQuery.error.value ? formatApiErrorMessage(usersQuery.error.value, t('common.error')) : ''"
+            :status-color="statusColor"
+            @open="openUser"
           />
-          <v-alert
-            v-else-if="usersQuery.error.value"
-            type="error"
-            variant="tonal"
-            class="ma-4"
-          >
-            {{ formatApiErrorMessage(usersQuery.error.value, t("common.error")) }}
-          </v-alert>
-          <v-table v-else density="comfortable">
-            <thead>
-              <tr>
-                <th>{{ t("Name") }}</th>
-                <th>{{ t("Email") }}</th>
-                <th>{{ t("Role") }}</th>
-                <th>{{ t("Status") }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="user in users"
-                :key="user.id"
-                class="cursor-pointer"
-                @click="openUser(user)"
-              >
-                <td class="font-weight-bold">{{ user.name }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ t(user.role) }}</td>
-                <td>
-                  <v-chip size="small" :color="statusColor(user.status)">
-                    {{ t(user.status) }}
-                  </v-chip>
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
         </v-card>
       </v-col>
     </v-row>

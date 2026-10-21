@@ -9,6 +9,8 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import AuditLogResults from "../components/AuditLogResults.vue";
+
 const selectedLog = ref<AuditLog | null>(null);
 const drawer = ref(false);
 const { t } = useI18n();
@@ -100,42 +102,12 @@ function json(value: unknown) {
         </v-row>
       </div>
       <v-divider />
-      <v-progress-linear
-        v-if="logsQuery.isPending.value"
-        indeterminate
-        color="primary"
+      <AuditLogResults
+        :logs="logs"
+        :pending="logsQuery.isPending.value"
+        :error-message="logsQuery.error.value ? formatApiErrorMessage(logsQuery.error.value, t('common.error')) : ''"
+        @open="openLog"
       />
-      <v-alert
-        v-else-if="logsQuery.error.value"
-        type="error"
-        variant="tonal"
-        class="ma-4"
-      >
-        {{ formatApiErrorMessage(logsQuery.error.value, t("common.error")) }}
-      </v-alert>
-      <v-table v-else density="comfortable">
-        <thead>
-          <tr>
-            <th>{{ t("Action") }}</th>
-            <th>{{ t("Resource") }}</th>
-            <th>{{ t("Actor") }}</th>
-            <th>{{ t("Created") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="log in logs"
-            :key="log.id"
-            class="cursor-pointer"
-            @click="openLog(log)"
-          >
-            <td class="font-weight-bold">{{ log.action }}</td>
-            <td>{{ log.resourceType }} · {{ log.resourceId }}</td>
-            <td>{{ log.actorUserId || "system" }}</td>
-            <td>{{ log.createdAt }}</td>
-          </tr>
-        </tbody>
-      </v-table>
     </v-card>
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="620">

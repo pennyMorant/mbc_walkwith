@@ -19,6 +19,8 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import NotificationDeliveryResults from "../components/NotificationDeliveryResults.vue";
+
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
 const { optionItems, t } = useI18n();
@@ -303,60 +305,13 @@ function cancelTask(task: NotificationDeliveryTask) {
         </v-row>
       </div>
       <v-divider />
-      <v-progress-linear
-        v-if="deliveriesQuery.isPending.value"
-        indeterminate
-        color="primary"
+      <NotificationDeliveryResults
+        :deliveries="deliveries"
+        :pending="deliveriesQuery.isPending.value"
+        :error-message="deliveriesQuery.error.value ? formatApiErrorMessage(deliveriesQuery.error.value, t('common.error')) : ''"
+        :status-color="statusColor"
+        @open="openTask"
       />
-      <v-alert
-        v-else-if="deliveriesQuery.error.value"
-        type="error"
-        variant="tonal"
-        class="ma-4"
-      >
-        {{ formatApiErrorMessage(deliveriesQuery.error.value, t("common.error")) }}
-      </v-alert>
-      <v-table v-else density="comfortable">
-        <thead>
-          <tr>
-            <th>{{ t("Type") }}</th>
-            <th>{{ t("Status") }}</th>
-            <th>{{ t("Audience") }}</th>
-            <th>{{ t("Title") }}</th>
-            <th>{{ t("Attempts") }}</th>
-            <th>{{ t("Updated") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="delivery in deliveries"
-            :key="delivery.id"
-            class="cursor-pointer"
-            @click="openTask(delivery)"
-          >
-            <td class="font-weight-bold">{{ delivery.type }}</td>
-            <td>
-              <v-chip size="small" :color="statusColor(delivery.status)">
-                {{ t(delivery.status) }}
-              </v-chip>
-            </td>
-            <td>{{ t(delivery.audience) }}</td>
-            <td>
-              <div class="font-weight-medium">{{ delivery.payload.title }}</div>
-              <div class="text-caption text-medium-emphasis">
-                {{ delivery.payload.route || "-" }}
-              </div>
-            </td>
-            <td>{{ delivery.attempts }}</td>
-            <td>{{ delivery.updatedAt }}</td>
-          </tr>
-          <tr v-if="deliveries.length === 0">
-            <td colspan="6" class="text-center text-medium-emphasis py-8">
-              {{ t("notifications.empty") }}
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
       <v-divider v-if="nextCursor" />
       <div v-if="nextCursor" class="pa-4 text-center">
         <v-btn
