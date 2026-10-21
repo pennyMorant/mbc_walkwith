@@ -16,6 +16,7 @@ import {
 } from "@/core/api/bible_verse_notes";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 const queryClient = useQueryClient();
@@ -78,6 +79,11 @@ const publishedCount = computed(
 const hiddenCount = computed(
   () => notes.value.filter((note) => note.status === "hidden").length
 );
+const summaryMetrics = computed(() => [
+  { id: "loaded", label: t("Loaded notes"), value: notes.value.length, icon: "mdi-note-text-outline", tone: "primary" as const },
+  { id: "published", label: t("Published"), value: publishedCount.value, icon: "mdi-eye-outline", tone: "success" as const },
+  { id: "hidden", label: t("Hidden"), value: hiddenCount.value, icon: "mdi-eye-off-outline", tone: "warning" as const }
+]);
 const queryErrorMessage = computed(() =>
   notesQuery.error.value
     ? formatApiErrorMessage(notesQuery.error.value, t("common.error"))
@@ -165,32 +171,7 @@ function restoreSelectedNote() {
       {{ queryErrorMessage }}
     </v-alert>
 
-    <v-row class="mt-5" dense>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("Loaded notes") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ notes.length }}</div>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("Published") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ publishedCount }}</div>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("Hidden") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ hiddenCount }}</div>
-        </v-card>
-      </v-col>
-    </v-row>
+    <AdminMetricGrid :items="summaryMetrics" />
 
     <v-card class="mt-6">
       <v-progress-linear

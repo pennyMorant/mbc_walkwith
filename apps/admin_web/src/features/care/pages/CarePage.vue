@@ -19,6 +19,7 @@ import {
 } from "@/core/api/care";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 const queryClient = useQueryClient();
@@ -115,6 +116,11 @@ const scheduledCount = computed(
   () =>
     requests.value.filter((request) => Boolean(request.nextFollowUpAt)).length
 );
+const summaryMetrics = computed(() => [
+  { id: "requests", label: t("Care requests"), value: requests.value.length, icon: "mdi-hand-heart-outline", tone: "primary" as const },
+  { id: "submitted", label: t("New submissions"), value: submittedCount.value, icon: "mdi-inbox-arrow-down-outline", tone: "warning" as const },
+  { id: "scheduled", label: t("Scheduled follow-ups"), value: scheduledCount.value, icon: "mdi-calendar-clock-outline", tone: "info" as const }
+]);
 const drawer = computed({
   get: () => Boolean(selectedRequest.value),
   set: (value: boolean) => {
@@ -220,32 +226,7 @@ function addCareFollowUp() {
       {{ errorMessage }}
     </v-alert>
 
-    <v-row class="mt-5" dense>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4" variant="outlined">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("Care requests") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ requests.length }}</div>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4" variant="outlined">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("New submissions") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ submittedCount }}</div>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4" variant="outlined">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("Scheduled follow-ups") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ scheduledCount }}</div>
-        </v-card>
-      </v-col>
-    </v-row>
+    <AdminMetricGrid :items="summaryMetrics" />
 
     <v-card class="mt-6" variant="outlined">
       <div class="pa-5">

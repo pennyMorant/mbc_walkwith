@@ -86,6 +86,9 @@ Surface rule:
 - Standard feature headers use the shared Core page-header layout for title,
   subtitle, and responsive action placement. The owning Feature still supplies
   localized copy, permission checks, loading state, and action handlers.
+- Repeated summary metrics use the shared responsive metric grid. Features must
+  supply already calculated and localized labels, values, icons, and semantic
+  tones; the shared component does not query data or derive business meaning.
 - Admin Web UI supports English, Spanish, Simplified Chinese, and Traditional
   Chinese. First load follows the browser/system locale; a manual locale choice
   is persisted in local storage.

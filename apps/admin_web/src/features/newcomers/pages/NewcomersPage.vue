@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { computed } from "vue";
+
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import { useNewcomerPage } from "../composables/use_newcomer_page";
@@ -36,6 +39,11 @@ const {
   selectedNewcomer,
   updateMutation
 } = useNewcomerPage();
+const summaryMetrics = computed(() => [
+  { id: "new", label: t("New newcomer profiles"), value: newCount.value, icon: "mdi-account-star-outline", tone: "primary" as const },
+  { id: "follow_up", label: t("Active follow-up"), value: assignedCount.value, icon: "mdi-account-clock-outline", tone: "warning" as const },
+  { id: "discipleship", label: t("In discipleship"), value: discipleshipCount.value, icon: "mdi-school-outline", tone: "success" as const }
+]);
 </script>
 
 <template>
@@ -58,32 +66,7 @@ const {
       {{ errorMessage }}
     </v-alert>
 
-    <v-row class="mt-5" dense>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4" variant="outlined">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("New newcomer profiles") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ newCount }}</div>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4" variant="outlined">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("Active follow-up") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ assignedCount }}</div>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4" variant="outlined">
-          <div class="text-caption text-medium-emphasis">
-            {{ t("In discipleship") }}
-          </div>
-          <div class="text-h5 font-weight-bold mt-1">{{ discipleshipCount }}</div>
-        </v-card>
-      </v-col>
-    </v-row>
+    <AdminMetricGrid :items="summaryMetrics" />
 
     <v-card class="mt-6" variant="outlined">
       <div class="pa-5">

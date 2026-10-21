@@ -1,37 +1,22 @@
 <script setup lang="ts">
-import { useI18n } from "@/core/i18n/i18n";
+import { computed } from "vue";
 
-defineProps<{
+import { useI18n } from "@/core/i18n/i18n";
+import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
+
+const props = defineProps<{
   loaded: number;
   pending: number;
   privateCount: number;
 }>();
 const { t } = useI18n();
+const items = computed(() => [
+  { id: "loaded", label: t("Loaded requests"), value: props.loaded, icon: "mdi-hands-pray", tone: "primary" as const },
+  { id: "pending", label: t("Pending review"), value: props.pending, icon: "mdi-clock-alert-outline", tone: "warning" as const },
+  { id: "private", label: t("Private"), value: props.privateCount, icon: "mdi-lock-outline", tone: "secondary" as const }
+]);
 </script>
 
 <template>
-  <v-row class="mt-5" dense>
-    <v-col cols="12" md="4">
-      <v-card class="pa-4">
-        <div class="text-caption text-medium-emphasis">
-          {{ t("Loaded requests") }}
-        </div>
-        <div class="text-h5 font-weight-bold mt-1">{{ loaded }}</div>
-      </v-card>
-    </v-col>
-    <v-col cols="12" md="4">
-      <v-card class="pa-4">
-        <div class="text-caption text-medium-emphasis">
-          {{ t("Pending review") }}
-        </div>
-        <div class="text-h5 font-weight-bold mt-1">{{ pending }}</div>
-      </v-card>
-    </v-col>
-    <v-col cols="12" md="4">
-      <v-card class="pa-4">
-        <div class="text-caption text-medium-emphasis">{{ t("Private") }}</div>
-        <div class="text-h5 font-weight-bold mt-1">{{ privateCount }}</div>
-      </v-card>
-    </v-col>
-  </v-row>
+  <AdminMetricGrid :items="items" />
 </template>
