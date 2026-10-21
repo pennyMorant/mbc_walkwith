@@ -29,6 +29,9 @@ import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import ReadingPlanAssignmentsPanel from "../components/ReadingPlanAssignmentsPanel.vue";
 import ReadingPlanDaysPanel from "../components/ReadingPlanDaysPanel.vue";
+import ReadingPlanEditorFields from "../components/ReadingPlanEditorFields.vue";
+import ReadingPlanFiltersCard from "../components/ReadingPlanFiltersCard.vue";
+import ReadingPlanLibraryPanel from "../components/ReadingPlanLibraryPanel.vue";
 import { useReadingPlanDayForm } from "../composables/use_reading_plan_day_form";
 import {
   readingPlanAssignmentPayload,
@@ -330,87 +333,22 @@ function assignPlan() {
       {{ errorMessage }}
     </v-alert>
 
-    <v-card class="mt-5" variant="outlined">
-      <v-card-text>
-        <v-row dense>
-          <v-col cols="12" md="4">
-            <v-text-field
-              v-model="filters.query"
-              :label="t('Search')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @keyup.enter="plansQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-select
-              v-model="filters.status"
-              :label="t('Status')"
-              :items="optionItems(['', ...readingPlanStatusOptions])"
-              density="compact"
-              variant="outlined"
-              hide-details
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-select
-              v-model="filters.visibility"
-              :label="t('Visibility')"
-              :items="optionItems(['', ...readingPlanVisibilityOptions])"
-              density="compact"
-              variant="outlined"
-              hide-details
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-select
-              v-model="filters.locale"
-              :label="t('Locale')"
-              :items="[{ title: t('common.all'), value: '' }, ...localeItems]"
-              density="compact"
-              variant="outlined"
-              hide-details
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-btn block variant="tonal" @click="plansQuery.refetch()">
-              {{ t("common.go") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <ReadingPlanFiltersCard
+      v-model="filters"
+      :status-items="optionItems(['', ...readingPlanStatusOptions])"
+      :visibility-items="optionItems(['', ...readingPlanVisibilityOptions])"
+      :locale-items="localeItems"
+      @refresh="plansQuery.refetch()"
+    />
 
     <v-row class="mt-2" dense>
       <v-col cols="12" lg="4">
-        <v-card variant="outlined">
-          <v-list lines="three">
-            <v-list-item v-if="plansQuery.isPending.value">
-              <v-progress-linear indeterminate color="primary" />
-            </v-list-item>
-            <v-list-item v-else-if="plans.length === 0">
-              {{ t("No reading plans match the current filters.") }}
-            </v-list-item>
-            <v-list-item
-              v-for="plan in plans"
-              :key="plan.id"
-              :active="selectedPlan?.id === plan.id"
-              @click="selectPlan(plan)"
-            >
-              <template #title>
-                <div class="font-weight-bold">{{ plan.title }}</div>
-              </template>
-              <template #subtitle>
-                <div class="text-caption text-medium-emphasis">
-                  {{ t(plan.status) }} · {{ t(plan.visibility) }} ·
-                  {{ plan.durationDays }} {{ t("days") }}
-                </div>
-                <div>{{ plan.description || t("common.notSet") }}</div>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <ReadingPlanLibraryPanel
+          :plans="plans"
+          :selected-plan-id="selectedPlan?.id ?? null"
+          :pending="plansQuery.isPending.value"
+          @select="selectPlan"
+        />
       </v-col>
 
       <v-col cols="12" lg="8">
@@ -423,76 +361,18 @@ function assignPlan() {
           </v-card-subtitle>
 
           <v-card-text>
-            <v-row dense>
-              <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="planForm.title"
-                  :label="t('Title')"
-                  :disabled="!canManage || planContentLocked"
-                  density="compact"
-                  variant="outlined"
-                />
-              </v-col>
-              <v-col cols="12" md="3">
-                <v-select
-                  v-model="planForm.status"
-                  :label="t('Status')"
-                  :items="optionItems(allowedPlanStatuses)"
-                  :disabled="!canManage"
-                  density="compact"
-                  variant="outlined"
-                />
-              </v-col>
-              <v-col cols="12" md="3">
-                <v-select
-                  v-model="planForm.visibility"
-                  :label="t('Visibility')"
-                  :items="optionItems(readingPlanVisibilityOptions)"
-                  :disabled="!canManage || planContentLocked || planStructureLocked"
-                  density="compact"
-                  variant="outlined"
-                />
-              </v-col>
-              <v-col cols="12" md="3">
-                <v-select
-                  v-model="planForm.locale"
-                  :label="t('Locale')"
-                  :items="localeItems"
-                  :disabled="!canManage || planContentLocked || planStructureLocked"
-                  density="compact"
-                  variant="outlined"
-                />
-              </v-col>
-              <v-col cols="12" md="3">
-                <v-text-field
-                  v-model.number="planForm.durationDays"
-                  :label="t('Duration days')"
-                  :disabled="!canManage || planContentLocked || planStructureLocked"
-                  type="number"
-                  density="compact"
-                  variant="outlined"
-                />
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-textarea
-                  v-model="planForm.description"
-                  :label="t('Description')"
-                  :disabled="!canManage || planContentLocked"
-                  rows="2"
-                  density="compact"
-                  variant="outlined"
-                />
-              </v-col>
-            </v-row>
-            <v-btn
-              v-if="canManage"
-              color="primary"
-              :disabled="!canSavePlan || savePlanMutation.isPending.value"
-              :loading="savePlanMutation.isPending.value"
-              @click="savePlan"
-            >
-              {{ t("common.save") }}
-            </v-btn>
+            <ReadingPlanEditorFields
+              v-model="planForm"
+              :status-items="optionItems(allowedPlanStatuses)"
+              :visibility-items="optionItems(readingPlanVisibilityOptions)"
+              :locale-items="localeItems"
+              :can-manage="canManage"
+              :can-save="canSavePlan"
+              :content-locked="planContentLocked"
+              :structure-locked="planStructureLocked"
+              :saving="savePlanMutation.isPending.value"
+              @save="savePlan"
+            />
           </v-card-text>
 
           <v-divider />

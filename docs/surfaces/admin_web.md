@@ -115,6 +115,9 @@ Surface rule:
 - Settings uses presentation-only group and editor components. The page retains
   query ownership, permissions, value parsing, locale side effects, and the
   canonical update mutation for both ordinary and public-landing settings.
+- Reading Plans keeps filters, plan results, and base fields in focused
+  presentation components. The page remains the owner of queries, mutations,
+  permission checks, content locks, day rules, and assignment eligibility.
   Mobile projections never widen content visibility or duplicate moderation state;
   they invoke the same page-owned detail or hide command used by desktop views.
 - Admin authentication changes clear the shared query cache before another session
