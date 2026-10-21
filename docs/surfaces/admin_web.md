@@ -121,6 +121,9 @@ Surface rule:
 - Bible Knowledge delegates entity fields and section editing to a
   presentation-only editor. The page retains CRUD, permissions, section
   normalization, verse-alias JSON parsing, and canonical request payloads.
+- Sermon Discussion Guides delegates filters and guide results to presentation
+  components. The page retains revision-safe guide mutations, status rules,
+  localization, response queries, and moderation commands.
   Mobile projections never widen content visibility or duplicate moderation state;
   they invoke the same page-owned detail or hide command used by desktop views.
 - Admin authentication changes clear the shared query cache before another session

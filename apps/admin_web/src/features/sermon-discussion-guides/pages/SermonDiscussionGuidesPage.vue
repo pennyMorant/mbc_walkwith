@@ -26,6 +26,8 @@ import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
 import SermonDiscussionGuideEditor from "../components/SermonDiscussionGuideEditor.vue";
+import SermonDiscussionGuideFiltersCard from "../components/SermonDiscussionGuideFiltersCard.vue";
+import SermonDiscussionGuideListCard from "../components/SermonDiscussionGuideListCard.vue";
 import SermonDiscussionResponsesPanel from "../components/SermonDiscussionResponsesPanel.vue";
 import { createSermonDiscussionLocalIdFactory } from "../sermon_discussion_guide_workspace_models";
 
@@ -354,102 +356,22 @@ function hideResponse(responseId: string) {
       {{ errorMessage }}
     </v-alert>
 
-    <v-card class="mt-5" variant="outlined">
-      <v-card-text>
-        <v-row dense>
-          <v-col cols="12" md="4">
-            <v-text-field
-              v-model="filters.query"
-              :label="t('Search')"
-              density="compact"
-              hide-details
-              variant="outlined"
-              @keyup.enter="guidesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-text-field
-              v-model="filters.sermonId"
-              :label="t('Sermon ID')"
-              density="compact"
-              hide-details
-              variant="outlined"
-              @keyup.enter="guidesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-select
-              v-model="filters.status"
-              :items="optionItems(['', ...sermonDiscussionGuideStatusOptions])"
-              :label="t('Status')"
-              density="compact"
-              hide-details
-              variant="outlined"
-              @update:model-value="guidesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-select
-              v-model="filters.audienceType"
-              :items="optionItems(['', ...sermonDiscussionAudienceTypeOptions])"
-              :label="t('Audience')"
-              density="compact"
-              hide-details
-              variant="outlined"
-              @update:model-value="guidesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="1">
-            <v-btn block variant="tonal" @click="guidesQuery.refetch()">
-              {{ t("common.go") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <SermonDiscussionGuideFiltersCard
+      v-model="filters"
+      :status-items="optionItems(['', ...sermonDiscussionGuideStatusOptions])"
+      :audience-items="optionItems(['', ...sermonDiscussionAudienceTypeOptions])"
+      @refresh="guidesQuery.refetch()"
+    />
 
     <v-row class="mt-2" dense>
       <v-col cols="12" lg="4">
-        <v-card variant="outlined">
-          <v-list lines="three">
-            <v-list-item v-if="guidesQuery.isPending.value">
-              <v-progress-linear color="primary" indeterminate />
-            </v-list-item>
-            <v-list-item v-else-if="guides.length === 0">
-              {{ t("No discussion guides match the current filters.") }}
-            </v-list-item>
-            <v-list-item
-              v-for="guide in guides"
-              :key="guide.id"
-              :active="selectedGuide?.id === guide.id"
-              @click="selectGuide(guide)"
-            >
-              <template #title>
-                <div class="font-weight-bold">{{ guide.title }}</div>
-              </template>
-              <template #subtitle>
-                <div class="text-caption text-medium-emphasis">
-                  {{ guide.sermonId }}
-                </div>
-                <div class="d-flex align-center flex-wrap ga-2 mt-1">
-                  <v-chip
-                    size="x-small"
-                    variant="tonal"
-                    :color="guideStatusColor(guide.status)"
-                  >
-                    {{ t(guide.status) }}
-                  </v-chip>
-                  <v-chip size="x-small" variant="tonal">
-                    {{ t(guide.audienceType) }}
-                  </v-chip>
-                  <span class="text-caption">
-                    {{ guide.questions.length }} {{ t("questions") }}
-                  </span>
-                </div>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <SermonDiscussionGuideListCard
+          :guides="guides"
+          :selected-guide-id="selectedGuide?.id ?? null"
+          :pending="guidesQuery.isPending.value"
+          :status-color="guideStatusColor"
+          @select="selectGuide"
+        />
       </v-col>
 
       <v-col cols="12" lg="8">
