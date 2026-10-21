@@ -7,6 +7,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { listAuditLogs } from "@/core/api/audit_logs";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const selectedLog = ref<AuditLog | null>(null);
 const drawer = ref(false);
@@ -137,7 +138,7 @@ function json(value: unknown) {
       </v-table>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" location="right" temporary width="620">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="620">
       <div v-if="selectedLog" class="pa-5">
         <div class="text-h6 font-weight-bold">{{ selectedLog.action }}</div>
         <div class="text-body-2 text-medium-emphasis mt-1">
@@ -156,7 +157,7 @@ function json(value: unknown) {
         </div>
         <pre class="json-block">{{ json(selectedLog.afterJson) }}</pre>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>
 

@@ -5,6 +5,7 @@ import type {
 } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 defineProps<{
   event: PaymentProviderEvent | null;
@@ -17,7 +18,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <v-navigation-drawer v-model="drawer" location="right" temporary width="460">
+  <AdminResponsiveDrawer v-model="drawer" :desktop-width="460">
     <div v-if="event" class="pa-5">
       <div class="text-h6 font-weight-bold">
         {{ t("Payment provider event") }}
@@ -59,5 +60,5 @@ const { t } = useI18n();
         />
       </v-list>
     </div>
-  </v-navigation-drawer>
+  </AdminResponsiveDrawer>
 </template>

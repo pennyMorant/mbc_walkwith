@@ -2,6 +2,7 @@
 import type { JobStatus } from "@mbc/api-contracts";
 
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import JobFailureDiagnostics from "../components/JobFailureDiagnostics.vue";
 import JobPipelineReadinessCard from "../components/JobPipelineReadinessCard.vue";
@@ -233,7 +234,7 @@ const {
       </v-col>
     </v-row>
 
-    <v-navigation-drawer v-model="drawer" temporary location="right" width="520">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="520">
       <div v-if="selectedJob" class="pa-5">
         <div class="d-flex align-start justify-space-between ga-4">
           <div>
@@ -300,7 +301,7 @@ const {
           </v-btn>
         </div>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>
 

@@ -18,6 +18,7 @@ import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -282,7 +283,7 @@ function restoreSelectedNote() {
       </v-table>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" location="right" temporary width="520">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="520">
       <div v-if="selectedNote" class="pa-5">
         <div class="d-flex align-center justify-space-between ga-3">
           <div>
@@ -344,6 +345,6 @@ function restoreSelectedNote() {
           </v-btn>
         </div>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>

@@ -10,6 +10,7 @@ import { computed, reactive, watch } from "vue";
 
 import { discipleshipTaskStatusOptions } from "@/core/api/discipleship";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 type TaskDraft = {
   status: DiscipleshipTaskStatus;
@@ -138,7 +139,7 @@ function saveTask(task: DiscipleshipTask, draft: TaskDraft) {
 </script>
 
 <template>
-  <v-navigation-drawer v-model="drawer" location="right" temporary width="680">
+  <AdminResponsiveDrawer v-model="drawer" :desktop-width="680">
     <div v-if="assignment" class="pa-5">
       <div class="d-flex align-start justify-space-between ga-4">
         <div>
@@ -242,5 +243,5 @@ function saveTask(task: DiscipleshipTask, draft: TaskDraft) {
         </v-card>
       </div>
     </div>
-  </v-navigation-drawer>
+  </AdminResponsiveDrawer>
 </template>

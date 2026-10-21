@@ -6,6 +6,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { getLifePost, translateLifePostNotification } from "@/core/api/life_posts";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
@@ -180,7 +181,7 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
       @open="openPost"
     />
 
-    <v-navigation-drawer v-model="drawer" location="right" temporary width="520">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="520">
       <div class="pa-5">
         <div class="text-h6 font-weight-bold">
           {{ selectedPost ? selectedPost.title : t("New life post") }}
@@ -596,7 +597,7 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
           />
         </v-form>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
 
     <LifePostConfirmDialog
       v-model="confirmDialog.show"

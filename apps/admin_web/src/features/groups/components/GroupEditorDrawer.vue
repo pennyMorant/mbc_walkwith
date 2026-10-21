@@ -2,6 +2,7 @@
 import type { MinistryGroup } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 import type { GroupEditorForm } from "../group_workspace_models";
 
 const drawer = defineModel<boolean>({ required: true });
@@ -22,7 +23,7 @@ const { optionItems, t } = useI18n();
 </script>
 
 <template>
-  <v-navigation-drawer v-model="drawer" location="right" temporary width="560">
+  <AdminResponsiveDrawer v-model="drawer" :desktop-width="560">
     <div class="pa-5">
       <div class="d-flex align-center justify-space-between ga-3">
         <div>
@@ -123,5 +124,5 @@ const { optionItems, t } = useI18n();
         </v-btn>
       </v-form>
     </div>
-  </v-navigation-drawer>
+  </AdminResponsiveDrawer>
 </template>

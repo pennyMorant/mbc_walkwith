@@ -21,6 +21,7 @@ import {
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -317,11 +318,9 @@ function resetUserPassword() {
       </v-col>
     </v-row>
 
-    <v-navigation-drawer
+    <AdminResponsiveDrawer
       v-model="drawer"
-      location="right"
-      temporary
-      width="440"
+      :desktop-width="440"
     >
       <div v-if="selectedUser" class="pa-5">
         <div class="text-h6 font-weight-bold">{{ selectedUser.name }}</div>
@@ -408,7 +407,7 @@ function resetUserPassword() {
           {{ t("Reset password") }}
         </v-btn>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>
 

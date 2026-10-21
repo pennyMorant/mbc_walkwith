@@ -4,6 +4,7 @@ import { computed } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 defineProps<{
   fund: GivingFund | null;
@@ -36,7 +37,7 @@ const statusItems = computed(() =>
 </script>
 
 <template>
-  <v-navigation-drawer v-model="drawer" location="right" temporary width="420">
+  <AdminResponsiveDrawer v-model="drawer" :desktop-width="420">
     <div class="pa-5">
       <div class="text-h6 font-weight-bold">
         {{ fund ? fund.name : t("New giving fund") }}
@@ -153,5 +154,5 @@ const statusItems = computed(() =>
         </div>
       </div>
     </div>
-  </v-navigation-drawer>
+  </AdminResponsiveDrawer>
 </template>

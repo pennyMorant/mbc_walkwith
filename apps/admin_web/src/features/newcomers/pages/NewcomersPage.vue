@@ -4,6 +4,7 @@ import { computed } from "vue";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import { useNewcomerPage } from "../composables/use_newcomer_page";
 import {
@@ -149,7 +150,7 @@ const summaryMetrics = computed(() => [
       </v-table>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" location="right" temporary width="640">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="640">
       <div v-if="selectedNewcomer" class="pa-5">
         <div class="d-flex align-start justify-space-between ga-4">
           <div>
@@ -323,7 +324,7 @@ const summaryMetrics = computed(() => [
           </v-list-item>
         </v-list>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>
 

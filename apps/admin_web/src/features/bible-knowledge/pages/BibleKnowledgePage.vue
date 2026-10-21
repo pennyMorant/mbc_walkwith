@@ -20,6 +20,7 @@ import {
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import BibleKnowledgeEntityListCard from "../components/BibleKnowledgeEntityListCard.vue";
 
@@ -324,7 +325,7 @@ function deleteCurrentEntity() {
       :open-entity="openEntity"
     />
 
-    <v-navigation-drawer v-model="drawer" location="right" temporary width="560">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="560">
       <div class="pa-5">
         <div class="text-h6 font-weight-bold">
           {{ selectedEntity ? selectedEntity.name : t("New entity") }}
@@ -531,6 +532,6 @@ function deleteCurrentEntity() {
           </div>
         </v-form>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>

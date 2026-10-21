@@ -8,6 +8,7 @@ import { listSettings, updateSetting } from "@/core/api/settings";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n, type AppLocale } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import PublicLandingStructuredEditor from "../components/PublicLandingStructuredEditor.vue";
 import SettingsFiltersCard from "../components/SettingsFiltersCard.vue";
@@ -420,7 +421,7 @@ function currentSelectItems() {
       </v-col>
     </v-row>
 
-    <v-navigation-drawer v-model="drawer" location="right" temporary width="560">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="560">
       <div v-if="selectedSetting" class="pa-4 pa-sm-5">
         <div class="d-flex align-start justify-space-between ga-4">
           <div>
@@ -519,7 +520,7 @@ function currentSelectItems() {
           </div>
         </v-form>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>
 

@@ -33,4 +33,20 @@ describe("admin responsive shell", () => {
     expect(recentContent.match(/v-for="item in items"/g)?.length).toBe(2);
     expect(recentContent.match(/\$emit\('open', item.path\)/g)?.length).toBe(2);
   });
+
+  test("routes feature detail drawers through the responsive drawer shell", async () => {
+    const component = await Bun.file(
+      new URL("../src/core/ui/AdminResponsiveDrawer.vue", import.meta.url)
+    ).text();
+    const featureRoot = new URL("../src/features", import.meta.url).pathname;
+    const paths = [
+      ...new Bun.Glob("**/*.vue").scanSync({ cwd: featureRoot, absolute: true })
+    ];
+    const sources = await Promise.all(paths.map((path) => Bun.file(path).text()));
+
+    expect(component).toContain("max-width: 100vw");
+    expect(component).toContain(':width="props.desktopWidth"');
+    expect(sources.some((source) => source.includes("<v-navigation-drawer"))).toBe(false);
+    expect(sources.filter((source) => source.includes("<AdminResponsiveDrawer"))).toHaveLength(19);
+  });
 });

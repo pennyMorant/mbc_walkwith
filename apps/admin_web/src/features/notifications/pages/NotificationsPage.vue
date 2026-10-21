@@ -17,6 +17,7 @@ import {
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -369,11 +370,9 @@ function cancelTask(task: NotificationDeliveryTask) {
       </div>
     </v-card>
 
-    <v-navigation-drawer
+    <AdminResponsiveDrawer
       v-model="drawer"
-      location="right"
-      temporary
-      width="520"
+      :desktop-width="520"
     >
       <div v-if="selectedTask" class="pa-5">
         <div class="d-flex align-center justify-space-between ga-3">
@@ -434,7 +433,7 @@ function cancelTask(task: NotificationDeliveryTask) {
         </div>
         <pre class="json-block mt-2">{{ json(selectedTask.providerEvidence) }}</pre>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>
 

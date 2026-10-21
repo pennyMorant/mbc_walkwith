@@ -8,6 +8,7 @@ import type {
 
 import { courseStatusOptions } from "@/core/api/courses";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const model = defineModel<boolean>({ required: true });
 const form = defineModel<CourseUpsertRequest>("form", { required: true });
@@ -29,11 +30,9 @@ const statusOptions: CourseStatus[] = courseStatusOptions;
 </script>
 
 <template>
-  <v-navigation-drawer
+  <AdminResponsiveDrawer
     v-model="model"
-    location="right"
-    temporary
-    width="480"
+    :desktop-width="480"
     class="pa-0"
   >
     <v-toolbar flat>
@@ -122,5 +121,5 @@ const statusOptions: CourseStatus[] = courseStatusOptions;
         {{ t("common.save") }}
       </v-btn>
     </div>
-  </v-navigation-drawer>
+  </AdminResponsiveDrawer>
 </template>

@@ -2,6 +2,7 @@
 import { getAdminSermon } from "@/core/api/sermons";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
@@ -158,11 +159,9 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
 
     <SermonAudioCleanupCard />
 
-    <v-navigation-drawer
+    <AdminResponsiveDrawer
       v-model="detailDrawer"
-      location="right"
-      temporary
-      width="640"
+      :desktop-width="640"
     >
       <div v-if="selectedSermon" class="pa-5">
         <div class="d-flex align-start justify-space-between ga-4">
@@ -333,6 +332,6 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
           />
         </v-form>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>

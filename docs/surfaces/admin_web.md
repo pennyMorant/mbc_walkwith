@@ -98,6 +98,9 @@ Surface rule:
   routes or unauthorized resources cannot reappear through search. Desktop keeps
   search in the app bar; compact layouts reuse the same component and query inside
   the navigation drawer instead of maintaining a second mobile search flow.
+- Feature detail and editor drawers use the shared responsive drawer shell. Each
+  feature may choose its desktop width, while the shell caps the surface at the
+  mobile viewport width and retains Vuetify's temporary-drawer behavior.
 - Admin authentication changes clear the shared query cache before another session
   can render role-scoped results. Search and recent-content links identify a record
   with `?open=<resourceId>`; the destination Feature owns detail loading and errors.

@@ -21,6 +21,7 @@ import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -323,7 +324,7 @@ function addCareFollowUp() {
       </v-table>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" location="right" temporary width="620">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="620">
       <div v-if="selectedRequest" class="pa-5">
         <div class="d-flex align-start justify-space-between ga-4">
           <div>
@@ -483,7 +484,7 @@ function addCareFollowUp() {
           </v-list-item>
         </v-list>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>
 

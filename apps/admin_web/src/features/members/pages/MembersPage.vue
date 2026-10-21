@@ -22,6 +22,7 @@ import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -331,7 +332,7 @@ function statusColor(status: MemberStatus) {
       </v-table>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" location="right" temporary width="500">
+    <AdminResponsiveDrawer v-model="drawer" :desktop-width="500">
       <div class="pa-5">
         <div class="text-h6 font-weight-bold">
           {{ drawerTitle }}
@@ -469,7 +470,7 @@ function statusColor(status: MemberStatus) {
           </div>
         </v-form>
       </div>
-    </v-navigation-drawer>
+    </AdminResponsiveDrawer>
   </div>
 </template>
 

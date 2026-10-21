@@ -3,6 +3,7 @@ import type { AdminPrayerRequest } from "@mbc/api-contracts";
 import { ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 import {
   prayerStatusColor,
   prayerVisibilityColor
@@ -45,7 +46,7 @@ function confirmDelete() {
 </script>
 
 <template>
-  <v-navigation-drawer v-model="open" location="right" temporary width="560">
+  <AdminResponsiveDrawer v-model="open" :desktop-width="560">
     <div v-if="request" class="pa-5">
       <div class="d-flex align-start justify-space-between ga-4">
         <div class="min-width-0">
@@ -161,7 +162,7 @@ function confirmDelete() {
         />
       </div>
     </div>
-  </v-navigation-drawer>
+  </AdminResponsiveDrawer>
 
   <v-dialog v-model="deleteDialog" max-width="440">
     <v-card>

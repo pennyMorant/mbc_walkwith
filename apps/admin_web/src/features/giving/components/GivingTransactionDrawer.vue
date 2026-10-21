@@ -5,6 +5,7 @@ import type {
 } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 defineProps<{
   transaction: GivingTransaction | null;
@@ -19,7 +20,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <v-navigation-drawer v-model="drawer" location="right" temporary width="460">
+  <AdminResponsiveDrawer v-model="drawer" :desktop-width="460">
     <div v-if="transaction" class="pa-5">
       <div class="text-h6 font-weight-bold">
         {{ t("Giving transaction") }}
@@ -106,5 +107,5 @@ const { t } = useI18n();
         <v-list-item :title="t('Created')" :subtitle="dateTime(transaction.createdAt)" />
       </v-list>
     </div>
-  </v-navigation-drawer>
+  </AdminResponsiveDrawer>
 </template>
