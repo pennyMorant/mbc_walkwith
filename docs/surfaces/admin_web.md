@@ -74,6 +74,10 @@ Life posts 的活动报名卡片负责现场签到二维码的生成、轮换和
 
 Surface rule:
 
+- Route pages are loaded with dynamic imports so authentication, the shell,
+  and the active workspace do not pull every Feature into the initial bundle.
+  Stable framework, Vuetify, and content-tool dependencies use separate vendor
+  chunks; route permissions and backend authorization remain unchanged.
 - `router.beforeEach` enforces authentication and redirects users without page
   permission to the first allowed admin route.
 - Admin Web can be deployed at `/` on its own domain or at `/admin/` on a

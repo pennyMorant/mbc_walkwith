@@ -3,30 +3,6 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import { useAdminAuthStore } from "./core/auth/auth_store";
 import { appConfig } from "./core/config/env";
-import AuditLogsPage from "./features/audit/pages/AuditLogsPage.vue";
-import AiManagementPage from "./features/ai/pages/AiManagementPage.vue";
-import BibleKnowledgePage from "./features/bible-knowledge/pages/BibleKnowledgePage.vue";
-import BibleNotesPage from "./features/bible-notes/pages/BibleNotesPage.vue";
-import CarePage from "./features/care/pages/CarePage.vue";
-import CoursesPage from "./features/courses/pages/CoursesPage.vue";
-import DashboardPage from "./features/dashboard/pages/DashboardPage.vue";
-import DiscipleshipPage from "./features/discipleship/pages/DiscipleshipPage.vue";
-import GivingPage from "./features/giving/pages/GivingPage.vue";
-import GroupsPage from "./features/groups/pages/GroupsPage.vue";
-import JobsPage from "./features/jobs/pages/JobsPage.vue";
-import LifePostsPage from "./features/life-posts/pages/LifePostsPage.vue";
-import LoginPage from "./features/auth/pages/LoginPage.vue";
-import MembersPage from "./features/members/pages/MembersPage.vue";
-import MediaPage from "./features/media/pages/MediaPage.vue";
-import NewcomersPage from "./features/newcomers/pages/NewcomersPage.vue";
-import NotificationsPage from "./features/notifications/pages/NotificationsPage.vue";
-import PrayerPage from "./features/prayer/pages/PrayerPage.vue";
-import ReadingPlansPage from "./features/reading-plans/pages/ReadingPlansPage.vue";
-import SermonDiscussionGuidesPage from "./features/sermon-discussion-guides/pages/SermonDiscussionGuidesPage.vue";
-import SermonsPage from "./features/sermons/pages/SermonsPage.vue";
-import ServingPage from "./features/serving/pages/ServingPage.vue";
-import SettingsPage from "./features/settings/pages/SettingsPage.vue";
-import UsersPage from "./features/users/pages/UsersPage.vue";
 
 function adminPageMeta(permission: AdminPermission) {
   return { requiresAuth: true, permission };
@@ -38,145 +14,145 @@ export const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: LoginPage,
+      component: () => import("./features/auth/pages/LoginPage.vue"),
       meta: { layout: "auth" }
     },
     {
       path: "/",
       name: "dashboard",
-      component: DashboardPage,
+      component: () => import("./features/dashboard/pages/DashboardPage.vue"),
       meta: adminPageMeta("dashboard:read")
     },
     {
       path: "/sermons",
       name: "sermons",
-      component: SermonsPage,
+      component: () => import("./features/sermons/pages/SermonsPage.vue"),
       meta: adminPageMeta("sermons:read")
     },
     {
       path: "/sermon-discussion-guides",
       name: "sermon-discussion-guides",
-      component: SermonDiscussionGuidesPage,
+      component: () => import("./features/sermon-discussion-guides/pages/SermonDiscussionGuidesPage.vue"),
       meta: adminPageMeta("sermon_guides:read")
     },
     {
       path: "/bible-knowledge",
       name: "bible-knowledge",
-      component: BibleKnowledgePage,
+      component: () => import("./features/bible-knowledge/pages/BibleKnowledgePage.vue"),
       meta: adminPageMeta("bible_knowledge:read")
     },
     {
       path: "/bible-notes",
       name: "bible-notes",
-      component: BibleNotesPage,
+      component: () => import("./features/bible-notes/pages/BibleNotesPage.vue"),
       meta: adminPageMeta("bible_notes:read")
     },
     {
       path: "/reading-plans",
       name: "reading-plans",
-      component: ReadingPlansPage,
+      component: () => import("./features/reading-plans/pages/ReadingPlansPage.vue"),
       meta: adminPageMeta("reading_plans:read")
     },
     {
       path: "/discipleship",
       name: "discipleship",
-      component: DiscipleshipPage,
+      component: () => import("./features/discipleship/pages/DiscipleshipPage.vue"),
       meta: adminPageMeta("discipleship:read")
     },
     {
       path: "/life-posts",
       name: "life-posts",
-      component: LifePostsPage,
+      component: () => import("./features/life-posts/pages/LifePostsPage.vue"),
       meta: adminPageMeta("life_posts:read")
     },
     {
       path: "/prayer",
       name: "prayer",
-      component: PrayerPage,
+      component: () => import("./features/prayer/pages/PrayerPage.vue"),
       meta: adminPageMeta("prayer:read")
     },
     {
       path: "/giving",
       name: "giving",
-      component: GivingPage,
+      component: () => import("./features/giving/pages/GivingPage.vue"),
       meta: adminPageMeta("giving:read")
     },
     {
       path: "/groups",
       name: "groups",
-      component: GroupsPage,
+      component: () => import("./features/groups/pages/GroupsPage.vue"),
       meta: adminPageMeta("groups:read")
     },
     {
       path: "/courses",
       name: "courses",
-      component: CoursesPage,
+      component: () => import("./features/courses/pages/CoursesPage.vue"),
       meta: adminPageMeta("courses:read")
     },
     {
       path: "/serving",
       name: "serving",
-      component: ServingPage,
+      component: () => import("./features/serving/pages/ServingPage.vue"),
       meta: adminPageMeta("serving:read")
     },
     {
       path: "/members",
       name: "members",
-      component: MembersPage,
+      component: () => import("./features/members/pages/MembersPage.vue"),
       meta: adminPageMeta("users:read")
     },
     {
       path: "/newcomers",
       name: "newcomers",
-      component: NewcomersPage,
+      component: () => import("./features/newcomers/pages/NewcomersPage.vue"),
       meta: adminPageMeta("newcomers:read")
     },
     {
       path: "/care",
       name: "care",
-      component: CarePage,
+      component: () => import("./features/care/pages/CarePage.vue"),
       meta: adminPageMeta("care:read")
     },
     {
       path: "/users",
       name: "users",
-      component: UsersPage,
+      component: () => import("./features/users/pages/UsersPage.vue"),
       meta: adminPageMeta("users:read")
     },
     {
       path: "/ai",
       name: "ai",
-      component: AiManagementPage,
+      component: () => import("./features/ai/pages/AiManagementPage.vue"),
       meta: adminPageMeta("ai:read")
     },
     {
       path: "/audit",
       name: "audit",
-      component: AuditLogsPage,
+      component: () => import("./features/audit/pages/AuditLogsPage.vue"),
       meta: adminPageMeta("audit:read")
     },
     {
       path: "/jobs",
       name: "jobs",
-      component: JobsPage,
+      component: () => import("./features/jobs/pages/JobsPage.vue"),
       meta: adminPageMeta("jobs:read")
     },
     {
       path: "/notifications",
       name: "notifications",
-      component: NotificationsPage,
+      component: () => import("./features/notifications/pages/NotificationsPage.vue"),
       meta: adminPageMeta("notifications:read")
     },
     {
       path: "/media",
       name: "media",
-      component: MediaPage,
+      component: () => import("./features/media/pages/MediaPage.vue"),
       meta: adminPageMeta("media:read")
     },
     {
       path: "/settings",
       name: "settings",
-      component: SettingsPage,
+      component: () => import("./features/settings/pages/SettingsPage.vue"),
       meta: adminPageMeta("settings:read")
     }
   ]

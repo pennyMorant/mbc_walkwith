@@ -28,6 +28,18 @@ export default defineConfig(({ mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url))
       }
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            "admin-i18n": ["./src/core/i18n/i18n.ts"],
+            "content-tools": ["markdown-it", "qrcode"],
+            "vue-framework": ["vue", "vue-router", "pinia", "@tanstack/vue-query"],
+            vuetify: ["vuetify"]
+          }
+        }
+      }
+    },
     server: {
       host: "127.0.0.1",
       port: 5173
