@@ -108,6 +108,10 @@ Surface rule:
   and audit logs. Operational commands and sensitive detail remain page-owned;
   responsive result components only present records and emit detail intents.
 - Bible note and sermon discussion moderation preserve the same responsive rule.
+- The Life post editor delegates details, publish readiness, and notification
+  fields to presentation-only components. `LifePostsPage` and its controller
+  retain permission checks, translation requests, AI application, and all
+  create, update, review, publish, archive, and delete mutations.
   Mobile projections never widen content visibility or duplicate moderation state;
   they invoke the same page-owned detail or hide command used by desktop views.
 - Admin authentication changes clear the shared query cache before another session

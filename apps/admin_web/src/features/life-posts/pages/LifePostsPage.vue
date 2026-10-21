@@ -10,13 +10,14 @@ import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
-import LifeEventRegistrationSettings from "../components/LifeEventRegistrationSettings.vue";
 import LifeEventRegistrationsCard from "../components/LifeEventRegistrationsCard.vue";
 import LifePostConfirmDialog from "../components/LifePostConfirmDialog.vue";
-import LifePostMarkdownEditor from "../components/LifePostMarkdownEditor.vue";
+import LifePostDetailsFields from "../components/LifePostDetailsFields.vue";
 import LifePostEditorActions from "../components/LifePostEditorActions.vue";
 import LifePostLibraryCard from "../components/LifePostLibraryCard.vue";
+import LifePostNotificationPanel from "../components/LifePostNotificationPanel.vue";
 import LifePostPreviewCard from "../components/LifePostPreviewCard.vue";
+import LifePostPublishChecklist from "../components/LifePostPublishChecklist.vue";
 import { useLifePostsPageController } from "../composables/use_life_posts_page_controller";
 
 const notificationLocale = ref<ContentLocale>("en");
@@ -237,329 +238,47 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
           @submit.prevent="saveLifePost"
         >
           <template v-if="authStore.can('life_posts:update')">
-          <v-row dense>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.type"
-                :label="t('Type')"
-                :items="optionItems(lifePostTypes)"
-                item-title="title"
-                item-value="value"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.visibility"
-                :label="t('Visibility')"
-                :items="optionItems(['public', 'members', 'group', 'private'])"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.status"
-                :label="t('Status')"
-                :items="optionItems(['draft', 'needs_review', 'published', 'archived'])"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.sort"
-                :label="t('life.sort.label')"
-                :items="sortOptions"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-          </v-row>
-          <v-text-field
-            v-model="form.title"
-            :label="t('Title')"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-text-field
-            v-model="form.meta"
-            :label="t('Meta')"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-row dense>
-            <v-col cols="12" md="5">
-              <v-text-field
-                v-model="form.ctaLabel"
-                :label="t('Action label')"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="7">
-              <v-text-field
-                v-model="form.ctaUrl"
-                :label="t('Action URL')"
-                density="comfortable"
-                variant="outlined"
-                :placeholder="t('life.actionUrlPlaceholder')"
-              />
-            </v-col>
-          </v-row>
-          <v-row dense>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="form.startsAt"
-                :label="t('Starts at')"
-                type="datetime-local"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="form.endsAt"
-                :label="t('Ends at')"
-                type="datetime-local"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-          </v-row>
-          <v-file-input
-            :label="t('Upload image')"
-            accept="image/png,image/jpeg,image/webp,image/gif"
-            density="comfortable"
-            variant="outlined"
-            prepend-icon=""
-            prepend-inner-icon="mdi-image-plus"
-            :loading="uploadImageMutation.isPending.value"
-            @update:model-value="uploadSelectedImage"
-          />
-          <v-alert
-            v-if="imageUploadErrorMessage"
-            type="error"
-            variant="tonal"
-            class="mb-4"
-          >
-            {{ imageUploadErrorMessage }}
-          </v-alert>
-          <v-img
-            v-if="imagePreviewUrl"
-            :src="imagePreviewUrl"
-            height="160"
-            cover
-            class="life-post-image-preview mb-3"
-          />
-          <div class="d-flex justify-end mb-5">
-            <v-btn
-              v-if="imagePreviewUrl"
-              color="secondary"
-              variant="tonal"
-              size="small"
-              @click="clearImage"
-            >
-              {{ t("Clear image") }}
-            </v-btn>
-          </div>
-          <v-select
-            v-model="form.iconName"
-            :label="t('Icon name')"
-            :items="optionItems(lifePostIcons)"
-            density="comfortable"
-            variant="outlined"
-          />
-          <LifePostMarkdownEditor v-model="form.body" :label="t('Body')" :rows="8" />
-
-          <AdminAiDraftPanel
-            task="life_post_draft"
-            :title="t('ai.lifePostTitle')"
-            :subtitle="t('ai.lifePostSubtitle')"
-            :button-label="t('ai.generateLifePost')"
-            :apply-label="t('ai.applyToBody')"
-            :input="lifePostAiInput"
-            :resource="lifePostAiResource"
-            :can-use="authStore.can('ai:use')"
-            :disabled="
-              !form.title.trim() && !form.body.trim() && !form.meta.trim()
-            "
-            @apply="applyLifePostAiDraft"
-          />
-
-          <LifeEventRegistrationSettings
-            :form="form"
-            @update-form="Object.assign(form, $event)"
-          />
-
-          <v-alert
-            v-if="!isScheduleValid || !isCtaUrlValid"
-            type="warning"
-            variant="tonal"
-            class="mb-4"
-          >
-            {{
-              !isScheduleValid
-                ? t("End time must be after start time.")
-                : t("Action URL must start with http or https.")
-              }}
-          </v-alert>
+            <LifePostDetailsFields
+              v-model="form"
+              :life-post-types="lifePostTypes"
+              :life-post-icons="lifePostIcons"
+              :sort-options="sortOptions"
+              :image-preview-url="imagePreviewUrl"
+              :image-upload-pending="uploadImageMutation.isPending.value"
+              :image-upload-error-message="imageUploadErrorMessage"
+              :schedule-valid="isScheduleValid"
+              :cta-url-valid="isCtaUrlValid"
+              @upload-image="uploadSelectedImage"
+              @clear-image="clearImage"
+            />
+            <AdminAiDraftPanel
+              task="life_post_draft"
+              :title="t('ai.lifePostTitle')"
+              :subtitle="t('ai.lifePostSubtitle')"
+              :button-label="t('ai.generateLifePost')"
+              :apply-label="t('ai.applyToBody')"
+              :input="lifePostAiInput"
+              :resource="lifePostAiResource"
+              :can-use="authStore.can('ai:use')"
+              :disabled="!form.title.trim() && !form.body.trim() && !form.meta.trim()"
+              @apply="applyLifePostAiDraft"
+            />
           </template>
 
-          <v-sheet class="life-publish-checklist mb-4" rounded border>
-            <div class="pa-4">
-              <div class="d-flex align-center justify-space-between ga-3">
-                <div>
-                  <div class="text-subtitle-2 font-weight-bold">
-                    {{ t("Publish checklist") }}
-                  </div>
-                  <div class="text-caption text-medium-emphasis">
-                    {{ t("Review required fields before sending content to the app.") }}
-                  </div>
-                </div>
-                <v-chip
-                  :color="isPublishReady ? 'success' : 'warning'"
-                  size="small"
-                  variant="tonal"
-                >
-                  {{ isPublishReady ? t("Ready to publish") : t("Incomplete") }}
-                </v-chip>
-              </div>
-              <v-list density="compact" class="mt-2 pa-0">
-                <v-list-item
-                  v-for="check in publishReadinessChecks"
-                  :key="check.label"
-                  class="px-0"
-                >
-                  <template #prepend>
-                    <v-icon
-                      :color="check.ok ? 'success' : 'warning'"
-                      :icon="check.ok ? 'mdi-check-circle' : 'mdi-alert-circle'"
-                    />
-                  </template>
-                  <v-list-item-title>{{ check.label }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ check.detail }}</v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
-            </div>
-          </v-sheet>
+          <LifePostPublishChecklist :ready="isPublishReady" :checks="publishReadinessChecks" />
 
-          <v-sheet
-            v-if="selectedPost && selectedPost.status !== 'published'"
-            class="life-publish-notification mb-4"
-            rounded
-            border
-          >
-            <div class="pa-4">
-              <div class="d-flex align-center justify-space-between ga-4">
-                <div>
-                  <div class="text-subtitle-2 font-weight-bold">
-                    {{ t("App notification") }}
-                  </div>
-                  <div class="text-caption text-medium-emphasis">
-                    {{ t("Notify app members when publishing") }}
-                  </div>
-                </div>
-                <v-switch
-                  v-model="form.notifyAppOnPublish"
-                  color="primary"
-                  density="compact"
-                  hide-details
-                  inset
-                />
-              </div>
-              <v-expand-transition>
-                <div v-if="form.notifyAppOnPublish" class="mt-4">
-                  <v-tabs v-model="notificationLocale" density="compact" grow>
-                    <v-tab
-                      v-for="item in notificationLocaleOptions"
-                      :key="item.value"
-                      :value="item.value"
-                    >
-                      {{ item.title }}
-                    </v-tab>
-                  </v-tabs>
-                  <v-window v-model="notificationLocale" class="mt-3">
-                    <v-window-item :value="form.sourceLocale">
-                      <v-text-field
-                        v-model="form.notificationTitle"
-                        :label="t('Notification title')"
-                        :placeholder="form.title || t('Leave blank to use post title')"
-                        maxlength="120"
-                        counter
-                        density="comfortable"
-                        variant="outlined"
-                      />
-                      <v-textarea
-                        v-model="form.notificationBody"
-                        :label="t('Notification body')"
-                        :placeholder="t('Leave blank to use post body')"
-                        maxlength="180"
-                        counter
-                        rows="3"
-                        density="comfortable"
-                        variant="outlined"
-                        hide-details
-                      />
-                      <AdminAiDraftPanel
-                        task="notification_draft"
-                        :title="t('ai.notificationTitle')"
-                        :subtitle="t('ai.notificationSubtitle')"
-                        :button-label="t('ai.generateNotification')"
-                        :apply-label="t('ai.applyToNotification')"
-                        :input="notificationAiInput"
-                        :resource="lifePostAiResource"
-                        :can-use="authStore.can('ai:use')"
-                        :disabled="!form.title.trim() && !form.body.trim()"
-                        @apply="applyNotificationAiDraft"
-                      />
-                    </v-window-item>
-                    <v-window-item
-                      v-for="item in notificationLocaleOptions.filter(
-                        (option) => option.value !== form.sourceLocale
-                      )"
-                      :key="item.value"
-                      :value="item.value"
-                    >
-                      <div class="d-flex justify-end mb-2">
-                        <v-btn
-                          size="small"
-                          variant="tonal"
-                          color="primary"
-                          :loading="translatingNotificationLocale === item.value"
-                          :disabled="!authStore.can('ai:use')"
-                          @click="translateNotificationTarget(item.value)"
-                        >
-                          {{ t("localization.generate") }}
-                        </v-btn>
-                      </div>
-                      <v-text-field
-                        v-model="form.notificationTranslations[item.value].title"
-                        :label="t('Notification title')"
-                        :placeholder="t('Leave blank to use source notification')"
-                        maxlength="120"
-                        counter
-                        density="comfortable"
-                        variant="outlined"
-                      />
-                      <v-textarea
-                        v-model="form.notificationTranslations[item.value].body"
-                        :label="t('Notification body')"
-                        :placeholder="t('Leave blank to use source notification')"
-                        maxlength="180"
-                        counter
-                        rows="3"
-                        density="comfortable"
-                        variant="outlined"
-                        hide-details
-                      />
-                    </v-window-item>
-                  </v-window>
-                </div>
-              </v-expand-transition>
-            </div>
-          </v-sheet>
+          <LifePostNotificationPanel
+            v-model:form="form"
+            v-model:locale="notificationLocale"
+            :post="selectedPost"
+            :locale-options="notificationLocaleOptions"
+            :translating-locale="translatingNotificationLocale"
+            :ai-input="notificationAiInput"
+            :ai-resource="lifePostAiResource"
+            :can-use-ai="authStore.can('ai:use')"
+            @translate="translateNotificationTarget"
+            @apply-ai="applyNotificationAiDraft"
+          />
 
           <ContentLocalizationCard
             v-if="selectedPost"
@@ -613,13 +332,3 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
     </v-snackbar>
   </div>
 </template>
-
-<style scoped>
-.life-post-image-preview {
-  border-radius: 8px;
-}
-
-.life-publish-checklist {
-  background: rgb(var(--v-theme-surface));
-}
-</style>
