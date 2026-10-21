@@ -140,10 +140,14 @@ const canCreateFollowUp = computed(
     (followUpForm.status !== "planned" ||
       dateTimeInputToIso(followUpForm.plannedAt) !== null)
 );
-const errorMessage = computed(() =>
+const listErrorMessage = computed(() =>
+  requestsQuery.error.value
+    ? formatApiErrorMessage(requestsQuery.error.value, t("common.error"))
+    : ""
+);
+const detailErrorMessage = computed(() =>
   formatApiErrorMessage(
-    requestsQuery.error.value ||
-      assigneesQuery.error.value ||
+    assigneesQuery.error.value ||
       updateMutation.error.value ||
       followUpMutation.error.value ||
       followUpsQuery.error.value,
@@ -225,8 +229,8 @@ function addCareFollowUp() {
       </template>
     </AdminPageHeader>
 
-    <v-alert v-if="errorMessage" type="error" variant="tonal" class="mt-4">
-      {{ errorMessage }}
+    <v-alert v-if="detailErrorMessage" type="error" variant="tonal" class="mt-4">
+      {{ detailErrorMessage }}
     </v-alert>
 
     <AdminMetricGrid :items="summaryMetrics" />
@@ -275,9 +279,11 @@ function addCareFollowUp() {
       <CareRequestResults
         :requests="requests"
         :pending="requestsQuery.isPending.value"
+        :error-message="listErrorMessage"
         :status-color="statusColor"
         :privacy-color="privacyColor"
         @open="openRequest"
+        @retry="requestsQuery.refetch()"
       />
     </v-card>
 

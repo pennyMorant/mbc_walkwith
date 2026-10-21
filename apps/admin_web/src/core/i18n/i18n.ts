@@ -607,6 +607,7 @@ Object.assign(messages.en, {
     "Assign newcomer follow-up, record contact history, and prepare the next pastoral step.",
   "newcomers.privacyNotice":
     "Newcomer contact details and follow-up notes are admin-only and are not returned to normal App APIs.",
+  "care.empty": "No care requests match the current filters.",
   "Active follow-up": "Active follow-up",
   "Add follow-up": "Add follow-up",
   "Admin": "Admin",
@@ -849,6 +850,7 @@ Object.assign(messages["zh-Hans"], {
   "newcomers.pageSubtitle": "分配新朋友跟进、记录联系历史，并预备下一步牧养行动。",
   "newcomers.privacyNotice":
     "新朋友联系方式和跟进记录仅供后台授权同工使用，不会返回给普通 App 接口。",
+  "care.empty": "当前筛选下没有关怀请求。",
   "Active follow-up": "进行中的跟进",
   "Add follow-up": "添加跟进",
   "Admin": "后台同工",
@@ -1717,6 +1719,7 @@ Object.assign(messages.es, messages.en, {
   "auth.accessDeniedMessage":
     "Tu cuenta ha iniciado sesión, pero no tiene acceso a ningún espacio administrativo.",
   "auth.accessDeniedTitle": "Sin acceso administrativo",
+  "care.empty": "Ninguna solicitud de cuidado coincide con los filtros actuales.",
   "auth.currentPassword": "Contraseña actual",
   "auth.email": "Correo",
   "auth.logout": "Cerrar sesión",
@@ -1938,6 +1941,7 @@ Object.assign(messages["zh-Hant"], messages["zh-Hans"], {
   "auth.accessDeniedHelp": "請聯絡管理員，為你的服事角色分配所需權限。",
   "auth.accessDeniedMessage": "帳號已登入，但目前沒有可存取的管理模組。",
   "auth.accessDeniedTitle": "暫無管理權限",
+  "care.empty": "目前篩選下沒有關懷請求。",
   "auth.currentPassword": "目前密碼",
   "auth.logout": "登出",
   "auth.newPassword": "新密碼",

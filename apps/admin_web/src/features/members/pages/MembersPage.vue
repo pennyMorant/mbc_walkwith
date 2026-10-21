@@ -294,6 +294,7 @@ function statusColor(status: MemberStatus) {
         :error-message="membersQuery.error.value ? formatApiErrorMessage(membersQuery.error.value, t('common.error')) : ''"
         :status-color="statusColor"
         @open="openMember"
+        @retry="membersQuery.refetch()"
       />
     </v-card>
 

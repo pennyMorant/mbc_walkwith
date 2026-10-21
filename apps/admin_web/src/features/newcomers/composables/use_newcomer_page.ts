@@ -190,13 +190,17 @@ export function useNewcomerPage() {
       newcomerFollowUpHasRequiredSchedule(followUpForm.status, plannedAt)
     );
   });
-  const queryErrorMessage = computed(() => {
-    const error = newcomersQuery.error.value || followUpsQuery.error.value;
-    return error ? formatApiErrorMessage(error, t("common.error")) : "";
-  });
-  const errorMessage = computed(
-    () => queryErrorMessage.value || mutationErrorMessage.value
+  const listErrorMessage = computed(() =>
+    newcomersQuery.error.value
+      ? formatApiErrorMessage(newcomersQuery.error.value, t("common.error"))
+      : ""
   );
+  const detailErrorMessage = computed(() => {
+    const error = followUpsQuery.error.value;
+    return error
+      ? formatApiErrorMessage(error, t("common.error"))
+      : mutationErrorMessage.value;
+  });
 
   watch(selectedNewcomer, (newcomer) => {
     if (!newcomer) return;
@@ -262,7 +266,7 @@ export function useNewcomerPage() {
     canSave,
     discipleshipCount,
     drawer,
-    errorMessage,
+    detailErrorMessage,
     filters,
     followUpForm,
     followUpMutation,
@@ -272,6 +276,7 @@ export function useNewcomerPage() {
     newCount,
     newcomers,
     newcomersQuery,
+    listErrorMessage,
     openNewcomer,
     saveNewcomer,
     selectedNewcomer,

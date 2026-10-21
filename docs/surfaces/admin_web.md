@@ -108,7 +108,8 @@ Surface rule:
   mobile viewport width and retains Vuetify's temporary-drawer behavior.
 - People workspaces render member, newcomer, and care result arrays as desktop
   tables and compact mobile records. Both projections emit the same page-owned
-  detail intent and do not own API, selection, permission, or mutation state.
+  detail intent and share Core loading, error, retry, and empty presentation.
+  Their pages retain query retry, selection, permission, and mutation ownership.
 - System workspaces apply the same rule to notification deliveries, admin users,
   and audit logs. Operational commands and sensitive detail remain page-owned;
   responsive result components only present records and emit detail intents.

@@ -26,7 +26,7 @@ const {
   canSave,
   discipleshipCount,
   drawer,
-  errorMessage,
+  detailErrorMessage,
   filters,
   followUpForm,
   followUpMutation,
@@ -36,6 +36,7 @@ const {
   newCount,
   newcomers,
   newcomersQuery,
+  listErrorMessage,
   openNewcomer,
   saveNewcomer,
   selectedNewcomer,
@@ -64,8 +65,8 @@ const summaryMetrics = computed(() => [
       </template>
     </AdminPageHeader>
 
-    <v-alert v-if="errorMessage" type="error" variant="tonal" class="mt-4">
-      {{ errorMessage }}
+    <v-alert v-if="detailErrorMessage" type="error" variant="tonal" class="mt-4">
+      {{ detailErrorMessage }}
     </v-alert>
 
     <AdminMetricGrid :items="summaryMetrics" />
@@ -105,7 +106,9 @@ const summaryMetrics = computed(() => [
       <NewcomerResults
         :newcomers="newcomers"
         :pending="newcomersQuery.isPending.value"
+        :error-message="listErrorMessage"
         @open="openNewcomer"
+        @retry="newcomersQuery.refetch()"
       />
     </v-card>
 
