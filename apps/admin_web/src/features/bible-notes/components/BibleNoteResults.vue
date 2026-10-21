@@ -6,20 +6,29 @@ import type {
 
 import { formatAdminDate } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 
 defineProps<{
   notes: AdminBibleVerseNote[];
   pending: boolean;
+  errorMessage: string;
   statusColor: (status: BibleVerseNoteStatus) => string;
 }>();
-defineEmits<{ open: [note: AdminBibleVerseNote] }>();
+defineEmits<{ open: [note: AdminBibleVerseNote]; retry: [] }>();
 
 const { locale, t } = useI18n();
 </script>
 
 <template>
-  <v-progress-linear v-if="pending" indeterminate color="primary" />
-  <template v-else>
+  <AdminDataState
+    :pending="pending"
+    :error-message="errorMessage"
+    :empty="notes.length === 0"
+    :empty-title="t('bibleNotes.empty')"
+    empty-icon="mdi-note-off-outline"
+    :retry-label="t('common.refresh')"
+    @retry="$emit('retry')"
+  >
     <v-table class="d-none d-md-block" hover>
       <thead>
         <tr>
@@ -52,11 +61,6 @@ const { locale, t } = useI18n();
           </td>
           <td>{{ formatAdminDate(note.updatedAt, locale) }}</td>
         </tr>
-        <tr v-if="notes.length === 0">
-          <td colspan="5" class="text-center text-medium-emphasis py-8">
-            {{ t("bibleNotes.empty") }}
-          </td>
-        </tr>
       </tbody>
     </v-table>
 
@@ -78,11 +82,8 @@ const { locale, t } = useI18n();
         </v-chip>
         <v-icon icon="mdi-chevron-right" size="20" />
       </button>
-      <div v-if="notes.length === 0" class="bible-note-record-empty">
-        {{ t("bibleNotes.empty") }}
-      </div>
     </div>
-  </template>
+  </AdminDataState>
 </template>
 
 <style scoped>
@@ -92,5 +93,4 @@ const { locale, t } = useI18n();
 .bible-note-record__main { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
 .bible-note-record__main span { overflow: hidden; color: rgba(var(--v-theme-on-surface), 0.62); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 .bible-note-record__content { color: rgba(var(--v-theme-on-surface), 0.78) !important; font-size: 13px !important; }
-.bible-note-record-empty { padding: 28px 16px; color: rgba(var(--v-theme-on-surface), 0.62); text-align: center; }
 </style>

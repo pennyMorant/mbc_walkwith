@@ -180,12 +180,18 @@ const canSaveGuide = computed(
     (guideForm.audienceType === "public" ||
       Boolean(guideForm.audienceId?.trim()))
 );
-const queryErrorMessage = computed(() => {
-  const error = guidesQuery.error.value || responsesQuery.error.value;
-  return error ? formatApiErrorMessage(error, t("common.error")) : "";
-});
+const guideErrorMessage = computed(() =>
+  guidesQuery.error.value
+    ? formatApiErrorMessage(guidesQuery.error.value, t("common.error"))
+    : ""
+);
+const responseErrorMessage = computed(() =>
+  responsesQuery.error.value
+    ? formatApiErrorMessage(responsesQuery.error.value, t("common.error"))
+    : ""
+);
 const errorMessage = computed(
-  () => queryErrorMessage.value || mutationErrorMessage.value
+  () => guideErrorMessage.value || mutationErrorMessage.value
 );
 
 function selectGuide(guide: SermonDiscussionGuide) {
@@ -432,6 +438,7 @@ function hideResponse(responseId: string) {
             <SermonDiscussionResponsesPanel
               v-else
               :can-manage="canManage"
+              :error-message="responseErrorMessage"
               :filters="responseFilters"
               :hiding-response-id="hidingResponseId"
               :pending="Boolean(selectedGuide) && responsesQuery.isFetching.value"

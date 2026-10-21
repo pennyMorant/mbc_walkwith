@@ -9,6 +9,7 @@ import {
 } from "@/core/api/sermon_discussion_guides";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 
 type ResponseFilters = {
   userType: "member" | "external" | "";
@@ -16,6 +17,7 @@ type ResponseFilters = {
 
 defineProps<{
   canManage: boolean;
+  errorMessage: string;
   filters: ResponseFilters;
   hidingResponseId: string | null;
   pending: boolean;
@@ -77,15 +79,8 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
       </div>
     </div>
 
-    <v-progress-linear
-      v-if="pending"
-      class="mt-4"
-      color="primary"
-      indeterminate
-    />
-
     <v-alert
-      v-else-if="!selectedGuide"
+      v-if="!selectedGuide"
       class="mt-4"
       density="comfortable"
       type="info"
@@ -94,7 +89,18 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
       {{ t("No discussion guide selected.") }}
     </v-alert>
 
-    <v-table v-else class="mt-4 d-none d-md-block" density="comfortable">
+    <AdminDataState
+      v-else
+      class="mt-4"
+      :pending="pending"
+      :error-message="errorMessage"
+      :empty="responses.length === 0"
+      :empty-title="t('No responses match the current filters.')"
+      empty-icon="mdi-message-text-off-outline"
+      :retry-label="t('common.refresh')"
+      @retry="$emit('refresh')"
+    >
+    <v-table class="d-none d-md-block" density="comfortable">
       <thead>
         <tr>
           <th>{{ t("User") }}</th>
@@ -106,11 +112,6 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
         </tr>
       </thead>
       <tbody>
-        <tr v-if="responses.length === 0">
-          <td colspan="6">
-            {{ t("No responses match the current filters.") }}
-          </td>
-        </tr>
         <tr v-for="response in responses" :key="response.id">
           <td>
             <div class="font-weight-medium">{{ t(response.userType) }}</div>
@@ -147,10 +148,7 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
       </tbody>
     </v-table>
 
-    <div
-      v-if="!pending && selectedGuide"
-      class="discussion-response-list d-md-none mt-4"
-    >
+    <div class="discussion-response-list d-md-none">
       <article
         v-for="response in responses"
         :key="response.id"
@@ -192,10 +190,8 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
           </v-btn>
         </div>
       </article>
-      <div v-if="responses.length === 0" class="discussion-response-empty">
-        {{ t("No responses match the current filters.") }}
-      </div>
     </div>
+    </AdminDataState>
   </div>
 </template>
 
@@ -208,5 +204,4 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
 .discussion-response-record { padding: 16px 2px; border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.08); }
 .discussion-response-record__heading, .discussion-response-record__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .discussion-response-record__content { line-height: 1.55; white-space: pre-wrap; }
-.discussion-response-empty { padding: 24px 0; color: rgba(var(--v-theme-on-surface), 0.62); text-align: center; }
 </style>

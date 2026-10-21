@@ -164,16 +164,6 @@ function restoreSelectedNote() {
       </template>
     </AdminPageHeader>
 
-    <v-alert
-      v-if="queryErrorMessage"
-      type="error"
-      variant="tonal"
-      density="comfortable"
-      class="mt-4"
-    >
-      {{ queryErrorMessage }}
-    </v-alert>
-
     <AdminMetricGrid :items="summaryMetrics" />
 
     <v-card class="mt-6">
@@ -240,8 +230,10 @@ function restoreSelectedNote() {
       <BibleNoteResults
         :notes="notes"
         :pending="notesQuery.isPending.value"
+        :error-message="queryErrorMessage"
         :status-color="statusColor"
         @open="openNote"
+        @retry="notesQuery.refetch()"
       />
     </v-card>
 

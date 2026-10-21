@@ -116,7 +116,9 @@ Surface rule:
 - System result projections use the shared Admin data-state presentation for
   loading, error, retry, and empty feedback. The shared component owns no query,
   permission, or transport state; each page connects retry to its own query.
-- Bible note and sermon discussion moderation preserve the same responsive rule.
+- Bible note and sermon discussion response moderation preserve the same
+  responsive and query-state rule. Their pages keep filters, moderation
+  permissions, retries, and mutation feedback separate from list errors.
 - The Life post editor delegates details, publish readiness, and notification
   fields to presentation-only components. `LifePostsPage` and its controller
   retain permission checks, translation requests, AI application, and all
