@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
+import GroupCatalogCard from "../components/GroupCatalogCard.vue";
 import GroupEditorDrawer from "../components/GroupEditorDrawer.vue";
 import GroupWorkspaceCard from "../components/GroupWorkspaceCard.vue";
 import { useGroupMinistryPage } from "../composables/use_group_ministry_page";
@@ -20,12 +21,12 @@ const {
   canSave,
   drawer,
   editGroup,
-  errorMessage,
   filters,
   filteredMemberships,
   form,
   groups,
   groupsQuery,
+  listErrorMessage,
   materialCreateMutation,
   materialFilters,
   materialForm,
@@ -45,7 +46,8 @@ const {
   selectGroup,
   successMessage,
   successVisible,
-  t
+  t,
+  workspaceErrorMessage
 } = useGroupMinistryPage();
 </script>
 
@@ -68,13 +70,13 @@ const {
     </AdminPageHeader>
 
     <v-alert
-      v-if="errorMessage"
+      v-if="workspaceErrorMessage"
       class="mt-4"
       type="error"
       variant="tonal"
       density="comfortable"
     >
-      {{ errorMessage }}
+      {{ workspaceErrorMessage }}
     </v-alert>
 
     <v-card class="mt-5" variant="outlined">
@@ -121,50 +123,16 @@ const {
 
     <v-row class="mt-2" dense>
       <v-col cols="12" lg="4">
-        <v-card variant="outlined">
-          <v-progress-linear
-            v-if="groupsQuery.isPending.value"
-            indeterminate
-            color="primary"
-          />
-          <v-list lines="three">
-            <v-list-item
-              v-if="!groupsQuery.isPending.value && groups.length === 0"
-            >
-              <v-list-item-title class="text-medium-emphasis">
-                {{ t("No groups match the current filters.") }}
-              </v-list-item-title>
-            </v-list-item>
-            <v-list-item
-              v-for="group in groups"
-              :key="group.id"
-              :active="selectedGroup?.id === group.id"
-              @click="selectGroup(group)"
-            >
-              <template #title>
-                <div class="font-weight-bold">{{ group.name }}</div>
-              </template>
-              <template #subtitle>
-                <div>{{ group.leaderName || t("common.notSet") }}</div>
-                <div class="text-caption text-medium-emphasis">
-                  {{ t(group.status) }} · {{ group.memberCount }}/{{
-                    group.capacity ?? "∞"
-                  }}
-                </div>
-              </template>
-              <template #append>
-                <v-btn
-                  v-if="canManage"
-                  icon="mdi-pencil-outline"
-                  size="small"
-                  variant="text"
-                  :aria-label="t('Edit group')"
-                  @click.stop="editGroup(group)"
-                />
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <GroupCatalogCard
+          :can-manage="canManage"
+          :error-message="listErrorMessage"
+          :groups="groups"
+          :pending="groupsQuery.isPending.value"
+          :selected-group-id="selectedGroup?.id ?? null"
+          @edit="editGroup"
+          @retry="groupsQuery.refetch()"
+          @select="selectGroup"
+        />
       </v-col>
 
       <v-col cols="12" lg="8">

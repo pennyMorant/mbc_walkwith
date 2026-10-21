@@ -226,17 +226,18 @@ export function useGroupMinistryPage() {
     onError: (error, variables, context) =>
       mutationFeedback.capture(error, variables, context)
   });
-  const queryErrorMessage = computed(() =>
+  const listErrorMessage = computed(() =>
+    groupsQuery.error.value
+      ? formatApiErrorMessage(groupsQuery.error.value, t("common.error"))
+      : ""
+  );
+  const workspaceErrorMessage = computed(() =>
     formatApiErrorMessage(
-      groupsQuery.error.value ||
-        applicationsQuery.error.value ||
+      applicationsQuery.error.value ||
         membershipsQuery.error.value ||
         activity.error.value,
       t("common.error")
-    )
-  );
-  const errorMessage = computed(
-    () => queryErrorMessage.value || mutationFeedback.errorMessage.value
+    ) || mutationFeedback.errorMessage.value
   );
 
   function selectGroup(group: MinistryGroup, preserveFeedback = false) {
@@ -286,11 +287,11 @@ export function useGroupMinistryPage() {
     canSave,
     drawer,
     editGroup,
-    errorMessage,
     filters,
     form,
     groups,
     groupsQuery,
+    listErrorMessage,
     membershipFilters,
     membershipMutation,
     filteredMemberships,
@@ -304,7 +305,8 @@ export function useGroupMinistryPage() {
     selectGroup,
     successMessage,
     successVisible,
-    t
+    t,
+    workspaceErrorMessage
   };
 }
 

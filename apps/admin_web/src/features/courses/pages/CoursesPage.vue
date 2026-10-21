@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
+import CourseCatalogCard from "../components/CourseCatalogCard.vue";
 import CourseEditorDrawer from "../components/CourseEditorDrawer.vue";
 import CourseWorkspaceCard from "../components/CourseWorkspaceCard.vue";
 import { useCoursePageController } from "../composables/use_course_page_controller";
@@ -19,7 +20,6 @@ const {
   enrollmentMutation,
   enrollments,
   enrollmentsQuery,
-  errorMessage,
   filters,
   form,
   lessonForm,
@@ -27,6 +27,7 @@ const {
   lessons,
   lessonsQuery,
   lessonStatusMutation,
+  listErrorMessage,
   newCourse,
   optionItems,
   saveCourse,
@@ -35,7 +36,8 @@ const {
   selectCourse,
   t,
   updateEnrollmentStatus,
-  updateLessonStatus
+  updateLessonStatus,
+  workspaceErrorMessage
 } = useCoursePageController();
 </script>
 
@@ -58,13 +60,13 @@ const {
     </AdminPageHeader>
 
     <v-alert
-      v-if="errorMessage"
+      v-if="workspaceErrorMessage"
       class="mt-4"
       type="error"
       variant="tonal"
       density="comfortable"
     >
-      {{ errorMessage }}
+      {{ workspaceErrorMessage }}
     </v-alert>
 
     <v-card class="mt-5" variant="outlined">
@@ -111,40 +113,14 @@ const {
 
     <v-row class="mt-2" dense>
       <v-col cols="12" lg="5">
-        <v-card variant="outlined">
-          <v-progress-linear
-            v-if="coursesQuery.isPending.value"
-            indeterminate
-            color="primary"
-          />
-          <v-list lines="three">
-            <v-list-item
-              v-if="!coursesQuery.isPending.value && courses.length === 0"
-            >
-              <v-list-item-title class="text-medium-emphasis">
-                {{ t("No courses match the current filters.") }}
-              </v-list-item-title>
-            </v-list-item>
-            <v-list-item
-              v-for="course in courses"
-              :key="course.id"
-              :active="selectedCourse?.id === course.id"
-              @click="selectCourse(course)"
-            >
-              <template #title>
-                <div class="font-weight-bold">{{ course.title }}</div>
-              </template>
-              <template #subtitle>
-                <div>{{ course.teacherName || t("common.notSet") }}</div>
-                <div class="text-caption text-medium-emphasis">
-                  {{ course.scheduleText || t("common.notSet") }} ·
-                  {{ t(course.status) }} ·
-                  {{ course.enrolledCount }}/{{ course.capacity ?? "∞" }}
-                </div>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
+        <CourseCatalogCard
+          :courses="courses"
+          :error-message="listErrorMessage"
+          :pending="coursesQuery.isPending.value"
+          :selected-course-id="selectedCourse?.id ?? null"
+          @retry="coursesQuery.refetch()"
+          @select="selectCourse"
+        />
       </v-col>
 
       <v-col cols="12" lg="7">

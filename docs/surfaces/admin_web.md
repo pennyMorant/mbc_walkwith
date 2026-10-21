@@ -165,10 +165,11 @@ Surface rule:
 - Event attendance：扫码签到、手动补签、出席状态、缺席和导出。
 - Group ministry：Groups 页面左侧选择/编辑小组，右侧工作台按申请、成员、材料和
   出席分区；页面经 `groups.ts` 与 `group_activity.ts` helper 提交 intent，并在
-  mutation 后刷新 canonical 小组和子资源。
+  mutation 后刷新 canonical 小组和子资源。左侧目录使用共享查询状态表达，页面
+  保留筛选、重试和选择 owner，子资源与 mutation 错误不会替换目录状态。
 - Group ministry v2：Admin 已接入成员状态、材料分配和出席记录；小组长 App
   工作台、关怀提醒和小组通知仍归 group ministry feature 后续阶段。
-- Course learning：Courses 页面维护课程、课次、报名名单和学习进度；mutation 后必须刷新 canonical 课程及子资源，查询需表达 loading、empty 和 error；资料和逐课次出勤后续接入。
+- Course learning：Courses 页面维护课程、课次、报名名单和学习进度；mutation 后必须刷新 canonical 课程及子资源。左侧课程目录使用共享 loading、empty、error 和 retry 表达，页面保留查询 owner；资料和逐课次出勤后续接入。
 - Serving schedule：Serving 页面通过 canonical member picker 维护团队、岗位和排班，
   并在同一工作区查看、筛选和写入可用时间与到岗状态；页面不提交成员姓名/邮箱
   快照，也不自己决定冲突和签到时间。

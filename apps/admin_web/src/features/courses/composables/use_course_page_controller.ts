@@ -181,12 +181,15 @@ export function useCoursePageController() {
   const courses = computed(() => coursesQuery.data.value ?? []);
   const lessons = computed(() => lessonsQuery.data.value ?? []);
   const enrollments = computed(() => enrollmentsQuery.data.value ?? []);
-  const errorMessage = computed(
+  const listErrorMessage = computed(() =>
+    coursesQuery.error.value
+      ? formatApiErrorMessage(coursesQuery.error.value, t("common.error"))
+      : ""
+  );
+  const workspaceErrorMessage = computed(
     () =>
       formatApiErrorMessage(
-        coursesQuery.error.value ||
-          lessonsQuery.error.value ||
-          enrollmentsQuery.error.value,
+        lessonsQuery.error.value || enrollmentsQuery.error.value,
         t("common.error")
       ) || mutationFeedback.errorMessage.value
   );
@@ -348,7 +351,6 @@ export function useCoursePageController() {
     enrollmentMutation,
     enrollments,
     enrollmentsQuery,
-    errorMessage,
     filters,
     form,
     lessonForm,
@@ -356,6 +358,7 @@ export function useCoursePageController() {
     lessons,
     lessonsQuery,
     lessonStatusMutation,
+    listErrorMessage,
     newCourse,
     optionItems,
     saveCourse,
@@ -364,6 +367,7 @@ export function useCoursePageController() {
     selectCourse,
     t,
     updateEnrollmentStatus,
-    updateLessonStatus
+    updateLessonStatus,
+    workspaceErrorMessage
   };
 }
