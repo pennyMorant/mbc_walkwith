@@ -126,6 +126,8 @@ Surface rule:
 - Settings uses presentation-only group and editor components. The page retains
   query ownership, permissions, value parsing, locale side effects, and the
   canonical update mutation for both ordinary and public-landing settings.
+  The settings catalog uses shared loading, error, retry, and empty presentation;
+  editor parsing and update errors remain scoped to the editor drawer.
 - Reading Plans keeps filters, plan results, and base fields in focused
   presentation components. The page remains the owner of queries, mutations,
   permission checks, content locks, day rules, and assignment eligibility.

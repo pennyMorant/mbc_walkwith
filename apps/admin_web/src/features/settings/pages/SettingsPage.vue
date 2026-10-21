@@ -7,6 +7,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { listSettings, updateSetting } from "@/core/api/settings";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n, type AppLocale } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import SettingsEditorDrawer from "../components/SettingsEditorDrawer.vue";
@@ -322,46 +323,31 @@ function currentSelectItems() {
       :refetch="settingsQuery.refetch"
     />
 
-    <v-progress-linear
-      v-if="settingsQuery.isPending.value"
-      indeterminate
-      color="primary"
+    <AdminDataState
       class="mt-6"
-    />
-
-    <v-alert
-      v-else-if="settingsQuery.error.value"
-      type="error"
-      variant="tonal"
-      class="mt-6"
+      :pending="settingsQuery.isPending.value"
+      :error-message="settingsQuery.error.value ? formatApiErrorMessage(settingsQuery.error.value, t('common.error')) : ''"
+      :empty="settings.length === 0"
+      :empty-title="t('settings.empty')"
+      empty-icon="mdi-tune-variant"
+      :retry-label="t('common.refresh')"
+      @retry="settingsQuery.refetch()"
     >
-      {{ formatApiErrorMessage(settingsQuery.error.value, t("common.error")) }}
-    </v-alert>
-
-    <v-alert
-      v-else-if="settings.length === 0"
-      type="info"
-      variant="tonal"
-      class="mt-6"
-    >
-      {{ t("settings.empty") }}
-    </v-alert>
-
-    <SettingsGroupGrid
-      v-else
-      :groups="groupedSettings"
-      :category-title="(category) => categoryTitle(category, t)"
-      :category-description="(category) => categoryDescription(category, t)"
-      :category-color="categoryColor"
-      :category-icon="categoryIcon"
-      :setting-title="(setting) => settingTitle(setting, t)"
-      :setting-description="(setting) => settingDescription(setting, t)"
-      :setting-icon="settingIcon"
-      :setting-preview="settingPreview"
-      :setting-preview-color="settingPreviewColor"
-      :edit-label="t('common.edit')"
-      @open="openSetting"
-    />
+      <SettingsGroupGrid
+        :groups="groupedSettings"
+        :category-title="(category) => categoryTitle(category, t)"
+        :category-description="(category) => categoryDescription(category, t)"
+        :category-color="categoryColor"
+        :category-icon="categoryIcon"
+        :setting-title="(setting) => settingTitle(setting, t)"
+        :setting-description="(setting) => settingDescription(setting, t)"
+        :setting-icon="settingIcon"
+        :setting-preview="settingPreview"
+        :setting-preview-color="settingPreviewColor"
+        :edit-label="t('common.edit')"
+        @open="openSetting"
+      />
+    </AdminDataState>
 
     <SettingsEditorDrawer
       v-model="drawer"

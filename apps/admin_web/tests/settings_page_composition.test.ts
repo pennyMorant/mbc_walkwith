@@ -25,6 +25,8 @@ describe("settings page composition", () => {
   });
 
   it("uses focused presentation components for the grid and editor", () => {
+    expect(pageSource).toContain("AdminDataState");
+    expect(pageSource).toContain('@retry="settingsQuery.refetch()"');
     expect(pageSource).toContain("<SettingsGroupGrid");
     expect(pageSource).toContain("<SettingsEditorDrawer");
     for (const source of [gridSource, drawerSource]) {
@@ -32,6 +34,11 @@ describe("settings page composition", () => {
       expect(source).not.toContain("useAdminAuthStore");
       expect(source).not.toContain("useMutation");
     }
+  });
+
+  it("keeps query errors separate from editor mutation errors", () => {
+    expect(pageSource).toContain(":error-message=\"settingsQuery.error.value");
+    expect(pageSource).toContain(":error-message=\"errorMessage\"");
   });
 
   it("preserves every supported setting editor projection", () => {
