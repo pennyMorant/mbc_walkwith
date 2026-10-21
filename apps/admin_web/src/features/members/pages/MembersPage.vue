@@ -24,6 +24,8 @@ import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_d
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import MemberResults from "../components/MemberResults.vue";
+
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
 const { optionItems, t } = useI18n();
@@ -286,50 +288,13 @@ function statusColor(status: MemberStatus) {
         </v-row>
       </div>
       <v-divider />
-      <v-progress-linear
-        v-if="membersQuery.isPending.value"
-        indeterminate
-        color="primary"
+      <MemberResults
+        :members="members"
+        :pending="membersQuery.isPending.value"
+        :error-message="membersQuery.error.value ? formatApiErrorMessage(membersQuery.error.value, t('common.error')) : ''"
+        :status-color="statusColor"
+        @open="openMember"
       />
-      <v-alert
-        v-else-if="membersQuery.error.value"
-        type="error"
-        variant="tonal"
-        class="ma-4"
-      >
-        {{ formatApiErrorMessage(membersQuery.error.value, t("common.error")) }}
-      </v-alert>
-      <v-table v-else density="comfortable">
-        <thead>
-          <tr>
-            <th>{{ t("Name") }}</th>
-            <th>{{ t("Email") }}</th>
-            <th>{{ t("Status") }}</th>
-            <th>{{ t("Role") }}</th>
-            <th>{{ t("Group") }}</th>
-            <th>{{ t("Locale") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="member in members"
-            :key="member.id"
-            class="cursor-pointer"
-            @click="openMember(member)"
-          >
-            <td class="font-weight-bold">{{ member.displayName }}</td>
-            <td>{{ member.email }}</td>
-            <td>
-              <v-chip size="small" :color="statusColor(member.status)">
-                {{ t(member.status) }}
-              </v-chip>
-            </td>
-            <td>{{ member.roles.map((role) => t(role)).join(", ") }}</td>
-            <td>{{ member.fellowshipGroupId || t("common.notSet") }}</td>
-            <td>{{ member.appLocale }}</td>
-          </tr>
-        </tbody>
-      </v-table>
     </v-card>
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="500">

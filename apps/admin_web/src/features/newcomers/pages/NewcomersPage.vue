@@ -6,6 +6,7 @@ import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import NewcomerResults from "../components/NewcomerResults.vue";
 import { useNewcomerPage } from "../composables/use_newcomer_page";
 import {
   conversionStatusOptions,
@@ -101,53 +102,11 @@ const summaryMetrics = computed(() => [
         </v-row>
       </div>
       <v-divider />
-      <v-progress-linear
-        v-if="newcomersQuery.isPending.value"
-        indeterminate
-        color="primary"
+      <NewcomerResults
+        :newcomers="newcomers"
+        :pending="newcomersQuery.isPending.value"
+        @open="openNewcomer"
       />
-      <v-table v-else density="comfortable">
-        <thead>
-          <tr>
-            <th>{{ t("Display name") }}</th>
-            <th>{{ t("Status") }}</th>
-            <th>{{ t("Assignee") }}</th>
-            <th>{{ t("Source") }}</th>
-            <th>{{ t("Next follow-up") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="newcomers.length === 0">
-            <td colspan="5" class="text-medium-emphasis">
-              {{ t("No newcomers match the current filters.") }}
-            </td>
-          </tr>
-          <tr
-            v-for="newcomer in newcomers"
-            :key="newcomer.id"
-            class="cursor-pointer"
-            @click="openNewcomer(newcomer)"
-          >
-            <td>
-              <div class="font-weight-bold">{{ newcomer.displayName }}</div>
-              <div class="text-caption text-medium-emphasis">
-                {{ newcomerContactLine(newcomer) || t("common.notSet") }}
-              </div>
-            </td>
-            <td>
-              <v-chip
-                size="small"
-                :color="newcomerStatusColor(newcomer.status)"
-              >
-                {{ t(newcomer.status) }}
-              </v-chip>
-            </td>
-            <td>{{ newcomer.assigneeName || t("common.notSet") }}</td>
-            <td>{{ newcomer.source || t("common.notSet") }}</td>
-            <td>{{ newcomer.nextFollowUpAt || t("Not scheduled") }}</td>
-          </tr>
-        </tbody>
-      </v-table>
     </v-card>
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="640">

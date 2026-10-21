@@ -101,6 +101,9 @@ Surface rule:
 - Feature detail and editor drawers use the shared responsive drawer shell. Each
   feature may choose its desktop width, while the shell caps the surface at the
   mobile viewport width and retains Vuetify's temporary-drawer behavior.
+- People workspaces render member, newcomer, and care result arrays as desktop
+  tables and compact mobile records. Both projections emit the same page-owned
+  detail intent and do not own API, selection, permission, or mutation state.
 - Admin authentication changes clear the shared query cache before another session
   can render role-scoped results. Search and recent-content links identify a record
   with `?open=<resourceId>`; the destination Feature owns detail loading and errors.

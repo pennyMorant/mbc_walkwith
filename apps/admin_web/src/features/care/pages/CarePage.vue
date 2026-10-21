@@ -23,6 +23,8 @@ import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import CareRequestResults from "../components/CareRequestResults.vue";
+
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
 const { optionItems, t } = useI18n();
@@ -270,58 +272,13 @@ function addCareFollowUp() {
         </v-row>
       </div>
       <v-divider />
-      <v-progress-linear
-        v-if="requestsQuery.isPending.value"
-        indeterminate
-        color="primary"
+      <CareRequestResults
+        :requests="requests"
+        :pending="requestsQuery.isPending.value"
+        :status-color="statusColor"
+        :privacy-color="privacyColor"
+        @open="openRequest"
       />
-      <v-table v-else density="comfortable">
-        <thead>
-          <tr>
-            <th>{{ t("Member") }}</th>
-            <th>{{ t("Status") }}</th>
-            <th>{{ t("Privacy") }}</th>
-            <th>{{ t("Assignee") }}</th>
-            <th>{{ t("Updated") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="requests.length === 0">
-            <td colspan="5" class="text-medium-emphasis">
-              {{ t("No care requests match the current filters.") }}
-            </td>
-          </tr>
-          <tr
-            v-for="request in requests"
-            :key="request.id"
-            class="cursor-pointer"
-            @click="openRequest(request)"
-          >
-            <td>
-              <div class="font-weight-bold">{{ request.title }}</div>
-              <div class="text-caption text-medium-emphasis">
-                {{ request.memberDisplayName }} · {{ request.memberEmail }}
-              </div>
-            </td>
-            <td>
-              <v-chip size="small" :color="statusColor(request.status)">
-                {{ t(request.status) }}
-              </v-chip>
-            </td>
-            <td>
-              <v-chip
-                size="small"
-                variant="tonal"
-                :color="privacyColor(request.privacyLevel)"
-              >
-                {{ t(request.privacyLevel) }}
-              </v-chip>
-            </td>
-            <td>{{ request.assigneeName || t("common.notSet") }}</td>
-            <td>{{ request.updatedAt }}</td>
-          </tr>
-        </tbody>
-      </v-table>
     </v-card>
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="620">
