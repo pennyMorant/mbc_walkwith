@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { JobStatus } from "@mbc/api-contracts";
-
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import JobFailureDiagnostics from "../components/JobFailureDiagnostics.vue";
 import JobPipelineReadinessCard from "../components/JobPipelineReadinessCard.vue";
 import JobQueueCard from "../components/JobQueueCard.vue";
+import JobStatsWorkspace from "../components/JobStatsWorkspace.vue";
 import { useJobsPageController } from "../composables/use_jobs_page_controller";
 
 const {
@@ -16,27 +15,33 @@ const {
   cancelMutation,
   drawer,
   filters,
+  isRefreshing,
   jobStatuses,
   jobs,
+  jobsErrorMessage,
   jobsQuery,
   jobTypes,
   markSucceededMutation,
   nextCursor,
-  optionItems,
+  pipelineStatusErrorMessage,
   pipelineStatusQuery,
   selectedJob,
   selectedJobActionErrorMessage,
+  statsErrorMessage,
   statsQuery,
   t,
+  applyJobFilters,
   cancelSelectedJob,
   jobAgeLabel,
   loadMore,
   markSelectedJobSucceeded,
   openJob,
   pipelineStatusColor,
-  resetList,
-  statusColor,
-  statusCount
+  refreshAll,
+  refreshJobs,
+  refreshPipelineStatus,
+  refreshStats,
+  statusColor
 } = useJobsPageController();
 </script>
 
@@ -48,8 +53,8 @@ const {
           color="primary"
           variant="tonal"
           prepend-icon="mdi-refresh"
-          :loading="jobsQuery.isFetching.value"
-          @click="resetList"
+          :loading="isRefreshing"
+          @click="refreshAll"
         >
           {{ t("common.refresh") }}
         </v-btn>
@@ -57,104 +62,24 @@ const {
     </AdminPageHeader>
 
     <JobPipelineReadinessCard
-      :ready="pipelineStatusQuery.data.value?.ready ?? false"
+      :status="pipelineStatusQuery.data.value"
       :pending="pipelineStatusQuery.isPending.value"
-      :error="pipelineStatusQuery.error.value"
-      :checks="pipelineStatusQuery.data.value?.checks ?? []"
-      :updated-at="pipelineStatusQuery.data.value?.updatedAt"
+      :fetching="pipelineStatusQuery.isFetching.value"
+      :error-message="pipelineStatusErrorMessage"
       :status-color="pipelineStatusColor"
+      @retry="refreshPipelineStatus"
     />
 
-    <v-row class="mt-6" dense>
-      <v-col
-        v-for="status in ['queued', 'running', 'failed', 'succeeded'] as JobStatus[]"
-        :key="status"
-        cols="6"
-        md="3"
-      >
-        <v-card class="pa-4">
-          <div class="d-flex align-center justify-space-between">
-            <div class="text-caption text-medium-emphasis text-uppercase">
-              {{ t(status) }}
-            </div>
-            <v-chip size="x-small" :color="statusColor(status)" />
-          </div>
-          <div class="text-h5 font-weight-bold mt-2">
-            {{ statusCount(status) }}
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row class="mt-2" dense>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4">
-          <div class="d-flex align-center justify-space-between">
-            <div class="text-subtitle-2 font-weight-bold">
-              {{ t("Local package workflow") }}
-            </div>
-            <v-chip color="info" size="small" variant="tonal">
-              {{ t("Queued") }} {{ statusCount("queued") }}
-            </v-chip>
-          </div>
-          <div class="text-body-2 text-medium-emphasis mt-3">
-            {{
-              t(
-                "Sermon text, outline, and Scripture references are prepared locally. The server only stores reviewed packages and historical diagnostics."
-              )
-            }}
-          </div>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4">
-          <div class="d-flex align-center justify-space-between">
-            <div class="text-subtitle-2 font-weight-bold">
-              {{ t("Failure health") }}
-            </div>
-            <v-chip color="error" size="small">
-              {{ statsQuery.data.value?.byStatus.failed ?? 0 }}
-            </v-chip>
-          </div>
-          <div class="d-flex ga-2 mt-3">
-            <v-chip color="warning" variant="tonal" size="small">
-              {{ t("Retryable") }} {{ statsQuery.data.value?.retryableFailed ?? 0 }}
-            </v-chip>
-            <v-chip color="error" variant="tonal" size="small">
-              {{ t("Exhausted") }} {{ statsQuery.data.value?.exhaustedFailed ?? 0 }}
-            </v-chip>
-          </div>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="pa-4">
-          <div class="text-subtitle-2 font-weight-bold">
-            {{ t("Running now") }}
-          </div>
-          <div
-            v-if="(statsQuery.data.value?.recentRunning.length ?? 0) === 0"
-            class="text-body-2 text-medium-emphasis mt-2"
-          >
-            {{ t("No running jobs.") }}
-          </div>
-          <v-list v-else density="compact" class="mt-2">
-            <v-list-item
-              v-for="job in statsQuery.data.value?.recentRunning"
-              :key="job.id"
-              :title="t(job.type)"
-              :subtitle="`${job.resourceType || '-'} / ${job.resourceId || '-'} · ${jobAgeLabel(job)}`"
-              @click="openJob(job)"
-            >
-              <template #append>
-                <v-chip size="x-small" :color="statusColor(job.status)">
-                  {{ job.attempts }} / {{ job.maxAttempts }}
-                </v-chip>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-    </v-row>
+    <JobStatsWorkspace
+      :stats="statsQuery.data.value"
+      :pending="statsQuery.isPending.value"
+      :fetching="statsQuery.isFetching.value"
+      :error-message="statsErrorMessage"
+      :status-color="statusColor"
+      :job-age-label="jobAgeLabel"
+      @retry="refreshStats"
+      @open-job="openJob"
+    />
 
     <v-row class="mt-6" dense>
       <v-col cols="12">
@@ -166,71 +91,13 @@ const {
           :next-cursor="nextCursor"
           :is-pending="jobsQuery.isPending.value"
           :is-fetching="jobsQuery.isFetching.value"
-          :error="jobsQuery.error.value"
+          :error-message="jobsErrorMessage"
           :status-color="statusColor"
-          :reset-list="resetList"
-          :load-more="loadMore"
-          :open-job="openJob"
+          @filters-changed="applyJobFilters"
+          @retry="refreshJobs"
+          @load-more="loadMore"
+          @open-job="openJob"
         />
-      </v-col>
-    </v-row>
-
-    <v-row class="mt-2" dense>
-      <v-col cols="12" md="6">
-        <v-card class="pa-4">
-          <div class="text-subtitle-2 font-weight-bold">
-            {{ t("Recent failures") }}
-          </div>
-          <div
-            v-if="(statsQuery.data.value?.recentFailures.length ?? 0) === 0"
-            class="text-body-2 text-medium-emphasis mt-2"
-          >
-            {{ t("No recent failures.") }}
-          </div>
-          <v-list v-else density="compact" class="mt-2">
-            <v-list-item
-              v-for="job in statsQuery.data.value?.recentFailures"
-              :key="job.id"
-              :title="t(job.type)"
-              :subtitle="job.errorMessage || jobAgeLabel(job)"
-              @click="openJob(job)"
-            >
-              <template #append>
-                <v-chip size="x-small" color="error">
-                  {{ job.attempts }} / {{ job.maxAttempts }}
-                </v-chip>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-card class="pa-4">
-          <div class="text-subtitle-2 font-weight-bold">
-            {{ t("Recent completed") }}
-          </div>
-          <div
-            v-if="(statsQuery.data.value?.recentSucceeded.length ?? 0) === 0"
-            class="text-body-2 text-medium-emphasis mt-2"
-          >
-            {{ t("No completed jobs yet.") }}
-          </div>
-          <v-list v-else density="compact" class="mt-2">
-            <v-list-item
-              v-for="job in statsQuery.data.value?.recentSucceeded"
-              :key="job.id"
-              :title="t(job.type)"
-              :subtitle="`${job.resourceType || '-'} / ${job.resourceId || '-'} · ${jobAgeLabel(job)}`"
-              @click="openJob(job)"
-            >
-              <template #append>
-                <v-chip size="x-small" color="success">
-                  {{ job.attempts }} / {{ job.maxAttempts }}
-                </v-chip>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
       </v-col>
     </v-row>
 

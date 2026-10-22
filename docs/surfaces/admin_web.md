@@ -200,6 +200,9 @@ Surface rule:
 - Member profile：会员资料、角色、状态、设备 token 和导出。
 - Pastoral care：Care 页面展示关怀队列，提交负责人、状态、隐私等级、下一步、内部备注和跟进记录 intent；最终权限、状态和审计以后端为准。
 - Notification delivery：通知任务、失败重试、取消和审计。
+- System diagnostics：任务管线、统计和任务队列使用独立可恢复查询状态；首次失败不显示
+  虚假的零统计或空队列，已有快照刷新失败时保留旧数据并显示错误。筛选草稿只有在管理员
+  明确应用后才成为查询条件，查询重试与后台任务重试是两个不同 intent。
 - Ministry analytics：Dashboard 展示后端按角色过滤的今日待办、精确聚合指标、
   最近更新内容、任务健康、fresh/stale 快照和 drill-down；Admin 只负责本地化和
   格式化，不自行推算指标或跨 Feature 合并列表。最近更新在桌面使用表格，在窄屏

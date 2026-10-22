@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Job, JobStatus, JobType } from "@mbc/api-contracts";
 
-import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 
 defineProps<{
   filters: {
@@ -18,11 +18,14 @@ defineProps<{
   nextCursor: string | null;
   isPending: boolean;
   isFetching: boolean;
-  error: unknown;
+  errorMessage: string;
   statusColor: (status: JobStatus) => string;
-  resetList: () => void;
-  loadMore: () => void;
-  openJob: (job: Job) => void;
+}>();
+defineEmits<{
+  filtersChanged: [];
+  loadMore: [];
+  openJob: [job: Job];
+  retry: [];
 }>();
 
 const { locale, optionItems, t } = useI18n();
@@ -51,7 +54,7 @@ const { locale, optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="resetList"
+            @update:model-value="$emit('filtersChanged')"
           />
         </v-col>
         <v-col cols="12" md="3">
@@ -62,7 +65,7 @@ const { locale, optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="resetList"
+            @update:model-value="$emit('filtersChanged')"
           />
         </v-col>
         <v-col cols="12" md="3">
@@ -72,7 +75,7 @@ const { locale, optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @keyup.enter="resetList"
+            @keyup.enter="$emit('filtersChanged')"
           />
         </v-col>
         <v-col cols="12" md="3">
@@ -82,59 +85,90 @@ const { locale, optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @keyup.enter="resetList"
+            @keyup.enter="$emit('filtersChanged')"
           />
         </v-col>
       </v-row>
     </div>
     <v-divider />
 
-    <v-progress-linear v-if="isPending" indeterminate color="primary" />
+    <AdminDataState
+      :pending="isPending && jobs.length === 0"
+      :error-message="jobs.length === 0 ? errorMessage : ''"
+      :empty="!isPending && !errorMessage && jobs.length === 0"
+      :empty-title="t('jobs.noJobs')"
+      :retry-label="t('common.refresh')"
+      @retry="$emit('retry')"
+    >
+      <v-progress-linear
+        v-if="isFetching && jobs.length > 0"
+        indeterminate
+        color="primary"
+      />
+      <v-alert
+        v-if="jobs.length > 0 && errorMessage"
+        type="error"
+        variant="tonal"
+        class="ma-4"
+      >
+        <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
+          <span>{{ errorMessage }}</span>
+          <v-btn
+            color="error"
+            variant="tonal"
+            size="small"
+            prepend-icon="mdi-refresh"
+            @click="$emit('retry')"
+          >
+            {{ t("common.refresh") }}
+          </v-btn>
+        </div>
+      </v-alert>
+      <v-table density="comfortable">
+        <thead>
+          <tr>
+            <th>{{ t("Type") }}</th>
+            <th>{{ t("Status") }}</th>
+            <th>{{ t("Resource") }}</th>
+            <th>{{ t("Attempts") }}</th>
+            <th>{{ t("Created") }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="job in jobs"
+            :key="job.id"
+            class="cursor-pointer"
+            @click="$emit('openJob', job)"
+          >
+            <td class="font-weight-bold">{{ t(job.type) }}</td>
+            <td>
+              <v-chip size="small" :color="statusColor(job.status)">
+                {{ t(job.status) }}
+              </v-chip>
+            </td>
+            <td>
+              <div>{{ job.resourceType || "-" }}</div>
+              <div class="text-caption text-medium-emphasis">
+                {{ job.resourceId || "" }}
+              </div>
+            </td>
+            <td>{{ job.attempts }} / {{ job.maxAttempts }}</td>
+            <td>{{ formatAdminDateTime(job.createdAt, locale) }}</td>
+          </tr>
+        </tbody>
+      </v-table>
 
-    <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">
-      {{ formatApiErrorMessage(error, t("common.error")) }}
-    </v-alert>
-
-    <v-table v-else density="comfortable">
-      <thead>
-        <tr>
-          <th>{{ t("Type") }}</th>
-          <th>{{ t("Status") }}</th>
-          <th>{{ t("Resource") }}</th>
-          <th>{{ t("Attempts") }}</th>
-          <th>{{ t("Created") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="job in jobs"
-          :key="job.id"
-          class="cursor-pointer"
-          @click="openJob(job)"
+      <div v-if="nextCursor" class="pa-4 d-flex justify-center">
+        <v-btn
+          variant="tonal"
+          :loading="isFetching"
+          @click="$emit('loadMore')"
         >
-          <td class="font-weight-bold">{{ t(job.type) }}</td>
-          <td>
-            <v-chip size="small" :color="statusColor(job.status)">
-              {{ t(job.status) }}
-            </v-chip>
-          </td>
-          <td>
-            <div>{{ job.resourceType || "-" }}</div>
-            <div class="text-caption text-medium-emphasis">
-              {{ job.resourceId || "" }}
-            </div>
-          </td>
-          <td>{{ job.attempts }} / {{ job.maxAttempts }}</td>
-          <td>{{ formatAdminDateTime(job.createdAt, locale) }}</td>
-        </tr>
-      </tbody>
-    </v-table>
-
-    <div v-if="nextCursor" class="pa-4 d-flex justify-center">
-      <v-btn variant="tonal" :loading="isFetching" @click="loadMore">
-        {{ t("Load more") }}
-      </v-btn>
-    </div>
+          {{ t("Load more") }}
+        </v-btn>
+      </div>
+    </AdminDataState>
   </v-card>
 </template>
 

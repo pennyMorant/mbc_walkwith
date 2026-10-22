@@ -18,7 +18,7 @@ import { useI18n } from "@/core/i18n/i18n";
 export function useJobsPageController() {
   const queryClient = useQueryClient();
   const authStore = useAdminAuthStore();
-  const { optionItems, t } = useI18n();
+  const { t } = useI18n();
   const selectedJob = ref<Job | null>(null);
   const drawer = ref(false);
 
@@ -26,8 +26,15 @@ export function useJobsPageController() {
     status: "" as JobStatus | "",
     type: "" as JobType | "",
     resourceType: "",
+    resourceId: ""
+  });
+  const appliedFilters = ref<JobListFilters>({
+    status: "",
+    type: "",
+    resourceType: "",
     resourceId: "",
-    cursor: null as string | null
+    cursor: null,
+    limit: 50
   });
   const loadedPages = ref<Array<{ items: Job[]; nextCursor: string | null }>>([]);
 
@@ -45,20 +52,17 @@ export function useJobsPageController() {
     "canceled"
   ];
 
-  const activeFilters = computed<JobListFilters>(() => ({
-    status: filters.status,
-    type: filters.type,
-    resourceType: filters.resourceType,
-    resourceId: filters.resourceId,
-    cursor: filters.cursor,
-    limit: 50
-  }));
-
   const jobsQuery = useQuery({
-    queryKey: ["admin-jobs", activeFilters],
+    queryKey: ["admin-jobs", appliedFilters],
     queryFn: async () => {
-      const page = await listJobs(activeFilters.value);
-      if (filters.cursor) {
+      const requestFilters = { ...appliedFilters.value };
+      const page = await listJobs(requestFilters);
+      if (
+        JSON.stringify(requestFilters) !== JSON.stringify(appliedFilters.value)
+      ) {
+        return page;
+      }
+      if (requestFilters.cursor) {
         loadedPages.value.push(page);
       } else {
         loadedPages.value = [page];
@@ -87,7 +91,7 @@ export function useJobsPageController() {
     },
     onSuccess: async (job) => {
       openJob(job);
-      resetList();
+      refreshAll();
     }
   });
 
@@ -104,7 +108,7 @@ export function useJobsPageController() {
     },
     onSuccess: async (job) => {
       openJob(job);
-      resetList();
+      refreshAll();
     }
   });
 
@@ -132,19 +136,62 @@ export function useJobsPageController() {
       t("common.error")
     )
   );
+  const jobsErrorMessage = computed(() =>
+    formatApiErrorMessage(jobsQuery.error.value, t("common.error"))
+  );
+  const statsErrorMessage = computed(() =>
+    formatApiErrorMessage(statsQuery.error.value, t("common.error"))
+  );
+  const pipelineStatusErrorMessage = computed(() =>
+    formatApiErrorMessage(pipelineStatusQuery.error.value, t("common.error"))
+  );
+  const isRefreshing = computed(
+    () =>
+      jobsQuery.isFetching.value ||
+      statsQuery.isFetching.value ||
+      pipelineStatusQuery.isFetching.value
+  );
 
-  function resetList() {
-    filters.cursor = null;
+  function refreshJobs() {
+    appliedFilters.value = { ...appliedFilters.value, cursor: null };
     void queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
+  }
+
+  function applyJobFilters() {
+    loadedPages.value = [];
+    appliedFilters.value = {
+      status: filters.status,
+      type: filters.type,
+      resourceType: filters.resourceType,
+      resourceId: filters.resourceId,
+      cursor: null,
+      limit: 50
+    };
+    void queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
+  }
+
+  function refreshStats() {
     void queryClient.invalidateQueries({ queryKey: ["admin-job-stats"] });
+  }
+
+  function refreshPipelineStatus() {
     void queryClient.invalidateQueries({
       queryKey: ["admin-sermon-pipeline-status"]
     });
   }
 
+  function refreshAll() {
+    refreshJobs();
+    refreshStats();
+    refreshPipelineStatus();
+  }
+
   function loadMore() {
     if (nextCursor.value && !jobsQuery.isFetching.value) {
-      filters.cursor = nextCursor.value;
+      appliedFilters.value = {
+        ...appliedFilters.value,
+        cursor: nextCursor.value
+      };
     }
   }
 
@@ -161,10 +208,6 @@ export function useJobsPageController() {
       failed: "error",
       canceled: "secondary"
     }[status];
-  }
-
-  function statusCount(status: JobStatus) {
-    return statsQuery.data.value?.byStatus[status] ?? 0;
   }
 
   function jobAgeLabel(job: Job) {
@@ -207,26 +250,32 @@ export function useJobsPageController() {
     cancelMutation,
     drawer,
     filters,
+    isRefreshing,
     jobStatuses,
     jobs,
+    jobsErrorMessage,
     jobsQuery,
     jobTypes,
     markSucceededMutation,
     nextCursor,
-    optionItems,
+    pipelineStatusErrorMessage,
     pipelineStatusQuery,
     selectedJob,
     selectedJobActionErrorMessage,
+    statsErrorMessage,
     statsQuery,
     t,
+    applyJobFilters,
     cancelSelectedJob,
     jobAgeLabel,
     loadMore,
     markSelectedJobSucceeded,
     openJob,
     pipelineStatusColor,
-    resetList,
-    statusColor,
-    statusCount
+    refreshAll,
+    refreshJobs,
+    refreshPipelineStatus,
+    refreshStats,
+    statusColor
   };
 }
