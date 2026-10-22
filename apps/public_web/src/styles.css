@@ -1675,12 +1675,22 @@ a {
     padding: 14px;
   }
 
+  .mission-card {
+    min-height: 0;
+    padding: 22px;
+  }
+
   .entrance-section {
     padding: 76px 12px;
   }
 
   .highlight-grid {
     grid-template-columns: 1fr;
+  }
+
+  .phone-shell {
+    min-height: 0;
+    padding-bottom: 28px;
   }
 
   .schedule-card {

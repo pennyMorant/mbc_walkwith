@@ -151,6 +151,13 @@ describe("public landing surface", () => {
     expect(styles).not.toContain("padding-bottom: 70px");
   });
 
+  test("removes decorative empty height from compact mobile sections", () => {
+    expect(styles).toContain(".mission-card {\n    min-height: 0;");
+    expect(styles).toContain(".phone-shell {\n    min-height: 0;");
+    expect(styles).toContain(".mission-card {\n  min-height: 268px;");
+    expect(styles).toContain("min-height: 560px;");
+  });
+
   test("keeps the three mission directions separate in every supported language", () => {
     expect(splitMissionPhrases("Make disciples, send workers, lead people to Christ")).toEqual([
       "Make disciples",
