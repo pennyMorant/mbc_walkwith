@@ -97,6 +97,14 @@ function setIconLink(rel: string, href: string, type?: string) {
 
 <template>
   <v-app :class="{ 'intro-active': showIntro }">
+    <a
+      v-if="content && !showIntro"
+      class="landing-skip-link"
+      href="#main-content"
+    >
+      {{ t("skipToContent") }}
+    </a>
+
     <LandingLanguageMenu
       v-if="!showIntro"
       :current-locale="locale"
@@ -116,7 +124,7 @@ function setIconLink(rel: string, href: string, type?: string) {
         :hero="content.hero"
         @complete="completeIntro"
       />
-      <v-main class="landing-main">
+      <v-main id="main-content" class="landing-main" tabindex="-1">
         <HeroSection :identity="content.identity" :hero="content.hero" />
         <MissionSection :mission="content.mission" />
         <ServiceInfoSection :service="content.service" />

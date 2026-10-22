@@ -40,6 +40,25 @@ describe("public landing surface", () => {
     expect(languageMenu).not.toContain("v-app-bar");
   });
 
+  test("provides a localized keyboard path to the main landing content", () => {
+    expect(app).toContain('class="landing-skip-link"');
+    expect(app).toContain('href="#main-content"');
+    expect(app).toContain('id="main-content"');
+    expect(app).toContain('tabindex="-1"');
+    expect(styles).toContain(".landing-skip-link:focus");
+    expect(styles).toContain(".quick-action:focus-visible");
+    expect(styles).toContain(".gallery-item:focus-visible");
+  });
+
+  test("uses stable action identity for hero quick links", () => {
+    const hero = readFileSync(
+      new URL("../src/components/HeroSection.vue", import.meta.url),
+      "utf8"
+    );
+    expect(hero).toContain(':key="action.id"');
+    expect(hero).not.toContain(':key="action.href"');
+  });
+
   test("preserves loaded content while locale refresh state stays recoverable", () => {
     expect(app).toContain(":is-loading=\"isLoading\"");
     expect(app).toContain("hasError ? t('refreshError') : ''");

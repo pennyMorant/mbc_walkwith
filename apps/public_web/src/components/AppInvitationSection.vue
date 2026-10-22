@@ -22,7 +22,7 @@ defineProps<{
         <div class="phone-header">{{ app.previewTitle }}</div>
         <div
           v-for="(item, index) in app.previewItems"
-          :key="item"
+          :key="`${item}-${index}`"
           class="phone-card"
           :class="{ active: index === 0 }"
         >
@@ -38,7 +38,7 @@ defineProps<{
       <div class="highlight-grid">
         <motion.div
           v-for="(item, index) in app.highlights"
-          :key="item.title"
+          :key="`${item.title}-${index}`"
           class="highlight-item"
           :initial="{ opacity: 0, y: 24 }"
           :whileInView="{ opacity: 1, y: 0 }"

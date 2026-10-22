@@ -33,6 +33,7 @@ const publicMessages: Record<SupportedLocale, Record<string, string>> = {
     primaryNavigation: "Primary navigation",
     refreshError: "The new language could not be loaded.",
     retry: "Try again",
+    skipToContent: "Skip to main content",
     viewPhoto: "View photo"
   },
   es: {
@@ -49,6 +50,7 @@ const publicMessages: Record<SupportedLocale, Record<string, string>> = {
     primaryNavigation: "Navegación principal",
     refreshError: "No se pudo cargar el nuevo idioma.",
     retry: "Reintentar",
+    skipToContent: "Saltar al contenido principal",
     viewPhoto: "Ver foto"
   },
   "zh-Hans": {
@@ -64,6 +66,7 @@ const publicMessages: Record<SupportedLocale, Record<string, string>> = {
     primaryNavigation: "主要导航",
     refreshError: "暂时无法载入所选语言。",
     retry: "重新载入",
+    skipToContent: "跳到主要内容",
     viewPhoto: "查看照片"
   },
   "zh-Hant": {
@@ -79,6 +82,7 @@ const publicMessages: Record<SupportedLocale, Record<string, string>> = {
     primaryNavigation: "主要導航",
     refreshError: "暫時無法載入所選語言。",
     retry: "重新載入",
+    skipToContent: "跳到主要內容",
     viewPhoto: "查看照片"
   }
 };

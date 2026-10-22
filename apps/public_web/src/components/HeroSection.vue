@@ -137,7 +137,7 @@ function missionInitial(index: number) {
     >
       <a
         v-for="action in hero.quickActions"
-        :key="action.href"
+        :key="action.id"
         class="quick-action"
         :href="action.href"
         :target="actionTarget(action)"

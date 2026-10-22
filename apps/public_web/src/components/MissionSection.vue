@@ -18,7 +18,7 @@ defineProps<{
     <div class="mission-grid">
       <motion.article
         v-for="(pillar, index) in mission.pillars"
-        :key="pillar.title"
+        :key="`${pillar.title}-${index}`"
         class="mission-card"
         :initial="{ opacity: 0, y: 32 }"
         :whileInView="{ opacity: 1, y: 0 }"

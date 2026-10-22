@@ -40,6 +40,37 @@ a {
   color: #f8f2e4;
 }
 
+.landing-skip-link {
+  position: fixed;
+  top: max(18px, env(safe-area-inset-top));
+  left: max(18px, env(safe-area-inset-left));
+  z-index: 120;
+  padding: 12px 18px;
+  border: 2px solid #f6df9f;
+  border-radius: 999px;
+  background: #10251a;
+  color: #fff8e8;
+  font-weight: 800;
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
+  transform: translateY(calc(-100% - 32px));
+  transition: transform 160ms ease;
+}
+
+.landing-skip-link:focus {
+  outline: none;
+  transform: translateY(0);
+}
+
+.quick-action:focus-visible,
+.entrance-card:focus-visible,
+.gallery-item:focus-visible,
+.footer-links a:focus-visible,
+.footer-bottom a:focus-visible,
+.landing-language-error:focus-visible {
+  outline: 3px solid #f6df9f;
+  outline-offset: 4px;
+}
+
 .landing-language-control {
   position: fixed;
   top: max(18px, env(safe-area-inset-top));
