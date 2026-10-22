@@ -2,24 +2,31 @@
 import type { ReadingPlan } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 
 defineProps<{
+  errorMessage: string;
   plans: ReadingPlan[];
   selectedPlanId: string | null;
   pending: boolean;
 }>();
-defineEmits<{ select: [plan: ReadingPlan] }>();
+defineEmits<{ retry: []; select: [plan: ReadingPlan] }>();
 
 const { t } = useI18n();
 </script>
 
 <template>
-    <v-card variant="outlined">
+  <v-card variant="outlined">
+    <AdminDataState
+      :pending="pending"
+      :error-message="errorMessage"
+      :empty="plans.length === 0"
+      :empty-title="t('No reading plans match the current filters.')"
+      empty-icon="mdi-book-open-page-variant-outline"
+      :retry-label="t('common.refresh')"
+      @retry="$emit('retry')"
+    >
       <v-list lines="three">
-        <v-list-item v-if="pending"><v-progress-linear indeterminate color="primary" /></v-list-item>
-        <v-list-item v-else-if="plans.length === 0">
-          {{ t("No reading plans match the current filters.") }}
-        </v-list-item>
         <v-list-item
           v-for="plan in plans"
           :key="plan.id"
@@ -35,5 +42,6 @@ const { t } = useI18n();
           </template>
         </v-list-item>
       </v-list>
-    </v-card>
+    </AdminDataState>
+  </v-card>
 </template>

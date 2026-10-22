@@ -186,6 +186,8 @@ Surface rule:
   进度审查。路径目录查询使用可重试状态，目录失败不显示成空结果；阶段、任务、分配
   查询和操作错误保留在当前工作区反馈。
 - Reading plan：Content/Ministry 工作区维护读经计划和每日经文引用，不编辑圣经正文。
+  计划目录、日程和个人分配使用独立可重试查询状态；查询失败不显示为空结果，保存
+  与分配命令错误继续由页面单独反馈。
 - Sermon discussion guide：Content/Ministry 工作区维护讨论包、人工审核，并可用现有目标 ID 分配；后端校验目标存在。当前尚无目标选择器和本 feature 专用 AI 草稿 action。页面只审核明确共享给小组的回应，私密回应不进入 Admin surface；页面按 canonical status 提示允许迁移并锁定 published/archived 内容，但 Backend service 仍拥有 transition 规则。
 - Prayer moderation：待审核、批准、隐藏、归档和隐私可见性。
 - Prayer moderation workspace：列表、摘要和审核抽屉只通过

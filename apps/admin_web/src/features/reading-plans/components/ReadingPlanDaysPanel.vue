@@ -2,6 +2,7 @@
 import type { ReadingPlanDay } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 
 type DayForm = {
   dayNumber: number;
@@ -19,12 +20,15 @@ defineProps<{
   canUpsertDay: boolean;
   days: ReadingPlanDay[];
   dayForm: DayForm;
+  errorMessage: string;
   hasSelectedPlan: boolean;
   loading: boolean;
+  pending: boolean;
   saving: boolean;
 }>();
 
 defineEmits<{
+  retry: [];
   saveDay: [];
 }>();
 
@@ -33,8 +37,16 @@ const { t } = useI18n();
 
 <template>
   <div class="mt-4">
-    <v-progress-linear v-if="loading" indeterminate color="primary" />
-    <v-list density="compact" class="border rounded">
+    <AdminDataState
+      :pending="pending"
+      :error-message="errorMessage"
+      :empty="false"
+      empty-title=""
+      :retry-label="t('common.refresh')"
+      @retry="$emit('retry')"
+    >
+      <v-progress-linear v-if="loading" indeterminate color="primary" />
+      <v-list density="compact" class="border rounded">
       <v-list-item v-if="!hasSelectedPlan">
         {{ t("No reading plan selected.") }}
       </v-list-item>
@@ -58,9 +70,9 @@ const { t } = useI18n();
           </span>
         </v-list-item-subtitle>
       </v-list-item>
-    </v-list>
+      </v-list>
 
-    <v-row v-if="canManage && hasSelectedPlan" class="mt-4" dense>
+      <v-row v-if="canManage && hasSelectedPlan" class="mt-4" dense>
       <v-col cols="6" md="2">
         <v-text-field
           v-model.number="dayForm.dayNumber"
@@ -132,6 +144,7 @@ const { t } = useI18n();
           variant="outlined"
         />
       </v-col>
-    </v-row>
+      </v-row>
+    </AdminDataState>
   </div>
 </template>

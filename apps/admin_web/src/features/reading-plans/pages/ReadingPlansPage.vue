@@ -234,15 +234,20 @@ const localeItems = computed(() => [
   { title: t("locale.en"), value: "en" },
   { title: t("locale.es"), value: "es" }
 ]);
-const queryErrorMessage = computed(() => {
-  const error =
-    plansQuery.error.value ||
-    daysQuery.error.value ||
-    assignmentsQuery.error.value;
-  return error ? formatApiErrorMessage(error, t("common.error")) : "";
-});
-const errorMessage = computed(
-  () => queryErrorMessage.value || mutationErrorMessage.value
+const plansErrorMessage = computed(() =>
+  plansQuery.error.value
+    ? formatApiErrorMessage(plansQuery.error.value, t("common.error"))
+    : ""
+);
+const daysErrorMessage = computed(() =>
+  daysQuery.error.value
+    ? formatApiErrorMessage(daysQuery.error.value, t("common.error"))
+    : ""
+);
+const assignmentsErrorMessage = computed(() =>
+  assignmentsQuery.error.value
+    ? formatApiErrorMessage(assignmentsQuery.error.value, t("common.error"))
+    : ""
 );
 
 function selectPlan(plan: ReadingPlan) {
@@ -324,13 +329,13 @@ function assignPlan() {
     </AdminPageHeader>
 
     <v-alert
-      v-if="errorMessage"
+      v-if="mutationErrorMessage"
       class="mt-4"
       type="error"
       variant="tonal"
       density="comfortable"
     >
-      {{ errorMessage }}
+      {{ mutationErrorMessage }}
     </v-alert>
 
     <ReadingPlanFiltersCard
@@ -347,6 +352,8 @@ function assignPlan() {
           :plans="plans"
           :selected-plan-id="selectedPlan?.id ?? null"
           :pending="plansQuery.isPending.value"
+          :error-message="plansErrorMessage"
+          @retry="plansQuery.refetch()"
           @select="selectPlan"
         />
       </v-col>
@@ -389,9 +396,12 @@ function assignPlan() {
               :can-upsert-day="canUpsertDay"
               :days="days"
               :day-form="dayForm"
+              :error-message="daysErrorMessage"
               :has-selected-plan="Boolean(selectedPlan)"
               :loading="daysQuery.isFetching.value"
+              :pending="daysQuery.isPending.value"
               :saving="upsertDayMutation.isPending.value"
+              @retry="daysQuery.refetch()"
               @save-day="saveDay"
             />
 
@@ -400,13 +410,16 @@ function assignPlan() {
               :assignment-filters="assignmentFilters"
               :assignment-form="assignmentForm"
               :assignments="assignments"
+              :error-message="assignmentsErrorMessage"
               :can-create-assignment="canCreateAssignment"
               :can-manage="canManage"
               :has-selected-plan="Boolean(selectedPlan)"
               :loading="assignmentsQuery.isFetching.value"
+              :pending="assignmentsQuery.isPending.value"
               :saving="createAssignmentMutation.isPending.value"
               @assign="assignPlan"
               @refresh="assignmentsQuery.refetch()"
+              @retry="assignmentsQuery.refetch()"
             />
           </v-card-text>
         </v-card>

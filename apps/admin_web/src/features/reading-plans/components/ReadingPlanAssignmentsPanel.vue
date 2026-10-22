@@ -11,6 +11,7 @@ import {
   readingPlanUserTypeOptions
 } from "@/core/api/reading_plans";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 
 type AssignmentFilters = {
   status: ReadingPlanAssignmentStatus | "";
@@ -22,16 +23,19 @@ defineProps<{
   assignmentFilters: AssignmentFilters;
   assignmentForm: ReadingPlanAssignmentCreateRequest;
   assignments: ReadingPlanAssignment[];
+  errorMessage: string;
   canCreateAssignment: boolean;
   canManage: boolean;
   hasSelectedPlan: boolean;
   loading: boolean;
+  pending: boolean;
   saving: boolean;
 }>();
 
 defineEmits<{
   assign: [];
   refresh: [];
+  retry: [];
 }>();
 
 const { optionItems, t } = useI18n();
@@ -61,8 +65,16 @@ const { optionItems, t } = useI18n();
       </div>
     </div>
 
-    <v-progress-linear v-if="loading" indeterminate color="primary" />
-    <v-table density="compact">
+    <AdminDataState
+      :pending="pending"
+      :error-message="errorMessage"
+      :empty="false"
+      empty-title=""
+      :retry-label="t('common.refresh')"
+      @retry="$emit('retry')"
+    >
+      <v-progress-linear v-if="loading" indeterminate color="primary" />
+      <v-table density="compact">
       <thead>
         <tr>
           <th>{{ t("User") }}</th>
@@ -80,9 +92,9 @@ const { optionItems, t } = useI18n();
           <td>{{ t(assignment.status) }}</td>
         </tr>
       </tbody>
-    </v-table>
+      </v-table>
 
-    <v-row v-if="canManage && hasSelectedPlan" class="mt-4" dense>
+      <v-row v-if="canManage && hasSelectedPlan" class="mt-4" dense>
       <v-col cols="12" md="3">
         <v-select
           v-model="assignmentForm.userType"
@@ -120,6 +132,7 @@ const { optionItems, t } = useI18n();
           {{ t("Assign") }}
         </v-btn>
       </v-col>
-    </v-row>
+      </v-row>
+    </AdminDataState>
   </div>
 </template>
