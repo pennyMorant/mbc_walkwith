@@ -152,6 +152,8 @@ Public Web 可以使用 JS 动画库，但动效必须服务信息路径。
 - 按钮和卡片只做轻微 hover / press 反馈。
 - 手机端减少复杂动效。
 - `prefers-reduced-motion` 生效时，opening intro 应立即让出内容，不能保留长时间遮罩。
+- Public Web 根层使用 `motion-v` 的 `MotionConfig reducedMotion=user`，统一约束 Hero、
+  滚动入场和照片墙等 JS 位移/缩放；CSS media query 同时关闭非 motion-v 动画和过渡。
 
 必须支持：
 

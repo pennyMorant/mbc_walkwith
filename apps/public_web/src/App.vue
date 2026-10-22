@@ -18,6 +18,7 @@ import {
   createLandingDocumentMetadata
 } from "@/core/document_metadata";
 import { usePublicLocale } from "@/core/locale";
+import { MotionConfig } from "motion-v";
 import { computed, ref, watch } from "vue";
 
 const { locale, localeOptions, setLocale, t } = usePublicLocale();
@@ -56,65 +57,67 @@ function shouldReplayIntro() {
 </script>
 
 <template>
-  <v-app :class="{ 'intro-active': showIntro }">
-    <a
-      v-if="content && !showIntro"
-      class="landing-skip-link"
-      href="#main-content"
-    >
-      {{ t("skipToContent") }}
-    </a>
+  <MotionConfig reduced-motion="user">
+    <v-app :class="{ 'intro-active': showIntro }">
+      <a
+        v-if="content && !showIntro"
+        class="landing-skip-link"
+        href="#main-content"
+      >
+        {{ t("skipToContent") }}
+      </a>
 
-    <LandingLanguageMenu
-      v-if="!showIntro"
-      :current-locale="locale"
-      :error-message="content && hasError ? t('refreshError') : ''"
-      :is-loading="isLoading"
-      :label="t('changeLanguage')"
-      :options="localeOptions"
-      :retry-label="t('retry')"
-      @change="setLocale"
-      @retry="retry"
-    />
-
-    <template v-if="content">
-      <OpeningIntro
-        v-if="showIntro"
-        :identity="content.identity"
-        :hero="content.hero"
-        @complete="completeIntro"
-      />
-      <v-main id="main-content" class="landing-main" tabindex="-1">
-        <HeroSection :identity="content.identity" :hero="content.hero" />
-        <MissionSection :mission="content.mission" />
-        <ServiceInfoSection :service="content.service" />
-        <ScheduleSection :schedule="content.schedule" />
-        <UpcomingEventsSection
-          :events="content.events"
-          :locale="content.locale"
-          :time-zone="content.timeZone"
-        />
-        <GallerySection :gallery="content.gallery" />
-        <PeopleSection :people="content.people" />
-        <ChurchEntranceSection :entrance="content.entrance" />
-        <AppInvitationSection :app="content.app" />
-        <ContactFooter
-          :contact="content.contact"
-          :footer-actions="content.footerActions"
-        />
-      </v-main>
-    </template>
-
-    <v-main v-else>
-      <LandingLoadState
-        :error-message="t('loadingError')"
-        :error-title="t('loadingErrorTitle')"
+      <LandingLanguageMenu
+        v-if="!showIntro"
+        :current-locale="locale"
+        :error-message="content && hasError ? t('refreshError') : ''"
         :is-loading="isLoading"
-        :loading-message="t('loadingMessage')"
-        :loading-title="t('loadingTitle')"
+        :label="t('changeLanguage')"
+        :options="localeOptions"
         :retry-label="t('retry')"
+        @change="setLocale"
         @retry="retry"
       />
-    </v-main>
-  </v-app>
+
+      <template v-if="content">
+        <OpeningIntro
+          v-if="showIntro"
+          :identity="content.identity"
+          :hero="content.hero"
+          @complete="completeIntro"
+        />
+        <v-main id="main-content" class="landing-main" tabindex="-1">
+          <HeroSection :identity="content.identity" :hero="content.hero" />
+          <MissionSection :mission="content.mission" />
+          <ServiceInfoSection :service="content.service" />
+          <ScheduleSection :schedule="content.schedule" />
+          <UpcomingEventsSection
+            :events="content.events"
+            :locale="content.locale"
+            :time-zone="content.timeZone"
+          />
+          <GallerySection :gallery="content.gallery" />
+          <PeopleSection :people="content.people" />
+          <ChurchEntranceSection :entrance="content.entrance" />
+          <AppInvitationSection :app="content.app" />
+          <ContactFooter
+            :contact="content.contact"
+            :footer-actions="content.footerActions"
+          />
+        </v-main>
+      </template>
+
+      <v-main v-else>
+        <LandingLoadState
+          :error-message="t('loadingError')"
+          :error-title="t('loadingErrorTitle')"
+          :is-loading="isLoading"
+          :loading-message="t('loadingMessage')"
+          :loading-title="t('loadingTitle')"
+          :retry-label="t('retry')"
+          @retry="retry"
+        />
+      </v-main>
+    </v-app>
+  </MotionConfig>
 </template>

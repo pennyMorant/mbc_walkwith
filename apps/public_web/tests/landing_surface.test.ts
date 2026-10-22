@@ -135,6 +135,11 @@ describe("public landing surface", () => {
   });
 
   test("does not hold reduced-motion visitors behind the opening overlay", () => {
+    expect(app).toContain('import { MotionConfig } from "motion-v"');
+    expect(app).toContain('<MotionConfig reduced-motion="user">');
+    expect(app.indexOf("<MotionConfig")).toBeLessThan(
+      app.indexOf("<OpeningIntro")
+    );
     expect(intro).toContain('reduceMotion ? 120 : 4860');
     expect(styles).toContain("@media (prefers-reduced-motion: reduce)");
   });
