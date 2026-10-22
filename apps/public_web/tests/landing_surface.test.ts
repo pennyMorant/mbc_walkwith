@@ -22,6 +22,14 @@ const mediaImage = readFileSync(
   new URL("../src/components/LandingMediaImage.vue", import.meta.url),
   "utf8"
 );
+const loadState = readFileSync(
+  new URL("../src/components/LandingLoadState.vue", import.meta.url),
+  "utf8"
+);
+const loadBackdrop = readFileSync(
+  new URL("../src/components/LandingLoadBackdrop.vue", import.meta.url),
+  "utf8"
+);
 const styles = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
 
 describe("public landing surface", () => {
@@ -37,6 +45,23 @@ describe("public landing surface", () => {
     expect(app).toContain("hasError ? t('refreshError') : ''");
     expect(app).toContain('@retry="retry"');
     expect(languageMenu).toContain("landing-language-error");
+  });
+
+  test("keeps locale choice available while the first request is pending or failed", () => {
+    expect(app.indexOf("<LandingLanguageMenu")).toBeLessThan(
+      app.indexOf('<template v-if="content">')
+    );
+    expect(app).toContain("content && hasError ? t('refreshError') : ''");
+    expect(loadState).toContain(':aria-busy="isLoading"');
+    expect(loadState).toContain(":role=\"isLoading ? 'status' : 'alert'\"");
+  });
+
+  test("uses presentation-only loading media frames without fake content", () => {
+    expect(loadState).toContain("LandingLoadBackdrop");
+    expect(loadBackdrop).toContain("landing-load-frame--left");
+    expect(loadBackdrop).toContain("prefers-reduced-motion: reduce");
+    expect(loadBackdrop).not.toContain("fetch(");
+    expect(loadBackdrop).not.toContain("href=");
   });
 
   test("does not hold reduced-motion visitors behind the opening overlay", () => {

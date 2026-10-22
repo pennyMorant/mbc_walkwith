@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import LandingLoadBackdrop from "@/components/LandingLoadBackdrop.vue";
+
 defineProps<{
   errorMessage: string;
   errorTitle: string;
@@ -14,9 +16,14 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="landing-load-state" aria-live="polite">
-    <div class="landing-load-glow" aria-hidden="true" />
-    <section class="landing-load-content">
+  <div class="landing-load-state">
+    <LandingLoadBackdrop />
+    <section
+      class="landing-load-content"
+      :aria-busy="isLoading"
+      aria-live="polite"
+      :role="isLoading ? 'status' : 'alert'"
+    >
       <div class="landing-load-mark" aria-hidden="true">
         <span class="landing-load-ring" />
         <img src="/mbc_web_logo.png" alt="" />
@@ -61,19 +68,6 @@ defineEmits<{
     radial-gradient(circle at 78% 72%, rgba(112, 178, 130, 0.12), transparent 32%),
     linear-gradient(180deg, #07110d 0%, #0b1711 58%, #07100c 100%);
   color: #f8f2e4;
-}
-
-.landing-load-glow {
-  position: absolute;
-  top: 12%;
-  width: min(620px, 92vw);
-  aspect-ratio: 1;
-  border: 1px solid rgba(255, 236, 184, 0.12);
-  border-radius: 50%;
-  box-shadow:
-    0 0 80px rgba(249, 220, 147, 0.08),
-    inset 0 0 80px rgba(249, 220, 147, 0.05);
-  animation: landing-load-breathe 3.6s ease-in-out infinite;
 }
 
 .landing-load-content {
@@ -160,20 +154,7 @@ defineEmits<{
   }
 }
 
-@keyframes landing-load-breathe {
-  0%,
-  100% {
-    opacity: 0.62;
-    transform: scale(0.96);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .landing-load-glow,
   .landing-load-progress span {
     animation: none;
   }

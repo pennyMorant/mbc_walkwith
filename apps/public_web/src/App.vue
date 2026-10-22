@@ -97,6 +97,18 @@ function setIconLink(rel: string, href: string, type?: string) {
 
 <template>
   <v-app :class="{ 'intro-active': showIntro }">
+    <LandingLanguageMenu
+      v-if="!showIntro"
+      :current-locale="locale"
+      :error-message="content && hasError ? t('refreshError') : ''"
+      :is-loading="isLoading"
+      :label="t('changeLanguage')"
+      :options="localeOptions"
+      :retry-label="t('retry')"
+      @change="setLocale"
+      @retry="retry"
+    />
+
     <template v-if="content">
       <OpeningIntro
         v-if="showIntro"
@@ -105,17 +117,6 @@ function setIconLink(rel: string, href: string, type?: string) {
         @complete="completeIntro"
       />
       <v-main class="landing-main">
-        <LandingLanguageMenu
-          v-if="!showIntro"
-          :current-locale="locale"
-          :error-message="hasError ? t('refreshError') : ''"
-          :is-loading="isLoading"
-          :label="t('changeLanguage')"
-          :options="localeOptions"
-          :retry-label="t('retry')"
-          @change="setLocale"
-          @retry="retry"
-        />
         <HeroSection :identity="content.identity" :hero="content.hero" />
         <MissionSection :mission="content.mission" />
         <ServiceInfoSection :service="content.service" />
