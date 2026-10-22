@@ -18,7 +18,9 @@ import {
   sermonDiscussionAudienceTypeOptions,
   sermonDiscussionGuideStatusOptions,
   sermonDiscussionQuestionTypeOptions,
-  updateSermonDiscussionGuide
+  sermonDiscussionResponseUserTypeOptions,
+  updateSermonDiscussionGuide,
+  type SermonDiscussionGuideFilters
 } from "@/core/api/sermon_discussion_guides";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
@@ -47,6 +49,12 @@ const filters = reactive({
   status: "" as SermonDiscussionGuideStatus | "",
   audienceType: "" as SermonDiscussionAudienceType | ""
 });
+const appliedFilters = ref<SermonDiscussionGuideFilters>({
+  query: "",
+  sermonId: "",
+  status: "",
+  audienceType: ""
+});
 
 const responseFilters = reactive({
   userType: "" as "member" | "external" | ""
@@ -67,8 +75,12 @@ const guideForm = reactive<SermonDiscussionGuideCreateRequest>({
 });
 
 const guidesQuery = useQuery({
-  queryKey: computed(() => ["sermon-discussion-guides", { ...filters }]),
-  queryFn: () => listSermonDiscussionGuides({ ...filters, limit: 100 })
+  queryKey: computed(() => [
+    "sermon-discussion-guides",
+    appliedFilters.value
+  ]),
+  queryFn: () =>
+    listSermonDiscussionGuides({ ...appliedFilters.value, limit: 100 })
 });
 
 const responsesQuery = useQuery({
@@ -190,10 +202,6 @@ const responseErrorMessage = computed(() =>
     ? formatApiErrorMessage(responsesQuery.error.value, t("common.error"))
     : ""
 );
-const errorMessage = computed(
-  () => guideErrorMessage.value || mutationErrorMessage.value
-);
-
 function selectGuide(guide: SermonDiscussionGuide) {
   clearMutationError();
   selectedGuide.value = guide;
@@ -323,6 +331,20 @@ function captureMutationError(error: unknown) {
   mutationErrorMessage.value = formatApiErrorMessage(error, t("common.error"));
 }
 
+function applyGuideFilters() {
+  const nextFilters: SermonDiscussionGuideFilters = {
+    query: filters.query,
+    sermonId: filters.sermonId,
+    status: filters.status,
+    audienceType: filters.audienceType
+  };
+  if (JSON.stringify(nextFilters) === JSON.stringify(appliedFilters.value)) {
+    void guidesQuery.refetch();
+    return;
+  }
+  appliedFilters.value = nextFilters;
+}
+
 function saveGuide() {
   if (!canSaveGuide.value || saveGuideMutation.isPending.value) {
     return;
@@ -354,19 +376,19 @@ function hideResponse(responseId: string) {
     </AdminPageHeader>
 
     <v-alert
-      v-if="errorMessage"
+      v-if="mutationErrorMessage"
       class="mt-4"
       type="error"
       variant="tonal"
     >
-      {{ errorMessage }}
+      {{ mutationErrorMessage }}
     </v-alert>
 
     <SermonDiscussionGuideFiltersCard
       v-model="filters"
       :status-items="optionItems(['', ...sermonDiscussionGuideStatusOptions])"
       :audience-items="optionItems(['', ...sermonDiscussionAudienceTypeOptions])"
-      @refresh="guidesQuery.refetch()"
+      @refresh="applyGuideFilters"
     />
 
     <v-row class="mt-2" dense>
@@ -375,7 +397,10 @@ function hideResponse(responseId: string) {
           :guides="guides"
           :selected-guide-id="selectedGuide?.id ?? null"
           :pending="guidesQuery.isPending.value"
+          :fetching="guidesQuery.isFetching.value"
+          :error-message="guideErrorMessage"
           :status-color="guideStatusColor"
+          @retry="guidesQuery.refetch()"
           @select="selectGuide"
         />
       </v-col>
@@ -441,9 +466,11 @@ function hideResponse(responseId: string) {
               :error-message="responseErrorMessage"
               :filters="responseFilters"
               :hiding-response-id="hidingResponseId"
-              :pending="Boolean(selectedGuide) && responsesQuery.isFetching.value"
+              :pending="Boolean(selectedGuide) && responsesQuery.isPending.value"
+              :fetching="Boolean(selectedGuide) && responsesQuery.isFetching.value"
               :responses="responses"
               :selected-guide="selectedGuide"
+              :user-type-items="optionItems(['', ...sermonDiscussionResponseUserTypeOptions])"
               @hide-response="hideResponse"
               @refresh="responsesQuery.refetch()"
             />

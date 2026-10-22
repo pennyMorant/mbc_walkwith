@@ -117,6 +117,10 @@ Admin Web 可以：
 
 Admin 根据已保存状态显示可选迁移，并在 `published` 或 `archived` 未退出当前状态时锁定内容字段。这只是操作提示，Backend service 仍是 transition 和内容锁的唯一 owner。
 
+Admin 的讨论包目录与回应列表使用独立可恢复查询状态。筛选表单只有在管理员明确
+应用后才成为目录查询条件；首次失败不能显示为无内容，已有结果刷新失败时保留上次
+结果并提供局部重试。保存、发布和隐藏回应的命令错误不与查询错误合并。
+
 ## Backend Service Boundary
 
 后端负责：

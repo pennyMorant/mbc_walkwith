@@ -4,9 +4,6 @@ import type {
   SermonDiscussionResponse
 } from "@mbc/api-contracts";
 
-import {
-  sermonDiscussionResponseUserTypeOptions
-} from "@/core/api/sermon_discussion_guides";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
@@ -21,8 +18,10 @@ defineProps<{
   filters: ResponseFilters;
   hidingResponseId: string | null;
   pending: boolean;
+  fetching: boolean;
   responses: SermonDiscussionResponse[];
   selectedGuide: SermonDiscussionGuide | null;
+  userTypeItems: unknown[];
 }>();
 
 defineEmits<{
@@ -30,7 +29,7 @@ defineEmits<{
   refresh: [];
 }>();
 
-const { locale, optionItems, t } = useI18n();
+const { locale, t } = useI18n();
 
 function responseStatusColor(status: SermonDiscussionResponse["status"]) {
   return {
@@ -60,7 +59,7 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
       <div class="d-flex flex-column flex-sm-row ga-2">
         <v-select
           v-model="filters.userType"
-          :items="optionItems(['', ...sermonDiscussionResponseUserTypeOptions])"
+          :items="userTypeItems"
           :label="t('User type')"
           density="compact"
           hide-details
@@ -70,7 +69,7 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
         />
         <v-btn
           :disabled="!selectedGuide"
-          :loading="pending"
+          :loading="fetching"
           variant="tonal"
           @click="$emit('refresh')"
         >
@@ -92,14 +91,38 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
     <AdminDataState
       v-else
       class="mt-4"
-      :pending="pending"
-      :error-message="errorMessage"
-      :empty="responses.length === 0"
+      :pending="(pending || fetching) && responses.length === 0"
+      :error-message="responses.length === 0 ? errorMessage : ''"
+      :empty="!fetching && !errorMessage && responses.length === 0"
       :empty-title="t('No responses match the current filters.')"
       empty-icon="mdi-message-text-off-outline"
       :retry-label="t('common.refresh')"
       @retry="$emit('refresh')"
     >
+    <v-progress-linear
+      v-if="fetching && responses.length > 0"
+      color="primary"
+      indeterminate
+    />
+    <v-alert
+      v-if="responses.length > 0 && errorMessage"
+      type="error"
+      variant="tonal"
+      class="mb-4"
+    >
+      <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
+        <span>{{ errorMessage }}</span>
+        <v-btn
+          color="error"
+          prepend-icon="mdi-refresh"
+          size="small"
+          variant="tonal"
+          @click="$emit('refresh')"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
     <v-table class="d-none d-md-block" density="comfortable">
       <thead>
         <tr>
