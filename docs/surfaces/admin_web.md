@@ -164,6 +164,10 @@ Surface rule:
   失效。正式保存、审核和发布仍归原 feature，Admin Web 不直连 provider。
 - Sermon publishing：创建草稿、上传、审核、发布，并查看或重试后端拥有的音频对象清理任务；管理 Web 不读取私有对象路径，也不把重试结果当成本地讲道状态。
 - Sermon discovery：通过后端 facets 复用已发布讲员、系列和主题目录；可按主题精确筛选讲道，并在新建或编辑讲道时维护主题。页面不保存第二份主题目录。
+- Bible knowledge：Content 工作区维护人物、地点和读经辅助资料，不编辑本地圣经
+  正文。目录筛选只有在管理员明确应用后才请求；查询失败不显示为空目录，已有结果
+  刷新失败时保留数据并可局部重试。更新和删除始终使用已选实体自身的 locale 与
+  translation key，不能使用尚未应用的筛选草稿定位记录。
 - Church life publishing：创建生活内容、审核、发布、下架和归档。
 - Event registration：创建活动、查看名单、报名管理和导出。
 - Event attendance：扫码签到、手动补签、出席状态、缺席和导出。

@@ -4,22 +4,28 @@ import type {
   BibleKnowledgeEntityType
 } from "@mbc/api-contracts";
 
-import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 
+type BibleKnowledgeFilters = {
+  query: string;
+  type: BibleKnowledgeEntityType | "";
+  status: BibleKnowledgeEntity["status"] | "";
+  locale: string;
+  translationId: "web" | "cuvs" | "cuvt";
+};
+
+const filters = defineModel<BibleKnowledgeFilters>({ required: true });
 defineProps<{
-  filters: {
-    query: string;
-    type: BibleKnowledgeEntityType | "";
-    status: string;
-    locale: string;
-    translationId: "web" | "cuvs" | "cuvt";
-  };
   entities: BibleKnowledgeEntity[];
   isPending: boolean;
-  error: unknown;
-  refetch: () => unknown;
-  openEntity: (entity: BibleKnowledgeEntity) => void;
+  isFetching: boolean;
+  errorMessage: string;
+}>();
+defineEmits<{
+  applyFilters: [];
+  openEntity: [entity: BibleKnowledgeEntity];
+  retry: [];
 }>();
 
 const { optionItems, t } = useI18n();
@@ -36,7 +42,7 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @keyup.enter="refetch"
+            @keyup.enter="$emit('applyFilters')"
           />
         </v-col>
         <v-col cols="12" md="2">
@@ -47,18 +53,18 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="refetch"
+            @update:model-value="$emit('applyFilters')"
           />
         </v-col>
         <v-col cols="12" md="2">
           <v-select
             v-model="filters.status"
             :label="t('Status')"
-            :items="optionItems(['', 'draft', 'needs_review', 'published', 'archived'])"
+            :items="optionItems(['', 'draft', 'processing', 'needs_review', 'published', 'archived', 'failed'])"
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="refetch"
+            @update:model-value="$emit('applyFilters')"
           />
         </v-col>
         <v-col cols="12" md="2">
@@ -69,7 +75,7 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="refetch"
+            @update:model-value="$emit('applyFilters')"
           />
         </v-col>
         <v-col cols="12" md="2">
@@ -79,51 +85,84 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @keyup.enter="refetch"
+            @keyup.enter="$emit('applyFilters')"
           />
         </v-col>
         <v-col cols="12" md="1">
-          <v-btn block variant="tonal" @click="refetch">
+          <v-btn block variant="tonal" @click="$emit('applyFilters')">
             {{ t("common.go") }}
           </v-btn>
         </v-col>
       </v-row>
     </div>
     <v-divider />
-    <v-progress-linear v-if="isPending" indeterminate color="primary" />
-    <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">
-      {{ formatApiErrorMessage(error, t("common.error")) }}
-    </v-alert>
-    <v-table v-else density="comfortable">
-      <thead>
-        <tr>
-          <th>{{ t("Name") }}</th>
-          <th>{{ t("Type") }}</th>
-          <th>{{ t("Category") }}</th>
-          <th>{{ t("Status") }}</th>
-          <th>{{ t("Aliases") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="entity in entities"
-          :key="entity.id"
-          class="cursor-pointer"
-          @click="openEntity(entity)"
-        >
-          <td>
-            <div class="font-weight-bold">{{ entity.name }}</div>
-            <div class="text-caption text-medium-emphasis">{{ entity.id }}</div>
-          </td>
-          <td>{{ t(entity.type) }}</td>
-          <td>{{ entity.category }}</td>
-          <td>
-            <v-chip size="small">{{ t(entity.status) }}</v-chip>
-          </td>
-          <td>{{ entity.aliases.length }}</td>
-        </tr>
-      </tbody>
-    </v-table>
+
+    <AdminDataState
+      :pending="(isPending || isFetching) && entities.length === 0"
+      :error-message="entities.length === 0 ? errorMessage : ''"
+      :empty="!isFetching && !errorMessage && entities.length === 0"
+      :empty-title="t('nav.searchEmpty')"
+      empty-icon="mdi-book-search-outline"
+      :retry-label="t('common.refresh')"
+      @retry="$emit('retry')"
+    >
+      <v-progress-linear
+        v-if="isFetching && entities.length > 0"
+        indeterminate
+        color="primary"
+      />
+      <v-alert
+        v-if="entities.length > 0 && errorMessage"
+        type="error"
+        variant="tonal"
+        class="ma-4"
+      >
+        <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
+          <span>{{ errorMessage }}</span>
+          <v-btn
+            color="error"
+            prepend-icon="mdi-refresh"
+            size="small"
+            variant="tonal"
+            @click="$emit('retry')"
+          >
+            {{ t("common.refresh") }}
+          </v-btn>
+        </div>
+      </v-alert>
+      <v-table density="comfortable">
+        <thead>
+          <tr>
+            <th>{{ t("Name") }}</th>
+            <th>{{ t("Type") }}</th>
+            <th>{{ t("Category") }}</th>
+            <th>{{ t("Status") }}</th>
+            <th>{{ t("Aliases") }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="entity in entities"
+            :key="`${entity.translationId}:${entity.locale}:${entity.id}`"
+            class="cursor-pointer"
+            @click="$emit('openEntity', entity)"
+          >
+            <td>
+              <div class="font-weight-bold">{{ entity.name }}</div>
+              <div class="text-caption text-medium-emphasis">
+                {{ entity.id }}
+              </div>
+            </td>
+            <td>{{ t(entity.type) }}</td>
+            <td>{{ entity.category }}</td>
+            <td>
+              <v-chip size="small">{{ t(entity.status) }}</v-chip>
+            </td>
+            <td>{{ entity.aliases.length }}</td>
+          </tr>
+        </tbody>
+      </v-table>
+    </AdminDataState>
   </v-card>
 </template>
 

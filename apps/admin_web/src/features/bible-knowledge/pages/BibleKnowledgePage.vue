@@ -15,7 +15,8 @@ import {
   createBibleKnowledgeEntity,
   deleteBibleKnowledgeEntity,
   listBibleKnowledge,
-  updateBibleKnowledgeEntity
+  updateBibleKnowledgeEntity,
+  type BibleKnowledgeListFilters
 } from "@/core/api/bible_knowledge";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
@@ -38,6 +39,14 @@ const filters = reactive({
   locale: "en",
   translationId: "web" as "web" | "cuvs" | "cuvt"
 });
+const appliedFilters = ref<BibleKnowledgeListFilters>({
+  query: "",
+  type: "",
+  status: "",
+  locale: "en",
+  translationId: "web",
+  limit: 50
+});
 
 const form = reactive({
   id: "",
@@ -52,10 +61,9 @@ const form = reactive({
   status: "draft" as BibleKnowledgeEntity["status"]
 });
 
-const activeFilters = computed(() => ({ ...filters, limit: 50 }));
 const entitiesQuery = useQuery({
-  queryKey: ["bible-knowledge", activeFilters],
-  queryFn: () => listBibleKnowledge(activeFilters.value)
+  queryKey: ["bible-knowledge", appliedFilters],
+  queryFn: () => listBibleKnowledge(appliedFilters.value)
 });
 const canManageKnowledge = computed(() =>
   authStore.can("bible_knowledge:update")
@@ -86,7 +94,7 @@ const updateMutation = useMutation({
     return updateBibleKnowledgeEntity(
       entity.id,
       buildUpdatePayload(),
-      { locale: filters.locale, translationId: filters.translationId }
+      { locale: entity.locale, translationId: entity.translationId }
     );
   },
   onSuccess: async (entity) => {
@@ -105,8 +113,8 @@ const deleteMutation = useMutation({
       throw new Error(t("Bible knowledge update access required"));
     }
     await deleteBibleKnowledgeEntity(entity.id, {
-      locale: filters.locale,
-      translationId: filters.translationId
+      locale: entity.locale,
+      translationId: entity.translationId
     });
   },
   onSuccess: async () => {
@@ -131,6 +139,9 @@ const entityMutationErrorMessage = computed(() =>
       deleteMutation.error.value,
     t("common.error")
   )
+);
+const entitiesErrorMessage = computed(() =>
+  formatApiErrorMessage(entitiesQuery.error.value, t("common.error"))
 );
 
 function openEntity(entity: BibleKnowledgeEntity) {
@@ -228,8 +239,8 @@ function buildUpsertPayload(): BibleKnowledgeUpsertRequest {
   return {
     id: form.id.trim(),
     type: form.type,
-    locale: filters.locale.trim() || "en",
-    translationId: filters.translationId,
+    locale: appliedFilters.value.locale?.trim() || "en",
+    translationId: appliedFilters.value.translationId ?? "web",
     name: form.name.trim(),
     category: form.category.trim(),
     summary: form.summary.trim(),
@@ -268,6 +279,22 @@ function parseVerseAliases(value: string): Record<string, string[]> {
         : []
     ])
   );
+}
+
+function applyFilters() {
+  const nextFilters: BibleKnowledgeListFilters = {
+    query: filters.query,
+    type: filters.type,
+    status: filters.status,
+    locale: filters.locale.trim() || "en",
+    translationId: filters.translationId,
+    limit: 50
+  };
+  if (JSON.stringify(nextFilters) === JSON.stringify(appliedFilters.value)) {
+    void entitiesQuery.refetch();
+    return;
+  }
+  appliedFilters.value = nextFilters;
 }
 
 function saveEntity() {
@@ -318,12 +345,14 @@ function deleteCurrentEntity() {
     </AdminPageHeader>
 
     <BibleKnowledgeEntityListCard
-      :filters="filters"
+      v-model="filters"
       :entities="entities"
       :is-pending="entitiesQuery.isPending.value"
-      :error="entitiesQuery.error.value"
-      :refetch="entitiesQuery.refetch"
-      :open-entity="openEntity"
+      :is-fetching="entitiesQuery.isFetching.value"
+      :error-message="entitiesErrorMessage"
+      @apply-filters="applyFilters"
+      @retry="entitiesQuery.refetch()"
+      @open-entity="openEntity"
     />
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="560">
