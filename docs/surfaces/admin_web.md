@@ -67,6 +67,11 @@ page/dialog/table
 | `/notifications` | `NotificationsPage` | `notifications:read` | `core/api/notifications.ts` |
 | `/settings` | `SettingsPage` | `settings:read` | `core/api/settings.ts` |
 
+Bible Notes moderation keeps filter drafts separate from applied query values,
+preserves already loaded notes when a background refresh fails, and targets
+hide/restore commands by the selected note's backend-owned id. The Admin Web
+does not infer authorship, restore deleted notes, or duplicate moderation rules.
+
 Life posts 的活动报名卡片负责现场签到二维码的生成、轮换和打印；二维码凭证走
 `life_posts.ts` API helper，报名名单和导出需要 `life_posts:update`，最终签到状态仍以后端
 `event_registrations` 为准。名单使用后端 `total/limit/offset` 分页；只有

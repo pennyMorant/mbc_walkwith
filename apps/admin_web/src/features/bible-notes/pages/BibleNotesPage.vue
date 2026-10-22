@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {
   AdminBibleVerseNote,
-  BibleVerseNoteAuthorType,
   BibleVerseNoteStatus
 } from "@mbc/api-contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
@@ -12,7 +11,8 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import {
   hideBibleVerseNote,
   listBibleVerseNotes,
-  restoreBibleVerseNote
+  restoreBibleVerseNote,
+  type BibleVerseNoteFilters
 } from "@/core/api/bible_verse_notes";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
@@ -20,30 +20,33 @@ import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import BibleNoteFilterCard, {
+  type BibleNoteFilters
+} from "../components/BibleNoteFilterCard.vue";
 import BibleNoteResults from "../components/BibleNoteResults.vue";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
-const { optionItems, t } = useI18n();
+const { t } = useI18n();
 const selectedNote = ref<AdminBibleVerseNote | null>(null);
 const drawer = ref(false);
 const mutationErrorMessage = ref("");
 
-const filters = reactive({
+const filters = reactive<BibleNoteFilters>({
   query: "",
   verseId: "",
-  status: "" as BibleVerseNoteStatus | "",
-  authorType: "" as BibleVerseNoteAuthorType | ""
+  status: "",
+  authorType: ""
 });
+const appliedFilters = ref<BibleVerseNoteFilters>({ limit: 100 });
 
 const form = reactive({
   hiddenReason: ""
 });
 
-const activeFilters = computed(() => ({ ...filters, limit: 100 }));
 const notesQuery = useQuery({
-  queryKey: ["bible-verse-notes", activeFilters],
-  queryFn: () => listBibleVerseNotes(activeFilters.value)
+  queryKey: ["bible-verse-notes", appliedFilters],
+  queryFn: () => listBibleVerseNotes(appliedFilters.value)
 });
 
 const hideMutation = useMutation({
@@ -113,6 +116,15 @@ function captureMutationError(error: unknown) {
   mutationErrorMessage.value = formatApiErrorMessage(error, t("common.error"));
 }
 
+function applyFilters() {
+  const nextFilters: BibleVerseNoteFilters = { ...filters, limit: 100 };
+  if (JSON.stringify(nextFilters) === JSON.stringify(appliedFilters.value)) {
+    void notesQuery.refetch();
+    return;
+  }
+  appliedFilters.value = nextFilters;
+}
+
 function statusColor(status: BibleVerseNoteStatus) {
   if (status === "published") {
     return "success";
@@ -167,69 +179,18 @@ function restoreSelectedNote() {
     <AdminMetricGrid :items="summaryMetrics" />
 
     <v-card class="mt-6">
-      <div class="pa-5">
-        <v-row dense>
-          <v-col cols="12" md="3">
-            <v-text-field
-              v-model="filters.query"
-              :label="t('Search')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @keyup.enter="notesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-text-field
-              v-model="filters.verseId"
-              :label="t('Verse ID')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @keyup.enter="notesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-select
-              v-model="filters.status"
-              :label="t('Status')"
-              :items="optionItems(['', 'published', 'hidden', 'deleted'])"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @update:model-value="notesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="2">
-            <v-select
-              v-model="filters.authorType"
-              :label="t('Author')"
-              :items="optionItems(['', 'member', 'external'])"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @update:model-value="notesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-btn
-              block
-              color="primary"
-              variant="tonal"
-              :loading="notesQuery.isFetching.value"
-              @click="notesQuery.refetch()"
-            >
-              {{ t("common.search") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </div>
+      <BibleNoteFilterCard
+        v-model="filters"
+        :fetching="notesQuery.isFetching.value"
+        @apply="applyFilters"
+      />
 
       <v-divider />
 
       <BibleNoteResults
         :notes="notes"
         :pending="notesQuery.isPending.value"
+        :fetching="notesQuery.isFetching.value"
         :error-message="queryErrorMessage"
         :status-color="statusColor"
         @open="openNote"

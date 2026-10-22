@@ -11,6 +11,7 @@ import AdminDataState from "@/core/ui/AdminDataState.vue";
 defineProps<{
   notes: AdminBibleVerseNote[];
   pending: boolean;
+  fetching: boolean;
   errorMessage: string;
   statusColor: (status: BibleVerseNoteStatus) => string;
 }>();
@@ -21,14 +22,38 @@ const { locale, t } = useI18n();
 
 <template>
   <AdminDataState
-    :pending="pending"
-    :error-message="errorMessage"
-    :empty="notes.length === 0"
+    :pending="(pending || fetching) && notes.length === 0"
+    :error-message="notes.length === 0 ? errorMessage : ''"
+    :empty="!fetching && !errorMessage && notes.length === 0"
     :empty-title="t('bibleNotes.empty')"
     empty-icon="mdi-note-off-outline"
     :retry-label="t('common.refresh')"
     @retry="$emit('retry')"
   >
+    <v-progress-linear
+      v-if="fetching && notes.length > 0"
+      indeterminate
+      color="primary"
+    />
+    <v-alert
+      v-if="notes.length > 0 && errorMessage"
+      type="error"
+      variant="tonal"
+      class="ma-4"
+    >
+      <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
+        <span>{{ errorMessage }}</span>
+        <v-btn
+          color="error"
+          variant="tonal"
+          size="small"
+          prepend-icon="mdi-refresh"
+          @click="$emit('retry')"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
     <v-table class="d-none d-md-block" hover>
       <thead>
         <tr>
