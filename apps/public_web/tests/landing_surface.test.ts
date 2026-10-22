@@ -4,6 +4,7 @@ import { describe, expect, test } from "bun:test";
 
 import { splitMissionPhrases } from "../src/core/mission_phrases";
 import { stepGalleryIndex } from "../src/core/gallery_navigation";
+import { createLandingDocumentMetadata } from "../src/core/document_metadata";
 
 const app = readFileSync(new URL("../src/App.vue", import.meta.url), "utf8");
 const languageMenu = readFileSync(
@@ -57,6 +58,56 @@ describe("public landing surface", () => {
     );
     expect(hero).toContain(':key="action.id"');
     expect(hero).not.toContain(':key="action.href"');
+  });
+
+  test("builds locale-aware share and search metadata from landing content", () => {
+    const metadata = createLandingDocumentMetadata(
+      {
+        hero: { imageUrl: "/hero.jpg" },
+        identity: {
+          englishName: "Example Church",
+          logoUrl: "/logo.png",
+          mission: "Formar discípulos, enviar obreros y guiar personas a Cristo",
+          name: "Iglesia de Ejemplo"
+        },
+        locale: "es",
+        updatedAt: "2026-10-21T00:00:00.000Z"
+      },
+      "https://example.org/?intro=1#mission"
+    );
+
+    expect(metadata.canonicalUrl).toBe("https://example.org/");
+    expect(metadata.description).toBe(
+      "Iglesia de Ejemplo. Formar discípulos, enviar obreros y guiar personas a Cristo."
+    );
+    expect(metadata.openGraphLocale).toBe("es_US");
+    expect(metadata.iconUrl).toContain("https://example.org/logo.png?v=");
+    expect(metadata.shareImageUrl).toContain("https://example.org/hero.jpg?v=");
+    expect(metadata.structuredData).toMatchObject({
+      "@type": "Church",
+      name: "Iglesia de Ejemplo",
+      url: "https://example.org/"
+    });
+  });
+
+  test("uses the public logo when no hero share image is configured", () => {
+    const metadata = createLandingDocumentMetadata(
+      {
+        hero: { imageUrl: "" },
+        identity: {
+          englishName: "Example Church",
+          logoUrl: "/logo.png",
+          mission: "造就门徒，差派工人，领人归主。",
+          name: "示例教会"
+        },
+        locale: "zh-Hans",
+        updatedAt: "2026-10-21T00:00:00.000Z"
+      },
+      "https://example.org/"
+    );
+
+    expect(metadata.description).toBe("示例教会，造就门徒，差派工人，领人归主。");
+    expect(metadata.shareImageUrl).toBe(metadata.iconUrl);
   });
 
   test("preserves loaded content while locale refresh state stays recoverable", () => {

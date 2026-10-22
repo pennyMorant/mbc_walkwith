@@ -86,8 +86,9 @@ Public Web does not own:
   不拼接 bucket、object key 或签名规则。
 - 主日、活动、人员和照片墙复用同一图片失败占位；照片墙允许访客在只读查看器中
   打开大图、前后切换和使用键盘方向键，但仍只读取后端返回的公开媒体 URL。
-- 浏览器标签页标题、描述和 favicon 跟随后端返回的 `identity.name`、`identity.mission`
-  和 `identity.logoUrl`；`index.html` 只提供首屏加载前的默认值。
+- 浏览器标签页标题、当前语言、描述、favicon、canonical、Open Graph、Twitter Card 和
+  Church JSON-LD 跟随后端返回的 identity、Hero 公开媒体与 locale；`index.html` 只提供
+  首屏加载前的静态品牌默认值。Hero 没有图片时分享图回退公开 logo，不拼接私有媒体路径。
 
 ## 4. Routing And Deployment
 

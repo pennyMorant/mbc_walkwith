@@ -13,6 +13,10 @@ import ScheduleSection from "@/components/ScheduleSection.vue";
 import ServiceInfoSection from "@/components/ServiceInfoSection.vue";
 import UpcomingEventsSection from "@/components/UpcomingEventsSection.vue";
 import { useLandingContent } from "@/composables/use_landing_content";
+import {
+  applyLandingDocumentMetadata,
+  createLandingDocumentMetadata
+} from "@/core/document_metadata";
 import { usePublicLocale } from "@/core/locale";
 import { computed, ref, watch } from "vue";
 
@@ -27,11 +31,10 @@ watch(content, (nextContent) => {
   if (!nextContent) {
     return;
   }
-  syncDocumentBrand({
-    title: nextContent.identity.name,
-    description: `${nextContent.identity.name}，${nextContent.identity.mission}。`,
-    iconUrl: versionAssetUrl(nextContent.identity.logoUrl, nextContent.updatedAt)
-  });
+  applyLandingDocumentMetadata(
+    document,
+    createLandingDocumentMetadata(nextContent, window.location.href)
+  );
 }, { immediate: true });
 
 function completeIntro() {
@@ -50,49 +53,6 @@ function shouldReplayIntro() {
   return new URLSearchParams(window.location.search).has("intro");
 }
 
-function versionAssetUrl(url: string, version: string) {
-  const assetUrl = new URL(url, window.location.origin);
-  assetUrl.searchParams.set("v", version);
-  return assetUrl.toString();
-}
-
-function syncDocumentBrand(input: {
-  title: string;
-  description: string;
-  iconUrl: string;
-}) {
-  document.title = input.title;
-  setMetaContent("description", input.description);
-  setIconLink("icon", input.iconUrl, "image/png");
-  setIconLink("apple-touch-icon", input.iconUrl);
-}
-
-function setMetaContent(name: string, content: string) {
-  let element = document.head.querySelector<HTMLMetaElement>(
-    `meta[name="${name}"]`
-  );
-  if (!element) {
-    element = document.createElement("meta");
-    element.name = name;
-    document.head.append(element);
-  }
-  element.content = content;
-}
-
-function setIconLink(rel: string, href: string, type?: string) {
-  let element = document.head.querySelector<HTMLLinkElement>(
-    `link[rel="${rel}"]`
-  );
-  if (!element) {
-    element = document.createElement("link");
-    element.rel = rel;
-    document.head.append(element);
-  }
-  element.href = href;
-  if (type) {
-    element.type = type;
-  }
-}
 </script>
 
 <template>
