@@ -7,7 +7,8 @@
     "dev": "bun run vite",
     "preview": "bun run vite preview",
     "build": "bun run vue-tsc -p tsconfig.json --noEmit && bun run vite build",
-    "typecheck": "bun run vue-tsc -p tsconfig.json --noEmit"
+    "typecheck": "bun run vue-tsc -p tsconfig.json --noEmit",
+    "test": "bun test tests"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",

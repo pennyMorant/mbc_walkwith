@@ -5,6 +5,7 @@ import ContactFooter from "@/components/ContactFooter.vue";
 import HeroSection from "@/components/HeroSection.vue";
 import GallerySection from "@/components/GallerySection.vue";
 import LandingLoadState from "@/components/LandingLoadState.vue";
+import LandingLanguageMenu from "@/components/LandingLanguageMenu.vue";
 import MissionSection from "@/components/MissionSection.vue";
 import OpeningIntro from "@/components/OpeningIntro.vue";
 import PeopleSection from "@/components/PeopleSection.vue";
@@ -15,8 +16,8 @@ import { useLandingContent } from "@/composables/use_landing_content";
 import { usePublicLocale } from "@/core/locale";
 import { computed, ref, watch } from "vue";
 
-const { locale, t } = usePublicLocale();
-const { content, isLoading, retry } = useLandingContent(locale);
+const { locale, localeOptions, setLocale, t } = usePublicLocale();
+const { content, hasError, isLoading, retry } = useLandingContent(locale);
 
 const introStorageKey = "mbc_public_intro_seen";
 const introDismissed = ref(hasSeenIntro());
@@ -104,6 +105,17 @@ function setIconLink(rel: string, href: string, type?: string) {
         @complete="completeIntro"
       />
       <v-main class="landing-main">
+        <LandingLanguageMenu
+          v-if="!showIntro"
+          :current-locale="locale"
+          :error-message="hasError ? t('refreshError') : ''"
+          :is-loading="isLoading"
+          :label="t('changeLanguage')"
+          :options="localeOptions"
+          :retry-label="t('retry')"
+          @change="setLocale"
+          @retry="retry"
+        />
         <HeroSection :identity="content.identity" :hero="content.hero" />
         <MissionSection :mission="content.mission" />
         <ServiceInfoSection :service="content.service" />

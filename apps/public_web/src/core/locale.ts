@@ -28,6 +28,7 @@ const publicMessages: Record<SupportedLocale, Record<string, string>> = {
     loadingTitle: "Preparing your welcome",
     openNavigation: "Open navigation",
     primaryNavigation: "Primary navigation",
+    refreshError: "The new language could not be loaded.",
     retry: "Try again"
   },
   es: {
@@ -39,6 +40,7 @@ const publicMessages: Record<SupportedLocale, Record<string, string>> = {
     loadingTitle: "Preparando tu bienvenida",
     openNavigation: "Abrir navegación",
     primaryNavigation: "Navegación principal",
+    refreshError: "No se pudo cargar el nuevo idioma.",
     retry: "Reintentar"
   },
   "zh-Hans": {
@@ -49,6 +51,7 @@ const publicMessages: Record<SupportedLocale, Record<string, string>> = {
     loadingTitle: "正在准备欢迎页面",
     openNavigation: "打开导航",
     primaryNavigation: "主要导航",
+    refreshError: "暂时无法载入所选语言。",
     retry: "重新载入"
   },
   "zh-Hant": {
@@ -59,6 +62,7 @@ const publicMessages: Record<SupportedLocale, Record<string, string>> = {
     loadingTitle: "正在準備歡迎頁面",
     openNavigation: "打開導航",
     primaryNavigation: "主要導航",
+    refreshError: "暫時無法載入所選語言。",
     retry: "重新載入"
   }
 };

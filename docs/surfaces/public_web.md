@@ -75,6 +75,8 @@ Public Web does not own:
 - 其他语言使用 locale setting key，例如 `publicLanding.en.hero`、
   `publicLanding.es.hero` 和 `publicLanding.zh-Hant.hero`。
 - Public Web 只负责选择 locale 和展示后端返回内容，不在前端维护另一份翻译资源真相。
+- 页面提供独立的悬浮语言入口，不依赖持久 AppBar；切换语言期间保留当前内容，
+  新语言加载失败时显示可重试提示，不用空白页替换已成功加载的内容。
 - 图片使用后端媒体投影中的公开 URL；生产 URL 直接指向 R2 自定义媒体域名，Public Web
   不拼接 bucket、object key 或签名规则。
 - 浏览器标签页标题、描述和 favicon 跟随后端返回的 `identity.name`、`identity.mission`
@@ -141,6 +143,7 @@ Public Web 可以使用 JS 动画库，但动效必须服务信息路径。
 - 宗旨三段、聚会信息、教会入口、App 引导滚动进入。
 - 按钮和卡片只做轻微 hover / press 反馈。
 - 手机端减少复杂动效。
+- `prefers-reduced-motion` 生效时，opening intro 应立即让出内容，不能保留长时间遮罩。
 
 必须支持：
 

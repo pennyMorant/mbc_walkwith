@@ -7,18 +7,14 @@ import { motion } from "motion-v";
 import { computed } from "vue";
 
 import { actionRel, actionTarget } from "@/core/actions";
+import { splitMissionPhrases } from "@/core/mission_phrases";
 
 const props = defineProps<{
   hero: PublicLandingHero;
   identity: PublicLandingIdentity;
 }>();
 
-const missionPhrases = computed(() =>
-  props.hero.mission
-    .split(/\s*[，,]\s*/)
-    .map((item) => item.trim())
-    .filter(Boolean)
-);
+const missionPhrases = computed(() => splitMissionPhrases(props.hero.mission));
 
 const heroStyle = computed(() => ({
   "--hero-image": props.hero.imageUrl.trim()

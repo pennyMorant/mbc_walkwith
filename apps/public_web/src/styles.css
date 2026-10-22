@@ -40,6 +40,67 @@ a {
   color: #f8f2e4;
 }
 
+.landing-language-control {
+  position: fixed;
+  top: max(18px, env(safe-area-inset-top));
+  right: max(18px, env(safe-area-inset-right));
+  z-index: 40;
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+}
+
+.landing-language-button {
+  width: 48px !important;
+  height: 48px !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 999px !important;
+  background: rgba(7, 17, 13, 0.68) !important;
+  color: #fff8e8 !important;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.landing-language-menu {
+  min-width: 188px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px !important;
+  background: rgba(11, 25, 18, 0.96) !important;
+  color: #fff8e8 !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(20px);
+}
+
+.landing-language-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(360px, calc(100vw - 36px));
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 190, 182, 0.24);
+  border-radius: 999px;
+  background: rgba(55, 24, 22, 0.9);
+  color: #ffe4df;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  backdrop-filter: blur(18px);
+}
+
+.landing-language-error span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.landing-language-error strong {
+  flex: 0 0 auto;
+  color: #fff8e8;
+}
+
 .hero-actions .v-btn,
 .service-actions .v-btn,
 .app-actions .v-btn {
@@ -281,7 +342,7 @@ a {
 .hero-section {
   --hero-image: none;
   position: relative;
-  min-height: 100svh;
+  min-height: min(920px, 96svh);
   overflow: hidden;
   display: grid;
   align-items: center;
@@ -633,7 +694,7 @@ a {
 }
 
 .mission-section {
-  padding-top: 108px;
+  padding-top: 52px;
   padding-bottom: 82px;
 }
 
@@ -1285,6 +1346,46 @@ a {
   }
 }
 
+@media (min-width: 981px) {
+  .hero-section {
+    min-height: min(820px, 92svh);
+    padding-top: 42px;
+    padding-bottom: 20px;
+  }
+
+  .hero-symbol {
+    width: 112px;
+    margin-bottom: 12px;
+  }
+
+  .hero-content h1 {
+    max-width: 900px;
+    margin-top: 12px;
+    font-size: clamp(42px, 5.2vw, 72px);
+  }
+
+  .hero-mission-declaration {
+    margin-top: 18px;
+  }
+
+  .hero-copy {
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    margin-top: 22px;
+  }
+
+  .hero-quick-actions {
+    margin-top: 24px;
+  }
+
+  .quick-action {
+    padding: 14px 16px;
+  }
+}
+
 @media (max-width: 980px) {
   .hero-section {
     min-height: 100svh;
@@ -1354,8 +1455,18 @@ a {
 }
 
 @media (max-width: 640px) {
-  body {
-    padding-bottom: 70px;
+  .landing-language-control {
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+  }
+
+  .landing-language-button {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .landing-language-error {
+    max-width: calc(100vw - 24px);
   }
 
   .opening-symbol {

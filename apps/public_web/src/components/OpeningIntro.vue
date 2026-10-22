@@ -6,6 +6,8 @@ import type {
 import { motion } from "motion-v";
 import { computed, onBeforeUnmount, onMounted } from "vue";
 
+import { splitMissionPhrases } from "@/core/mission_phrases";
+
 const props = defineProps<{
   hero: PublicLandingHero;
   identity: PublicLandingIdentity;
@@ -20,13 +22,7 @@ const reduceMotion =
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const missionPhrases = computed(() => {
-  const phrases = props.hero.mission
-    .split(/\s*[，,]\s*/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-  return phrases.length >= 2 ? phrases : [props.hero.mission];
-});
+const missionPhrases = computed(() => splitMissionPhrases(props.hero.mission));
 
 const introStyle = computed(() => ({
   "--intro-image": props.hero.imageUrl.trim()
@@ -35,7 +31,7 @@ const introStyle = computed(() => ({
 }));
 
 onMounted(() => {
-  timer = window.setTimeout(() => emit("complete"), reduceMotion ? 1800 : 4860);
+  timer = window.setTimeout(() => emit("complete"), reduceMotion ? 120 : 4860);
 });
 
 onBeforeUnmount(() => {
