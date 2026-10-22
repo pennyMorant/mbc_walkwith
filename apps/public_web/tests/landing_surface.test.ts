@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, test } from "bun:test";
 
 import { splitMissionPhrases } from "../src/core/mission_phrases";
+import { stepGalleryIndex } from "../src/core/gallery_navigation";
 
 const app = readFileSync(new URL("../src/App.vue", import.meta.url), "utf8");
 const languageMenu = readFileSync(
@@ -11,6 +12,14 @@ const languageMenu = readFileSync(
 );
 const intro = readFileSync(
   new URL("../src/components/OpeningIntro.vue", import.meta.url),
+  "utf8"
+);
+const gallery = readFileSync(
+  new URL("../src/components/GallerySection.vue", import.meta.url),
+  "utf8"
+);
+const mediaImage = readFileSync(
+  new URL("../src/components/LandingMediaImage.vue", import.meta.url),
   "utf8"
 );
 const styles = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
@@ -58,5 +67,20 @@ describe("public landing surface", () => {
       "差派工人",
       "领人归主"
     ]);
+  });
+
+  test("provides cyclic keyboard-friendly gallery navigation", () => {
+    expect(stepGalleryIndex(0, 3, -1)).toBe(2);
+    expect(stepGalleryIndex(2, 3, 1)).toBe(0);
+    expect(stepGalleryIndex(0, 0, 1)).toBe(-1);
+    expect(gallery).toContain('event.key === "ArrowLeft"');
+    expect(gallery).toContain('event.key === "ArrowRight"');
+    expect(gallery).toContain("v-dialog");
+  });
+
+  test("uses a shared visual fallback without changing media ownership", () => {
+    expect(mediaImage).toContain('@error="failed = true"');
+    expect(mediaImage).not.toContain("fetch(");
+    expect(mediaImage).not.toContain("@/core/api/");
   });
 });

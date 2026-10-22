@@ -3,6 +3,7 @@ import type { PublicLandingServiceSection } from "@mbc/api-contracts";
 import { motion } from "motion-v";
 
 import { actionRel, actionTarget } from "@/core/actions";
+import LandingMediaImage from "@/components/LandingMediaImage.vue";
 
 defineProps<{
   service: PublicLandingServiceSection;
@@ -23,7 +24,11 @@ defineProps<{
       :inViewOptions="{ once: true, margin: '-80px' }"
       :transition="{ duration: 0.8, ease: 'easeOut' }"
     >
-      <img :src="service.imageUrl" :alt="service.title" />
+      <LandingMediaImage
+        :src="service.imageUrl"
+        :alt="service.title"
+        fallback-icon="mdi-church-outline"
+      />
     </motion.div>
 
     <motion.div

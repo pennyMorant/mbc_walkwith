@@ -79,6 +79,8 @@ Public Web does not own:
   新语言加载失败时显示可重试提示，不用空白页替换已成功加载的内容。
 - 图片使用后端媒体投影中的公开 URL；生产 URL 直接指向 R2 自定义媒体域名，Public Web
   不拼接 bucket、object key 或签名规则。
+- 主日、活动、人员和照片墙复用同一图片失败占位；照片墙允许访客在只读查看器中
+  打开大图、前后切换和使用键盘方向键，但仍只读取后端返回的公开媒体 URL。
 - 浏览器标签页标题、描述和 favicon 跟随后端返回的 `identity.name`、`identity.mission`
   和 `identity.logoUrl`；`index.html` 只提供首屏加载前的默认值。
 

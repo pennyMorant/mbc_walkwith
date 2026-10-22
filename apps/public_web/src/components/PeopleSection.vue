@@ -2,6 +2,8 @@
 import type { PublicLandingPeopleSection } from "@mbc/api-contracts";
 import { motion } from "motion-v";
 
+import LandingMediaImage from "@/components/LandingMediaImage.vue";
+
 defineProps<{
   people: PublicLandingPeopleSection;
 }>();
@@ -26,14 +28,11 @@ defineProps<{
         :transition="{ duration: 0.6, delay: index * 0.07, ease: 'easeOut' }"
       >
         <div class="person-photo">
-          <img
-            v-if="person.imageUrl"
+          <LandingMediaImage
             :src="person.imageUrl"
             :alt="person.name"
-            loading="lazy"
-            decoding="async"
+            fallback-icon="mdi-account-heart-outline"
           />
-          <v-icon v-else icon="mdi-account-heart-outline" size="42" />
         </div>
         <div class="person-copy">
           <p class="person-role">{{ person.role }}</p>

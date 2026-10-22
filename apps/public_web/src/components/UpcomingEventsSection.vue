@@ -6,6 +6,8 @@ import type {
 } from "@mbc/api-contracts";
 import { motion } from "motion-v";
 
+import LandingMediaImage from "@/components/LandingMediaImage.vue";
+
 const props = defineProps<{
   events: PublicLandingEventsSection;
   locale: SupportedLocale;
@@ -51,11 +53,10 @@ function eventDate(event: PublicLandingEvent) {
         :transition="{ duration: 0.62, delay: index * 0.07, ease: 'easeOut' }"
       >
         <div v-if="event.imageUrl" class="event-image">
-          <img
+          <LandingMediaImage
             :src="event.imageUrl"
             :alt="event.title"
-            loading="lazy"
-            decoding="async"
+            fallback-icon="mdi-calendar-image-outline"
           />
         </div>
         <div class="event-copy">
