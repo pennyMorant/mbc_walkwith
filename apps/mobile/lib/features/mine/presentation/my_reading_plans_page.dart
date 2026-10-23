@@ -90,28 +90,21 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
                       )
                     else
                       for (final assignment in assignments) ...[
-                        IgnorePointer(
-                          ignoring: _busyAssignmentId == assignment.id,
-                          child: Opacity(
-                            opacity: _busyAssignmentId == assignment.id
-                                ? 0.6
-                                : 1,
-                            child: ReadingPlanAssignmentCard(
-                              assignment: assignment,
-                              onTap: () => assignment.isHistory
-                                  ? _openHistory(assignment)
-                                  : context.goNamed(AppRouteNames.study),
-                              onPause: assignment.status == 'active'
-                                  ? () => _updateStatus(assignment, 'paused')
-                                  : null,
-                              onResume: assignment.status == 'paused'
-                                  ? () => _updateStatus(assignment, 'active')
-                                  : null,
-                              onAbandon: assignment.isHistory
-                                  ? null
-                                  : () => _confirmAbandon(assignment),
-                            ),
-                          ),
+                        ReadingPlanAssignmentCard(
+                          assignment: assignment,
+                          busy: _busyAssignmentId == assignment.id,
+                          onTap: () => assignment.isHistory
+                              ? _openHistory(assignment)
+                              : context.goNamed(AppRouteNames.study),
+                          onPause: assignment.status == 'active'
+                              ? () => _updateStatus(assignment, 'paused')
+                              : null,
+                          onResume: assignment.status == 'paused'
+                              ? () => _updateStatus(assignment, 'active')
+                              : null,
+                          onAbandon: assignment.isHistory
+                              ? null
+                              : () => _confirmAbandon(assignment),
                         ),
                         const SizedBox(height: 8),
                       ],

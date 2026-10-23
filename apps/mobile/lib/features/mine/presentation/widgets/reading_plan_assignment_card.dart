@@ -10,6 +10,7 @@ class ReadingPlanAssignmentCard extends StatelessWidget {
     super.key,
     required this.assignment,
     required this.onTap,
+    this.busy = false,
     this.onPause,
     this.onResume,
     this.onAbandon,
@@ -17,6 +18,7 @@ class ReadingPlanAssignmentCard extends StatelessWidget {
 
   final ReadingPlanAssignment assignment;
   final VoidCallback onTap;
+  final bool busy;
   final VoidCallback? onPause;
   final VoidCallback? onResume;
   final VoidCallback? onAbandon;
@@ -33,7 +35,7 @@ class ReadingPlanAssignmentCard extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: onTap,
+        onTap: busy ? null : onTap,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -49,7 +51,17 @@ class ReadingPlanAssignmentCard extends StatelessWidget {
                           ?.copyWith(fontWeight: FontWeight.w700),
                     ),
                   ),
-                  if (onPause != null || onResume != null || onAbandon != null)
+                  if (busy)
+                    const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: SizedBox.square(
+                        dimension: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    )
+                  else if (onPause != null ||
+                      onResume != null ||
+                      onAbandon != null)
                     PopupMenuButton<_AssignmentAction>(
                       tooltip: MaterialLocalizations.of(context)
                           .showMenuTooltip,

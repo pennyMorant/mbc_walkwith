@@ -27,6 +27,35 @@ void main() {
     expect(find.text('Unknown status'), findsOneWidget);
     expect(find.text('requires_review'), findsNothing);
   });
+
+  testWidgets('busy reading plan card shows progress and disables actions', (
+    tester,
+  ) async {
+    var tapCount = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: AppTheme.build(null, Brightness.light),
+        home: Scaffold(
+          body: ReadingPlanAssignmentCard(
+            assignment: _assignment(status: 'active'),
+            busy: true,
+            onTap: () => tapCount += 1,
+            onPause: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(PopupMenuButton), findsNothing);
+
+    await tester.tap(find.text('Reading plan'));
+    await tester.pump();
+    expect(tapCount, 0);
+  });
 }
 
 ReadingPlanAssignment _assignment({required String status}) {
