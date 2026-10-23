@@ -69,12 +69,21 @@ class PreferenceNotificationPermissionControl extends StatelessWidget {
 }
 
 String _localeLabel(Locale locale) {
-  final script = locale.scriptCode;
-  final country = locale.countryCode;
-  final parts = [
-    locale.languageCode,
-    if (script != null && script.isNotEmpty) script,
-    if (country != null && country.isNotEmpty) country,
-  ];
-  return parts.join('-');
+  return switch (locale.languageCode) {
+    'en' => 'English',
+    'es' => 'Español',
+    'zh' when _usesTraditionalChinese(locale) => '繁體中文',
+    'zh' => '简体中文',
+    _ => locale.toLanguageTag(),
+  };
+}
+
+bool _usesTraditionalChinese(Locale locale) {
+  if (locale.scriptCode == 'Hant') {
+    return true;
+  }
+  return switch (locale.countryCode) {
+    'TW' || 'HK' || 'MO' => true,
+    _ => false,
+  };
 }
