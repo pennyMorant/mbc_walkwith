@@ -4,6 +4,7 @@ import 'package:mbc_walkwith/features/life/presentation/widgets/life_dashboard_t
 import 'package:mbc_walkwith/features/study/domain/bible_book.dart';
 import 'package:mbc_walkwith/features/study/presentation/widgets/chapter_grid_sheet.dart';
 import 'package:mbc_walkwith/l10n/app_localizations.dart';
+import 'package:mbc_walkwith/shared/widgets/app_unread_count_badge.dart';
 
 void main() {
   testWidgets('life tab unread badge includes semantic context', (
@@ -35,6 +36,26 @@ void main() {
     );
 
     expect(find.bySemanticsLabel('Romans chapter 8'), findsOneWidget);
+  });
+
+  testWidgets('unread badge caps display and keeps the exact semantic count', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _localizedApp(
+        const AppUnreadCountBadge(
+          count: 140,
+          semanticLabel: 'Notifications, 140 unread items',
+          child: Icon(Icons.notifications_outlined),
+        ),
+      ),
+    );
+
+    expect(find.text('99+'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Notifications, 140 unread items'),
+      findsOneWidget,
+    );
   });
 }
 

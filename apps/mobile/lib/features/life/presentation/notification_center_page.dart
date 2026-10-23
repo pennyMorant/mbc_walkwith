@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_unread_count_badge.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../data/push_notification_inbox_repository.dart';
 import 'notification_inbox_provider.dart';
@@ -50,19 +51,13 @@ class NotificationCenterPage extends ConsumerWidget {
                         if (unreadCount > 0)
                           Padding(
                             padding: const EdgeInsets.only(right: 4),
-                            child: Semantics(
-                              label: l10n.unreadCountSemanticLabel(
+                            child: AppUnreadCountBadge(
+                              count: unreadCount,
+                              semanticLabel: l10n.unreadCountSemanticLabel(
                                 l10n.notificationInboxTitle,
                                 unreadCount,
                               ),
-                              child: ExcludeSemantics(
-                                child: Badge(
-                                  label: Text('$unreadCount'),
-                                  child: const Icon(
-                                    Icons.notifications_outlined,
-                                  ),
-                                ),
-                              ),
+                              child: const Icon(Icons.notifications_outlined),
                             ),
                           ),
                         IconButton(
@@ -160,9 +155,8 @@ class NotificationCenterPage extends ConsumerWidget {
                 children: [
                   Text(
                     l10n.notificationPermissionTitle,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -171,9 +165,8 @@ class NotificationCenterPage extends ConsumerWidget {
                               ? l10n.notificationPermissionEnabledBody
                               : l10n.notificationPermissionDisabledBody
                         : l10n.notificationDeviceUnavailableBody,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium
+                        ?.copyWith(color: colorScheme.onSurfaceVariant),
                   ),
                   if (pushState.supported) ...[
                     const SizedBox(height: 14),

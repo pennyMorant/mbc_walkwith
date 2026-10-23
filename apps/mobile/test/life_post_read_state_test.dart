@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mbc_walkwith/features/life/domain/life_post.dart';
 import 'package:mbc_walkwith/features/life/presentation/widgets/life_post_read_state.dart';
-import 'package:mbc_walkwith/features/life/presentation/widgets/life_unread_count_badge.dart';
+import 'package:mbc_walkwith/shared/widgets/app_unread_count_badge.dart';
 import 'package:mbc_walkwith/theme/app_theme.dart';
 
 void main() {
@@ -76,8 +76,8 @@ void main() {
         theme: AppTheme.build(null, Brightness.light),
         home: const Column(
           children: [
-            LifeUnreadCountBadge(unreadCount: 0),
-            LifeUnreadCountBadge(unreadCount: 140),
+            AppUnreadCountBadge(count: 0),
+            AppUnreadCountBadge(count: 140),
           ],
         ),
       ),

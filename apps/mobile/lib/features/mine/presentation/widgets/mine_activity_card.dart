@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_unread_count_badge.dart';
 
 class MineActivityCard extends StatelessWidget {
   const MineActivityCard({
@@ -21,9 +22,12 @@ class MineActivityCard extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            leading: Badge(
-              isLabelVisible: unreadNotificationCount > 0,
-              label: Text('$unreadNotificationCount'),
+            leading: AppUnreadCountBadge(
+              count: unreadNotificationCount,
+              semanticLabel: l10n.unreadCountSemanticLabel(
+                l10n.notificationInboxTitle,
+                unreadNotificationCount,
+              ),
               child: const Icon(Icons.notifications_outlined),
             ),
             title: Text(l10n.notificationInboxTitle),

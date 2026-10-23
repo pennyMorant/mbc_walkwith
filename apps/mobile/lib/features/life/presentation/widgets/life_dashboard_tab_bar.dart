@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import 'life_unread_count_badge.dart';
+import '../../../../shared/widgets/app_unread_count_badge.dart';
 
 enum LifeDashboardTab {
   week,
@@ -92,7 +92,7 @@ class LifeDashboardTabLabel extends StatelessWidget {
             Text(label),
             if (hasUnread) ...[
               const SizedBox(width: 6),
-              LifeUnreadCountBadge(unreadCount: unreadCount),
+              AppUnreadCountBadge(count: unreadCount),
             ],
           ],
         ),
