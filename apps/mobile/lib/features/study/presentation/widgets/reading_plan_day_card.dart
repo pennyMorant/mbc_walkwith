@@ -34,20 +34,11 @@ class ReadingPlanDayCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 AppChip(label: l10n.readingPlanDayLabel(day.dayNumber)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    day.title.isEmpty
-                        ? l10n.readingPlanDayLabel(day.dayNumber)
-                        : day.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
                 if (completed)
                   AppChip(
                     label: l10n.readingPlanCompletedLabel,
@@ -55,13 +46,20 @@ class ReadingPlanDayCard extends StatelessWidget {
                   ),
               ],
             ),
+            if (day.title.trim().isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                day.title.trim(),
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w800),
+              ),
+            ],
             if (day.description.trim().isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
                 day.description,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurfaceVariant),
               ),
             ],
             if (day.references.isNotEmpty) ...[
