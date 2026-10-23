@@ -7,6 +7,7 @@ import '../../../../shared/widgets/app_chip.dart';
 import '../../data/reading_plan_repository.dart';
 import '../../domain/reading_plan.dart';
 import 'reading_plan_day_card.dart';
+import 'reading_plan_sheet_states.dart';
 
 class ReadingPlanDetailSheet extends ConsumerStatefulWidget {
   const ReadingPlanDetailSheet({
@@ -33,7 +34,6 @@ class _ReadingPlanDetailSheetState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    final bottomPadding = MediaQuery.paddingOf(context).bottom;
     final daysAsync = ref.watch(readingPlanDaysProvider(widget.plan.id));
     final assignmentsAsync = ref.watch(activeReadingPlanAssignmentsProvider);
     final assignment = assignmentForPlan(
@@ -46,7 +46,7 @@ class _ReadingPlanDetailSheetState
       child: FractionallySizedBox(
         heightFactor: 0.85,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 8, 20, 20 + bottomPadding),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,7 +112,7 @@ class _ReadingPlanDetailSheetState
                 child: assignmentsAsync.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : assignmentsAsync.hasError
-                    ? _SheetError(
+                    ? ReadingPlanSheetErrorState(
                         onRetry: () => ref.invalidate(
                           activeReadingPlanAssignmentsProvider,
                         ),
@@ -120,15 +120,18 @@ class _ReadingPlanDetailSheetState
                     : daysAsync.when(
                         loading: () =>
                             const Center(child: CircularProgressIndicator()),
-                        error: (error, stackTrace) => _SheetError(
-                          onRetry: () {
-                            ref.invalidate(
-                              readingPlanDaysProvider(widget.plan.id),
-                            );
-                          },
-                        ),
+                        error: (error, stackTrace) =>
+                            ReadingPlanSheetErrorState(
+                              onRetry: () {
+                                ref.invalidate(
+                                  readingPlanDaysProvider(widget.plan.id),
+                                );
+                              },
+                            ),
                         data: (days) => days.isEmpty
-                            ? _EmptyDays(message: l10n.readingPlanNoDaysBody)
+                            ? ReadingPlanSheetEmptyState(
+                                message: l10n.readingPlanNoDaysBody,
+                              )
                             : ListView.separated(
                                 itemCount: days.length,
                                 separatorBuilder: (context, index) {
@@ -218,41 +221,5 @@ class _ReadingPlanDetailSheetState
         setState(() => _busyDayId = null);
       }
     }
-  }
-}
-
-class _SheetError extends StatelessWidget {
-  const _SheetError({required this.onRetry});
-
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Center(
-      child: AppButton(
-        label: l10n.retryAction,
-        icon: Icons.refresh,
-        onPressed: onRetry,
-      ),
-    );
-  }
-}
-
-class _EmptyDays extends StatelessWidget {
-  const _EmptyDays({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium
-            ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-      ),
-    );
   }
 }

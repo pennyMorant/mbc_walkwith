@@ -7,6 +7,7 @@ import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../../study/data/reading_plan_repository.dart';
 import '../../../study/domain/reading_plan.dart';
+import '../../../study/presentation/widgets/reading_plan_sheet_states.dart';
 import 'reading_plan_assignment_card.dart';
 
 class ReadingPlanHistorySheet extends ConsumerWidget {
@@ -24,23 +25,18 @@ class ReadingPlanHistorySheet extends ConsumerWidget {
     final detailAsync = ref.watch(
       readingPlanAssignmentDetailProvider(assignmentId),
     );
-    final bottomPadding = MediaQuery.paddingOf(context).bottom;
 
     return SafeArea(
       top: false,
       child: FractionallySizedBox(
         heightFactor: 0.85,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 8, 20, 20 + bottomPadding),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
           child: detailAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stackTrace) => Center(
-              child: AppButton(
-                label: AppLocalizations.of(context)!.retryAction,
-                icon: Icons.refresh,
-                onPressed: () => ref.invalidate(
-                  readingPlanAssignmentDetailProvider(assignmentId),
-                ),
+            error: (error, stackTrace) => ReadingPlanSheetErrorState(
+              onRetry: () => ref.invalidate(
+                readingPlanAssignmentDetailProvider(assignmentId),
               ),
             ),
             data: (detail) => _HistoryContent(
@@ -108,15 +104,19 @@ class _HistoryContent extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Expanded(
-          child: ListView.separated(
-            itemCount: detail.days.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final day = detail.days[index];
-              final progress = assignment.progressForDay(day.id);
-              return _HistoryDay(day: day, progress: progress);
-            },
-          ),
+          child: detail.days.isEmpty
+              ? ReadingPlanSheetEmptyState(message: l10n.readingPlanNoDaysBody)
+              : ListView.separated(
+                  itemCount: detail.days.length,
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 8);
+                  },
+                  itemBuilder: (context, index) {
+                    final day = detail.days[index];
+                    final progress = assignment.progressForDay(day.id);
+                    return _HistoryDay(day: day, progress: progress);
+                  },
+                ),
         ),
         if (detail.canRestart) ...[
           const SizedBox(height: 12),

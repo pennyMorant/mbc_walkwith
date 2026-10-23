@@ -65,6 +65,57 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Start again'), findsNothing);
+    expect(find.text('This plan has no daily references yet.'), findsOneWidget);
+  });
+
+  testWidgets('history detail error explains the failure and retries', (
+    tester,
+  ) async {
+    var detailReads = 0;
+    await tester.pumpWidget(
+      ProviderScope(
+        retry: (_, _) => null,
+        overrides: [
+          activeReadingPlanAssignmentsProvider.overrideWith(
+            (ref) async => const [],
+          ),
+          readingPlanHistoryProvider.overrideWith(
+            (ref) async => ReadingPlanAssignmentPage(
+              items: [
+                _assignment(title: 'Completed plan', status: 'completed'),
+              ],
+            ),
+          ),
+          readingPlanAssignmentDetailProvider.overrideWith((
+            ref,
+            assignmentId,
+          ) async {
+            detailReads += 1;
+            throw const FormatException('Malformed detail.');
+          }),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: const MyReadingPlansPage(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('History'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Completed plan'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please refresh and try again.'), findsOneWidget);
+    expect(find.text('Retry'), findsOneWidget);
+    expect(detailReads, 1);
+
+    await tester.tap(find.text('Retry'));
+    await tester.pumpAndSettle();
+    expect(detailReads, 2);
   });
 }
 
