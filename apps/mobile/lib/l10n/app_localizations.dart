@@ -1936,6 +1936,12 @@ abstract class AppLocalizations {
   /// **'暂无讲道内容'**
   String get sermonEmptyTitle;
 
+  /// No description provided for @sermonEmptyBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'本月暂时没有已发布的讲道。可在上方选择其他月份，或下拉刷新。'**
+  String get sermonEmptyBody;
+
   /// No description provided for @sermonAudioMissing.
   ///
   /// In zh, this message translates to:

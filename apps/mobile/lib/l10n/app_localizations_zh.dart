@@ -976,6 +976,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get sermonEmptyTitle => '暂无讲道内容';
 
   @override
+  String get sermonEmptyBody => '本月暂时没有已发布的讲道。可在上方选择其他月份，或下拉刷新。';
+
+  @override
   String get sermonAudioMissing => '暂未上传音频';
 
   @override
@@ -2890,6 +2893,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get sermonEmptyTitle => '暂无讲道内容';
 
   @override
+  String get sermonEmptyBody => '本月暂时没有已发布的讲道。可在上方选择其他月份，或下拉刷新。';
+
+  @override
   String get sermonAudioMissing => '暂未上传音频';
 
   @override
@@ -4802,6 +4808,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get sermonEmptyTitle => '暫無講道內容';
+
+  @override
+  String get sermonEmptyBody => '本月暫時沒有已發布的講道。可在上方選擇其他月份，或下拉重新整理。';
 
   @override
   String get sermonAudioMissing => '暫未上傳音訊';

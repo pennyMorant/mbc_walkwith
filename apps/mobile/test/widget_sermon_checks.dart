@@ -80,6 +80,13 @@ void registerSermonWidgetChecks() {
     await _pumpUntilFound(tester, find.text('No sermons yet'));
     expect(find.byType(RefreshIndicator), findsOneWidget);
     expect(find.text('Sermons'), findsOneWidget);
+    expect(find.byIcon(Icons.graphic_eq_rounded), findsOneWidget);
+    expect(
+      find.text(
+        'No sermons were published for this month. Choose another month above or pull down to refresh.',
+      ),
+      findsOneWidget,
+    );
 
     await tester.tap(find.byIcon(Icons.calendar_month_outlined));
     await tester.pumpAndSettle();
@@ -95,6 +102,44 @@ void registerSermonWidgetChecks() {
     expect(find.text(expectedMonth), findsOneWidget);
     expect(find.text('Sermons'), findsOneWidget);
     expect(find.text('No sermons yet'), findsOneWidget);
+  });
+
+  testWidgets('sermon empty state supports larger text', (tester) async {
+    tester.view.physicalSize = const Size(360, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final prefs = await _testSharedPreferences();
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          appConfigProvider.overrideWithValue(_testAppConfig),
+          sermonsRepositoryProvider.overrideWithValue(
+            _EmptySermonsRepository(),
+          ),
+        ],
+        child: MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(1.3)),
+            child: child!,
+          ),
+          home: const SermonsTab(),
+        ),
+      ),
+    );
+
+    await _pumpUntilFound(tester, find.text('No sermons yet'));
+
+    expect(tester.takeException(), isNull);
+    expect(find.byIcon(Icons.graphic_eq_rounded), findsOneWidget);
+    expect(find.byType(RefreshIndicator), findsOneWidget);
   });
 
   testWidgets('opens Bible reader from sermon scripture reference', (

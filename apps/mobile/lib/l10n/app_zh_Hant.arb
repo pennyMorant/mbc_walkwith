@@ -465,6 +465,7 @@
   "sermonLoadErrorBody": "稍後會從後端重新取得講道列表。",
   "retryAction": "重試",
   "sermonEmptyTitle": "暫無講道內容",
+  "sermonEmptyBody": "本月暫時沒有已發布的講道。可在上方選擇其他月份，或下拉重新整理。",
   "sermonAudioMissing": "暫未上傳音訊",
   "sermonAudioPreparing": "正在準備音訊",
   "sermonAudioLoading": "正在載入音訊",

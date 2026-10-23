@@ -465,6 +465,7 @@
   "sermonLoadErrorBody": "La app volverá a pedir la lista de sermones al backend.",
   "retryAction": "Reintentar",
   "sermonEmptyTitle": "Aún no hay sermones",
+  "sermonEmptyBody": "No se publicaron sermones para este mes. Elige otro mes arriba o desliza hacia abajo para actualizar.",
   "sermonAudioMissing": "Audio no subido aún",
   "sermonAudioPreparing": "Preparando audio",
   "sermonAudioLoading": "Cargando audio",

@@ -465,6 +465,7 @@
   "sermonLoadErrorBody": "稍后会从后端重新获取讲道列表。",
   "retryAction": "重试",
   "sermonEmptyTitle": "暂无讲道内容",
+  "sermonEmptyBody": "本月暂时没有已发布的讲道。可在上方选择其他月份，或下拉刷新。",
   "sermonAudioMissing": "暂未上传音频",
   "sermonAudioPreparing": "正在准备音频",
   "sermonAudioLoading": "正在加载音频",

@@ -465,6 +465,7 @@
   "sermonLoadErrorBody": "The app will fetch the sermon list from the backend again.",
   "retryAction": "Retry",
   "sermonEmptyTitle": "No sermons yet",
+  "sermonEmptyBody": "No sermons were published for this month. Choose another month above or pull down to refresh.",
   "sermonAudioMissing": "Audio not uploaded yet",
   "sermonAudioPreparing": "Preparing audio",
   "sermonAudioLoading": "Loading audio",

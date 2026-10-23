@@ -92,6 +92,7 @@ Surface rule:
 - Sermon publishing：App 只读取已发布讲道。
 - Sermon playback：讲道详情页只提交播放 intent；`SermonPlayerSession` 和 audio playback capability 负责 Android / iOS 原生媒体控制、后台播放、系统暂停和完成态进度保存。
 - Sermon discovery：App 默认按选中月份浏览，可在该月份内搜索，并使用后端 published-only facets 按讲员、系列或主题精确筛选。筛选状态只属于页面 intent；网络失败时 repository 可从已缓存讲道派生建议并保持同样的离线筛选语义，内容可见性仍以后端为准。
+- Sermon empty state：选中月份没有已发布讲道时，App 保留月份选择和下拉刷新，并说明当前月份为空；空数据不能呈现为加载错误，也不能创建本地占位讲道。
 - Sermon detail cache：后端返回 `sermon_not_found` 或 404 时必须清理本地缓存，不能继续展示旧讲道。
 - Church life publishing：App 只展示当前身份可见且已发布生活内容。
 - Church life periods：Life 的本周 tab 读取选中周，其他生活 tab 读取选中月；主日/周报 hero 自动读取最新可见周报，不跟随当前 tab 周期。

@@ -124,6 +124,7 @@ void main() {
     );
     expect(find.text('mock_foundations'), findsNothing);
     expect(find.text('Edit profile'), findsNothing);
+    await tester.scrollUntilVisible(find.text('Preferences'), 240);
     expect(find.text('Preferences'), findsOneWidget);
     expect(find.text('Notification permission'), findsOneWidget);
     await tester.scrollUntilVisible(

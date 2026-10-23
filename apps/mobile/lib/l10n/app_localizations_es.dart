@@ -1074,6 +1074,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sermonEmptyTitle => 'Aún no hay sermones';
 
   @override
+  String get sermonEmptyBody =>
+      'No se publicaron sermones para este mes. Elige otro mes arriba o desliza hacia abajo para actualizar.';
+
+  @override
   String get sermonAudioMissing => 'Audio no subido aún';
 
   @override
