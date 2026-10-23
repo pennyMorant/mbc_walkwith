@@ -31,11 +31,13 @@ class ContinueReadingCard extends StatelessWidget {
               children: [
                 Icon(Icons.auto_stories, color: colorScheme.onPrimaryContainer),
                 const SizedBox(width: 10),
-                Text(
-                  l10n.continueReadingTitle,
-                  style: textTheme.titleMedium?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w800,
+                Expanded(
+                  child: Text(
+                    l10n.continueReadingTitle,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ],
