@@ -48,6 +48,7 @@ void registerMemberAuthWidgetChecks() {
     );
     expect(find.widgetWithText(AppButton, '登录'), findsOneWidget);
     expect(find.text('忘记密码？'), findsOneWidget);
+    expect(find.byTooltip('显示密码'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -67,6 +68,11 @@ void registerMemberAuthWidgetChecks() {
 
     expect(find.byType(AppFilledTextField), findsNWidgets(3));
     expect(find.widgetWithText(AppButton, 'Registrarse'), findsOneWidget);
+    expect(find.byTooltip('Mostrar contraseña'), findsNWidgets(2));
+    await tester.tap(find.byTooltip('Mostrar contraseña').first);
+    await tester.pump();
+    expect(find.byTooltip('Ocultar contraseña'), findsOneWidget);
+    expect(find.byTooltip('Mostrar contraseña'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

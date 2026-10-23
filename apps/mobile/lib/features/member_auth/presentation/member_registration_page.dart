@@ -11,6 +11,7 @@ import '../data/member_session_repository.dart';
 import 'widgets/member_auth_inline_error.dart';
 import 'widgets/member_auth_page_layout.dart';
 import 'widgets/member_federated_auth_actions.dart';
+import 'widgets/member_password_field.dart';
 
 class MemberRegistrationPage extends ConsumerStatefulWidget {
   const MemberRegistrationPage({super.key});
@@ -52,21 +53,18 @@ class _MemberRegistrationPageState
           prefixIcon: const Icon(Icons.mail_outline),
         ),
         const SizedBox(height: 12),
-        AppFilledTextField(
+        MemberPasswordField(
           controller: _passwordController,
           enabled: !_loading,
           autofillHints: const [AutofillHints.newPassword],
-          obscureText: true,
           textInputAction: TextInputAction.next,
           hintText: l10n.memberPasswordLabel,
-          prefixIcon: const Icon(Icons.lock_outline),
         ),
         const SizedBox(height: 12),
-        AppFilledTextField(
+        MemberPasswordField(
           controller: _confirmController,
           enabled: !_loading,
           autofillHints: const [AutofillHints.newPassword],
-          obscureText: true,
           textInputAction: TextInputAction.done,
           hintText: l10n.memberConfirmPasswordLabel,
           prefixIcon: const Icon(Icons.lock_reset_outlined),

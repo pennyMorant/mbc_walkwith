@@ -7,12 +7,12 @@ import '../../../app/app_routes.dart';
 import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_button.dart';
-import '../../../shared/widgets/filled_text_field.dart';
 import '../../life/presentation/push_notifications_controller.dart';
 import '../data/member_session_repository.dart';
 import 'widgets/member_auth_account_row.dart';
 import 'widgets/member_auth_inline_error.dart';
 import 'widgets/member_auth_page_layout.dart';
+import 'widgets/member_password_field.dart';
 
 class MemberLoginPasswordPage extends ConsumerStatefulWidget {
   const MemberLoginPasswordPage({super.key, required this.email});
@@ -27,7 +27,6 @@ class MemberLoginPasswordPage extends ConsumerStatefulWidget {
 class _MemberLoginPasswordPageState
     extends ConsumerState<MemberLoginPasswordPage> {
   final _passwordController = TextEditingController();
-  bool _obscurePassword = true;
   bool _isLoading = false;
   String? _error;
 
@@ -67,29 +66,13 @@ class _MemberLoginPasswordPageState
           ),
           const SizedBox(height: 16),
           AutofillGroup(
-            child: AppFilledTextField(
+            child: MemberPasswordField(
               controller: _passwordController,
               autofillHints: const [AutofillHints.password],
-              obscureText: _obscurePassword,
               enabled: !_isLoading,
               autofocus: true,
               textInputAction: TextInputAction.done,
               hintText: l10n.memberPasswordLabel,
-              prefixIcon: const Icon(Icons.lock_outline),
-              suffixIcon: IconButton(
-                tooltip: _obscurePassword
-                    ? l10n.memberShowPasswordTooltip
-                    : l10n.memberHidePasswordTooltip,
-                onPressed: _isLoading
-                    ? null
-                    : () =>
-                          setState(() => _obscurePassword = !_obscurePassword),
-                icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                ),
-              ),
               onSubmitted: (_) => _login(email),
             ),
           ),

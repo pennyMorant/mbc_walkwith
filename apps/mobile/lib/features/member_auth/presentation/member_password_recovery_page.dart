@@ -11,6 +11,7 @@ import '../../../shared/widgets/filled_text_field.dart';
 import '../data/member_session_repository.dart';
 import 'widgets/member_auth_inline_error.dart';
 import 'widgets/member_auth_page_layout.dart';
+import 'widgets/member_password_field.dart';
 
 class MemberPasswordRecoveryPage extends ConsumerStatefulWidget {
   const MemberPasswordRecoveryPage({super.key, this.email});
@@ -75,14 +76,12 @@ class _MemberPasswordRecoveryPageState
             prefixIcon: const Icon(Icons.pin_outlined),
           ),
           const SizedBox(height: 12),
-          AppFilledTextField(
+          MemberPasswordField(
             controller: _passwordController,
             enabled: !_loading,
             autofillHints: const [AutofillHints.newPassword],
-            obscureText: true,
             textInputAction: TextInputAction.done,
             hintText: l10n.memberPasswordLabel,
-            prefixIcon: const Icon(Icons.lock_outline),
             onSubmitted: (_) => _confirm(request),
           ),
           if (kDebugMode && request.devCode != null) ...[
