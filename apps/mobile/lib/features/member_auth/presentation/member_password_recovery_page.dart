@@ -6,8 +6,10 @@ import 'package:go_router/go_router.dart';
 import '../../../app/app_routes.dart';
 import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/filled_text_field.dart';
 import '../data/member_session_repository.dart';
+import 'widgets/member_auth_inline_error.dart';
 import 'widgets/member_auth_page_layout.dart';
 
 class MemberPasswordRecoveryPage extends ConsumerStatefulWidget {
@@ -55,6 +57,7 @@ class _MemberPasswordRecoveryPageState
         if (request == null)
           AppFilledTextField(
             controller: _emailController,
+            enabled: !_loading,
             autofillHints: const [AutofillHints.email],
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.done,
@@ -65,6 +68,7 @@ class _MemberPasswordRecoveryPageState
         if (request != null) ...[
           AppFilledTextField(
             controller: _codeController,
+            enabled: !_loading,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
             hintText: l10n.memberCodeLabel,
@@ -73,6 +77,7 @@ class _MemberPasswordRecoveryPageState
           const SizedBox(height: 12),
           AppFilledTextField(
             controller: _passwordController,
+            enabled: !_loading,
             autofillHints: const [AutofillHints.newPassword],
             obscureText: true,
             textInputAction: TextInputAction.done,
@@ -87,25 +92,23 @@ class _MemberPasswordRecoveryPageState
         ],
         if (_error != null) ...[
           const SizedBox(height: 8),
-          Text(
-            _error!,
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
+          MemberAuthInlineError(message: _error!),
         ],
         const SizedBox(height: 16),
         SizedBox(
           width: double.infinity,
-          child: FilledButton(
+          child: AppButton(
+            label: request == null
+                ? l10n.memberNextAction
+                : l10n.memberPasswordResetAction,
+            variant: AppButtonVariant.filled,
+            minHeight: 52,
+            loading: _loading,
             onPressed: _loading
                 ? null
                 : request == null
                 ? _requestCode
                 : () => _confirm(request),
-            child: Text(
-              request == null
-                  ? l10n.memberNextAction
-                  : l10n.memberPasswordResetAction,
-            ),
           ),
         ),
       ],

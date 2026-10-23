@@ -53,6 +53,7 @@ import 'package:mbc_walkwith/features/study/presentation/widgets/reader_settings
 import 'package:mbc_walkwith/l10n/app_localizations.dart';
 import 'package:mbc_walkwith/shared/utils/date_period.dart';
 import 'package:mbc_walkwith/shared/widgets/app_button.dart';
+import 'package:mbc_walkwith/shared/widgets/filled_text_field.dart';
 import 'package:mbc_walkwith/theme/app_colors.dart';
 import 'package:mbc_walkwith/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
@@ -63,9 +64,11 @@ import 'test_database.dart';
 part 'widget_test_harness.dart';
 part 'widget_sermon_checks.dart';
 part 'widget_life_checks.dart';
+part 'widget_member_auth_checks.dart';
 
 void main() {
   registerLifeWidgetChecks();
+  registerMemberAuthWidgetChecks();
   registerSermonWidgetChecks();
 
   testWidgets('shows the core tabs in default locale', (tester) async {
@@ -174,56 +177,6 @@ void main() {
     expect(find.text('Sermones'), findsOneWidget);
     expect(find.text('Vida'), findsOneWidget);
     expect(find.text('Mi perfil'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('member sign-in keeps a clear two-step flow on a small screen', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(320, 640));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    final harness = await _localizedApp(locale: const Locale('zh'));
-    addTearDown(harness.close);
-
-    await tester.pumpWidget(harness.widget);
-    await tester.pump();
-    GoRouter.of(tester.element(find.byType(Scaffold).first))
-        .pushNamed(AppRouteNames.memberLoginEmail);
-    await _pumpUntilFound(tester, find.text('欢迎回来'));
-
-    expect(
-      find.byKey(const ValueKey('member_auth_brand_logo')),
-      findsOneWidget,
-    );
-    expect(find.text('欢迎回来'), findsOneWidget);
-    expect(find.widgetWithText(AppButton, '下一步'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-
-    await tester.enterText(find.byType(TextField), 'invalid-email');
-    await tester.tap(find.widgetWithText(AppButton, '下一步'));
-    await tester.pump();
-    expect(find.text('请输入有效的邮箱地址。'), findsOneWidget);
-
-    await tester.enterText(find.byType(TextField), 'member@example.com');
-    await tester.tap(find.widgetWithText(AppButton, '下一步'));
-    await _pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('member_auth_account_row')),
-    );
-
-    expect(
-      find.byKey(const ValueKey('member_auth_account_row')),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(
-        of: find.byKey(const ValueKey('member_auth_account_row')),
-        matching: find.text('member@example.com'),
-      ),
-      findsOneWidget,
-    );
-    expect(find.widgetWithText(AppButton, '登录'), findsOneWidget);
-    expect(find.text('忘记密码？'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

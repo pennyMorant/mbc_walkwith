@@ -6,8 +6,10 @@ import 'package:go_router/go_router.dart';
 import '../../../app/app_routes.dart';
 import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/filled_text_field.dart';
 import '../data/member_session_repository.dart';
+import 'widgets/member_auth_inline_error.dart';
 import 'widgets/member_auth_page_layout.dart';
 
 class MemberEmailVerificationPage extends ConsumerStatefulWidget {
@@ -39,9 +41,11 @@ class _MemberEmailVerificationPageState
       return MemberAuthPageLayout(
         title: l10n.memberRegisterAction,
         children: [
-          FilledButton(
+          AppButton(
+            label: l10n.memberBackToSignInAction,
+            variant: AppButtonVariant.filled,
+            minHeight: 52,
             onPressed: () => context.goNamed(AppRouteNames.memberRegister),
-            child: Text(l10n.memberBackToSignInAction),
           ),
         ],
       );
@@ -52,6 +56,7 @@ class _MemberEmailVerificationPageState
       children: [
         AppFilledTextField(
           controller: _codeController,
+          enabled: !_loading,
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.done,
           hintText: l10n.memberCodeLabel,
@@ -64,17 +69,17 @@ class _MemberEmailVerificationPageState
         ],
         if (_error != null) ...[
           const SizedBox(height: 8),
-          Text(
-            _error!,
-            style: TextStyle(color: Theme.of(context).colorScheme.error),
-          ),
+          MemberAuthInlineError(message: _error!),
         ],
         const SizedBox(height: 16),
         SizedBox(
           width: double.infinity,
-          child: FilledButton(
+          child: AppButton(
+            label: l10n.memberVerifyEmailAction,
+            variant: AppButtonVariant.filled,
+            minHeight: 52,
+            loading: _loading,
             onPressed: _loading ? null : () => _verify(request),
-            child: Text(l10n.memberVerifyEmailAction),
           ),
         ),
       ],
@@ -99,9 +104,9 @@ class _MemberEmailVerificationPageState
         _finishSignedIn();
       } else {
         setState(
-          () => _error = AppLocalizations.of(
-            context,
-          )!.memberRegistrationPendingApproval,
+          () =>
+              _error = AppLocalizations.of(context)!
+                  .memberRegistrationPendingApproval,
         );
       }
     } catch (error) {

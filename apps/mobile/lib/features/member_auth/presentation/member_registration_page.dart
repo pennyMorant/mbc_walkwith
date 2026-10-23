@@ -5,8 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../../app/app_routes.dart';
 import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/filled_text_field.dart';
 import '../data/member_session_repository.dart';
+import 'widgets/member_auth_inline_error.dart';
 import 'widgets/member_auth_page_layout.dart';
 import 'widgets/member_federated_auth_actions.dart';
 
@@ -42,6 +44,7 @@ class _MemberRegistrationPageState
       children: [
         AppFilledTextField(
           controller: _emailController,
+          enabled: !_loading,
           autofillHints: const [AutofillHints.newUsername],
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
@@ -51,6 +54,7 @@ class _MemberRegistrationPageState
         const SizedBox(height: 12),
         AppFilledTextField(
           controller: _passwordController,
+          enabled: !_loading,
           autofillHints: const [AutofillHints.newPassword],
           obscureText: true,
           textInputAction: TextInputAction.next,
@@ -60,6 +64,7 @@ class _MemberRegistrationPageState
         const SizedBox(height: 12),
         AppFilledTextField(
           controller: _confirmController,
+          enabled: !_loading,
           autofillHints: const [AutofillHints.newPassword],
           obscureText: true,
           textInputAction: TextInputAction.done,
@@ -69,20 +74,17 @@ class _MemberRegistrationPageState
         ),
         if (_error != null) ...[
           const SizedBox(height: 8),
-          Text(
-            _error!,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.error,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+          MemberAuthInlineError(message: _error!),
         ],
         const SizedBox(height: 16),
         SizedBox(
           width: double.infinity,
-          child: FilledButton(
+          child: AppButton(
+            label: l10n.memberRegisterAction,
+            variant: AppButtonVariant.filled,
+            minHeight: 52,
+            loading: _loading,
             onPressed: _loading ? null : _register,
-            child: Text(l10n.memberRegisterAction),
           ),
         ),
         const SizedBox(height: 20),
