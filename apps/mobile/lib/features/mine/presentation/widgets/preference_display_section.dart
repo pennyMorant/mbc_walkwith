@@ -22,26 +22,35 @@ class PreferenceAppearanceControl extends StatelessWidget {
       children: [
         PreferenceSectionLabel(label: l10n.appearanceTitle),
         const SizedBox(height: 12),
-        SegmentedButton<ThemeMode>(
-          segments: [
-            ButtonSegment(
-              value: ThemeMode.system,
-              icon: const Icon(Icons.brightness_auto),
-              label: Text(l10n.themeModeSystem),
-            ),
-            ButtonSegment(
-              value: ThemeMode.light,
-              icon: const Icon(Icons.light_mode),
-              label: Text(l10n.themeModeLight),
-            ),
-            ButtonSegment(
-              value: ThemeMode.dark,
-              icon: const Icon(Icons.dark_mode),
-              label: Text(l10n.themeModeDark),
-            ),
-          ],
-          selected: {themeMode},
-          onSelectionChanged: (selection) => onChanged(selection.first),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final textScale = MediaQuery.textScalerOf(context).scale(1);
+            final useVerticalLayout =
+                constraints.maxWidth < 300 || textScale > 1.15;
+            return SegmentedButton<ThemeMode>(
+              direction: useVerticalLayout ? Axis.vertical : Axis.horizontal,
+              expandedInsets: useVerticalLayout ? null : EdgeInsets.zero,
+              segments: [
+                ButtonSegment(
+                  value: ThemeMode.system,
+                  icon: const Icon(Icons.brightness_auto),
+                  label: Text(l10n.themeModeSystem),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.light,
+                  icon: const Icon(Icons.light_mode),
+                  label: Text(l10n.themeModeLight),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.dark,
+                  icon: const Icon(Icons.dark_mode),
+                  label: Text(l10n.themeModeDark),
+                ),
+              ],
+              selected: {themeMode},
+              onSelectionChanged: (selection) => onChanged(selection.first),
+            );
+          },
         ),
       ],
     );
@@ -82,9 +91,8 @@ class PreferenceTextScaleControl extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           l10n.textSizeBody,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+          style: Theme.of(context).textTheme.bodySmall
+              ?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         Slider(
           value: _textScaleValue(textScale),
