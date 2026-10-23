@@ -33,10 +33,10 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       title: Text(
         title,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-          color: cs.onSurface,
-          fontWeight: FontWeight.w800,
-        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.titleLarge
+            ?.copyWith(color: cs.onSurface, fontWeight: FontWeight.w800),
       ),
       leadingWidth: 64,
       leading: showBackButton
@@ -60,6 +60,7 @@ class _SecondaryBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final backTooltip = MaterialLocalizations.of(context).backButtonTooltip;
     final bgColor = Color.alphaBlend(
       cs.primary.withValues(alpha: 0.12),
       cs.surfaceContainerHighest,
@@ -68,13 +69,16 @@ class _SecondaryBackButton extends StatelessWidget {
     return SizedBox(
       width: 44,
       height: 44,
-      child: Material(
-        color: bgColor,
-        shape: const CircleBorder(),
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onPressed ?? () => Navigator.maybePop(context),
-          child: Icon(Icons.arrow_back_rounded, color: cs.primary, size: 22),
+      child: Tooltip(
+        message: backTooltip,
+        child: Material(
+          color: bgColor,
+          shape: const CircleBorder(),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: onPressed ?? () => Navigator.maybePop(context),
+            child: Icon(Icons.arrow_back_rounded, color: cs.primary, size: 22),
+          ),
         ),
       ),
     );
