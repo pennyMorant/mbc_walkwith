@@ -64,7 +64,7 @@ class MineReadingPlanCard extends ConsumerWidget {
               ),
               const SizedBox(height: 14),
               for (final assignment in visibleAssignments) ...[
-                _AssignmentRow(assignment: assignment),
+                MineReadingPlanAssignmentRow(assignment: assignment),
                 if (assignment != visibleAssignments.last)
                   const SizedBox(height: 10),
               ],
@@ -95,8 +95,8 @@ Widget _readingPlanCard(Widget child) {
   );
 }
 
-class _AssignmentRow extends StatelessWidget {
-  const _AssignmentRow({required this.assignment});
+class MineReadingPlanAssignmentRow extends StatelessWidget {
+  const MineReadingPlanAssignmentRow({super.key, required this.assignment});
 
   final ReadingPlanAssignment assignment;
 
@@ -111,26 +111,40 @@ class _AssignmentRow extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                assignment.planTitle,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.w800),
-              ),
-            ),
-            const SizedBox(width: 10),
-            AppChip(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final textScale = MediaQuery.textScalerOf(context).scale(1);
+            final stackContent = constraints.maxWidth < 300 || textScale > 1.15;
+            final title = Text(
+              assignment.planTitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
+            );
+            final progress = AppChip(
               icon: Icons.done_all_outlined,
               label: l10n.mineReadingPlanProgressChip(
                 assignment.completedCount,
               ),
               selected: assignment.status == 'completed',
-            ),
-          ],
+            );
+
+            if (stackContent) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [title, const SizedBox(height: 8), progress],
+              );
+            }
+
+            return Row(
+              children: [
+                Expanded(child: title),
+                const SizedBox(width: 10),
+                progress,
+              ],
+            );
+          },
         ),
       ),
     );
