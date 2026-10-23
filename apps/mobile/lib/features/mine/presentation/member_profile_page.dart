@@ -9,6 +9,7 @@ import '../../../shared/widgets/filled_text_field.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../life/presentation/push_notifications_controller.dart';
 import '../../member_auth/data/member_session_repository.dart';
+import 'widgets/member_profile_summary_card.dart';
 import 'widgets/member_profile_year_fields.dart';
 
 class MemberProfilePage extends ConsumerStatefulWidget {
@@ -91,34 +92,7 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.memberProfileEditTitle,
-                    style: Theme.of(context).textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w800),
-                  ),
-                  const SizedBox(height: 14),
-                  _ReadOnlyRow(
-                    label: l10n.memberEmailLabel,
-                    value: member.email,
-                  ),
-                  _ReadOnlyRow(
-                    label: l10n.memberStatusLabel,
-                    value: member.status,
-                  ),
-                  _ReadOnlyRow(
-                    label: l10n.memberGroupLabel,
-                    value: member.fellowshipGroupId ?? l10n.memberNoGroupLabel,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          MemberProfileSummaryCard(member: member),
           const SizedBox(height: 12),
           Card(
             child: Padding(
@@ -299,41 +273,6 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
     } catch (_) {
       // Sign-out must not be blocked by a notification registration failure.
     }
-  }
-}
-
-class _ReadOnlyRow extends StatelessWidget {
-  const _ReadOnlyRow({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 112,
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.labelMedium
-                  ?.copyWith(color: colorScheme.onSurfaceVariant),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.w700),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
