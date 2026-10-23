@@ -90,19 +90,13 @@ class _LifeTabState extends ConsumerState<LifeTab> {
             onPressed: () => context.pushNamed(AppRouteNames.lifeCheckInScan),
             icon: const Icon(Icons.qr_code_scanner_outlined),
           ),
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 8),
-            child: _selectedTab == LifeDashboardTab.week
-                ? AppChip(
-                    label: l10n.lifeTabWeek,
-                    variant: AppChipVariant.filled,
-                  )
-                : PeriodPickerButton(
-                    period: _monthPeriod,
-                    onChanged: _changeMonth,
-                    labelBuilder: _lifeMonthLabel,
-                  ),
-          ),
+          _selectedTab == LifeDashboardTab.week
+              ? AppChip(label: l10n.lifeTabWeek, variant: AppChipVariant.filled)
+              : PeriodPickerButton(
+                  period: _monthPeriod,
+                  onChanged: _changeMonth,
+                  labelBuilder: _lifeMonthLabel,
+                ),
         ],
       ),
       body: activePostsAsync.when(

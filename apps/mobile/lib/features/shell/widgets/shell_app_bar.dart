@@ -14,38 +14,54 @@ class ShellAppBar extends StatelessWidget implements PreferredSizeWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
+    final actionWidgets = _buildActions(actions);
 
     return AppBar(
       toolbarHeight: kToolbarHeight + 8,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
+      excludeHeaderSemantics: true,
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       titleSpacing: 16,
-      title: Text(
-        title,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: textTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.w800,
-          color: colorScheme.onSurface,
-        ),
+      title: Row(
+        children: [
+          Expanded(
+            child: Semantics(
+              header: true,
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+            ),
+          ),
+          if (actionWidgets.isNotEmpty) ...[
+            const SizedBox(width: 8),
+            ...actionWidgets,
+          ],
+        ],
       ),
-      actions: _buildActions(actions),
     );
   }
 }
 
-List<Widget>? _buildActions(List<Widget>? actions) {
+List<Widget> _buildActions(List<Widget>? actions) {
   if (actions == null || actions.isEmpty) {
-    return actions;
+    return const [];
   }
 
   return [
     for (var index = 0; index < actions.length; index += 1)
       Padding(
-        padding: EdgeInsets.only(right: index == actions.length - 1 ? 20 : 8),
+        padding: EdgeInsetsDirectional.only(
+          end: index == actions.length - 1 ? 0 : 8,
+        ),
         child: actions[index] is IconButton
             ? _ShellIconAction(
                 icon: (actions[index] as IconButton).icon,
