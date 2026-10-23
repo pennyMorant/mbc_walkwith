@@ -21,6 +21,7 @@ Future<_TestHarness> _testApp() async {
 
 Future<_TestHarness> _localizedApp({
   required Locale locale,
+  TextScaler? textScaler,
   Map<String, Object> sharedPreferencesValues = const {},
   List<Override> providerOverrides = const [],
 }) async {
@@ -47,6 +48,12 @@ Future<_TestHarness> _localizedApp({
         darkTheme: AppTheme.build(null, Brightness.dark),
         themeMode: ThemeMode.system,
         routerConfig: createAppRouter(),
+        builder: textScaler == null
+            ? null
+            : (context, child) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaler: textScaler),
+                child: child ?? const SizedBox.shrink(),
+              ),
       ),
     ),
   );

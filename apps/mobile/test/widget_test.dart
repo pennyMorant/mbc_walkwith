@@ -155,6 +155,28 @@ void main() {
     expect(find.text('我的'), findsOneWidget);
   });
 
+  testWidgets('main navigation fits Spanish labels with larger text', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(320, 640));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final harness = await _localizedApp(
+      locale: const Locale('es'),
+      textScaler: const TextScaler.linear(1.3),
+    );
+    addTearDown(harness.close);
+    await tester.runAsync(harness.seedBible);
+
+    await tester.pumpWidget(harness.widget);
+    await _pumpUntilFound(tester, find.text('Estudio'));
+
+    expect(find.text('Estudio'), findsOneWidget);
+    expect(find.text('Sermones'), findsOneWidget);
+    expect(find.text('Vida'), findsOneWidget);
+    expect(find.text('Mi perfil'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('member sign-in keeps a clear two-step flow on a small screen', (
     tester,
   ) async {
