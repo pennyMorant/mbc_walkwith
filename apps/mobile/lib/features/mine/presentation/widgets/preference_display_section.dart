@@ -76,17 +76,34 @@ class PreferenceTextScaleControl extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(child: PreferenceSectionLabel(label: l10n.textSizeTitle)),
-            Text(
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final textScale = MediaQuery.textScalerOf(context).scale(1);
+            final stackHeader = constraints.maxWidth < 300 || textScale > 1.15;
+            final title = PreferenceSectionLabel(label: l10n.textSizeTitle);
+            final value = Text(
               label,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: colorScheme.primary,
                 fontWeight: FontWeight.w800,
               ),
-            ),
-          ],
+            );
+
+            if (stackHeader) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [title, const SizedBox(height: 4), value],
+              );
+            }
+
+            return Row(
+              children: [
+                Expanded(child: title),
+                const SizedBox(width: 12),
+                value,
+              ],
+            );
+          },
         ),
         const SizedBox(height: 4),
         Text(
