@@ -9,6 +9,7 @@ import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../study/data/reading_plan_repository.dart';
 import '../../study/domain/reading_plan.dart';
 import 'widgets/reading_plan_assignment_card.dart';
+import 'widgets/reading_plan_collection_states.dart';
 import 'widgets/reading_plan_history_sheet.dart';
 
 class MyReadingPlansPage extends ConsumerStatefulWidget {
@@ -72,8 +73,9 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
           Expanded(
             child: assignmentsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) =>
-                  _ErrorView(onRetry: _invalidateCurrentView),
+              error: (error, stackTrace) => ReadingPlanCollectionErrorState(
+                onRetry: _invalidateCurrentView,
+              ),
               data: (assignments) => RefreshIndicator(
                 onRefresh: _refreshCurrentView,
                 child: ListView(
@@ -81,7 +83,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
                   children: [
                     if (assignments.isEmpty)
-                      _EmptyView(
+                      ReadingPlanCollectionEmptyState(
                         message: _view == _ReadingPlanView.current
                             ? l10n.readingPlanCurrentEmpty
                             : l10n.readingPlanHistoryEmpty,
@@ -329,37 +331,6 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
     } else {
       context.goNamed(AppRouteNames.mine);
     }
-  }
-}
-
-class _EmptyView extends StatelessWidget {
-  const _EmptyView({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(padding: const EdgeInsets.all(18), child: Text(message)),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.onRetry});
-
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Center(
-      child: FilledButton.icon(
-        onPressed: onRetry,
-        icon: const Icon(Icons.refresh),
-        label: Text(l10n.retryAction),
-      ),
-    );
   }
 }
 
