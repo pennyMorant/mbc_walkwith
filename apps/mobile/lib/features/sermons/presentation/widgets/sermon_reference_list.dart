@@ -25,8 +25,8 @@ class SermonReferenceList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: Card(
+                clipBehavior: Clip.antiAlias,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(24),
                   onTap: () => onReferenceSelected(reference),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
@@ -47,9 +47,9 @@ class SermonReferenceList extends StatelessWidget {
                                   reference.note,
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurfaceVariant,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
                                         height: 1.35,
                                       ),
                                 ),

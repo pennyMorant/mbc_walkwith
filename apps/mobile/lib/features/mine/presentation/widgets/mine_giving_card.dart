@@ -18,8 +18,8 @@ class MineGivingCard extends ConsumerWidget {
         .maybeWhen(data: (session) => session, orElse: () => null);
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
         onTap: () {
           if (memberSession == null) {
             context.pushNamed(AppRouteNames.memberLoginEmail);
@@ -43,18 +43,16 @@ class MineGivingCard extends ConsumerWidget {
                   children: [
                     Text(
                       l10n.mineGivingEntryTitle,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       memberSession == null
                           ? l10n.givingGuestBody
                           : l10n.mineGivingEntryBody,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall
+                          ?.copyWith(color: colorScheme.onSurfaceVariant),
                     ),
                   ],
                 ),

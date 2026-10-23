@@ -14,7 +14,6 @@ import '../../../core/settings/app_settings_repository.dart';
 import '../../../core/settings/app_text_scale_provider.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_chip.dart';
-import '../../../theme/app_colors.dart';
 import '../../../theme/theme_provider.dart';
 import '../../discipleship/presentation/widgets/mine_discipleship_card.dart';
 import '../../life/data/course_repository.dart';
@@ -173,14 +172,11 @@ class MemberSessionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final currentSession = session;
 
-    return Material(
-      color: colorScheme.tintedCardColor,
-      borderRadius: BorderRadius.circular(18),
+    return Card(
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(18),
         onTap: currentSession == null
             ? null
             : () => context.pushNamed(AppRouteNames.memberProfile),

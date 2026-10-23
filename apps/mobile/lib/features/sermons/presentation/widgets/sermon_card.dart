@@ -29,8 +29,8 @@ class SermonCard extends StatelessWidget {
 
     return Card(
       color: selected ? colorScheme.secondaryContainer : null,
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(24),
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
