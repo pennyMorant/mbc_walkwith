@@ -100,32 +100,10 @@ class _PublishedSundayHeroCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 14),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.schedule_outlined,
-                        size: 18,
-                        color: colorScheme.onSecondaryContainer,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          scheduleLabel,
-                          style: Theme.of(context).textTheme.labelLarge
-                              ?.copyWith(
-                                color: colorScheme.onSecondaryContainer,
-                                fontWeight: FontWeight.w700,
-                              ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      FilledButton.tonalIcon(
-                        onPressed: onOpen,
-                        icon: const Icon(Icons.arrow_forward),
-                        label: Text(l10n.lifeOpenDetailAction),
-                      ),
-                    ],
+                  _SundayHeroFooter(
+                    scheduleLabel: scheduleLabel,
+                    actionLabel: l10n.lifeOpenDetailAction,
+                    onOpen: onOpen,
                   ),
                 ],
               ),
@@ -133,6 +111,70 @@ class _PublishedSundayHeroCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _SundayHeroFooter extends StatelessWidget {
+  const _SundayHeroFooter({
+    required this.scheduleLabel,
+    required this.actionLabel,
+    required this.onOpen,
+  });
+
+  final String scheduleLabel;
+  final String actionLabel;
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textScale = MediaQuery.textScalerOf(context).scale(1);
+
+    final schedule = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.schedule_outlined,
+          size: 18,
+          color: colorScheme.onSecondaryContainer,
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            scheduleLabel,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: colorScheme.onSecondaryContainer,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
+    );
+    final action = FilledButton.tonalIcon(
+      onPressed: onOpen,
+      icon: const Icon(Icons.arrow_forward),
+      label: Text(actionLabel),
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final stackFooter = constraints.maxWidth < 340 || textScale > 1.15;
+        if (stackFooter) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [schedule, const SizedBox(height: 12), action],
+          );
+        }
+        return Row(
+          children: [
+            Expanded(child: schedule),
+            const SizedBox(width: 8),
+            action,
+          ],
+        );
+      },
     );
   }
 }

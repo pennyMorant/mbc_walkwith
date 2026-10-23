@@ -48,39 +48,46 @@ class AppChip extends StatelessWidget {
     final colors = _chipColors(colorScheme);
     final baseTextStyle =
         textStyle ??
-        Theme.of(
-          context,
-        ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700);
+        Theme.of(context).textTheme.labelMedium
+            ?.copyWith(fontWeight: FontWeight.w700);
 
-    return DecoratedBox(
-      decoration: ShapeDecoration(
-        color: colors.background,
-        shape: _chipBorder(
-          side: BorderSide(color: colors.border, width: colors.borderWidth),
-        ),
-      ),
-      child: Padding(
-        padding: padding,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: iconSize, color: colors.foreground),
-              SizedBox(width: iconGap),
-            ],
-            Text(
-              label,
-              maxLines: maxLines,
-              overflow: TextOverflow.ellipsis,
-              textAlign: textAlign,
-              style: baseTextStyle?.copyWith(
-                color: textStyle?.color ?? colors.foreground,
-              ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final labelText = Text(
+          label,
+          maxLines: maxLines,
+          overflow: TextOverflow.ellipsis,
+          textAlign: textAlign,
+          style: baseTextStyle?.copyWith(
+            color: textStyle?.color ?? colors.foreground,
+          ),
+        );
+        return DecoratedBox(
+          decoration: ShapeDecoration(
+            color: colors.background,
+            shape: _chipBorder(
+              side: BorderSide(color: colors.border, width: colors.borderWidth),
             ),
-          ],
-        ),
-      ),
+          ),
+          child: Padding(
+            padding: padding,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, size: iconSize, color: colors.foreground),
+                  SizedBox(width: iconGap),
+                ],
+                if (constraints.hasBoundedWidth)
+                  Flexible(child: labelText)
+                else
+                  labelText,
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

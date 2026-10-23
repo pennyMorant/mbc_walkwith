@@ -30,6 +30,7 @@ import 'package:mbc_walkwith/features/life/presentation/widgets/life_dashboard_t
 import 'package:mbc_walkwith/features/life/presentation/widgets/life_dashboard_view.dart';
 import 'package:mbc_walkwith/features/life/presentation/widgets/life_post_card.dart';
 import 'package:mbc_walkwith/features/life/presentation/widgets/life_post_image.dart';
+import 'package:mbc_walkwith/features/life/presentation/widgets/life_sunday_hero_card.dart';
 import 'package:mbc_walkwith/features/member_auth/data/member_session_repository.dart';
 import 'package:mbc_walkwith/features/sermons/domain/sermon.dart';
 import 'package:mbc_walkwith/features/sermons/domain/sermon_discovery_facets.dart';

@@ -53,6 +53,54 @@ void registerLifeWidgetChecks() {
     },
   );
 
+  testWidgets('life Sunday hero supports Spanish and larger text', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 700);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          locale: const Locale('es'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(1.3)),
+            child: child!,
+          ),
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: LifeSundayHeroCard(
+                  post: LifePost(
+                    id: 'spanish-weekly-bulletin',
+                    type: 'weekly_bulletin',
+                    title: 'Información del culto dominical de esta semana',
+                    body: 'Noticias, próximos pasos y anuncios para toda la iglesia.',
+                    meta: '',
+                    iconName: 'church',
+                    startsAt: DateTime.utc(2026, 10, 25, 17),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Ver detalles'), findsOneWidget);
+    expect(find.byIcon(Icons.schedule_outlined), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('opens life post detail sheet by default', (tester) async {
     await tester.pumpWidget(_lifeDetailPresentationApp());
 
