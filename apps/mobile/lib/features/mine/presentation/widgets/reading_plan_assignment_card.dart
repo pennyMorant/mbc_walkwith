@@ -146,7 +146,7 @@ String readingPlanStatusLabel(AppLocalizations l10n, String status) {
     'paused' => l10n.readingPlanPausedLabel,
     'completed' => l10n.readingPlanCompletedLabel,
     'abandoned' => l10n.readingPlanAbandonedLabel,
-    _ => status,
+    _ => l10n.commonStatusUnknownLabel,
   };
 }
 
