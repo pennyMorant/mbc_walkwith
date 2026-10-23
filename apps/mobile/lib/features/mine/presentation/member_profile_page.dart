@@ -4,10 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/filled_text_field.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../life/presentation/push_notifications_controller.dart';
 import '../../member_auth/data/member_session_repository.dart';
+import 'widgets/member_profile_year_fields.dart';
 
 class MemberProfilePage extends ConsumerStatefulWidget {
   const MemberProfilePage({super.key});
@@ -58,6 +60,7 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
     _syncControllers(session.member);
     final member = session.member;
     final colorScheme = Theme.of(context).colorScheme;
+    final formEnabled = !_isSaving && !_isSigningOut;
 
     return Scaffold(
       appBar: SecondaryAppBar(
@@ -96,9 +99,8 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
                 children: [
                   Text(
                     l10n.memberProfileEditTitle,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
                   ),
                   const SizedBox(height: 14),
                   _ReadOnlyRow(
@@ -125,6 +127,7 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
                 children: [
                   AppFilledTextField(
                     controller: _nameController,
+                    enabled: formEnabled,
                     textInputAction: TextInputAction.next,
                     hintText: l10n.memberNameLabel,
                     prefixIcon: const Icon(Icons.person_outline),
@@ -132,6 +135,7 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
                   const SizedBox(height: 12),
                   AppFilledTextField(
                     controller: _phoneController,
+                    enabled: formEnabled,
                     keyboardType: TextInputType.phone,
                     textInputAction: TextInputAction.next,
                     hintText: l10n.memberPhoneLabel,
@@ -140,35 +144,21 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
                   const SizedBox(height: 12),
                   AppFilledTextField(
                     controller: _addressController,
+                    enabled: formEnabled,
                     textInputAction: TextInputAction.next,
                     hintText: l10n.memberAddressLabel,
                     prefixIcon: const Icon(Icons.home_outlined),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppFilledTextField(
-                          controller: _faithYearController,
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          hintText: l10n.memberFaithStartYearLabel,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: AppFilledTextField(
-                          controller: _baptizedYearController,
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          hintText: l10n.memberBaptizedYearLabel,
-                        ),
-                      ),
-                    ],
+                  MemberProfileYearFields(
+                    faithYearController: _faithYearController,
+                    baptizedYearController: _baptizedYearController,
+                    enabled: formEnabled,
                   ),
                   const SizedBox(height: 12),
                   AppFilledTextField(
                     controller: _joinedChurchController,
+                    enabled: formEnabled,
                     keyboardType: TextInputType.datetime,
                     textInputAction: TextInputAction.next,
                     hintText: l10n.memberJoinedChurchAtLabel,
@@ -178,6 +168,7 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
                   const SizedBox(height: 12),
                   AppFilledTextField(
                     controller: _emergencyNameController,
+                    enabled: formEnabled,
                     textInputAction: TextInputAction.next,
                     hintText: l10n.memberEmergencyContactNameLabel,
                     prefixIcon: const Icon(Icons.contact_emergency_outlined),
@@ -185,6 +176,7 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
                   const SizedBox(height: 12),
                   AppFilledTextField(
                     controller: _emergencyPhoneController,
+                    enabled: formEnabled,
                     keyboardType: TextInputType.phone,
                     hintText: l10n.memberEmergencyContactPhoneLabel,
                     prefixIcon: const Icon(Icons.phone_in_talk_outlined),
@@ -204,10 +196,13 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
             ),
           ),
           const SizedBox(height: 12),
-          FilledButton.icon(
+          AppButton(
+            label: l10n.memberProfileSaveAction,
+            icon: Icons.save_outlined,
+            variant: AppButtonVariant.filled,
+            minHeight: 52,
+            loading: _isSaving,
             onPressed: _isSaving || _isSigningOut ? null : () => _save(session),
-            icon: const Icon(Icons.save_outlined),
-            label: Text(l10n.memberProfileSaveAction),
           ),
         ],
       ),
@@ -325,17 +320,15 @@ class _ReadOnlyRow extends StatelessWidget {
             width: 112,
             child: Text(
               label,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.labelMedium
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
         ],
