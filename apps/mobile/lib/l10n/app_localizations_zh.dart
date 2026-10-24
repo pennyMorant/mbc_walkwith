@@ -191,6 +191,9 @@ class AppLocalizationsZh extends AppLocalizations {
       '年份请输入 1900 至 2100，日期请使用 YYYY-MM-DD 格式。';
 
   @override
+  String get memberProfileRequestError => '暂时无法更新个人资料，请重试。';
+
+  @override
   String get memberEmergencyContactNameLabel => '紧急联系人';
 
   @override
@@ -2139,6 +2142,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
       '年份请输入 1900 至 2100，日期请使用 YYYY-MM-DD 格式。';
 
   @override
+  String get memberProfileRequestError => '暂时无法更新个人资料，请重试。';
+
+  @override
   String get memberEmergencyContactNameLabel => '紧急联系人';
 
   @override
@@ -4085,6 +4091,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   @override
   String get memberProfileDateValidationError =>
       '年份請輸入 1900 至 2100，日期請使用 YYYY-MM-DD 格式。';
+
+  @override
+  String get memberProfileRequestError => '暫時無法更新個人資料，請重試。';
 
   @override
   String get memberEmergencyContactNameLabel => '緊急聯絡人';

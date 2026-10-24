@@ -60,6 +60,7 @@
   "memberBaptizedYearLabel": "受洗年份",
   "memberJoinedChurchAtLabel": "加入教會日期",
   "memberProfileDateValidationError": "年份請輸入 1900 至 2100，日期請使用 YYYY-MM-DD 格式。",
+  "memberProfileRequestError": "暫時無法更新個人資料，請重試。",
   "memberEmergencyContactNameLabel": "緊急聯絡人",
   "memberEmergencyContactPhoneLabel": "緊急聯絡人電話",
   "mineGivingEntryTitle": "奉獻與年度證明",

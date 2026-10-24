@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/filled_text_field.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../life/presentation/push_notifications_controller.dart';
 import '../../member_auth/data/member_session_repository.dart';
+import 'member_profile_error_message.dart';
 import 'member_profile_input_validation.dart';
 import 'widgets/member_profile_summary_card.dart';
 import 'widgets/member_profile_year_fields.dart';
@@ -238,7 +238,12 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
       if (!mounted) {
         return;
       }
-      setState(() => _error = formatApiErrorMessage(error));
+      setState(
+        () => _error = memberProfileErrorMessage(
+          error,
+          fallback: l10n.memberProfileRequestError,
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
@@ -247,6 +252,8 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
   }
 
   Future<void> _logout(MemberSession session) async {
+    final requestError = AppLocalizations.of(context)!
+        .memberProfileRequestError;
     setState(() {
       _isSigningOut = true;
       _error = null;
@@ -265,7 +272,9 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
       if (!mounted) {
         return;
       }
-      setState(() => _error = formatApiErrorMessage(error));
+      setState(
+        () => _error = memberProfileErrorMessage(error, fallback: requestError),
+      );
     } finally {
       if (mounted) {
         setState(() => _isSigningOut = false);

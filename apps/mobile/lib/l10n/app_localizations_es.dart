@@ -201,6 +201,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Ingresa años entre 1900 y 2100 y usa AAAA-MM-DD para la fecha.';
 
   @override
+  String get memberProfileRequestError =>
+      'No se pudo actualizar tu perfil. Inténtalo de nuevo.';
+
+  @override
   String get memberEmergencyContactNameLabel => 'Contacto de emergencia';
 
   @override

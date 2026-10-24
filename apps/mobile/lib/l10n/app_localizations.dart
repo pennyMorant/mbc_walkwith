@@ -462,6 +462,12 @@ abstract class AppLocalizations {
   /// **'年份请输入 1900 至 2100，日期请使用 YYYY-MM-DD 格式。'**
   String get memberProfileDateValidationError;
 
+  /// No description provided for @memberProfileRequestError.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时无法更新个人资料，请重试。'**
+  String get memberProfileRequestError;
+
   /// No description provided for @memberEmergencyContactNameLabel.
   ///
   /// In zh, this message translates to:
