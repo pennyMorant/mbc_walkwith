@@ -1054,6 +1054,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notificationInboxEmptyBody => '这台设备收到新的教会更新后会显示在这里。';
 
   @override
+  String get notificationInboxActionError => '暂时无法更新通知，请重试。';
+
+  @override
   String get notificationRefreshAction => '刷新通知';
 
   @override
@@ -3005,6 +3008,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get notificationInboxEmptyBody => '这台设备收到新的教会更新后会显示在这里。';
 
   @override
+  String get notificationInboxActionError => '暂时无法更新通知，请重试。';
+
+  @override
   String get notificationRefreshAction => '刷新通知';
 
   @override
@@ -4954,6 +4960,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get notificationInboxEmptyBody => '這台裝置收到新的教會更新後會顯示在這裡。';
+
+  @override
+  String get notificationInboxActionError => '暫時無法更新通知，請重試。';
 
   @override
   String get notificationRefreshAction => '重新整理通知';

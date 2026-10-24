@@ -500,6 +500,7 @@
   },
   "notificationInboxEmptyTitle": "No notifications yet",
   "notificationInboxEmptyBody": "New church updates will appear here after this device receives them.",
+  "notificationInboxActionError": "Notifications could not be updated. Please try again.",
   "notificationRefreshAction": "Refresh notifications",
   "notificationMarkAllReadAction": "Mark all as read",
   "notificationClearAction": "Clear notifications",

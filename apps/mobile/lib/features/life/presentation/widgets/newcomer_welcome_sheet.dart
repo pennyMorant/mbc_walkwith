@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/newcomer_repository.dart';
+import '../life_action_error_message.dart';
 
 class NewcomerWelcomeSheet extends ConsumerStatefulWidget {
   const NewcomerWelcomeSheet({super.key});
@@ -69,9 +69,8 @@ class _NewcomerWelcomeSheetState extends ConsumerState<NewcomerWelcomeSheet> {
                   Expanded(
                     child: Text(
                       l10n.newcomerSheetTitle,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge
+                          ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                   ),
                 ],
@@ -81,9 +80,8 @@ class _NewcomerWelcomeSheetState extends ConsumerState<NewcomerWelcomeSheet> {
                 session == null
                     ? l10n.newcomerSheetGuestBody
                     : l10n.newcomerSheetMemberBody,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 18),
               AppFilledTextField(
@@ -198,7 +196,12 @@ class _NewcomerWelcomeSheetState extends ConsumerState<NewcomerWelcomeSheet> {
       }
     } catch (error) {
       if (mounted) {
-        setState(() => _error = formatApiErrorMessage(error));
+        setState(
+          () => _error = lifeActionErrorMessage(
+            error,
+            fallback: l10n.lifeActionError,
+          ),
+        );
       }
     } finally {
       if (mounted) {

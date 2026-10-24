@@ -500,6 +500,7 @@
   },
   "notificationInboxEmptyTitle": "Aún no hay notificaciones",
   "notificationInboxEmptyBody": "Las nuevas actualizaciones de la iglesia aparecerán aquí cuando este dispositivo las reciba.",
+  "notificationInboxActionError": "No se pudieron actualizar las notificaciones. Inténtalo de nuevo.",
   "notificationRefreshAction": "Actualizar notificaciones",
   "notificationMarkAllReadAction": "Marcar todo como leído",
   "notificationClearAction": "Borrar notificaciones",

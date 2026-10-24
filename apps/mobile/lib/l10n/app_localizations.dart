@@ -2086,6 +2086,12 @@ abstract class AppLocalizations {
   /// **'这台设备收到新的教会更新后会显示在这里。'**
   String get notificationInboxEmptyBody;
 
+  /// No description provided for @notificationInboxActionError.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时无法更新通知，请重试。'**
+  String get notificationInboxActionError;
+
   /// No description provided for @notificationRefreshAction.
   ///
   /// In zh, this message translates to:

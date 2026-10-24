@@ -500,6 +500,7 @@
   },
   "notificationInboxEmptyTitle": "暫無通知",
   "notificationInboxEmptyBody": "這台裝置收到新的教會更新後會顯示在這裡。",
+  "notificationInboxActionError": "暫時無法更新通知，請重試。",
   "notificationRefreshAction": "重新整理通知",
   "notificationMarkAllReadAction": "全部標為已讀",
   "notificationClearAction": "清空通知",

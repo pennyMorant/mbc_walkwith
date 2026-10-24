@@ -500,6 +500,7 @@
   },
   "notificationInboxEmptyTitle": "暂无通知",
   "notificationInboxEmptyBody": "这台设备收到新的教会更新后会显示在这里。",
+  "notificationInboxActionError": "暂时无法更新通知，请重试。",
   "notificationRefreshAction": "刷新通知",
   "notificationMarkAllReadAction": "全部标为已读",
   "notificationClearAction": "清空通知",

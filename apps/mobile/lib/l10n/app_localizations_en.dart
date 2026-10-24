@@ -1157,6 +1157,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'New church updates will appear here after this device receives them.';
 
   @override
+  String get notificationInboxActionError =>
+      'Notifications could not be updated. Please try again.';
+
+  @override
   String get notificationRefreshAction => 'Refresh notifications';
 
   @override

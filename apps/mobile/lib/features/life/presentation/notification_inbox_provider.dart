@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/api/api_error.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/push_notification_inbox_repository.dart';
 import '../data/push_notification_repository.dart';
@@ -34,14 +33,14 @@ class NotificationInboxState {
   final int unreadCount;
   final bool isSyncing;
   final bool isRemote;
-  final String? lastError;
+  final Object? lastError;
 
   NotificationInboxState copyWith({
     List<PushNotificationInboxItem>? items,
     int? unreadCount,
     bool? isSyncing,
     bool? isRemote,
-    String? lastError,
+    Object? lastError,
     bool clearError = false,
   }) {
     final nextItems = items ?? this.items;
@@ -210,19 +209,14 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
       if (state.isRemote) {
         _preserveRemoteFailure(error);
       } else {
-        state = NotificationInboxState.local(
-          _localRepository.listItems(),
-        ).copyWith(lastError: formatApiErrorMessage(error));
+        state = NotificationInboxState.local(_localRepository.listItems())
+            .copyWith(lastError: error);
       }
     }
   }
 
   void _preserveRemoteFailure(Object error) {
-    state = state.copyWith(
-      isSyncing: false,
-      isRemote: true,
-      lastError: formatApiErrorMessage(error),
-    );
+    state = state.copyWith(isSyncing: false, isRemote: true, lastError: error);
   }
 
   void _handleFailure(Object error) {
@@ -230,8 +224,7 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
       _preserveRemoteFailure(error);
       return;
     }
-    state = NotificationInboxState.local(
-      _localRepository.listItems(),
-    ).copyWith(lastError: formatApiErrorMessage(error));
+    state = NotificationInboxState.local(_localRepository.listItems())
+        .copyWith(lastError: error);
   }
 }

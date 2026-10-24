@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../data/push_notification_inbox_repository.dart';
+import 'notification_error_message.dart';
 import 'notification_inbox_provider.dart';
 import 'push_notifications_controller.dart';
 import 'widgets/notification_inbox_header.dart';
@@ -59,7 +60,10 @@ class NotificationCenterPage extends ConsumerWidget {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              error,
+                              notificationErrorMessage(
+                                error,
+                                fallback: l10n.notificationInboxActionError,
+                              ),
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(color: colorScheme.error),
                             ),
