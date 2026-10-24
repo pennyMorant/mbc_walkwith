@@ -60,76 +60,91 @@ class _HistoryContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final assignment = detail.assignment;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Container(
-            width: 36,
-            height: 4,
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.outlineVariant,
-              borderRadius: BorderRadius.circular(2),
-            ),
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Text(
+                assignment.planTitle,
+                style: Theme.of(context).textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  AppChip(
+                    label: readingPlanStatusLabel(l10n, assignment.status),
+                    selected: assignment.status == 'completed',
+                  ),
+                  AppChip(
+                    label: l10n.readingPlanProgressLabel(
+                      assignment.completedCount,
+                      assignment.planDurationDays,
+                    ),
+                  ),
+                  if (assignment.endedAt != null)
+                    AppChip(
+                      label: l10n.readingPlanEndedOn(
+                        formatDateOnly(context, assignment.endedAt!),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
           ),
         ),
-        Text(
-          assignment.planTitle,
-          style: Theme.of(context).textTheme.headlineSmall
-              ?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            AppChip(
-              label: readingPlanStatusLabel(l10n, assignment.status),
-              selected: assignment.status == 'completed',
+        if (detail.days.isEmpty)
+          SliverToBoxAdapter(
+            child: ReadingPlanSheetEmptyState(
+              message: l10n.readingPlanNoDaysBody,
             ),
-            AppChip(
-              label: l10n.readingPlanProgressLabel(
-                assignment.completedCount,
-                assignment.planDurationDays,
-              ),
-            ),
-            if (assignment.endedAt != null)
-              AppChip(
-                label: l10n.readingPlanEndedOn(
-                  formatDateOnly(context, assignment.endedAt!),
+          )
+        else
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final day = detail.days[index];
+              final progress = assignment.progressForDay(day.id);
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: index == detail.days.length - 1 ? 0 : 8,
                 ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Expanded(
-          child: detail.days.isEmpty
-              ? ReadingPlanSheetEmptyState(message: l10n.readingPlanNoDaysBody)
-              : ListView.separated(
-                  itemCount: detail.days.length,
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 8);
-                  },
-                  itemBuilder: (context, index) {
-                    final day = detail.days[index];
-                    final progress = assignment.progressForDay(day.id);
-                    return _HistoryDay(day: day, progress: progress);
-                  },
-                ),
-        ),
+                child: _HistoryDay(day: day, progress: progress),
+              );
+            }, childCount: detail.days.length),
+          ),
         if (detail.canRestart) ...[
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(
-              label: l10n.readingPlanRestartAction,
-              icon: Icons.replay_rounded,
-              variant: AppButtonVariant.filled,
-              onPressed: onRestart,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: SizedBox(
+                width: double.infinity,
+                child: AppButton(
+                  label: l10n.readingPlanRestartAction,
+                  icon: Icons.replay_rounded,
+                  variant: AppButtonVariant.filled,
+                  onPressed: onRestart,
+                ),
+              ),
             ),
           ),
         ],
+        const SliverToBoxAdapter(child: SizedBox(height: 4)),
       ],
     );
   }
