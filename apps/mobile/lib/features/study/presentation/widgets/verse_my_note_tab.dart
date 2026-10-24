@@ -12,6 +12,8 @@ class MyVerseNoteTab extends StatelessWidget {
     required this.isBookmarked,
     required this.highlightColor,
     required this.noteController,
+    required this.saving,
+    required this.errorMessage,
     required this.onBookmarkChanged,
     required this.onHighlightChanged,
     required this.onNoteSaved,
@@ -20,6 +22,8 @@ class MyVerseNoteTab extends StatelessWidget {
   final bool isBookmarked;
   final String? highlightColor;
   final TextEditingController noteController;
+  final bool saving;
+  final String? errorMessage;
   final ValueChanged<bool> onBookmarkChanged;
   final ValueChanged<String?> onHighlightChanged;
   final VoidCallback onNoteSaved;
@@ -86,12 +90,25 @@ class MyVerseNoteTab extends StatelessWidget {
             textInputAction: TextInputAction.newline,
             fillColor: colorScheme.insetSurfaceColor,
           ),
+          if (errorMessage != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              errorMessage!,
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: colorScheme.error),
+            ),
+          ],
           const SizedBox(height: 14),
           Align(
             alignment: Alignment.centerRight,
             child: FilledButton.icon(
-              onPressed: onNoteSaved,
-              icon: const Icon(Icons.save_outlined),
+              onPressed: saving ? null : onNoteSaved,
+              icon: saving
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.save_outlined),
               label: Text(l10n.saveNoteAction),
             ),
           ),

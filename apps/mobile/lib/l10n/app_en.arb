@@ -348,6 +348,7 @@
   "noteTitle": "Note",
   "noteHint": "Write a private study note",
   "saveNoteAction": "Save note",
+  "noteSaveError": "Your note could not be saved. Please try again.",
   "verseNotesMyNotesTab": "My notes",
   "verseNotesChurchNotesTab": "Church notes",
   "verseNotesPublishHint": "Shared notes are visible to other people reading this verse in the app.",

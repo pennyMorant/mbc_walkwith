@@ -35,7 +35,7 @@ void main() {
               initialTabIndex: 1,
               onBookmarkChanged: (_) {},
               onHighlightChanged: (_) {},
-              onNoteSaved: (_) {},
+              onNoteSaved: (_) async {},
             ),
           ),
         ),
@@ -83,7 +83,7 @@ void main() {
               annotation: null,
               onBookmarkChanged: (_) {},
               onHighlightChanged: (_) {},
-              onNoteSaved: (_) {},
+              onNoteSaved: (_) async {},
             ),
           ),
         ),
@@ -131,7 +131,7 @@ void main() {
                 annotation: null,
                 onBookmarkChanged: (_) {},
                 onHighlightChanged: (_) {},
-                onNoteSaved: (_) {},
+                onNoteSaved: (_) async {},
               ),
             ),
           ),
@@ -148,6 +148,55 @@ void main() {
     final sheet = find.byKey(const ValueKey('verse-annotation-sheet-content'));
     expect(tester.getTopLeft(sheet).dy, greaterThanOrEqualTo(32));
     expect(tester.getBottomLeft(sheet).dy, lessThanOrEqualTo(480));
+  });
+
+  testWidgets('private note stays open with its text when saving fails', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          bibleNotesRepositoryProvider.overrideWithValue(
+            _StaleDeleteBibleNotesRepository(),
+          ),
+        ],
+        child: MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: Scaffold(
+            body: VerseAnnotationSheet(
+              verse: _verse,
+              bookId: 'rom',
+              chapter: 8,
+              annotation: null,
+              onBookmarkChanged: (_) {},
+              onHighlightChanged: (_) {},
+              onNoteSaved: (_) async {
+                throw StateError('database unavailable');
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField).first, 'Keep this note');
+    final saveButton = find.widgetWithText(FilledButton, 'Save note');
+    await tester.ensureVisible(saveButton);
+    await tester.pumpAndSettle();
+    await tester.tap(saveButton);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(VerseAnnotationSheet), findsOneWidget);
+    expect(find.text('Keep this note'), findsOneWidget);
+    expect(
+      find.text('Your note could not be saved. Please try again.'),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
   });
 }
 

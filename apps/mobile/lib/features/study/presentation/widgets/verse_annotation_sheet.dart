@@ -7,7 +7,7 @@ import '../../data/bible_notes_repository.dart';
 import '../../domain/bible_note.dart';
 import '../../domain/bible_verse.dart';
 import '../../domain/study_annotation.dart';
-import 'verse_annotation_header.dart';
+import 'verse_annotation_sheet_frame.dart';
 import 'verse_church_notes_tab.dart';
 import 'verse_my_note_tab.dart';
 
@@ -32,7 +32,7 @@ class VerseAnnotationSheet extends ConsumerStatefulWidget {
   final int initialTabIndex;
   final ValueChanged<bool> onBookmarkChanged;
   final ValueChanged<String?> onHighlightChanged;
-  final ValueChanged<String> onNoteSaved;
+  final Future<void> Function(String noteText) onNoteSaved;
   final VoidCallback? onOpenLexicon;
 
   @override
@@ -48,7 +48,9 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
   String? _highlightColor;
   String? _editingChurchNoteId;
   bool _churchNoteSeeded = false;
+  bool _savingPrivateNote = false;
   bool _savingChurchNote = false;
+  String? _privateNoteError;
   String? _churchNoteError;
 
   @override
@@ -72,85 +74,34 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final mediaQuery = MediaQuery.of(context);
-    final bottomPadding = mediaQuery.padding.bottom;
-    final keyboardInset = mediaQuery.viewInsets.bottom;
-    final preferredHeight = mediaQuery.size.height * 0.85;
-    final availableHeight =
-        (mediaQuery.size.height - keyboardInset - mediaQuery.padding.top - 8)
-            .clamp(0.0, mediaQuery.size.height)
-            .toDouble();
-    final sheetHeight = preferredHeight.clamp(0.0, availableHeight).toDouble();
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 180),
-      curve: Curves.easeOutCubic,
-      padding: EdgeInsets.only(bottom: keyboardInset),
-      child: SafeArea(
-        top: false,
-        child: AnimatedContainer(
-          key: const ValueKey('verse-annotation-sheet-content'),
-          duration: const Duration(milliseconds: 180),
-          curve: Curves.easeOutCubic,
-          height: sheetHeight,
-          child: DefaultTabController(
-            length: 2,
-            initialIndex: widget.initialTabIndex,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 8, 20, 20 + bottomPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  VerseAnnotationHeader(
-                    verseNumber: widget.verse.number,
-                    onOpenLexicon: widget.onOpenLexicon,
-                  ),
-                  const SizedBox(height: 12),
-                  TabBar(
-                    tabs: [
-                      Tab(text: l10n.verseNotesMyNotesTab),
-                      Tab(text: l10n.verseNotesChurchNotesTab),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        MyVerseNoteTab(
-                          isBookmarked: _isBookmarked,
-                          highlightColor: _highlightColor,
-                          noteController: _noteController,
-                          onBookmarkChanged: (value) {
-                            setState(() {
-                              _isBookmarked = value;
-                            });
-                            widget.onBookmarkChanged(value);
-                          },
-                          onHighlightChanged: _setHighlight,
-                          onNoteSaved: () {
-                            widget.onNoteSaved(_noteController.text);
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        ChurchVerseNotesTab(
-                          verse: widget.verse,
-                          noteController: _churchNoteController,
-                          externalNameController: _externalNameController,
-                          saving: _savingChurchNote,
-                          errorMessage: _churchNoteError,
-                          onSeedMine: _seedChurchNote,
-                          onPublish: _saveChurchNote,
-                          onDelete: _deleteChurchNote,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+    return VerseAnnotationSheetFrame(
+      verseNumber: widget.verse.number,
+      initialTabIndex: widget.initialTabIndex,
+      onOpenLexicon: widget.onOpenLexicon,
+      myNoteTab: MyVerseNoteTab(
+        isBookmarked: _isBookmarked,
+        highlightColor: _highlightColor,
+        noteController: _noteController,
+        saving: _savingPrivateNote,
+        errorMessage: _privateNoteError,
+        onBookmarkChanged: (value) {
+          setState(() {
+            _isBookmarked = value;
+          });
+          widget.onBookmarkChanged(value);
+        },
+        onHighlightChanged: _setHighlight,
+        onNoteSaved: _savePrivateNote,
+      ),
+      churchNotesTab: ChurchVerseNotesTab(
+        verse: widget.verse,
+        noteController: _churchNoteController,
+        externalNameController: _externalNameController,
+        saving: _savingChurchNote,
+        errorMessage: _churchNoteError,
+        onSeedMine: _seedChurchNote,
+        onPublish: _saveChurchNote,
+        onDelete: _deleteChurchNote,
       ),
     );
   }
@@ -160,6 +111,31 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
       _highlightColor = colorId;
     });
     widget.onHighlightChanged(colorId);
+  }
+
+  Future<void> _savePrivateNote() async {
+    setState(() {
+      _savingPrivateNote = true;
+      _privateNoteError = null;
+    });
+    try {
+      await widget.onNoteSaved(_noteController.text);
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _privateNoteError = AppLocalizations.of(context)!.noteSaveError;
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _savingPrivateNote = false;
+        });
+      }
+    }
   }
 
   void _seedChurchNote(BibleVerseNote? note) {

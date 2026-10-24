@@ -1402,6 +1402,12 @@ abstract class AppLocalizations {
   /// **'保存笔记'**
   String get saveNoteAction;
 
+  /// No description provided for @noteSaveError.
+  ///
+  /// In zh, this message translates to:
+  /// **'笔记暂时无法保存，请重试。'**
+  String get noteSaveError;
+
   /// No description provided for @verseNotesMyNotesTab.
   ///
   /// In zh, this message translates to:

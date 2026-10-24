@@ -700,6 +700,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get saveNoteAction => '保存笔记';
 
   @override
+  String get noteSaveError => '笔记暂时无法保存，请重试。';
+
+  @override
   String get verseNotesMyNotesTab => '我的笔记';
 
   @override
@@ -2620,6 +2623,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get saveNoteAction => '保存笔记';
 
   @override
+  String get noteSaveError => '笔记暂时无法保存，请重试。';
+
+  @override
   String get verseNotesMyNotesTab => '我的笔记';
 
   @override
@@ -4538,6 +4544,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get saveNoteAction => '保存筆記';
+
+  @override
+  String get noteSaveError => '筆記暫時無法保存，請重試。';
 
   @override
   String get verseNotesMyNotesTab => '我的筆記';

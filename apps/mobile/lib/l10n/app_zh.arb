@@ -348,6 +348,7 @@
   "noteTitle": "笔记",
   "noteHint": "写下私人读经笔记",
   "saveNoteAction": "保存笔记",
+  "noteSaveError": "笔记暂时无法保存，请重试。",
   "verseNotesMyNotesTab": "我的笔记",
   "verseNotesChurchNotesTab": "教会心得",
   "verseNotesPublishHint": "发布后，其他使用此 App 的人读到这节经文时可以看到。",

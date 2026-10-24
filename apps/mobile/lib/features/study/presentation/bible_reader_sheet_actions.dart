@@ -190,13 +190,9 @@ class BibleReaderSheetActions {
             colorId: highlightColor,
             annotationsRequest: annotationsRequest,
           ),
-          onNoteSaved: (noteText) {
-            unawaited(
-              repository
-                  .saveVerseNote(verseId: verse.id, noteText: noteText)
-                  .then((_) => _refreshAnnotations(annotationsRequest)),
-            );
-          },
+          onNoteSaved: (noteText) => repository
+              .saveVerseNote(verseId: verse.id, noteText: noteText)
+              .then((_) => _refreshAnnotations(annotationsRequest)),
           onOpenLexicon: includeLexicon && verse.hasLexicon
               ? () {
                   Navigator.of(sheetContext).pop();

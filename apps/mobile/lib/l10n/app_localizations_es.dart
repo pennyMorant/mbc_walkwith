@@ -768,6 +768,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get saveNoteAction => 'Guardar nota';
 
   @override
+  String get noteSaveError => 'No se pudo guardar tu nota. Inténtalo de nuevo.';
+
+  @override
   String get verseNotesMyNotesTab => 'Mis notas';
 
   @override

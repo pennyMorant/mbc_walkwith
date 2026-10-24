@@ -348,6 +348,7 @@
   "noteTitle": "Nota",
   "noteHint": "Escribe una nota privada de estudio",
   "saveNoteAction": "Guardar nota",
+  "noteSaveError": "No se pudo guardar tu nota. Inténtalo de nuevo.",
   "verseNotesMyNotesTab": "Mis notas",
   "verseNotesChurchNotesTab": "Notas de la iglesia",
   "verseNotesPublishHint": "Las notas compartidas son visibles para otras personas que leen este versículo en la app.",
