@@ -23,7 +23,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
   static const _historyPageSize = 20;
 
   _ReadingPlanView _view = _ReadingPlanView.current;
-  String? _busyAssignmentId;
+  final Set<String> _busyAssignmentIds = {};
   String? _historyBaseKey;
   String? _historyNextCursor;
   List<ReadingPlanAssignment> _additionalHistory = const [];
@@ -92,7 +92,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
                       for (final assignment in assignments) ...[
                         ReadingPlanAssignmentCard(
                           assignment: assignment,
-                          busy: _busyAssignmentId == assignment.id,
+                          busy: _busyAssignmentIds.contains(assignment.id),
                           onTap: () => assignment.isHistory
                               ? _openHistory(assignment)
                               : context.goNamed(AppRouteNames.study),
@@ -141,7 +141,8 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
     ReadingPlanAssignment assignment,
     String status,
   ) async {
-    setState(() => _busyAssignmentId = assignment.id);
+    if (_busyAssignmentIds.contains(assignment.id)) return;
+    setState(() => _busyAssignmentIds.add(assignment.id));
     try {
       final identity = await readReadingPlanIdentityForAction(ref);
       await ref
@@ -155,7 +156,9 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
     } catch (_) {
       _showActionError();
     } finally {
-      if (mounted) setState(() => _busyAssignmentId = null);
+      if (mounted) {
+        setState(() => _busyAssignmentIds.remove(assignment.id));
+      }
     }
   }
 
@@ -183,7 +186,8 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
       setState(() => _view = _ReadingPlanView.current);
       return;
     }
-    setState(() => _busyAssignmentId = assignment.id);
+    if (_busyAssignmentIds.contains(assignment.id)) return;
+    setState(() => _busyAssignmentIds.add(assignment.id));
     try {
       final identity = await readReadingPlanIdentityForAction(ref);
       await ref
@@ -202,7 +206,9 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
     } catch (_) {
       _showActionError();
     } finally {
-      if (mounted) setState(() => _busyAssignmentId = null);
+      if (mounted) {
+        setState(() => _busyAssignmentIds.remove(assignment.id));
+      }
     }
   }
 
