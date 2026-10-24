@@ -7,6 +7,8 @@ This document covers church life content, weekly bulletin cards, event registrat
 - Domain: `apps/mobile/lib/features/life/domain/life_post.dart`
 - List request: `apps/mobile/lib/features/life/domain/life_post_list_request.dart`
 - DTO: `apps/mobile/lib/features/life/data/dto/life_post_dto.dart`
+- Registration summary DTO:
+  `apps/mobile/lib/features/life/data/dto/event_registration_summary_dto.dart`
 - Repository: `apps/mobile/lib/features/life/data/life_repository.dart`
 - Remote API: `apps/mobile/lib/features/life/data/remote/api_life_remote_data_source.dart`
 - Offline mock API, only when `USE_MOCK_REMOTE_DATA=true`:
