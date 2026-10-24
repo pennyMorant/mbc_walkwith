@@ -7,6 +7,7 @@ import '../../../core/api/api_error.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/storage/session_store.dart';
 import 'member_session_models.dart';
+import 'member_session_response_parser.dart';
 
 export 'member_session_models.dart';
 
@@ -31,6 +32,7 @@ class MemberSessionRepository {
 
   final ApiClient apiClient;
   final SessionStore sessionStore;
+  static const _responseParser = MemberSessionResponseParser();
 
   Future<MemberSession> login({
     required String email,
@@ -40,7 +42,7 @@ class MemberSessionRepository {
       'email': email,
       'password': password,
     });
-    final session = _sessionFromEnvelope(response);
+    final session = _responseParser.sessionFromEnvelope(response);
     await _saveSession(session);
     return session;
   }
@@ -51,21 +53,11 @@ class MemberSessionRepository {
     final response = await apiClient.postJsonMap('/member/auth/firebase', {
       'idToken': idToken,
     });
-    final data = response['data'] as Map<String, Object?>? ?? const {};
-    switch (_requiredString(data, 'status')) {
-      case 'signed_in':
-        final session = _sessionFromData(_requiredMap(data, 'session'));
-        await _saveSession(session);
-        return MemberRegistrationResult.signedIn(session);
-      case 'pending_approval':
-        return MemberRegistrationResult.pendingApproval(
-          MemberProfile.fromJson(_requiredMap(data, 'member')),
-        );
-      default:
-        throw const FormatException(
-          'Unknown member Firebase authentication status.',
-        );
+    final result = _responseParser.firebaseSignInFromEnvelope(response);
+    if (result.session case final session?) {
+      await _saveSession(session);
     }
+    return result;
   }
 
   Future<MemberCodeRequestResult> requestPasswordReset({
@@ -75,14 +67,7 @@ class MemberSessionRepository {
       '/member/auth/password-reset/request',
       {'email': email},
     );
-    final data = response['data'] as Map<String, Object?>? ?? const {};
-    return MemberCodeRequestResult(
-      challengeId: _requiredString(data, 'challengeId'),
-      expiresInSeconds: _requiredInt(data, 'expiresInSeconds'),
-      maskedEmail: data['maskedEmail'] as String?,
-      resendAfterSeconds: _requiredInt(data, 'resendAfterSeconds'),
-      devCode: data['devCode'] as String?,
-    );
+    return _responseParser.codeRequestFromEnvelope(response);
   }
 
   Future<void> confirmPasswordReset({
@@ -105,32 +90,11 @@ class MemberSessionRepository {
       'email': email,
       'password': password,
     });
-    final data = response['data'] as Map<String, Object?>? ?? const {};
-    final status = _requiredString(data, 'status');
-    switch (status) {
-      case 'signed_in':
-        final session = _sessionFromData(_requiredMap(data, 'session'));
-        await _saveSession(session);
-        return MemberRegistrationResult.signedIn(session);
-      case 'pending_approval':
-        return MemberRegistrationResult.pendingApproval(
-          MemberProfile.fromJson(_requiredMap(data, 'member')),
-        );
-      case 'pending_email_verification':
-        final codeRequest = _requiredMap(data, 'codeRequest');
-        final challengeId = _requiredString(codeRequest, 'challengeId');
-        return MemberRegistrationResult.pendingEmailVerification(
-          MemberCodeRequestResult(
-            challengeId: challengeId,
-            expiresInSeconds: _requiredInt(codeRequest, 'expiresInSeconds'),
-            maskedEmail: codeRequest['maskedEmail'] as String?,
-            resendAfterSeconds: _requiredInt(codeRequest, 'resendAfterSeconds'),
-            devCode: codeRequest['devCode'] as String?,
-          ),
-        );
-      default:
-        throw FormatException('Unknown member registration status: $status');
+    final result = _responseParser.registrationFromEnvelope(response);
+    if (result.session case final session?) {
+      await _saveSession(session);
     }
+    return result;
   }
 
   Future<MemberRegistrationResult> verifyCode({
@@ -144,15 +108,11 @@ class MemberSessionRepository {
       if (displayName != null && displayName.trim().isNotEmpty)
         'displayName': displayName.trim(),
     });
-    final data = response['data'] as Map<String, Object?>? ?? const {};
-    if (data['status'] == 'pending_approval') {
-      return MemberRegistrationResult.pendingApproval(
-        MemberProfile.fromJson(_requiredMap(data, 'member')),
-      );
+    final result = _responseParser.verificationFromEnvelope(response);
+    if (result.session case final session?) {
+      await _saveSession(session);
     }
-    final session = _sessionFromEnvelope(response);
-    await _saveSession(session);
-    return MemberRegistrationResult.signedIn(session);
+    return result;
   }
 
   Future<MemberSession?> restoreSession() async {
@@ -270,18 +230,6 @@ class MemberSessionRepository {
       jsonEncode(session.member.toJson()),
     );
   }
-
-  MemberSession _sessionFromEnvelope(Map<String, Object?> response) {
-    final data = response['data'] as Map<String, Object?>? ?? const {};
-    return _sessionFromData(data);
-  }
-
-  MemberSession _sessionFromData(Map<String, Object?> data) {
-    return MemberSession(
-      accessToken: _requiredString(data, 'accessToken'),
-      member: MemberProfile.fromJson(_requiredMap(data, 'member')),
-    );
-  }
 }
 
 MemberSession? _debugMemberSession(AppConfig config) {
@@ -329,28 +277,4 @@ bool _isTerminalSessionError(ApiError error) {
         'member_account_inactive',
         'member_auth_required',
       });
-}
-
-Map<String, Object?> _requiredMap(Map<String, Object?> json, String key) {
-  final value = json[key];
-  if (value is Map<String, Object?>) {
-    return value;
-  }
-  throw FormatException('Missing member response object: $key');
-}
-
-String _requiredString(Map<String, Object?> json, String key) {
-  final value = json[key];
-  if (value is String && value.trim().isNotEmpty) {
-    return value;
-  }
-  throw FormatException('Missing member response text: $key');
-}
-
-int _requiredInt(Map<String, Object?> json, String key) {
-  final value = json[key];
-  if (value is int && value >= 0) {
-    return value;
-  }
-  throw FormatException('Missing member response number: $key');
 }

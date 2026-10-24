@@ -7,6 +7,7 @@ This document covers member and admin authentication client boundaries.
 Primary files:
 
 - `apps/mobile/lib/features/member_auth/data/member_session_repository.dart`
+- `apps/mobile/lib/features/member_auth/data/member_session_response_parser.dart`
 - `apps/mobile/lib/features/member_auth/presentation/`
 
 Current sign-in flow:
@@ -65,6 +66,9 @@ Rules:
 
 - Do not call member endpoints directly from UI.
 - Do not store member tokens outside `MemberSessionRepository`.
+- Keep strict auth envelope and status parsing in
+  `MemberSessionResponseParser`; transport and secure persistence remain owned
+  by `MemberSessionRepository`.
 - Do not store member profile JSON in SharedPreferences. A cached profile is only a temporary secure fallback for network/provider failures.
 - `restoreSession()` clears token and profile for authentication, permission, invalid-session, or inactive-member errors. It may use the secure cached view only for transient API failures.
 - Missing or malformed required response fields are contract failures, not empty successful sessions.
