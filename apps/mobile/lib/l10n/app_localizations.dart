@@ -3388,6 +3388,18 @@ abstract class AppLocalizations {
   /// **'无法打开 Stripe 付款页面。'**
   String get givingCheckoutOpenError;
 
+  /// No description provided for @givingLoadError.
+  ///
+  /// In zh, this message translates to:
+  /// **'奉献信息暂时无法加载，请重试。'**
+  String get givingLoadError;
+
+  /// No description provided for @givingActionError.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时无法发起奉献，请重试。'**
+  String get givingActionError;
+
   /// No description provided for @givingCheckoutReturnSuccess.
   ///
   /// In zh, this message translates to:
@@ -3447,6 +3459,18 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'年度证明 PDF 已分享。'**
   String get annualStatementPdfSharedMessage;
+
+  /// No description provided for @annualStatementLoadError.
+  ///
+  /// In zh, this message translates to:
+  /// **'年度证明暂时无法加载，请重试。'**
+  String get annualStatementLoadError;
+
+  /// No description provided for @annualStatementActionError.
+  ///
+  /// In zh, this message translates to:
+  /// **'年度证明操作暂时无法完成，请重试。'**
+  String get annualStatementActionError;
 
   /// No description provided for @annualStatementPdfOpenedMessage.
   ///

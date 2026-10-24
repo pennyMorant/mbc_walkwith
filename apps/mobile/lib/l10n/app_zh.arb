@@ -835,6 +835,8 @@
   "givingCheckoutAction": "前往 Stripe",
   "givingAmountError": "请输入 USD 1.00 至 USD 100,000.00 之间的金额，最多保留两位小数。",
   "givingCheckoutOpenError": "无法打开 Stripe 付款页面。",
+  "givingLoadError": "奉献信息暂时无法加载，请重试。",
+  "givingActionError": "暂时无法发起奉献，请重试。",
   "givingCheckoutReturnSuccess": "Stripe 付款流程已完成。确认入账后会显示在奉献记录中。",
   "givingCheckoutReturnCancel": "Stripe 付款已取消。",
   "annualStatementTooltip": "年度证明",
@@ -845,6 +847,8 @@
   "annualStatementSharePdfAction": "分享 PDF",
   "annualStatementSharePdfText": "年度奉献证明",
   "annualStatementPdfSharedMessage": "年度证明 PDF 已分享。",
+  "annualStatementLoadError": "年度证明暂时无法加载，请重试。",
+  "annualStatementActionError": "年度证明操作暂时无法完成，请重试。",
   "annualStatementPdfOpenedMessage": "年度证明 PDF 已保存并打开。",
   "annualStatementPdfSavedMessage": "年度证明 PDF 已保存到 {path}。",
   "@annualStatementPdfSavedMessage": {

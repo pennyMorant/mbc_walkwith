@@ -835,6 +835,8 @@
   "givingCheckoutAction": "Continuar a pago",
   "givingAmountError": "Introduce un importe de USD 1,00 a USD 100.000,00 con un máximo de dos decimales.",
   "givingCheckoutOpenError": "No se pudo abrir el pago.",
+  "givingLoadError": "No se pudo cargar la información de ofrendas. Inténtalo de nuevo.",
+  "givingActionError": "No se pudo iniciar la ofrenda. Inténtalo de nuevo.",
   "givingCheckoutReturnSuccess": "Gracias. Tu ofrenda se está confirmando.",
   "givingCheckoutReturnCancel": "El pago fue cancelado.",
   "annualStatementTooltip": "Comprobante anual",
@@ -845,6 +847,8 @@
   "annualStatementSharePdfAction": "Compartir PDF",
   "annualStatementSharePdfText": "Comprobante anual de ofrendas",
   "annualStatementPdfSharedMessage": "PDF compartido.",
+  "annualStatementLoadError": "No se pudieron cargar los comprobantes anuales. Inténtalo de nuevo.",
+  "annualStatementActionError": "No se pudo completar la acción del comprobante anual. Inténtalo de nuevo.",
   "annualStatementPdfOpenedMessage": "PDF abierto.",
   "annualStatementPdfSavedMessage": "PDF guardado en {path}.",
   "@annualStatementPdfSavedMessage": {

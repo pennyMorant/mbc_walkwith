@@ -835,6 +835,8 @@
   "givingCheckoutAction": "Continue to Stripe",
   "givingAmountError": "Enter an amount from USD 1.00 to USD 100,000.00 with no more than two decimal places.",
   "givingCheckoutOpenError": "Could not open the Stripe checkout page.",
+  "givingLoadError": "Giving information could not be loaded. Please try again.",
+  "givingActionError": "Giving could not be started. Please try again.",
   "givingCheckoutReturnSuccess": "Stripe checkout finished. Your gift will appear after payment confirmation.",
   "givingCheckoutReturnCancel": "Stripe checkout was canceled.",
   "annualStatementTooltip": "Annual statement",
@@ -845,6 +847,8 @@
   "annualStatementSharePdfAction": "Share PDF",
   "annualStatementSharePdfText": "Annual giving statement",
   "annualStatementPdfSharedMessage": "Statement PDF shared.",
+  "annualStatementLoadError": "Annual statements could not be loaded. Please try again.",
+  "annualStatementActionError": "The annual statement action could not be completed. Please try again.",
   "annualStatementPdfOpenedMessage": "Statement PDF saved and opened.",
   "annualStatementPdfSavedMessage": "Statement PDF saved to {path}.",
   "@annualStatementPdfSavedMessage": {

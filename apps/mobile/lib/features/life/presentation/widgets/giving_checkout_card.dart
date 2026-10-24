@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/api/api_error.dart';
 import '../../../../core/platform/external_link_service.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
@@ -9,6 +8,7 @@ import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/giving_repository.dart';
 import '../../domain/giving_checkout_amount.dart';
 import '../../domain/giving_record.dart';
+import '../giving_error_message.dart';
 import 'giving_fund_dropdown.dart';
 
 class GivingCheckoutCard extends ConsumerStatefulWidget {
@@ -52,16 +52,14 @@ class _GivingCheckoutCardState extends ConsumerState<GivingCheckoutCard> {
           children: [
             Text(
               l10n.givingCheckoutTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(
               l10n.givingCheckoutBody,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 14),
             AppFilledTextField(
@@ -82,25 +80,22 @@ class _GivingCheckoutCardState extends ConsumerState<GivingCheckoutCard> {
                   const SizedBox(height: 8),
                   Text(
                     l10n.givingFundsLoading,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: colorScheme.onSurfaceVariant),
                   ),
                 ],
               ),
               error: (error, stackTrace) => Text(
-                formatApiErrorMessage(error),
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: colorScheme.error),
+                givingErrorMessage(error, fallback: l10n.givingLoadError),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: colorScheme.error),
               ),
               data: (funds) {
                 if (funds.isEmpty) {
                   return Text(
                     l10n.givingFundsEmpty,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: colorScheme.error),
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(color: colorScheme.error),
                   );
                 }
                 return GivingFundDropdown(
@@ -120,9 +115,8 @@ class _GivingCheckoutCardState extends ConsumerState<GivingCheckoutCard> {
               const SizedBox(height: 12),
               Text(
                 _error!,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: colorScheme.error),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: colorScheme.error),
               ),
             ],
             const SizedBox(height: 14),
@@ -177,12 +171,20 @@ class _GivingCheckoutCardState extends ConsumerState<GivingCheckoutCard> {
           .read(externalLinkServiceProvider)
           .openExternalUrl(checkout.checkoutUrl);
       if (!opened) {
-        throw StateError(l10n.givingCheckoutOpenError);
+        if (mounted) {
+          setState(() => _error = l10n.givingCheckoutOpenError);
+        }
+        return;
       }
       ref.invalidate(memberGivingOverviewProvider);
     } catch (error) {
       if (mounted) {
-        setState(() => _error = formatApiErrorMessage(error));
+        setState(
+          () => _error = givingErrorMessage(
+            error,
+            fallback: l10n.givingActionError,
+          ),
+        );
       }
     } finally {
       if (mounted) {

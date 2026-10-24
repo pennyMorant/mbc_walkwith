@@ -1897,6 +1897,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get givingCheckoutOpenError => 'No se pudo abrir el pago.';
 
   @override
+  String get givingLoadError =>
+      'No se pudo cargar la información de ofrendas. Inténtalo de nuevo.';
+
+  @override
+  String get givingActionError =>
+      'No se pudo iniciar la ofrenda. Inténtalo de nuevo.';
+
+  @override
   String get givingCheckoutReturnSuccess =>
       'Gracias. Tu ofrenda se está confirmando.';
 
@@ -1926,6 +1934,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get annualStatementPdfSharedMessage => 'PDF compartido.';
+
+  @override
+  String get annualStatementLoadError =>
+      'No se pudieron cargar los comprobantes anuales. Inténtalo de nuevo.';
+
+  @override
+  String get annualStatementActionError =>
+      'No se pudo completar la acción del comprobante anual. Inténtalo de nuevo.';
 
   @override
   String get annualStatementPdfOpenedMessage => 'PDF abierto.';

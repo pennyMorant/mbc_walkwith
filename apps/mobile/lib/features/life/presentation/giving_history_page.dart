@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
-import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/giving_repository.dart';
 import '../domain/giving_checkout_return.dart';
+import 'giving_error_message.dart';
 import 'widgets/giving_checkout_card.dart';
 import 'widgets/giving_history_cards.dart';
 
@@ -67,9 +67,8 @@ class _GivingHistoryPageState extends ConsumerState<GivingHistoryPage> {
       final message = isFinished
           ? l10n.givingCheckoutReturnSuccess
           : l10n.givingCheckoutReturnCancel;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
       _refreshGivingAfterCheckout(
         isFinished,
         onComplete: widget.onCheckoutReturnHandled,
@@ -129,7 +128,7 @@ class _GivingHistoryPageState extends ConsumerState<GivingHistoryPage> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => GivingMessageCard(
           title: l10n.givingTitle,
-          body: formatApiErrorMessage(error),
+          body: givingErrorMessage(error, fallback: l10n.givingLoadError),
         ),
         data: (overview) {
           if (session == null || overview == null) {
@@ -147,9 +146,8 @@ class _GivingHistoryPageState extends ConsumerState<GivingHistoryPage> {
               const SizedBox(height: 20),
               Text(
                 l10n.givingTransactionsTitle,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 12),
               if (overview.transactions.isEmpty)

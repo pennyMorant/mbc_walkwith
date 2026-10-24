@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/annual_statement_export_service.dart';
 import '../../domain/giving_record.dart';
+import '../giving_error_message.dart';
 
 class AnnualStatementExportSheet extends ConsumerWidget {
   const AnnualStatementExportSheet({super.key, required this.export});
@@ -30,9 +30,8 @@ class AnnualStatementExportSheet extends ConsumerWidget {
           children: [
             Text(
               l10n.annualStatementExportTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(
@@ -54,9 +53,8 @@ class AnnualStatementExportSheet extends ConsumerWidget {
                 child: SingleChildScrollView(
                   child: SelectableText(
                     export.csv,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
+                    style: Theme.of(context).textTheme.bodySmall
+                        ?.copyWith(fontFamily: 'monospace'),
                   ),
                 ),
               ),
@@ -127,7 +125,14 @@ class AnnualStatementExportSheet extends ConsumerWidget {
     } catch (error) {
       if (context.mounted) {
         messenger.showSnackBar(
-          SnackBar(content: Text(formatApiErrorMessage(error))),
+          SnackBar(
+            content: Text(
+              givingErrorMessage(
+                error,
+                fallback: l10n.annualStatementActionError,
+              ),
+            ),
+          ),
         );
       }
     }
@@ -157,7 +162,14 @@ class AnnualStatementExportSheet extends ConsumerWidget {
     } catch (error) {
       if (context.mounted) {
         messenger.showSnackBar(
-          SnackBar(content: Text(formatApiErrorMessage(error))),
+          SnackBar(
+            content: Text(
+              givingErrorMessage(
+                error,
+                fallback: l10n.annualStatementActionError,
+              ),
+            ),
+          ),
         );
       }
     }

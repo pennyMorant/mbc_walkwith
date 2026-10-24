@@ -1737,6 +1737,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get givingCheckoutOpenError => '无法打开 Stripe 付款页面。';
 
   @override
+  String get givingLoadError => '奉献信息暂时无法加载，请重试。';
+
+  @override
+  String get givingActionError => '暂时无法发起奉献，请重试。';
+
+  @override
   String get givingCheckoutReturnSuccess => 'Stripe 付款流程已完成。确认入账后会显示在奉献记录中。';
 
   @override
@@ -1765,6 +1771,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get annualStatementPdfSharedMessage => '年度证明 PDF 已分享。';
+
+  @override
+  String get annualStatementLoadError => '年度证明暂时无法加载，请重试。';
+
+  @override
+  String get annualStatementActionError => '年度证明操作暂时无法完成，请重试。';
 
   @override
   String get annualStatementPdfOpenedMessage => '年度证明 PDF 已保存并打开。';
@@ -3670,6 +3682,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get givingCheckoutOpenError => '无法打开 Stripe 付款页面。';
 
   @override
+  String get givingLoadError => '奉献信息暂时无法加载，请重试。';
+
+  @override
+  String get givingActionError => '暂时无法发起奉献，请重试。';
+
+  @override
   String get givingCheckoutReturnSuccess => 'Stripe 付款流程已完成。确认入账后会显示在奉献记录中。';
 
   @override
@@ -3698,6 +3716,12 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
 
   @override
   String get annualStatementPdfSharedMessage => '年度证明 PDF 已分享。';
+
+  @override
+  String get annualStatementLoadError => '年度证明暂时无法加载，请重试。';
+
+  @override
+  String get annualStatementActionError => '年度证明操作暂时无法完成，请重试。';
 
   @override
   String get annualStatementPdfOpenedMessage => '年度证明 PDF 已保存并打开。';
@@ -5603,6 +5627,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get givingCheckoutOpenError => '無法打開 Stripe 付款頁面。';
 
   @override
+  String get givingLoadError => '奉獻資訊暫時無法載入，請重試。';
+
+  @override
+  String get givingActionError => '暫時無法發起奉獻，請重試。';
+
+  @override
   String get givingCheckoutReturnSuccess => 'Stripe 付款流程已完成。確認入帳後會顯示在奉獻記錄中。';
 
   @override
@@ -5631,6 +5661,12 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get annualStatementPdfSharedMessage => '年度證明 PDF 已分享。';
+
+  @override
+  String get annualStatementLoadError => '年度證明暫時無法載入，請重試。';
+
+  @override
+  String get annualStatementActionError => '年度證明操作暫時無法完成，請重試。';
 
   @override
   String get annualStatementPdfOpenedMessage => '年度證明 PDF 已保存並打開。';

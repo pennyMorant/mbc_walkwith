@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
-import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/giving_repository.dart';
 import '../domain/giving_record.dart';
+import 'giving_error_message.dart';
 import 'widgets/annual_statement_card.dart';
 import 'widgets/annual_statement_export_sheet.dart';
 
@@ -35,8 +35,12 @@ class _AnnualStatementsPageState extends ConsumerState<AnnualStatementsPage> {
       appBar: SecondaryAppBar(title: l10n.annualStatementsTitle),
       body: overviewAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) =>
-            _StatementsMessageCard(body: formatApiErrorMessage(error)),
+        error: (error, stackTrace) => _StatementsMessageCard(
+          body: givingErrorMessage(
+            error,
+            fallback: l10n.annualStatementLoadError,
+          ),
+        ),
         data: (overview) {
           if (session == null || overview == null) {
             return _StatementsGuestView(
@@ -78,6 +82,8 @@ class _AnnualStatementsPageState extends ConsumerState<AnnualStatementsPage> {
 
   Future<void> _previewStatement(MemberSession session, int year) async {
     final messenger = ScaffoldMessenger.of(context);
+    final actionError = AppLocalizations.of(context)!
+        .annualStatementActionError;
     setState(() => _loadingYear = year);
     try {
       final export = await ref
@@ -93,8 +99,13 @@ class _AnnualStatementsPageState extends ConsumerState<AnnualStatementsPage> {
         builder: (context) => AnnualStatementExportSheet(export: export),
       );
     } catch (error) {
+      if (!mounted) {
+        return;
+      }
       messenger.showSnackBar(
-        SnackBar(content: Text(formatApiErrorMessage(error))),
+        SnackBar(
+          content: Text(givingErrorMessage(error, fallback: actionError)),
+        ),
       );
     } finally {
       if (mounted) {
@@ -146,16 +157,14 @@ class _StatementsMessageCard extends StatelessWidget {
           children: [
             Text(
               l10n.annualStatementsTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(
               body,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
             if (action != null) ...[const SizedBox(height: 14), action!],
           ],

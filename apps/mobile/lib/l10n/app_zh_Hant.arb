@@ -835,6 +835,8 @@
   "givingCheckoutAction": "前往 Stripe",
   "givingAmountError": "請輸入 USD 1.00 至 USD 100,000.00 之間的金額，最多保留兩位小數。",
   "givingCheckoutOpenError": "無法打開 Stripe 付款頁面。",
+  "givingLoadError": "奉獻資訊暫時無法載入，請重試。",
+  "givingActionError": "暫時無法發起奉獻，請重試。",
   "givingCheckoutReturnSuccess": "Stripe 付款流程已完成。確認入帳後會顯示在奉獻記錄中。",
   "givingCheckoutReturnCancel": "Stripe 付款已取消。",
   "annualStatementTooltip": "年度證明",
@@ -845,6 +847,8 @@
   "annualStatementSharePdfAction": "分享 PDF",
   "annualStatementSharePdfText": "年度奉獻證明",
   "annualStatementPdfSharedMessage": "年度證明 PDF 已分享。",
+  "annualStatementLoadError": "年度證明暫時無法載入，請重試。",
+  "annualStatementActionError": "年度證明操作暫時無法完成，請重試。",
   "annualStatementPdfOpenedMessage": "年度證明 PDF 已保存並打開。",
   "annualStatementPdfSavedMessage": "年度證明 PDF 已保存到 {path}。",
   "@annualStatementPdfSavedMessage": {

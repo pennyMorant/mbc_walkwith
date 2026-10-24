@@ -1897,6 +1897,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Could not open the Stripe checkout page.';
 
   @override
+  String get givingLoadError =>
+      'Giving information could not be loaded. Please try again.';
+
+  @override
+  String get givingActionError =>
+      'Giving could not be started. Please try again.';
+
+  @override
   String get givingCheckoutReturnSuccess =>
       'Stripe checkout finished. Your gift will appear after payment confirmation.';
 
@@ -1926,6 +1934,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get annualStatementPdfSharedMessage => 'Statement PDF shared.';
+
+  @override
+  String get annualStatementLoadError =>
+      'Annual statements could not be loaded. Please try again.';
+
+  @override
+  String get annualStatementActionError =>
+      'The annual statement action could not be completed. Please try again.';
 
   @override
   String get annualStatementPdfOpenedMessage =>
