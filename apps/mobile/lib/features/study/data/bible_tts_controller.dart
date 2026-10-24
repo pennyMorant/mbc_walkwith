@@ -1,4 +1,5 @@
 import 'bible_tts_engine.dart';
+import 'bible_tts_engine_setup.dart';
 import 'bible_tts_state.dart';
 
 export 'bible_tts_engine.dart';
@@ -60,7 +61,7 @@ class BibleTtsController {
       throw error;
     }
 
-    final textError = _validateText(verses);
+    final textError = BibleTtsEngineSetup.validateVerses(verses);
     if (textError != null) {
       _emit(
         _state.copyWith(
@@ -116,7 +117,9 @@ class BibleTtsController {
         );
         onVerseStarted?.call(verse, index);
 
-        final result = await engine.speak(_textForVerse(verse));
+        final result = await engine.speak(
+          BibleTtsEngineSetup.spokenTextForVerse(verse),
+        );
         if (runId != _runId) {
           return;
         }
@@ -239,7 +242,11 @@ class BibleTtsController {
   Future<TtsPlaybackEngine> _ensureEngine(String translationId) async {
     final existing = _engine;
     if (existing != null) {
-      await _configure(existing, translationId);
+      await BibleTtsEngineSetup.configure(
+        engine: existing,
+        translationId: translationId,
+        rate: _state.rate,
+      );
       return existing;
     }
 
@@ -257,38 +264,15 @@ class BibleTtsController {
     try {
       await engine.prepareForBackgroundPlayback();
       await engine.awaitSpeakCompletion(true);
-      await _configure(engine, translationId);
+      await BibleTtsEngineSetup.configure(
+        engine: engine,
+        translationId: translationId,
+        rate: _state.rate,
+      );
       return engine;
     } catch (_) {
       _engine = null;
       rethrow;
-    }
-  }
-
-  Future<void> _configure(
-    TtsPlaybackEngine engine,
-    String translationId,
-  ) async {
-    try {
-      final result = await engine.setLanguage(_languageCode(translationId));
-      if (result != 1 && result != true) {
-        throw StateError('TTS language unavailable');
-      }
-    } catch (error) {
-      throw BibleTtsException(
-        BibleTtsErrorCode.ttsLanguageUnavailable,
-        cause: error,
-      );
-    }
-    try {
-      await engine.setSpeechRate(_state.rate);
-      await engine.setVolume(1);
-      await engine.setPitch(1);
-    } catch (error) {
-      throw BibleTtsException(
-        BibleTtsErrorCode.ttsEngineUnavailable,
-        cause: error,
-      );
     }
   }
 
@@ -298,29 +282,5 @@ class BibleTtsController {
       return;
     }
     _onStateChanged(state);
-  }
-
-  String _languageCode(String translationId) {
-    return switch (translationId) {
-      'cuvt' => 'zh-TW',
-      'cuvs' => 'zh-CN',
-      _ => 'en-US',
-    };
-  }
-
-  String _textForVerse(BibleTtsVerse verse) {
-    return '${verse.number}. ${verse.text}';
-  }
-
-  BibleTtsException? _validateText(List<BibleTtsVerse> verses) {
-    if (verses.isEmpty) {
-      return const BibleTtsException(BibleTtsErrorCode.bibleTextMissing);
-    }
-    for (final verse in verses) {
-      if (verse.text.trim().isEmpty) {
-        return const BibleTtsException(BibleTtsErrorCode.bibleTextMissing);
-      }
-    }
-    return null;
   }
 }

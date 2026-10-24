@@ -10,6 +10,10 @@
 
 App TTS platform service。
 
+当前实现中，`BibleTtsController` 持有唯一播放生命周期和 run identity；
+`BibleTtsEngineSetup` 只负责语言、速率、音量、音调与经文输入规范化，不持有状态或
+平台 engine。
+
 ## Contract
 
 输入：
