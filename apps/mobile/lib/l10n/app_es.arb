@@ -146,6 +146,7 @@
   "bibleSearchNoResultsTitle": "No hay versículos coincidentes",
   "bibleSearchNoResultsBody": "Prueba con menos palabras u otra frase. La búsqueda permite coincidencias parciales, pero puede ignorar palabras muy cortas.",
   "bibleSearchErrorTitle": "La búsqueda falló",
+  "bibleSearchErrorBody": "No se pudo completar la búsqueda bíblica. Inténtalo de nuevo.",
   "versePickerTooltip": "Elegir versículo",
   "versePickerTitle": "Elegir un versículo",
   "readerSettingsTooltip": "Ajustes de lectura",

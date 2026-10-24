@@ -146,6 +146,7 @@
   "bibleSearchNoResultsTitle": "沒有找到匹配經文",
   "bibleSearchNoResultsBody": "可以減少關鍵詞，或換一種說法。搜尋會嘗試寬鬆匹配，但太短的詞可能會被忽略。",
   "bibleSearchErrorTitle": "搜尋失敗",
+  "bibleSearchErrorBody": "暫時無法完成經文搜尋，請重試。",
   "versePickerTooltip": "選擇經節",
   "versePickerTitle": "選擇經節",
   "readerSettingsTooltip": "閱讀設定",

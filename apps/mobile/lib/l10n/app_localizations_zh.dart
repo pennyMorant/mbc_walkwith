@@ -365,6 +365,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bibleSearchErrorTitle => '搜索失败';
 
   @override
+  String get bibleSearchErrorBody => '暂时无法完成经文搜索，请重试。';
+
+  @override
   String get versePickerTooltip => '选择经节';
 
   @override
@@ -2282,6 +2285,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get bibleSearchErrorTitle => '搜索失败';
 
   @override
+  String get bibleSearchErrorBody => '暂时无法完成经文搜索，请重试。';
+
+  @override
   String get versePickerTooltip => '选择经节';
 
   @override
@@ -4197,6 +4203,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get bibleSearchErrorTitle => '搜尋失敗';
+
+  @override
+  String get bibleSearchErrorBody => '暫時無法完成經文搜尋，請重試。';
 
   @override
   String get versePickerTooltip => '選擇經節';

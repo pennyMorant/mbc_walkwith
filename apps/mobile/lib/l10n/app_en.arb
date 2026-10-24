@@ -146,6 +146,7 @@
   "bibleSearchNoResultsTitle": "No matching verses",
   "bibleSearchNoResultsBody": "Try fewer words or another phrase. The search allows partial matches, but very short words may be ignored.",
   "bibleSearchErrorTitle": "Search failed",
+  "bibleSearchErrorBody": "Bible search could not be completed. Please try again.",
   "versePickerTooltip": "Choose verse",
   "versePickerTitle": "Choose a verse",
   "readerSettingsTooltip": "Reader settings",

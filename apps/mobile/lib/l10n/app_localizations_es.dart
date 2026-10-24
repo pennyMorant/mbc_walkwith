@@ -392,6 +392,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get bibleSearchErrorTitle => 'La búsqueda falló';
 
   @override
+  String get bibleSearchErrorBody =>
+      'No se pudo completar la búsqueda bíblica. Inténtalo de nuevo.';
+
+  @override
   String get versePickerTooltip => 'Elegir versículo';
 
   @override

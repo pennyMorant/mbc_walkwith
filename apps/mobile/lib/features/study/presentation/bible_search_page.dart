@@ -45,16 +45,12 @@ class _BibleSearchPageState extends ConsumerState<BibleSearchPage> {
       Localizations.localeOf(context),
     );
     final searchQuery = _query.trim();
-    final resultsAsync = searchQuery.length >= 2
-        ? ref.watch(
-            bibleSearchProvider(
-              BibleSearchRequest(
-                query: searchQuery,
-                translationId: translation.id,
-              ),
-            ),
-          )
+    final searchRequest = searchQuery.length >= 2
+        ? BibleSearchRequest(query: searchQuery, translationId: translation.id)
         : null;
+    final resultsAsync = searchRequest == null
+        ? null
+        : ref.watch(bibleSearchProvider(searchRequest));
 
     return Scaffold(
       appBar: SecondaryAppBar(title: l10n.bibleSearchTitle),
@@ -73,9 +69,8 @@ class _BibleSearchPageState extends ConsumerState<BibleSearchPage> {
                 suffixIcon: _controller.text.isEmpty
                     ? null
                     : IconButton(
-                        tooltip: MaterialLocalizations.of(
-                          context,
-                        ).deleteButtonTooltip,
+                        tooltip: MaterialLocalizations.of(context)
+                            .deleteButtonTooltip,
                         onPressed: _controller.clear,
                         icon: const Icon(Icons.close),
                       ),
@@ -87,6 +82,9 @@ class _BibleSearchPageState extends ConsumerState<BibleSearchPage> {
               query: searchQuery,
               resultsAsync: resultsAsync,
               onResultSelected: _openResult,
+              onRetry: searchRequest == null
+                  ? null
+                  : () => ref.invalidate(bibleSearchProvider(searchRequest)),
             ),
           ),
         ],
@@ -120,11 +118,13 @@ class _SearchResultsView extends StatelessWidget {
     required this.query,
     required this.resultsAsync,
     required this.onResultSelected,
+    required this.onRetry,
   });
 
   final String query;
   final AsyncValue<List<BibleSearchResult>>? resultsAsync;
   final ValueChanged<BibleSearchResult> onResultSelected;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +152,9 @@ class _SearchResultsView extends StatelessWidget {
           key: const ValueKey('search-error'),
           icon: Icons.search_off,
           title: l10n.bibleSearchErrorTitle,
-          body: '$error',
+          body: l10n.bibleSearchErrorBody,
+          actionLabel: l10n.retryAction,
+          onAction: onRetry,
         ),
         data: (results) {
           if (results.isEmpty) {
@@ -259,9 +261,8 @@ class _SearchResultTile extends StatelessWidget {
                 result.text,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(height: 1.45),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(height: 1.45),
               ),
             ],
           ),
@@ -277,11 +278,15 @@ class _SearchInfoView extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.body,
+    this.actionLabel,
+    this.onAction,
   });
 
   final IconData icon;
   final String title;
   final String body;
+  final String? actionLabel;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -298,18 +303,24 @@ class _SearchInfoView extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(
               body,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
+            if (actionLabel != null && onAction != null) ...[
+              const SizedBox(height: 16),
+              FilledButton.tonalIcon(
+                onPressed: onAction,
+                icon: const Icon(Icons.refresh),
+                label: Text(actionLabel!),
+              ),
+            ],
           ],
         ),
       ),

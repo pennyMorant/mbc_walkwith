@@ -146,6 +146,7 @@
   "bibleSearchNoResultsTitle": "没有找到匹配经文",
   "bibleSearchNoResultsBody": "可以减少关键词，或换一种说法。搜索会尝试宽松匹配，但太短的词可能会被忽略。",
   "bibleSearchErrorTitle": "搜索失败",
+  "bibleSearchErrorBody": "暂时无法完成经文搜索，请重试。",
   "versePickerTooltip": "选择经节",
   "versePickerTitle": "选择经节",
   "readerSettingsTooltip": "阅读设置",

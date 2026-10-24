@@ -792,6 +792,12 @@ abstract class AppLocalizations {
   /// **'搜索失败'**
   String get bibleSearchErrorTitle;
 
+  /// No description provided for @bibleSearchErrorBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时无法完成经文搜索，请重试。'**
+  String get bibleSearchErrorBody;
+
   /// No description provided for @versePickerTooltip.
   ///
   /// In zh, this message translates to:
