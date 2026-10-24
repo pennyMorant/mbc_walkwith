@@ -9,6 +9,7 @@ import '../../../shared/widgets/filled_text_field.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../life/presentation/push_notifications_controller.dart';
 import '../../member_auth/data/member_session_repository.dart';
+import 'member_profile_input_validation.dart';
 import 'widgets/member_profile_summary_card.dart';
 import 'widgets/member_profile_year_fields.dart';
 
@@ -199,6 +200,13 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
   }
 
   Future<void> _save(MemberSession session) async {
+    final l10n = AppLocalizations.of(context)!;
+    if (!isValidOptionalMemberYear(_faithYearController.text) ||
+        !isValidOptionalMemberYear(_baptizedYearController.text) ||
+        !isValidOptionalIsoDate(_joinedChurchController.text)) {
+      setState(() => _error = l10n.memberProfileDateValidationError);
+      return;
+    }
     setState(() {
       _isSaving = true;
       _error = null;

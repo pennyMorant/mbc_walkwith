@@ -58,6 +58,7 @@
   "memberFaithStartYearLabel": "Faith start year",
   "memberBaptizedYearLabel": "Baptized year",
   "memberJoinedChurchAtLabel": "Joined church date",
+  "memberProfileDateValidationError": "Enter years from 1900 to 2100 and use YYYY-MM-DD for the date.",
   "memberEmergencyContactNameLabel": "Emergency contact",
   "memberEmergencyContactPhoneLabel": "Emergency phone",
   "mineGivingEntryTitle": "Giving and annual statements",

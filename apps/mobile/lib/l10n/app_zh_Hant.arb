@@ -58,6 +58,7 @@
   "memberFaithStartYearLabel": "信主年份",
   "memberBaptizedYearLabel": "受洗年份",
   "memberJoinedChurchAtLabel": "加入教會日期",
+  "memberProfileDateValidationError": "年份請輸入 1900 至 2100，日期請使用 YYYY-MM-DD 格式。",
   "memberEmergencyContactNameLabel": "緊急聯絡人",
   "memberEmergencyContactPhoneLabel": "緊急聯絡人電話",
   "mineGivingEntryTitle": "奉獻與年度證明",

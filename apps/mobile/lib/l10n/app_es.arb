@@ -58,6 +58,7 @@
   "memberFaithStartYearLabel": "Año de fe",
   "memberBaptizedYearLabel": "Año de bautismo",
   "memberJoinedChurchAtLabel": "Fecha de ingreso",
+  "memberProfileDateValidationError": "Ingresa años entre 1900 y 2100 y usa AAAA-MM-DD para la fecha.",
   "memberEmergencyContactNameLabel": "Contacto de emergencia",
   "memberEmergencyContactPhoneLabel": "Teléfono de emergencia",
   "mineGivingEntryTitle": "Ofrendas y comprobantes anuales",

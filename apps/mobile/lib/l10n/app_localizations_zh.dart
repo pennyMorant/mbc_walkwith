@@ -184,6 +184,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memberJoinedChurchAtLabel => '加入教会日期';
 
   @override
+  String get memberProfileDateValidationError =>
+      '年份请输入 1900 至 2100，日期请使用 YYYY-MM-DD 格式。';
+
+  @override
   String get memberEmergencyContactNameLabel => '紧急联系人';
 
   @override
@@ -2113,6 +2117,10 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get memberJoinedChurchAtLabel => '加入教会日期';
 
   @override
+  String get memberProfileDateValidationError =>
+      '年份请输入 1900 至 2100，日期请使用 YYYY-MM-DD 格式。';
+
+  @override
   String get memberEmergencyContactNameLabel => '紧急联系人';
 
   @override
@@ -4040,6 +4048,10 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get memberJoinedChurchAtLabel => '加入教會日期';
+
+  @override
+  String get memberProfileDateValidationError =>
+      '年份請輸入 1900 至 2100，日期請使用 YYYY-MM-DD 格式。';
 
   @override
   String get memberEmergencyContactNameLabel => '緊急聯絡人';

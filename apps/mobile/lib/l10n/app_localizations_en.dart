@@ -192,6 +192,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get memberJoinedChurchAtLabel => 'Joined church date';
 
   @override
+  String get memberProfileDateValidationError =>
+      'Enter years from 1900 to 2100 and use YYYY-MM-DD for the date.';
+
+  @override
   String get memberEmergencyContactNameLabel => 'Emergency contact';
 
   @override

@@ -450,6 +450,12 @@ abstract class AppLocalizations {
   /// **'加入教会日期'**
   String get memberJoinedChurchAtLabel;
 
+  /// No description provided for @memberProfileDateValidationError.
+  ///
+  /// In zh, this message translates to:
+  /// **'年份请输入 1900 至 2100，日期请使用 YYYY-MM-DD 格式。'**
+  String get memberProfileDateValidationError;
+
   /// No description provided for @memberEmergencyContactNameLabel.
   ///
   /// In zh, this message translates to:
