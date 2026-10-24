@@ -40,6 +40,56 @@ class _ReadingPlanDetailSheetState
       assignmentsAsync.value ?? const <ReadingPlanAssignment>[],
       widget.plan.id,
     );
+    final contentSliver = assignmentsAsync.isLoading
+        ? _stateSliver(const CircularProgressIndicator())
+        : assignmentsAsync.hasError
+        ? _stateSliver(
+            ReadingPlanSheetErrorState(
+              onRetry: () =>
+                  ref.invalidate(activeReadingPlanAssignmentsProvider),
+            ),
+          )
+        : daysAsync.when(
+            loading: () => _stateSliver(const CircularProgressIndicator()),
+            error: (error, stackTrace) => _stateSliver(
+              ReadingPlanSheetErrorState(
+                onRetry: () {
+                  ref.invalidate(readingPlanDaysProvider(widget.plan.id));
+                },
+              ),
+            ),
+            data: (days) => days.isEmpty
+                ? _stateSliver(
+                    ReadingPlanSheetEmptyState(
+                      message: l10n.readingPlanNoDaysBody,
+                    ),
+                  )
+                : SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final day = days[index];
+                      final progress = assignment?.progressForDay(day.id);
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          bottom: index == days.length - 1 ? 0 : 10,
+                        ),
+                        child: ReadingPlanDayCard(
+                          day: day,
+                          completed: progress?.isCompleted ?? false,
+                          busy: _busyDayId == day.id,
+                          canComplete: assignment?.isInProgress ?? false,
+                          onRead: day.references.isEmpty
+                              ? null
+                              : () => widget.onOpenReference(
+                                  day.references.first,
+                                ),
+                          onComplete: !(assignment?.isInProgress ?? false)
+                              ? null
+                              : () => _completeDay(assignment!, day),
+                        ),
+                      );
+                    }, childCount: days.length),
+                  ),
+          );
 
     return SafeArea(
       top: false,
@@ -47,125 +97,87 @@ class _ReadingPlanDetailSheetState
         heightFactor: 0.85,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 36,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              Text(
-                widget.plan.title,
-                style: Theme.of(context).textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w800),
-              ),
-              if (widget.plan.description.trim().isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Text(
-                  widget.plan.description,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    height: 1.35,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  AppChip(
-                    icon: Icons.calendar_month_outlined,
-                    label: l10n.readingPlanDaysLabel(widget.plan.durationDays),
-                    selected: true,
-                  ),
-                  if (assignment != null)
-                    AppChip(
-                      icon: Icons.done_all_outlined,
-                      label: l10n.readingPlanProgressLabel(
-                        assignment.completedCount,
-                        widget.plan.durationDays,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 36,
+                        height: 4,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: colorScheme.outlineVariant,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
-                ],
-              ),
-              const SizedBox(height: 14),
-              if (!assignmentsAsync.isLoading &&
-                  !assignmentsAsync.hasError &&
-                  assignment == null)
-                AppButton(
-                  label: l10n.readingPlanStartAction,
-                  icon: Icons.playlist_add_check_circle_outlined,
-                  variant: AppButtonVariant.filled,
-                  loading: _starting,
-                  onPressed: _startPlan,
-                ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: assignmentsAsync.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : assignmentsAsync.hasError
-                    ? ReadingPlanSheetErrorState(
-                        onRetry: () => ref.invalidate(
-                          activeReadingPlanAssignmentsProvider,
+                    Text(
+                      widget.plan.title,
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w800),
+                    ),
+                    if (widget.plan.description.trim().isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.plan.description,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                          height: 1.35,
                         ),
-                      )
-                    : daysAsync.when(
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (error, stackTrace) =>
-                            ReadingPlanSheetErrorState(
-                              onRetry: () {
-                                ref.invalidate(
-                                  readingPlanDaysProvider(widget.plan.id),
-                                );
-                              },
-                            ),
-                        data: (days) => days.isEmpty
-                            ? ReadingPlanSheetEmptyState(
-                                message: l10n.readingPlanNoDaysBody,
-                              )
-                            : ListView.separated(
-                                itemCount: days.length,
-                                separatorBuilder: (context, index) {
-                                  return const SizedBox(height: 10);
-                                },
-                                itemBuilder: (context, index) {
-                                  final day = days[index];
-                                  final progress = assignment?.progressForDay(
-                                    day.id,
-                                  );
-                                  return ReadingPlanDayCard(
-                                    day: day,
-                                    completed: progress?.isCompleted ?? false,
-                                    busy: _busyDayId == day.id,
-                                    canComplete:
-                                        assignment?.isInProgress ?? false,
-                                    onRead: day.references.isEmpty
-                                        ? null
-                                        : () => widget.onOpenReference(
-                                            day.references.first,
-                                          ),
-                                    onComplete:
-                                        !(assignment?.isInProgress ?? false)
-                                        ? null
-                                        : () => _completeDay(assignment!, day),
-                                  );
-                                },
-                              ),
                       ),
+                    ],
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        AppChip(
+                          icon: Icons.calendar_month_outlined,
+                          label: l10n.readingPlanDaysLabel(
+                            widget.plan.durationDays,
+                          ),
+                          selected: true,
+                        ),
+                        if (assignment != null)
+                          AppChip(
+                            icon: Icons.done_all_outlined,
+                            label: l10n.readingPlanProgressLabel(
+                              assignment.completedCount,
+                              widget.plan.durationDays,
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    if (!assignmentsAsync.isLoading &&
+                        !assignmentsAsync.hasError &&
+                        assignment == null)
+                      AppButton(
+                        label: l10n.readingPlanStartAction,
+                        icon: Icons.playlist_add_check_circle_outlined,
+                        variant: AppButtonVariant.filled,
+                        loading: _starting,
+                        onPressed: _startPlan,
+                      ),
+                    const SizedBox(height: 12),
+                  ],
+                ),
               ),
+              contentSliver,
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _stateSliver(Widget state) {
+    return SliverFillRemaining(
+      hasScrollBody: false,
+      child: Center(child: state),
     );
   }
 
