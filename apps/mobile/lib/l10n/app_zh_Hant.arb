@@ -375,6 +375,7 @@
   "verseNotesEmptyState": "這節經文還沒有公開心得。",
   "verseNotesEmptyError": "請先寫下心得。",
   "verseNotesGenericError": "經文心得載入失敗。",
+  "verseNotesActionError": "心得儲存失敗，請重試。",
   "studyChapterLabel": "羅馬書 8",
   "translationLabel": "和合本",
   "relatedSermonsLabel": "{count} 篇相關講道",

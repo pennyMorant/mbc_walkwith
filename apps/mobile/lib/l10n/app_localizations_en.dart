@@ -838,6 +838,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verseNotesGenericError => 'Could not load verse notes.';
 
   @override
+  String get verseNotesActionError =>
+      'Could not save your reflection. Please try again.';
+
+  @override
   String get studyChapterLabel => 'Romans 8';
 
   @override

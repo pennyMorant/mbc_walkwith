@@ -1522,6 +1522,12 @@ abstract class AppLocalizations {
   /// **'经文心得加载失败。'**
   String get verseNotesGenericError;
 
+  /// No description provided for @verseNotesActionError.
+  ///
+  /// In zh, this message translates to:
+  /// **'心得保存失败，请重试。'**
+  String get verseNotesActionError;
+
   /// No description provided for @studyChapterLabel.
   ///
   /// In zh, this message translates to:

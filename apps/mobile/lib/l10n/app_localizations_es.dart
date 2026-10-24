@@ -844,6 +844,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudieron cargar las notas del versículo.';
 
   @override
+  String get verseNotesActionError =>
+      'No se pudo guardar tu reflexión. Inténtalo de nuevo.';
+
+  @override
   String get studyChapterLabel => 'Romanos 8';
 
   @override

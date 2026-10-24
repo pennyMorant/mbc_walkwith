@@ -375,6 +375,7 @@
   "verseNotesEmptyState": "这节经文还没有公开心得。",
   "verseNotesEmptyError": "请先写下心得。",
   "verseNotesGenericError": "经文心得加载失败。",
+  "verseNotesActionError": "心得保存失败，请重试。",
   "studyChapterLabel": "罗马书 8",
   "translationLabel": "和合本",
   "relatedSermonsLabel": "{count} 篇相关讲道",

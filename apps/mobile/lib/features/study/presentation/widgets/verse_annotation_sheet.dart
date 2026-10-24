@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/bible_notes_repository.dart';
 import '../../domain/bible_note.dart';
@@ -30,8 +29,8 @@ class VerseAnnotationSheet extends ConsumerStatefulWidget {
   final int chapter;
   final StudyVerseAnnotation? annotation;
   final int initialTabIndex;
-  final ValueChanged<bool> onBookmarkChanged;
-  final ValueChanged<String?> onHighlightChanged;
+  final Future<void> Function(bool isBookmarked) onBookmarkChanged;
+  final Future<void> Function(String? highlightColor) onHighlightChanged;
   final Future<void> Function(String noteText) onNoteSaved;
   final VoidCallback? onOpenLexicon;
 
@@ -48,6 +47,7 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
   String? _highlightColor;
   String? _editingChurchNoteId;
   bool _churchNoteSeeded = false;
+  bool _savingAnnotation = false;
   bool _savingPrivateNote = false;
   bool _savingChurchNote = false;
   String? _privateNoteError;
@@ -82,14 +82,9 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
         isBookmarked: _isBookmarked,
         highlightColor: _highlightColor,
         noteController: _noteController,
-        saving: _savingPrivateNote,
+        saving: _savingPrivateNote || _savingAnnotation,
         errorMessage: _privateNoteError,
-        onBookmarkChanged: (value) {
-          setState(() {
-            _isBookmarked = value;
-          });
-          widget.onBookmarkChanged(value);
-        },
+        onBookmarkChanged: _setBookmark,
         onHighlightChanged: _setHighlight,
         onNoteSaved: _savePrivateNote,
       ),
@@ -106,11 +101,60 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
     );
   }
 
-  void _setHighlight(String? colorId) {
+  Future<void> _setBookmark(bool value) async {
+    if (_savingAnnotation) {
+      return;
+    }
+    final previousValue = _isBookmarked;
+    setState(() {
+      _isBookmarked = value;
+      _savingAnnotation = true;
+      _privateNoteError = null;
+    });
+    try {
+      await widget.onBookmarkChanged(value);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _isBookmarked = previousValue;
+          _privateNoteError = AppLocalizations.of(context)!.noteSaveError;
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _savingAnnotation = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _setHighlight(String? colorId) async {
+    if (_savingAnnotation) {
+      return;
+    }
+    final previousColor = _highlightColor;
     setState(() {
       _highlightColor = colorId;
+      _savingAnnotation = true;
+      _privateNoteError = null;
     });
-    widget.onHighlightChanged(colorId);
+    try {
+      await widget.onHighlightChanged(colorId);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _highlightColor = previousColor;
+          _privateNoteError = AppLocalizations.of(context)!.noteSaveError;
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _savingAnnotation = false;
+        });
+      }
+    }
   }
 
   Future<void> _savePrivateNote() async {
@@ -174,8 +218,13 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
           : await repository.update(noteId: noteId, content: content);
       _editingChurchNoteId = saved.id;
       ref.invalidate(bibleVerseNotesProvider(widget.verse.id));
-    } catch (error) {
-      _churchNoteError = _errorMessage(error);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _churchNoteError = AppLocalizations.of(context)!
+              .verseNotesActionError;
+        });
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -196,8 +245,13 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
       _churchNoteController.clear();
       _churchNoteSeeded = true;
       ref.invalidate(bibleVerseNotesProvider(widget.verse.id));
-    } catch (error) {
-      _churchNoteError = _errorMessage(error);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _churchNoteError = AppLocalizations.of(context)!
+              .verseNotesActionError;
+        });
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -205,12 +259,5 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
         });
       }
     }
-  }
-
-  String _errorMessage(Object error) {
-    if (error is ApiError) {
-      return error.message;
-    }
-    return AppLocalizations.of(context)!.verseNotesGenericError;
   }
 }

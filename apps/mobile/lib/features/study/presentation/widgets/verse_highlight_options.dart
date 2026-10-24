@@ -13,7 +13,7 @@ class VerseHighlightChip extends StatelessWidget {
 
   final String label;
   final bool selected;
-  final VoidCallback onSelected;
+  final VoidCallback? onSelected;
   final Color? color;
 
   @override
@@ -31,7 +31,7 @@ class VerseHighlightChip extends StatelessWidget {
       selectedColor: color == null
           ? colorScheme.secondaryContainer
           : chipColor.withValues(alpha: 0.72),
-      onSelected: (_) => onSelected(),
+      onSelected: onSelected == null ? null : (_) => onSelected!(),
     );
   }
 }
@@ -93,7 +93,8 @@ Color? studyHighlightColor(BuildContext context, String? colorId) {
     return null;
   }
 
-  return verseHighlightOptions(
-    context,
-  ).where((option) => option.id == colorId).firstOrNull?.color;
+  return verseHighlightOptions(context)
+      .where((option) => option.id == colorId)
+      .firstOrNull
+      ?.color;
 }

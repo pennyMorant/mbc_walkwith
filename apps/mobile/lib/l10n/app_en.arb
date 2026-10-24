@@ -375,6 +375,7 @@
   "verseNotesEmptyState": "No shared reflections yet.",
   "verseNotesEmptyError": "Write a reflection before sharing.",
   "verseNotesGenericError": "Could not load verse notes.",
+  "verseNotesActionError": "Could not save your reflection. Please try again.",
   "studyChapterLabel": "Romans 8",
   "translationLabel": "CUV",
   "relatedSermonsLabel": "{count, plural, =1{1 related sermon} other{{count} related sermons}}",

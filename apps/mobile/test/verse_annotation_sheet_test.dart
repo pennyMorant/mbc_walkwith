@@ -33,8 +33,8 @@ void main() {
               chapter: 8,
               annotation: null,
               initialTabIndex: 1,
-              onBookmarkChanged: (_) {},
-              onHighlightChanged: (_) {},
+              onBookmarkChanged: (_) async {},
+              onHighlightChanged: (_) async {},
               onNoteSaved: (_) async {},
             ),
           ),
@@ -81,8 +81,8 @@ void main() {
               bookId: 'rom',
               chapter: 8,
               annotation: null,
-              onBookmarkChanged: (_) {},
-              onHighlightChanged: (_) {},
+              onBookmarkChanged: (_) async {},
+              onHighlightChanged: (_) async {},
               onNoteSaved: (_) async {},
             ),
           ),
@@ -129,8 +129,8 @@ void main() {
                 bookId: 'rom',
                 chapter: 8,
                 annotation: null,
-                onBookmarkChanged: (_) {},
-                onHighlightChanged: (_) {},
+                onBookmarkChanged: (_) async {},
+                onHighlightChanged: (_) async {},
                 onNoteSaved: (_) async {},
               ),
             ),
@@ -171,8 +171,8 @@ void main() {
               bookId: 'rom',
               chapter: 8,
               annotation: null,
-              onBookmarkChanged: (_) {},
-              onHighlightChanged: (_) {},
+              onBookmarkChanged: (_) async {},
+              onHighlightChanged: (_) async {},
               onNoteSaved: (_) async {
                 throw StateError('database unavailable');
               },
@@ -196,6 +196,51 @@ void main() {
       find.text('Your note could not be saved. Please try again.'),
       findsOneWidget,
     );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('failed bookmark save rolls back and stays recoverable', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          bibleNotesRepositoryProvider.overrideWithValue(
+            _StaleDeleteBibleNotesRepository(),
+          ),
+        ],
+        child: MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: Scaffold(
+            body: VerseAnnotationSheet(
+              verse: _verse,
+              bookId: 'rom',
+              chapter: 8,
+              annotation: null,
+              onBookmarkChanged: (_) async {
+                throw StateError('database unavailable');
+              },
+              onHighlightChanged: (_) async {},
+              onNoteSaved: (_) async {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+
+    expect(tester.widget<Switch>(find.byType(Switch)).value, isFalse);
+    expect(
+      find.text('Your note could not be saved. Please try again.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('database unavailable'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 }

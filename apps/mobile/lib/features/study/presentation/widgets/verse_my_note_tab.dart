@@ -47,7 +47,7 @@ class MyVerseNoteTab extends StatelessWidget {
                 isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
                 color: colorScheme.primary,
               ),
-              onChanged: onBookmarkChanged,
+              onChanged: saving ? null : onBookmarkChanged,
             ),
           ),
           const SizedBox(height: 14),
@@ -64,14 +64,16 @@ class MyVerseNoteTab extends StatelessWidget {
               VerseHighlightChip(
                 label: l10n.highlightNone,
                 selected: highlightColor == null,
-                onSelected: () => onHighlightChanged(null),
+                onSelected: saving ? null : () => onHighlightChanged(null),
               ),
               for (final option in verseHighlightOptions(context))
                 VerseHighlightChip(
                   label: option.label,
                   color: option.color,
                   selected: highlightColor == option.id,
-                  onSelected: () => onHighlightChanged(option.id),
+                  onSelected: saving
+                      ? null
+                      : () => onHighlightChanged(option.id),
                 ),
             ],
           ),

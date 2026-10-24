@@ -375,6 +375,7 @@
   "verseNotesEmptyState": "Aún no hay reflexiones compartidas.",
   "verseNotesEmptyError": "Escribe una reflexión antes de compartir.",
   "verseNotesGenericError": "No se pudieron cargar las notas del versículo.",
+  "verseNotesActionError": "No se pudo guardar tu reflexión. Inténtalo de nuevo.",
   "studyChapterLabel": "Romanos 8",
   "translationLabel": "RVR",
   "relatedSermonsLabel": "{count, plural, =1{1 sermón relacionado} other{{count} sermones relacionados}}",

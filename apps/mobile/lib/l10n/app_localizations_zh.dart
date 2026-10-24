@@ -763,6 +763,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get verseNotesGenericError => '经文心得加载失败。';
 
   @override
+  String get verseNotesActionError => '心得保存失败，请重试。';
+
+  @override
   String get studyChapterLabel => '罗马书 8';
 
   @override
@@ -2720,6 +2723,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get verseNotesGenericError => '经文心得加载失败。';
 
   @override
+  String get verseNotesActionError => '心得保存失败，请重试。';
+
+  @override
   String get studyChapterLabel => '罗马书 8';
 
   @override
@@ -4675,6 +4681,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get verseNotesGenericError => '經文心得載入失敗。';
+
+  @override
+  String get verseNotesActionError => '心得儲存失敗，請重試。';
 
   @override
   String get studyChapterLabel => '羅馬書 8';
