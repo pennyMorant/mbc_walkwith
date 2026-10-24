@@ -636,6 +636,12 @@ abstract class AppLocalizations {
   /// **'系统通知权限未开启。打开开关后会请求系统权限。'**
   String get notificationPermissionDisabledBody;
 
+  /// No description provided for @notificationPermissionActionError.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时无法更新通知设置，请重试。'**
+  String get notificationPermissionActionError;
+
   /// No description provided for @aboutTitle.
   ///
   /// In zh, this message translates to:

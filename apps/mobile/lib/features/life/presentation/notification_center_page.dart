@@ -126,6 +126,30 @@ class NotificationCenterPage extends ConsumerWidget {
                     style: Theme.of(context).textTheme.bodyMedium
                         ?.copyWith(color: colorScheme.onSurfaceVariant),
                   ),
+                  if (pushState.lastError case final error?) ...[
+                    const SizedBox(height: 12),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 20,
+                          color: colorScheme.error,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            notificationErrorMessage(
+                              error,
+                              fallback: l10n.notificationPermissionActionError,
+                            ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: colorScheme.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   if (pushState.supported) ...[
                     const SizedBox(height: 14),
                     SwitchListTile.adaptive(

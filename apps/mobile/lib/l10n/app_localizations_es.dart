@@ -312,6 +312,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Las notificaciones están desactivadas. Activa esto para solicitar el permiso del sistema.';
 
   @override
+  String get notificationPermissionActionError =>
+      'No se pudo actualizar la configuración de notificaciones. Inténtalo de nuevo.';
+
+  @override
   String get aboutTitle => 'Acerca de';
 
   @override

@@ -113,6 +113,7 @@
   "notificationPermissionTitle": "Permiso de notificaciones",
   "notificationPermissionEnabledBody": "Las notificaciones están permitidas. Usa el interruptor para abrir la configuración del sistema si quieres desactivarlas.",
   "notificationPermissionDisabledBody": "Las notificaciones están desactivadas. Activa esto para solicitar el permiso del sistema.",
+  "notificationPermissionActionError": "No se pudo actualizar la configuración de notificaciones. Inténtalo de nuevo.",
   "aboutTitle": "Acerca de",
   "aboutChurchTitle": "Acerca de la iglesia",
   "churchAddressTitle": "Dirección / mapa",

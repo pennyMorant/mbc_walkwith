@@ -284,6 +284,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notificationPermissionDisabledBody => '系统通知权限未开启。打开开关后会请求系统权限。';
 
   @override
+  String get notificationPermissionActionError => '暂时无法更新通知设置，请重试。';
+
+  @override
   String get aboutTitle => '关于';
 
   @override
@@ -2238,6 +2241,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get notificationPermissionDisabledBody => '系统通知权限未开启。打开开关后会请求系统权限。';
 
   @override
+  String get notificationPermissionActionError => '暂时无法更新通知设置，请重试。';
+
+  @override
   String get aboutTitle => '关于';
 
   @override
@@ -4190,6 +4196,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get notificationPermissionDisabledBody => '系統通知權限未開啟。打開開關後會請求系統權限。';
+
+  @override
+  String get notificationPermissionActionError => '暫時無法更新通知設定，請重試。';
 
   @override
   String get aboutTitle => '關於';

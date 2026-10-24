@@ -113,6 +113,7 @@
   "notificationPermissionTitle": "通知权限",
   "notificationPermissionEnabledBody": "系统已允许通知。需要关闭时，请通过开关进入系统设置。",
   "notificationPermissionDisabledBody": "系统通知权限未开启。打开开关后会请求系统权限。",
+  "notificationPermissionActionError": "暂时无法更新通知设置，请重试。",
   "aboutTitle": "关于",
   "aboutChurchTitle": "关于教会",
   "churchAddressTitle": "地址 / 地图",

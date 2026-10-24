@@ -113,6 +113,7 @@
   "notificationPermissionTitle": "通知權限",
   "notificationPermissionEnabledBody": "系統已允許通知。需要關閉時，請透過開關進入系統設定。",
   "notificationPermissionDisabledBody": "系統通知權限未開啟。打開開關後會請求系統權限。",
+  "notificationPermissionActionError": "暫時無法更新通知設定，請重試。",
   "aboutTitle": "關於",
   "aboutChurchTitle": "關於教會",
   "churchAddressTitle": "地址 / 地圖",

@@ -311,6 +311,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Notifications are off. Turn this on to request system permission.';
 
   @override
+  String get notificationPermissionActionError =>
+      'Notification settings could not be updated. Please try again.';
+
+  @override
   String get aboutTitle => 'About';
 
   @override

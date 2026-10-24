@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mbc_walkwith/features/life/presentation/push_notifications_controller.dart';
 import 'package:mbc_walkwith/features/mine/presentation/widgets/preference_system_section.dart';
 import 'package:mbc_walkwith/features/study/domain/bible_translation.dart';
 import 'package:mbc_walkwith/l10n/app_localizations.dart';
@@ -56,6 +57,31 @@ void main() {
     );
 
     expect(find.textContaining('繁體中文'), findsOneWidget);
+  });
+
+  testWidgets('notification permission hides implementation failures', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        locale: const Locale('en'),
+        child: PreferenceNotificationPermissionControl(
+          state: PushNotificationsState.initial.copyWith(
+            lastError: StateError('permission service unavailable'),
+          ),
+          onPressed: () {},
+        ),
+      ),
+    );
+
+    expect(
+      find.text(
+        'Notification settings could not be updated. Please try again.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('permission service unavailable'), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 }
 

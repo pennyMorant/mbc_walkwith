@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/api/api_error.dart';
 import '../../../core/storage/shared_preferences_provider.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/push_notification_platform_service.dart';
@@ -36,7 +35,7 @@ class PushNotificationsState {
   final String permissionStatus;
   final bool isRegistered;
   final bool isLoading;
-  final String? lastError;
+  final Object? lastError;
 
   bool get permissionGranted =>
       permissionStatus == 'authorized' || permissionStatus == 'provisional';
@@ -46,7 +45,7 @@ class PushNotificationsState {
     String? permissionStatus,
     bool? isRegistered,
     bool? isLoading,
-    String? lastError,
+    Object? lastError,
     bool clearError = false,
   }) {
     return PushNotificationsState(
@@ -111,7 +110,7 @@ class PushNotificationsController extends Notifier<PushNotificationsState> {
         state = state.copyWith(permissionStatus: permissionStatus);
         await _requestInitialPermissionIfNeeded();
       } catch (error) {
-        state = state.copyWith(lastError: formatApiErrorMessage(error));
+        state = state.copyWith(lastError: error);
       }
     }
 
@@ -131,10 +130,7 @@ class PushNotificationsController extends Notifier<PushNotificationsState> {
       }
       await _syncCurrentSession();
     } catch (error) {
-      state = state.copyWith(
-        lastError: formatApiErrorMessage(error),
-        isRegistered: false,
-      );
+      state = state.copyWith(lastError: error, isRegistered: false);
     }
   }
 
@@ -151,7 +147,7 @@ class PushNotificationsController extends Notifier<PushNotificationsState> {
       state = state.copyWith(permissionStatus: permissionStatus);
       await _syncCurrentSession();
     } catch (error) {
-      state = state.copyWith(lastError: formatApiErrorMessage(error));
+      state = state.copyWith(lastError: error);
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -166,7 +162,7 @@ class PushNotificationsController extends Notifier<PushNotificationsState> {
       await _permissionService.openSettings();
       await refreshPermissionAndSync();
     } catch (error) {
-      state = state.copyWith(lastError: formatApiErrorMessage(error));
+      state = state.copyWith(lastError: error);
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -184,7 +180,7 @@ class PushNotificationsController extends Notifier<PushNotificationsState> {
       );
       await _syncCurrentSession();
     } catch (error) {
-      state = state.copyWith(lastError: formatApiErrorMessage(error));
+      state = state.copyWith(lastError: error);
     }
   }
 

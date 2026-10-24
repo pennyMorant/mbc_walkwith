@@ -113,6 +113,7 @@
   "notificationPermissionTitle": "Notification permission",
   "notificationPermissionEnabledBody": "Notifications are allowed. Use the switch to open system settings if you want to turn them off.",
   "notificationPermissionDisabledBody": "Notifications are off. Turn this on to request system permission.",
+  "notificationPermissionActionError": "Notification settings could not be updated. Please try again.",
   "aboutTitle": "About",
   "aboutChurchTitle": "About church",
   "churchAddressTitle": "Address / map",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../life/presentation/notification_error_message.dart';
 import '../../../life/presentation/push_notifications_controller.dart';
 import '../../../study/domain/bible_translation.dart';
 
@@ -55,15 +56,34 @@ class PreferenceNotificationPermissionControl extends StatelessWidget {
         ? l10n.notificationPermissionEnabledBody
         : l10n.notificationPermissionDisabledBody;
 
-    return SwitchListTile.adaptive(
-      contentPadding: EdgeInsets.zero,
-      secondary: const Icon(Icons.notifications_active_outlined),
-      title: Text(l10n.notificationPermissionTitle),
-      subtitle: Text(subtitle),
-      value: enabled,
-      onChanged: state.supported && !state.isLoading
-          ? (_) => onPressed()
-          : null,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SwitchListTile.adaptive(
+          contentPadding: EdgeInsets.zero,
+          secondary: const Icon(Icons.notifications_active_outlined),
+          title: Text(l10n.notificationPermissionTitle),
+          subtitle: Text(subtitle),
+          value: enabled,
+          onChanged: state.supported && !state.isLoading
+              ? (_) => onPressed()
+              : null,
+        ),
+        if (state.lastError case final error?)
+          Padding(
+            padding: const EdgeInsets.only(left: 56, right: 16, bottom: 8),
+            child: Text(
+              notificationErrorMessage(
+                error,
+                fallback: l10n.notificationPermissionActionError,
+              ),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.error,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
