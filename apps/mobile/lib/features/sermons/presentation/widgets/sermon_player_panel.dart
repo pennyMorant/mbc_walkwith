@@ -10,16 +10,12 @@ class SermonPlayerPanel extends ConsumerStatefulWidget {
   const SermonPlayerPanel({
     super.key,
     required this.sermon,
-    required this.progress,
     required this.speed,
-    required this.onProgressChanged,
     required this.onSpeedPressed,
   });
 
   final Sermon sermon;
-  final double progress;
   final double speed;
-  final ValueChanged<double> onProgressChanged;
   final VoidCallback onSpeedPressed;
 
   @override
@@ -59,7 +55,6 @@ class _SermonPlayerPanelState extends ConsumerState<SermonPlayerPanel> {
   Widget build(BuildContext context) {
     return SermonPlayerView(
       sermon: widget.sermon,
-      progress: widget.progress,
       speed: widget.speed,
       position: _session.position,
       duration: _session.effectiveDuration(widget.sermon),
@@ -68,7 +63,6 @@ class _SermonPlayerPanelState extends ConsumerState<SermonPlayerPanel> {
       isPlaying: _session.isPlaying,
       isBuffering: _session.isBuffering,
       isLoadingSource: _session.isLoadingSource,
-      onProgressChanged: widget.onProgressChanged,
       onSeekToProgress: _session.seekToProgress,
       onRetryLoad: () => _syncSession(reloadSource: true),
       onRewind: () => _session.seekRelative(const Duration(seconds: -15)),

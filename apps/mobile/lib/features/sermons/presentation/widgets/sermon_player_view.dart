@@ -9,7 +9,6 @@ class SermonPlayerView extends StatelessWidget {
   const SermonPlayerView({
     super.key,
     required this.sermon,
-    required this.progress,
     required this.speed,
     required this.position,
     required this.duration,
@@ -18,7 +17,6 @@ class SermonPlayerView extends StatelessWidget {
     required this.isPlaying,
     required this.isBuffering,
     required this.isLoadingSource,
-    required this.onProgressChanged,
     required this.onSeekToProgress,
     required this.onRetryLoad,
     required this.onRewind,
@@ -28,7 +26,6 @@ class SermonPlayerView extends StatelessWidget {
   });
 
   final Sermon sermon;
-  final double progress;
   final double speed;
   final Duration position;
   final Duration duration;
@@ -37,7 +34,6 @@ class SermonPlayerView extends StatelessWidget {
   final bool isPlaying;
   final bool isBuffering;
   final bool isLoadingSource;
-  final ValueChanged<double> onProgressChanged;
   final ValueChanged<double> onSeekToProgress;
   final VoidCallback onRetryLoad;
   final VoidCallback onRewind;
@@ -72,11 +68,7 @@ class SermonPlayerView extends StatelessWidget {
             ),
             Row(
               children: [
-                Text(
-                  formatDurationClock(
-                    hasAudio ? position : _positionForProgress(sermon),
-                  ),
-                ),
+                Text(formatDurationClock(hasAudio ? position : Duration.zero)),
                 const Spacer(),
                 Text(formatDurationClock(duration)),
               ],
@@ -146,7 +138,7 @@ class SermonPlayerView extends StatelessWidget {
 
   double _progressValue({required bool hasAudio}) {
     if (!hasAudio) {
-      return progress.clamp(0, 1).toDouble();
+      return 0;
     }
     if (duration.inMilliseconds <= 0) {
       return 0;
@@ -199,11 +191,5 @@ class SermonPlayerView extends StatelessWidget {
       return colorScheme.primary;
     }
     return colorScheme.tertiary;
-  }
-
-  Duration _positionForProgress(Sermon sermon) {
-    return Duration(
-      seconds: (sermon.duration.inSeconds * progress.clamp(0, 1)).round(),
-    );
   }
 }

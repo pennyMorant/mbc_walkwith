@@ -70,6 +70,8 @@ iOS 必须具备：
 - 讲道与 Bible TTS 不得分别初始化媒体 service；切换 owner 时，共享 session 必须先停止前一个 owner，再发布新 owner 的元数据和控制动作。
 - 播放器 session 属于讲道 feature 层，不属于详情页 widget 生命周期；从详情页返回列表不能自动停止播放。
 - 底层原生播放器状态是播放、暂停、缓冲和完成态的来源。
+- 讲道详情页的进度滑块只读取 `SermonPlayerSession` 的 position/duration，并把
+  seek intent 交回同一 session；页面不得维护第二份播放进度或单独写进度缓存。
 - 系统暂停、耳机拔出、来电或 audio focus 被抢占时，session 必须保存当前进度。
 - 播放完成时必须清理本地进度，并向后端上报完成状态。
 - 本地进度先写入；服务器同步失败不能阻断暂停、切换或退出。

@@ -29,7 +29,6 @@ class SermonDetailPage extends ConsumerStatefulWidget {
 }
 
 class _SermonDetailPageState extends ConsumerState<SermonDetailPage> {
-  double _progress = 0;
   double _speed = 1;
 
   @override
@@ -59,14 +58,7 @@ class _SermonDetailPageState extends ConsumerState<SermonDetailPage> {
           }
           return _SermonDetailContent(
             sermon: sermon,
-            progress: _effectiveProgress(sermon),
             speed: _speed,
-            onProgressChanged: (value) {
-              _saveProgress(sermon: sermon, progress: value);
-              setState(() {
-                _progress = value;
-              });
-            },
             onSpeedPressed: () => _showSpeedSheet(context),
             onReferenceSelected: _openReference,
           );
@@ -80,31 +72,6 @@ class _SermonDetailPageState extends ConsumerState<SermonDetailPage> {
       _speed = nextSpeed;
     });
     unawaited(ref.read(sermonProgressRepositoryProvider).saveSpeed(nextSpeed));
-  }
-
-  double _effectiveProgress(Sermon sermon) {
-    if (_progress > 0) {
-      return _progress;
-    }
-    return ref
-        .read(sermonProgressRepositoryProvider)
-        .savedProgress(sermonId: sermon.id, duration: sermon.duration);
-  }
-
-  void _saveProgress({required Sermon sermon, required double progress}) {
-    if (!sermon.hasAudio || sermon.duration <= Duration.zero) {
-      return;
-    }
-    final position = Duration(
-      milliseconds: (sermon.duration.inMilliseconds * progress.clamp(0, 1))
-          .round(),
-    );
-    final repository = ref.read(sermonProgressRepositoryProvider);
-    if (position >= sermon.duration - const Duration(seconds: 15)) {
-      unawaited(repository.clearPosition(sermon.id));
-      return;
-    }
-    unawaited(repository.savePosition(sermonId: sermon.id, position: position));
   }
 
   void _openReference(SermonReference reference) {
@@ -170,17 +137,13 @@ class _SermonDetailPageState extends ConsumerState<SermonDetailPage> {
 class _SermonDetailContent extends StatefulWidget {
   const _SermonDetailContent({
     required this.sermon,
-    required this.progress,
     required this.speed,
-    required this.onProgressChanged,
     required this.onSpeedPressed,
     required this.onReferenceSelected,
   });
 
   final Sermon sermon;
-  final double progress;
   final double speed;
-  final ValueChanged<double> onProgressChanged;
   final VoidCallback onSpeedPressed;
   final ValueChanged<SermonReference> onReferenceSelected;
 
@@ -213,9 +176,7 @@ class _SermonDetailContentState extends State<_SermonDetailContent> {
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
             child: SermonPlayerPanel(
               sermon: widget.sermon,
-              progress: widget.progress,
               speed: widget.speed,
-              onProgressChanged: widget.onProgressChanged,
               onSpeedPressed: widget.onSpeedPressed,
             ),
           ),
