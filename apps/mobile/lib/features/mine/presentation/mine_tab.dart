@@ -51,7 +51,7 @@ class MineTab extends ConsumerWidget {
         .watch(appSettingsProvider)
         .maybeWhen(
           data: (settings) => settings,
-          orElse: () => AppSettings.defaults,
+          orElse: () => AppSettings.unavailable,
         );
     final groupsAsync = ref.watch(myMinistryGroupsProvider);
     final coursesAsync = ref.watch(myCoursesProvider);

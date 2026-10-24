@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../api/api_client.dart';
+import '../api/api_error.dart';
 import '../config/app_config.dart';
 import 'app_settings.dart';
 
@@ -36,26 +37,34 @@ class ApiAppSettingsRepository implements AppSettingsRepository {
 
   @override
   Future<AppSettings> getSettings() async {
-    try {
-      final response = await apiClient.getJsonMap('/settings/public?limit=200');
-      final data = response['data'];
-      if (data is! Map<String, Object?>) {
-        return AppSettings.defaults;
-      }
-      final items = data['items'];
-      if (items is! List<Object?>) {
-        return AppSettings.defaults;
-      }
-      final values = <String, Object?>{};
-      for (final item in items.cast<Map<String, Object?>>()) {
-        final key = item['key'] as String?;
-        if (key != null) {
-          values[key] = item['value'];
-        }
-      }
-      return AppSettings.fromSettingMap(values);
-    } catch (_) {
-      return AppSettings.defaults;
+    final response = await apiClient.getJsonMap('/settings/public?limit=200');
+    final data = response['data'];
+    if (data is! Map<String, Object?>) {
+      throw _invalidSettingsResponse();
     }
+    final items = data['items'];
+    if (items is! List<Object?>) {
+      throw _invalidSettingsResponse();
+    }
+    final values = <String, Object?>{};
+    for (final item in items) {
+      if (item is! Map<String, Object?>) {
+        throw _invalidSettingsResponse();
+      }
+      final key = item['key'];
+      if (key is! String || key.trim().isEmpty) {
+        throw _invalidSettingsResponse();
+      }
+      values[key] = item['value'];
+    }
+    return AppSettings.fromSettingMap(values);
   }
+}
+
+ApiError _invalidSettingsResponse() {
+  return const ApiError(
+    message: 'Invalid public settings response',
+    category: 'contract_violation',
+    sourceLayer: 'transport',
+  );
 }

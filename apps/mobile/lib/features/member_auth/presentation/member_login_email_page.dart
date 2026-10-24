@@ -37,7 +37,7 @@ class _MemberLoginEmailPageState extends ConsumerState<MemberLoginEmailPage> {
         .watch(appSettingsProvider)
         .maybeWhen(
           data: (settings) => settings,
-          orElse: () => AppSettings.defaults,
+          orElse: () => AppSettings.unavailable,
         );
     return MemberAuthPageLayout(
       title: l10n.memberLoginEmailTitle,

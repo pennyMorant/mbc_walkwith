@@ -94,6 +94,17 @@ class AppSettings {
     memberRegistrationHelpText: '',
   );
 
+  static const unavailable = AppSettings(
+    churchName: 'MBCG',
+    defaultLocale: 'system',
+    prayerEnabled: false,
+    givingEnabled: false,
+    memberRegistrationMode: 'closed',
+    memberRequireEmailVerification: true,
+    memberRequireAdminApproval: false,
+    memberRegistrationHelpText: '',
+  );
+
   final String churchName;
   final String defaultLocale;
   final bool prayerEnabled;

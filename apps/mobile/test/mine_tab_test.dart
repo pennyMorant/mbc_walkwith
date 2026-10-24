@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mbc_walkwith/core/settings/app_settings.dart';
+import 'package:mbc_walkwith/core/settings/app_settings_repository.dart';
 import 'package:mbc_walkwith/core/storage/shared_preferences_provider.dart';
 import 'package:mbc_walkwith/features/life/data/course_repository.dart';
 import 'package:mbc_walkwith/features/life/data/group_repository.dart';
@@ -23,6 +25,7 @@ void main() {
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(preferences),
+          appSettingsProvider.overrideWith((ref) async => AppSettings.defaults),
           memberSessionProvider.overrideWith(
             (ref) async => const MemberSession(
               accessToken: 'member-token',

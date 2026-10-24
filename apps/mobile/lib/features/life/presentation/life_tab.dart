@@ -78,7 +78,7 @@ class _LifeTabState extends ConsumerState<LifeTab> {
         .watch(appSettingsProvider)
         .maybeWhen(
           data: (settings) => settings,
-          orElse: () => AppSettings.defaults,
+          orElse: () => AppSettings.unavailable,
         );
 
     return Scaffold(

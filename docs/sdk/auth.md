@@ -29,6 +29,7 @@ Current registration flow:
 6. If email verification and admin approval are both enabled, `verifyCode()` returns pending approval after a valid code instead of treating the member as signed in.
 7. Direct registration commits member, profile, and password atomically. Verification locks and consumes the challenge in the same transaction that creates the account, so concurrent verification cannot create duplicates.
 8. Verification code HMAC comparison and failed-attempt increments also run inside that locked repository transaction. Clients receive the same generic invalid-code error after the limit and cannot infer transaction details.
+9. Public settings loading is fail-closed: a network or contract failure hides registration and other backend-owned feature entries instead of falling back to development defaults. Mock mode may still use `AppSettings.defaults`.
 
 Firebase federated sign-in:
 
