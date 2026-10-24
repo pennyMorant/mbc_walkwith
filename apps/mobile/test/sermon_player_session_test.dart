@@ -109,6 +109,35 @@ void main() {
     expect(repository.recentPlayedSermonId(), _sermon.id);
   });
 
+  test('notifies listeners after local playback progress changes', () async {
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+    final repository = _RecordingSermonProgressRepository(preferences);
+    final engine = _FakeSermonAudioEngine();
+    final changedSermonIds = <String>[];
+    final session = SermonPlayerSession(
+      repository: () => repository,
+      audioEngineFactory: () => engine,
+      onProgressChanged: changedSermonIds.add,
+    );
+    addTearDown(session.dispose);
+
+    await session.update(sermon: _sermon, speed: 1);
+    await session.togglePlayback();
+    engine.emitPosition(const Duration(minutes: 6));
+    engine.emitState(
+      const SermonAudioEngineState(
+        isPlaying: false,
+        isBuffering: false,
+        isCompleted: false,
+      ),
+    );
+    await _flushAsync();
+
+    expect(changedSermonIds, contains(_sermon.id));
+    expect(repository.savedPosition(_sermon.id), const Duration(minutes: 6));
+  });
+
   test('loads the next sermon when switching during source loading', () async {
     SharedPreferences.setMockInitialValues({});
     final preferences = await SharedPreferences.getInstance();

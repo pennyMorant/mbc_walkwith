@@ -60,6 +60,11 @@ This document covers sermon listing, details, audio playback, transcripts, progr
   `GET/POST /sermons/:sermonId/progress`. The App sends both the valid member
   token when available and its installation `X-External-User-Id`; the backend
   gives member identity precedence.
+- Local progress persistence emits a lightweight revision signal after save,
+  completion clear, or newer remote progress application. Sermon list cards
+  observe that signal and re-read the repository-owned position so returning
+  from playback never leaves stale progress UI or creates a second progress
+  source of truth in the presentation layer.
 - Progress restore compares local and server `updatedAt`. A newer server record
   is applied locally, while network failure or an older server record cannot
   replace newer offline progress.

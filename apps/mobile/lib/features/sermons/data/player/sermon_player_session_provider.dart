@@ -14,6 +14,9 @@ final sermonPlayerSessionProvider = Provider<SermonPlayerSession>((ref) {
     onRecentPlayedChanged: (sermonId) {
       ref.read(recentPlayedSermonIdProvider.notifier).setCurrent(sermonId);
     },
+    onProgressChanged: (_) {
+      ref.read(sermonProgressRevisionProvider.notifier).markChanged();
+    },
   );
   ref.onDispose(session.dispose);
   return session;

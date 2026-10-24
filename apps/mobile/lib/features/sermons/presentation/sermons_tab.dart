@@ -203,9 +203,8 @@ class _SermonsTabState extends ConsumerState<SermonsTab> {
     } catch (_) {
       if (mounted) {
         ref.invalidate(sermonDiscoveryFacetsProvider);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.sermonFilterLoadError)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.sermonFilterLoadError)));
       }
     }
   }
@@ -306,7 +305,7 @@ class _SermonsContent extends StatelessWidget {
   }
 }
 
-class _SermonList extends StatelessWidget {
+class _SermonList extends ConsumerWidget {
   const _SermonList({
     required this.sermons,
     required this.selectedSermonId,
@@ -318,7 +317,7 @@ class _SermonList extends StatelessWidget {
   final ValueChanged<Sermon> onSermonSelected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SliverList.separated(
       itemCount: sermons.length,
       separatorBuilder: (context, index) => const SizedBox(height: 8),
@@ -329,19 +328,12 @@ class _SermonList extends StatelessWidget {
             sermon: sermons[index],
             selected: sermons[index].id == selectedSermonId,
             onTap: () => onSermonSelected(sermons[index]),
-            savedPosition: context.readSermonSavedPosition(sermons[index].id),
+            savedPosition: ref.watch(
+              sermonSavedPositionProvider(sermons[index].id),
+            ),
           ),
         );
       },
     );
-  }
-}
-
-extension _SermonProgressContext on BuildContext {
-  Duration readSermonSavedPosition(String sermonId) {
-    final container = ProviderScope.containerOf(this, listen: false);
-    return container
-        .read(sermonProgressRepositoryProvider)
-        .savedPosition(sermonId);
   }
 }

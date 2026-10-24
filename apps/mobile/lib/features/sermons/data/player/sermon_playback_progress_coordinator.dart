@@ -1,14 +1,19 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import '../sermon_progress_repository.dart';
 import '../../domain/sermon.dart';
 
 class SermonPlaybackProgressCoordinator {
   const SermonPlaybackProgressCoordinator({
     required SermonProgressRepository Function() repository,
-  }) : _repository = repository;
+    ValueChanged<String>? onProgressChanged,
+  }) : _repository = repository,
+       _onProgressChanged = onProgressChanged;
 
   final SermonProgressRepository Function() _repository;
+  final ValueChanged<String>? _onProgressChanged;
 
   Duration savedPosition(String sermonId) {
     return _repository().savedPosition(sermonId);
@@ -28,6 +33,7 @@ class SermonPlaybackProgressCoordinator {
           (localProgress.updatedAt == null ||
               remoteProgress.updatedAt.isAfter(localProgress.updatedAt!))) {
         await repository.applyRemoteProgress(remoteProgress);
+        _onProgressChanged?.call(sermon.id);
         savedPosition = remoteProgress.completed
             ? Duration.zero
             : remoteProgress.position;
@@ -50,8 +56,9 @@ class SermonPlaybackProgressCoordinator {
   Future<void> saveLocalPosition({
     required String sermonId,
     required Duration position,
-  }) {
-    return _repository().savePosition(sermonId: sermonId, position: position);
+  }) async {
+    await _repository().savePosition(sermonId: sermonId, position: position);
+    _onProgressChanged?.call(sermonId);
   }
 
   Future<void> saveRecentPlayedSermonId(String sermonId) {
@@ -113,6 +120,7 @@ class SermonPlaybackProgressCoordinator {
     } else {
       await repository.savePosition(sermonId: sermonId, position: position);
     }
+    _onProgressChanged?.call(sermonId);
   }
 
   Future<void> _reportProgress({

@@ -13,7 +13,11 @@ class SermonPlayerSession extends ChangeNotifier {
     required SermonProgressRepository Function() repository,
     SermonAudioEngine Function()? audioEngineFactory,
     ValueChanged<String>? onRecentPlayedChanged,
-  }) : _progress = SermonPlaybackProgressCoordinator(repository: repository),
+    ValueChanged<String>? onProgressChanged,
+  }) : _progress = SermonPlaybackProgressCoordinator(
+         repository: repository,
+         onProgressChanged: onProgressChanged,
+       ),
        _audioEngineFactory =
            audioEngineFactory ?? JustAudioSermonAudioEngine.new,
        _onRecentPlayedChanged = onRecentPlayedChanged;

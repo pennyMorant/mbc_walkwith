@@ -31,6 +31,28 @@ final recentPlayedSermonIdProvider =
       RecentPlayedSermonIdNotifier.new,
     );
 
+final sermonProgressRevisionProvider =
+    NotifierProvider<SermonProgressRevisionNotifier, int>(
+      SermonProgressRevisionNotifier.new,
+    );
+
+final sermonSavedPositionProvider = Provider.family<Duration, String>((
+  ref,
+  sermonId,
+) {
+  ref.watch(sermonProgressRevisionProvider);
+  return ref.watch(sermonProgressRepositoryProvider).savedPosition(sermonId);
+});
+
+class SermonProgressRevisionNotifier extends Notifier<int> {
+  @override
+  int build() => 0;
+
+  void markChanged() {
+    state++;
+  }
+}
+
 class RecentPlayedSermonIdNotifier extends Notifier<String?> {
   @override
   String? build() {
