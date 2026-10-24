@@ -88,6 +88,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memberFederatedSignInFailed => '登录未能完成，请重试。';
 
   @override
+  String get memberAuthRequestError => '暂时无法完成此操作，请重试。';
+
+  @override
   String get memberLoginEmailTitle => '欢迎回来';
 
   @override
@@ -2033,6 +2036,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get memberFederatedSignInFailed => '登录未能完成，请重试。';
 
   @override
+  String get memberAuthRequestError => '暂时无法完成此操作，请重试。';
+
+  @override
   String get memberLoginEmailTitle => '欢迎回来';
 
   @override
@@ -3976,6 +3982,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get memberFederatedSignInFailed => '登入未能完成，請重試。';
+
+  @override
+  String get memberAuthRequestError => '暫時無法完成此操作，請重試。';
 
   @override
   String get memberLoginEmailTitle => '歡迎回來';

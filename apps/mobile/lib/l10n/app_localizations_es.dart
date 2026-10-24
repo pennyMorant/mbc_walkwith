@@ -91,6 +91,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo completar el inicio de sesión. Inténtalo de nuevo.';
 
   @override
+  String get memberAuthRequestError =>
+      'No se pudo completar esta solicitud. Inténtalo de nuevo.';
+
+  @override
   String get memberLoginEmailTitle => 'Bienvenido de nuevo';
 
   @override

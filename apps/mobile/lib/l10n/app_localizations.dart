@@ -258,6 +258,12 @@ abstract class AppLocalizations {
   /// **'登录未能完成，请重试。'**
   String get memberFederatedSignInFailed;
 
+  /// No description provided for @memberAuthRequestError.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时无法完成此操作，请重试。'**
+  String get memberAuthRequestError;
+
   /// No description provided for @memberLoginEmailTitle.
   ///
   /// In zh, this message translates to:

@@ -26,6 +26,7 @@
   "memberAuthAlternative": "or",
   "memberFederatedSetupUnavailable": "Google and Apple sign-in are not configured yet.",
   "memberFederatedSignInFailed": "Sign-in could not be completed. Please try again.",
+  "memberAuthRequestError": "This request could not be completed. Please try again.",
   "memberLoginEmailTitle": "Welcome back",
   "memberLoginEmailBody": "Sign in to continue your church life.",
   "memberNextAction": "Next",

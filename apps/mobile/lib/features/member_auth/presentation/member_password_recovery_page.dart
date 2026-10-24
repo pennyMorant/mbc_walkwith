@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
-import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/filled_text_field.dart';
 import '../data/member_session_repository.dart';
+import 'member_auth_error_message.dart';
 import 'widgets/member_auth_inline_error.dart';
 import 'widgets/member_auth_page_layout.dart';
 import 'widgets/member_password_field.dart';
@@ -115,6 +115,7 @@ class _MemberPasswordRecoveryPageState
   }
 
   Future<void> _requestCode() async {
+    final requestError = AppLocalizations.of(context)!.memberAuthRequestError;
     setState(() {
       _loading = true;
       _error = null;
@@ -125,13 +126,18 @@ class _MemberPasswordRecoveryPageState
           .requestPasswordReset(email: _emailController.text);
       if (mounted) setState(() => _request = result);
     } catch (error) {
-      if (mounted) setState(() => _error = formatApiErrorMessage(error));
+      if (mounted) {
+        setState(
+          () => _error = memberAuthErrorMessage(error, fallback: requestError),
+        );
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
   Future<void> _confirm(MemberCodeRequestResult request) async {
+    final requestError = AppLocalizations.of(context)!.memberAuthRequestError;
     setState(() {
       _loading = true;
       _error = null;
@@ -157,7 +163,11 @@ class _MemberPasswordRecoveryPageState
         context.goNamed(AppRouteNames.memberLoginEmail);
       }
     } catch (error) {
-      if (mounted) setState(() => _error = formatApiErrorMessage(error));
+      if (mounted) {
+        setState(
+          () => _error = memberAuthErrorMessage(error, fallback: requestError),
+        );
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }

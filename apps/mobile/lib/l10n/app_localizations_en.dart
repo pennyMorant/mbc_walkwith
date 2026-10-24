@@ -91,6 +91,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Sign-in could not be completed. Please try again.';
 
   @override
+  String get memberAuthRequestError =>
+      'This request could not be completed. Please try again.';
+
+  @override
   String get memberLoginEmailTitle => 'Welcome back';
 
   @override

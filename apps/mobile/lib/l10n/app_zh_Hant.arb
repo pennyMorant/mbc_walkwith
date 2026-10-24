@@ -26,6 +26,7 @@
   "memberAuthAlternative": "或",
   "memberFederatedSetupUnavailable": "Google 與 Apple 登入尚未完成設定。",
   "memberFederatedSignInFailed": "登入未能完成，請重試。",
+  "memberAuthRequestError": "暫時無法完成此操作，請重試。",
   "memberLoginEmailTitle": "歡迎回來",
   "memberLoginEmailBody": "登入後繼續參與教會生活。",
   "memberNextAction": "下一步",

@@ -26,6 +26,7 @@
   "memberAuthAlternative": "o",
   "memberFederatedSetupUnavailable": "El inicio con Google y Apple aún no está configurado.",
   "memberFederatedSignInFailed": "No se pudo completar el inicio de sesión. Inténtalo de nuevo.",
+  "memberAuthRequestError": "No se pudo completar esta solicitud. Inténtalo de nuevo.",
   "memberLoginEmailTitle": "Bienvenido de nuevo",
   "memberLoginEmailBody": "Inicia sesión para continuar tu vida en la iglesia.",
   "memberNextAction": "Siguiente",

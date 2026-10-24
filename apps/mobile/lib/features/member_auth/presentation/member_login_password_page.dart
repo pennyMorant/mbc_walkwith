@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
-import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../life/presentation/push_notifications_controller.dart';
 import '../data/member_session_repository.dart';
+import 'member_auth_error_message.dart';
 import 'widgets/member_auth_account_row.dart';
 import 'widgets/member_auth_inline_error.dart';
 import 'widgets/member_auth_page_layout.dart';
@@ -112,6 +112,7 @@ class _MemberLoginPasswordPageState
   }
 
   Future<void> _login(String email) async {
+    final requestError = AppLocalizations.of(context)!.memberAuthRequestError;
     setState(() {
       _isLoading = true;
       _error = null;
@@ -132,7 +133,9 @@ class _MemberLoginPasswordPageState
       }
     } catch (error) {
       if (mounted) {
-        setState(() => _error = formatApiErrorMessage(error));
+        setState(
+          () => _error = memberAuthErrorMessage(error, fallback: requestError),
+        );
       }
     } finally {
       if (mounted) {
