@@ -62,6 +62,8 @@ App repository 应提供：
 - `apps/mobile/lib/core/ai/ai_locale.dart`
 - `apps/mobile/lib/core/ai/ai_request_contract.dart`
 - `apps/mobile/lib/features/study/data/ai_study_repository.dart`
+- `apps/mobile/lib/features/study/presentation/widgets/ai_study_sheet.dart`
+- `apps/mobile/lib/features/study/presentation/widgets/ai_study_sheet_content.dart`
 - 圣经阅读页经文 AI 查经 sheet 通过 `/member/ai/study` 调用后端。
 - `apps/mobile/lib/features/sermons/data/sermon_ai_repository.dart`
 - 讲道详情页讲道问答 sheet 通过 `/member/ai/study` 的 `sermon_qa` 调用后端。

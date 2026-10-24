@@ -2,19 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/ai/ai_locale.dart';
-import '../../../../core/ai/ai_request_contract.dart';
 import '../../../../core/ai/member_ai_request_guard.dart';
 import '../../../../core/ai/member_ai_study_response.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../shared/utils/ai_error_messages.dart';
-import '../../../../shared/widgets/ai_info_panel.dart';
-import '../../../../shared/widgets/app_markdown_body.dart';
-import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/ai_study_repository.dart';
 import '../../domain/bible_book.dart';
 import '../../domain/bible_translation.dart';
 import '../../domain/bible_verse.dart';
+import 'ai_study_sheet_content.dart';
 
 class AiStudySheet extends ConsumerStatefulWidget {
   const AiStudySheet({
@@ -49,9 +45,8 @@ class _AiStudySheetState extends ConsumerState<AiStudySheet> {
       return;
     }
     _initialized = true;
-    _questionController.text = AppLocalizations.of(
-      context,
-    )!.aiStudyDefaultQuestion;
+    _questionController.text = AppLocalizations.of(context)!
+        .aiStudyDefaultQuestion;
   }
 
   @override
@@ -63,8 +58,6 @@ class _AiStudySheetState extends ConsumerState<AiStudySheet> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     final sessionAsync = ref.watch(memberSessionProvider);
     final session = sessionAsync.maybeWhen(
       data: (session) => session,
@@ -85,93 +78,18 @@ class _AiStudySheetState extends ConsumerState<AiStudySheet> {
         minChildSize: 0.5,
         maxChildSize: 0.94,
         builder: (context, controller) {
-          return ListView(
-            controller: controller,
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 28 + bottomInset),
-            children: [
-              Text(
-                l10n.aiStudySheetTitle,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                _reference,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(widget.verse.text),
-              const SizedBox(height: 18),
-              AppFilledTextField(
-                controller: _questionController,
-                minLines: 2,
-                maxLines: 4,
-                maxLength: aiQuestionMaxLength,
-                hintText: l10n.aiStudyQuestionLabel,
-                onChanged: _handleQuestionChanged,
-              ),
-              const SizedBox(height: 12),
-              if (sessionAsync.isLoading)
-                const LinearProgressIndicator()
-              else if (session == null)
-                AiInfoPanel(
-                  icon: Icons.lock_outline,
-                  title: l10n.aiStudySignInTitle,
-                  body: l10n.aiStudySignInBody,
-                )
-              else ...[
-                FilledButton.icon(
-                  onPressed: _loading || _questionController.text.trim().isEmpty
-                      ? null
-                      : () => _ask(session),
-                  icon: _loading
-                      ? const SizedBox.square(
-                          dimension: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.auto_awesome),
-                  label: Text(
-                    _response == null
-                        ? l10n.aiStudyGenerateAction
-                        : l10n.aiStudyRetryAction,
-                  ),
-                ),
-                if (_error != null) ...[
-                  const SizedBox(height: 12),
-                  AiInfoPanel(
-                    icon: Icons.error_outline,
-                    title: l10n.aiStudyErrorTitle,
-                    body: aiUserFacingErrorMessage(l10n, _error!),
-                    isError: true,
-                  ),
-                ],
-                if (_response != null) ...[
-                  const SizedBox(height: 18),
-                  Text(
-                    l10n.aiStudyResultTitle,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  AppMarkdownBody(data: _response!.markdown),
-                  const SizedBox(height: 14),
-                  Text(
-                    _response!.safetyNotice.isEmpty
-                        ? l10n.aiStudyDisclaimer
-                        : _response!.safetyNotice,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ],
-            ],
+          return AiStudySheetContent(
+            scrollController: controller,
+            questionController: _questionController,
+            reference: _reference,
+            verseText: widget.verse.text,
+            sessionLoading: sessionAsync.isLoading,
+            signedIn: session != null,
+            loading: _loading,
+            response: _response,
+            error: _error,
+            onQuestionChanged: _handleQuestionChanged,
+            onSubmit: session == null ? null : () => _ask(session),
           );
         },
       ),
