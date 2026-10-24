@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
-import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/utils/app_formatters.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/course_repository.dart';
 import '../domain/course_learning.dart';
+import 'life_action_error_message.dart';
 import 'widgets/course_learning_card.dart';
 import 'widgets/life_error_view.dart';
 
@@ -74,9 +74,14 @@ class _CourseDetailPageState extends ConsumerState<CourseDetailPage> {
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(error))));
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              lifeActionErrorMessage(error, fallback: l10n.lifeActionError),
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -144,9 +149,8 @@ class _CourseDetailContent extends ConsumerWidget {
         const SizedBox(height: 20),
         Text(
           l10n.courseLessonsTitle,
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+          style: Theme.of(context).textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 10),
         if (course.lessons.isEmpty)
@@ -181,17 +185,15 @@ class _CourseLessonCard extends StatelessWidget {
           children: [
             Text(
               '$sequence. ${lesson.title}',
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             if (lesson.startsAt != null) ...[
               const SizedBox(height: 6),
               Text(
                 formatDateTime(context, lesson.startsAt!.toLocal()),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: colorScheme.onSurfaceVariant),
               ),
             ],
             if (lesson.description.isNotEmpty) ...[

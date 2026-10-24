@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/serving_repository.dart';
 import '../../domain/serving_assignment.dart';
+import '../life_action_error_message.dart';
 import 'life_dashboard_support_widgets.dart';
 import 'serving_assignment_card.dart';
 
@@ -112,9 +112,16 @@ class _ServingAssignmentSectionState
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(error))));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            lifeActionErrorMessage(
+              error,
+              fallback: AppLocalizations.of(context)!.lifeActionError,
+            ),
+          ),
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() => _submittingAssignmentId = null);

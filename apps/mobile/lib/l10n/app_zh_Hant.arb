@@ -519,6 +519,7 @@
   "lifeLoadErrorTitle": "教會生活資料暫時無法載入",
   "lifeLoadErrorBody": "稍後會從後端重新取得週報和生活資訊。",
   "lifeSectionLoadError": "此區域暫時無法載入，請重試。",
+  "lifeActionError": "此操作暫時無法完成，請重試。",
   "lifeEmptyTitle": "暫無教會生活內容",
   "lifePostNoBody": "詳細內容會稍後補充。",
   "lifePostVisibilityMembers": "會眾可見",

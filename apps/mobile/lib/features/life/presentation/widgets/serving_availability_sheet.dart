@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
@@ -9,6 +8,7 @@ import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/serving_repository.dart';
 import '../../domain/serving_availability.dart';
 import '../serving_presenters.dart';
+import '../life_action_error_message.dart';
 import 'serving_date_time_field.dart';
 
 class ServingAvailabilitySheet extends ConsumerStatefulWidget {
@@ -75,9 +75,8 @@ class _ServingAvailabilitySheetState
           children: [
             Text(
               l10n.servingAvailabilitySheetTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 18),
             ServingFieldLabel(text: l10n.servingAvailabilityStatusLabel),
@@ -133,9 +132,8 @@ class _ServingAvailabilitySheetState
               const SizedBox(height: 8),
               Text(
                 _validationError!,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: colorScheme.error),
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: colorScheme.error),
               ),
             ],
             const SizedBox(height: 18),
@@ -204,9 +202,16 @@ class _ServingAvailabilitySheetState
     } catch (error) {
       if (mounted) {
         setState(() => _isSubmitting = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(error))));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              lifeActionErrorMessage(
+                error,
+                fallback: AppLocalizations.of(context)!.lifeActionError,
+              ),
+            ),
+          ),
+        );
       }
     }
   }

@@ -519,6 +519,7 @@
   "lifeLoadErrorTitle": "No se pudo cargar Vida",
   "lifeLoadErrorBody": "La app volverá a pedir contenido de vida al backend.",
   "lifeSectionLoadError": "No se pudo cargar esta sección. Inténtalo de nuevo.",
+  "lifeActionError": "No se pudo completar esta acción. Inténtalo de nuevo.",
   "lifeEmptyTitle": "Aún no hay contenido de vida",
   "lifePostNoBody": "Sin contenido adicional.",
   "lifePostVisibilityMembers": "Miembros",

@@ -519,6 +519,7 @@
   "lifeLoadErrorTitle": "教会生活数据暂时无法加载",
   "lifeLoadErrorBody": "稍后会从后端重新获取周报和生活信息。",
   "lifeSectionLoadError": "此区域暂时无法加载，请重试。",
+  "lifeActionError": "此操作暂时无法完成，请重试。",
   "lifeEmptyTitle": "暂无教会生活内容",
   "lifePostNoBody": "详细内容会稍后补充。",
   "lifePostVisibilityMembers": "会众可见",

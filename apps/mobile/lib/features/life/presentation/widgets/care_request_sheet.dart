@@ -6,6 +6,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/care_repository.dart';
+import '../life_action_error_message.dart';
 
 class CareRequestSheet extends ConsumerStatefulWidget {
   const CareRequestSheet({super.key});
@@ -68,9 +69,8 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
                   Expanded(
                     child: Text(
                       l10n.careSubmitTitle,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge
+                          ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                   ),
                 ],
@@ -78,9 +78,8 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
               const SizedBox(height: 12),
               Text(
                 session == null ? l10n.careSignInRequired : l10n.careSubmitBody,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 18),
               AppFilledTextField(
@@ -197,7 +196,12 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
       }
     } catch (error) {
       if (mounted) {
-        setState(() => _error = formatApiErrorMessage(error));
+        setState(
+          () => _error = lifeActionErrorMessage(
+            error,
+            fallback: l10n.lifeActionError,
+          ),
+        );
       }
     } finally {
       if (mounted) {

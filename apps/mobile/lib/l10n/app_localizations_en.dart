@@ -1219,6 +1219,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'This section could not be loaded. Please try again.';
 
   @override
+  String get lifeActionError =>
+      'This action could not be completed. Please try again.';
+
+  @override
   String get lifeEmptyTitle => 'No church life content yet';
 
   @override

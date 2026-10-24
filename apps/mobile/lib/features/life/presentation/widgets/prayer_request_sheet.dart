@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/prayer_repository.dart';
+import '../life_action_error_message.dart';
 
 class PrayerRequestSheet extends ConsumerStatefulWidget {
   const PrayerRequestSheet({super.key});
@@ -67,9 +67,8 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
                   Expanded(
                     child: Text(
                       l10n.prayerSubmitTitle,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                      style: Theme.of(context).textTheme.titleLarge
+                          ?.copyWith(fontWeight: FontWeight.w800),
                     ),
                   ),
                 ],
@@ -79,9 +78,8 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
                 session == null
                     ? l10n.prayerGuestSubmitBody
                     : l10n.prayerMemberSubmitBody,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 18),
               AppFilledTextField(
@@ -201,7 +199,10 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
     } catch (error) {
       if (mounted) {
         setState(() {
-          _error = formatApiErrorMessage(error);
+          _error = lifeActionErrorMessage(
+            error,
+            fallback: l10n.lifeActionError,
+          );
         });
       }
     } finally {

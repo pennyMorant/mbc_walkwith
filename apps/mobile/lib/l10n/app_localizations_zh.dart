@@ -1111,6 +1111,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lifeSectionLoadError => '此区域暂时无法加载，请重试。';
 
   @override
+  String get lifeActionError => '此操作暂时无法完成，请重试。';
+
+  @override
   String get lifeEmptyTitle => '暂无教会生活内容';
 
   @override
@@ -3037,6 +3040,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get lifeSectionLoadError => '此区域暂时无法加载，请重试。';
 
   @override
+  String get lifeActionError => '此操作暂时无法完成，请重试。';
+
+  @override
   String get lifeEmptyTitle => '暂无教会生活内容';
 
   @override
@@ -4961,6 +4967,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get lifeSectionLoadError => '此區域暫時無法載入，請重試。';
+
+  @override
+  String get lifeActionError => '此操作暫時無法完成，請重試。';
 
   @override
   String get lifeEmptyTitle => '暫無教會生活內容';

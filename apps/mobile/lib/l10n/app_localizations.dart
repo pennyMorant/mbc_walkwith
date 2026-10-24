@@ -2200,6 +2200,12 @@ abstract class AppLocalizations {
   /// **'此区域暂时无法加载，请重试。'**
   String get lifeSectionLoadError;
 
+  /// No description provided for @lifeActionError.
+  ///
+  /// In zh, this message translates to:
+  /// **'此操作暂时无法完成，请重试。'**
+  String get lifeActionError;
+
   /// No description provided for @lifeEmptyTitle.
   ///
   /// In zh, this message translates to:

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
-import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/utils/app_formatters.dart';
 import '../../../shared/widgets/app_button.dart';
@@ -13,6 +12,7 @@ import '../../member_auth/data/member_session_repository.dart';
 import '../data/serving_repository.dart';
 import '../domain/serving_assignment.dart';
 import '../domain/serving_check_in.dart';
+import 'life_action_error_message.dart';
 import 'serving_presenters.dart';
 import 'widgets/life_dashboard_support_widgets.dart';
 import 'widgets/life_error_view.dart';
@@ -177,17 +177,21 @@ class _ServingAssignmentDetailPageState
 
   void _showSuccess(String message) {
     if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
   void _showError(Object error) {
     if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(error))));
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            lifeActionErrorMessage(error, fallback: l10n.lifeActionError),
+          ),
+        ),
+      );
     }
   }
 
@@ -230,9 +234,8 @@ class _ServingCheckInCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.servingCheckInTitle,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: Theme.of(context).textTheme.titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w800),
                   ),
                 ),
                 if (current != null)
@@ -282,9 +285,8 @@ class _ServingTextCard extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(body),

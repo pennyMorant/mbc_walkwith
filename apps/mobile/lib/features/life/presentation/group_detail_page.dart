@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
-import '../../../core/api/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
@@ -11,6 +10,7 @@ import '../data/group_repository.dart';
 import '../domain/ministry_group.dart';
 import '../domain/group_material_assignment.dart';
 import '../../../shared/utils/app_formatters.dart';
+import 'life_action_error_message.dart';
 import 'widgets/life_error_view.dart';
 import 'widgets/ministry_group_card.dart';
 
@@ -131,9 +131,16 @@ class _GroupDetailPageState extends ConsumerState<GroupDetailPage> {
       }
     } catch (error) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(error))));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              lifeActionErrorMessage(
+                error,
+                fallback: AppLocalizations.of(context)!.lifeActionError,
+              ),
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -173,7 +180,7 @@ class _GroupMaterialsSection extends StatelessWidget {
             const SizedBox(height: 10),
             materialsAsync.when(
               loading: () => const LinearProgressIndicator(),
-              error: (error, stackTrace) => Text(formatApiErrorMessage(error)),
+              error: (error, stackTrace) => Text(l10n.lifeSectionLoadError),
               data: (materials) => materials.isEmpty
                   ? Text(l10n.groupMaterialsEmpty)
                   : Column(

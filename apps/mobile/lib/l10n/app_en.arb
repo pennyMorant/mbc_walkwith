@@ -519,6 +519,7 @@
   "lifeLoadErrorTitle": "Church life could not be loaded",
   "lifeLoadErrorBody": "The app will fetch bulletin and life content from the backend again.",
   "lifeSectionLoadError": "This section could not be loaded. Please try again.",
+  "lifeActionError": "This action could not be completed. Please try again.",
   "lifeEmptyTitle": "No church life content yet",
   "lifePostNoBody": "Details will be added soon.",
   "lifePostVisibilityMembers": "Members",

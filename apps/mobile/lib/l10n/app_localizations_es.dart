@@ -1227,6 +1227,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo cargar esta sección. Inténtalo de nuevo.';
 
   @override
+  String get lifeActionError =>
+      'No se pudo completar esta acción. Inténtalo de nuevo.';
+
+  @override
   String get lifeEmptyTitle => 'Aún no hay contenido de vida';
 
   @override

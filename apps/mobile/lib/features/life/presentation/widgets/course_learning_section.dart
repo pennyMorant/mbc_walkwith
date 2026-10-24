@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/app_routes.dart';
-import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/course_repository.dart';
 import '../../domain/course_learning.dart';
+import '../life_action_error_message.dart';
 import 'course_learning_card.dart';
 import 'life_dashboard_support_widgets.dart';
 
@@ -105,9 +105,16 @@ class _CourseLearningSectionState extends ConsumerState<CourseLearningSection> {
       if (!mounted) {
         return;
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(formatApiErrorMessage(error))));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            lifeActionErrorMessage(
+              error,
+              fallback: AppLocalizations.of(context)!.lifeActionError,
+            ),
+          ),
+        ),
+      );
     } finally {
       if (mounted) {
         setState(() => _submittingCourseId = null);
