@@ -80,6 +80,38 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('response sheet scrolls above the keyboard with larger text', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(320, 640));
+    tester.view.viewInsets = const FakeViewPadding(bottom: 260);
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    addTearDown(tester.view.resetViewInsets);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(1.5)),
+            child: child!,
+          ),
+          home: Scaffold(body: SermonDiscussionResponseSheet(guide: _guide)),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final submitButton = find.text('Submit');
+    await tester.ensureVisible(submitButton);
+    await tester.pumpAndSettle();
+
+    expect(submitButton, findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }
 
 final _guide = SermonDiscussionGuide(

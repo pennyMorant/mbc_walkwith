@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -142,7 +144,9 @@ class _GuideCard extends ConsumerWidget {
                 label: l10n.sermonDiscussionRespondAction,
                 icon: Icons.edit_note_outlined,
                 variant: AppButtonVariant.filled,
-                onPressed: () => _openResponseSheet(context, guide),
+                onPressed: () => unawaited(
+                  _openResponseSheet(context: context, guide: guide),
+                ),
               ),
             ),
           ],
@@ -216,12 +220,23 @@ class _PrayerPromptList extends StatelessWidget {
   }
 }
 
-void _openResponseSheet(BuildContext context, SermonDiscussionGuide guide) {
-  showModalBottomSheet<void>(
+Future<void> _openResponseSheet({
+  required BuildContext context,
+  required SermonDiscussionGuide guide,
+}) async {
+  final saved = await showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
     builder: (context) => SermonDiscussionResponseSheet(guide: guide),
+  );
+  if (saved != true || !context.mounted) {
+    return;
+  }
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(AppLocalizations.of(context)!.sermonDiscussionSubmitted),
+    ),
   );
 }
 

@@ -35,7 +35,7 @@ class _SermonDiscussionResponseSheetState
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     return SafeArea(
       top: false,
-      child: Padding(
+      child: SingleChildScrollView(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 20 + bottomInset),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -43,9 +43,8 @@ class _SermonDiscussionResponseSheetState
           children: [
             Text(
               l10n.sermonDiscussionResponseTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(
@@ -97,14 +96,7 @@ class _SermonDiscussionResponseSheetState
             content: content,
           );
       if (mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.sermonDiscussionSubmitted,
-            ),
-          ),
-        );
+        Navigator.of(context).pop(true);
       }
     } catch (_) {
       if (mounted) {
