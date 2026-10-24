@@ -375,18 +375,24 @@ class _BibleReaderPageState extends ConsumerState<BibleReaderPage> {
   }
 
   void _recordReadingProgress() {
-    unawaited(
-      ref
+    unawaited(_saveReadingProgress());
+  }
+
+  Future<void> _saveReadingProgress() async {
+    try {
+      await ref
           .read(studyRepositoryProvider)
-          .saveReadingProgress(bookId: widget.bookId, chapter: widget.chapter)
-          .then((_) {
-            if (mounted) {
-              for (final translation in BibleTranslation.values) {
-                ref.invalidate(readingProgressProvider(translation.id));
-              }
-            }
-          }),
-    );
+          .saveReadingProgress(bookId: widget.bookId, chapter: widget.chapter);
+    } catch (_) {
+      // Auxiliary progress must not prevent access to local Bible text.
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+    for (final translation in BibleTranslation.values) {
+      ref.invalidate(readingProgressProvider(translation.id));
+    }
   }
 
   void _handleSessionStateChanged() {
