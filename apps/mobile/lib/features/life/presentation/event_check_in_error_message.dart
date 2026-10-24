@@ -14,6 +14,6 @@ String eventCheckInErrorMessage(AppLocalizations l10n, Object error) {
     'event_not_open' => l10n.eventRegistrationClosed,
     'authentication_required' ||
     'auth_required' => l10n.eventRegistrationSignInBody,
-    _ => error.message,
+    _ => l10n.eventRegistrationUnavailable,
   };
 }

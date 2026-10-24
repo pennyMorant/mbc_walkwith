@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
-import '../../../core/api/api_error.dart';
 import '../../../core/platform/external_link_service.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/utils/app_formatters.dart';
@@ -12,6 +11,7 @@ import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/life_repository.dart';
 import '../domain/life_post.dart';
+import 'event_registration_error_message.dart';
 import 'life_post_action.dart';
 import 'life_post_read_controller.dart';
 import 'widgets/event_registration_card.dart';
@@ -295,7 +295,7 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
       if (!mounted) {
         return;
       }
-      final message = _registrationErrorMessage(
+      final message = eventRegistrationErrorMessage(
         AppLocalizations.of(context)!,
         error,
       );
@@ -357,21 +357,4 @@ String? _detailDateLabel(BuildContext context, LifePost post) {
   }
   final updatedAt = post.updatedAt;
   return updatedAt == null ? null : formatDateOnly(context, updatedAt);
-}
-
-String _registrationErrorMessage(AppLocalizations l10n, Object error) {
-  if (error is! ApiError) {
-    return formatApiErrorMessage(error);
-  }
-  return switch (error.code) {
-    'event_not_found' => l10n.eventRegistrationUnavailable,
-    'event_capacity_full' => l10n.eventRegistrationFull,
-    'event_not_open' => l10n.eventRegistrationClosed,
-    'event_party_size_invalid' => l10n.eventRegistrationPartySizeInvalid,
-    'registration_not_found' => l10n.eventRegistrationNotFound,
-    'check_in_not_allowed' => l10n.eventRegistrationCheckInLocked,
-    'authentication_required' ||
-    'auth_required' => l10n.eventRegistrationSignInBody,
-    _ => error.message,
-  };
 }

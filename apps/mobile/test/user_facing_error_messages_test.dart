@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mbc_walkwith/core/api/api_error.dart';
 import 'package:mbc_walkwith/features/life/presentation/event_check_in_error_message.dart';
+import 'package:mbc_walkwith/features/life/presentation/event_registration_error_message.dart';
 import 'package:mbc_walkwith/l10n/app_localizations_en.dart';
 import 'package:mbc_walkwith/shared/utils/ai_error_messages.dart';
 
@@ -28,6 +29,40 @@ void main() {
         ),
       ),
       l10n.eventCheckInQrInvalid,
+    );
+  });
+
+  test('unknown event API errors do not expose backend messages', () {
+    const error = ApiError(
+      message: 'Database constraint detail',
+      code: 'unexpected_event_failure',
+    );
+
+    expect(
+      eventCheckInErrorMessage(l10n, error),
+      l10n.eventRegistrationUnavailable,
+    );
+    expect(
+      eventRegistrationErrorMessage(l10n, error),
+      l10n.eventRegistrationUnavailable,
+    );
+    expect(eventCheckInErrorMessage(l10n, error), isNot(contains('Database')));
+    expect(
+      eventRegistrationErrorMessage(l10n, error),
+      isNot(contains('Database')),
+    );
+  });
+
+  test('registration errors keep mapped user-facing messages', () {
+    expect(
+      eventRegistrationErrorMessage(
+        l10n,
+        const ApiError(
+          message: 'Raw backend message',
+          code: 'event_capacity_full',
+        ),
+      ),
+      l10n.eventRegistrationFull,
     );
   });
 

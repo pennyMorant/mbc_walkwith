@@ -204,6 +204,7 @@ tap register
 - 后端报名写入幂等。
 - 会友报名/修改/取消和管理员创建/调整/签到有审计。
 - 失败错误有 next action。
+- App 只按稳定错误码显示本地化报名/签到提示；未知 API message 不直接暴露给用户。
 
 ## Related Docs
 
