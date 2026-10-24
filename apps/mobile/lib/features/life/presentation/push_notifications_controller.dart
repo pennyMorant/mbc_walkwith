@@ -215,16 +215,17 @@ class PushNotificationsController extends Notifier<PushNotificationsState> {
     if (preferences.getBool(_firstPermissionRequestKey) == true) {
       return;
     }
-    await preferences.setBool(_firstPermissionRequestKey, true);
 
     final currentStatus = await _permissionService.currentStatus();
     state = state.copyWith(permissionStatus: currentStatus);
     if (_allowsNotifications(currentStatus)) {
+      await preferences.setBool(_firstPermissionRequestKey, true);
       return;
     }
 
     final requestedStatus = await _permissionService.requestStatus();
     state = state.copyWith(permissionStatus: requestedStatus);
+    await preferences.setBool(_firstPermissionRequestKey, true);
   }
 
   Future<void> _syncCurrentSession({String? pushTokenOverride}) async {

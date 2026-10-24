@@ -122,6 +122,43 @@ void main() {
       expect(pushRepository.guestRegistrations, 0);
     },
   );
+
+  test(
+    'failed initial permission request does not consume the first request',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final preferences = await SharedPreferences.getInstance();
+      final permission = _FakeSystemNotificationPermissionService(
+        failRequest: true,
+      );
+      final container = ProviderContainer(
+        overrides: [
+          appConfigProvider.overrideWithValue(_testAppConfig),
+          sharedPreferencesProvider.overrideWithValue(preferences),
+          systemNotificationPermissionServiceProvider.overrideWithValue(
+            permission,
+          ),
+          pushNotificationPlatformServiceProvider.overrideWithValue(
+            _FakePushNotificationPlatformService(),
+          ),
+          pushNotificationRepositoryProvider.overrideWithValue(
+            _FakePushNotificationRepository(),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await container
+          .read(pushNotificationsControllerProvider.notifier)
+          .start(_testRouter());
+
+      expect(permission.requestPermissionCount, 1);
+      expect(
+        preferences.getBool('push_notification_permission_requested_once'),
+        isNot(true),
+      );
+    },
+  );
 }
 
 GoRouter _testRouter() {
@@ -175,9 +212,11 @@ class _FakeSystemNotificationPermissionService
     implements SystemNotificationPermissionService {
   _FakeSystemNotificationPermissionService({
     this.permissionStatus = 'not_determined',
+    this.failRequest = false,
   });
 
   String permissionStatus;
+  final bool failRequest;
   @override
   bool get isSupported => true;
   int requestPermissionCount = 0;
@@ -189,6 +228,9 @@ class _FakeSystemNotificationPermissionService
   @override
   Future<String> requestStatus() async {
     requestPermissionCount += 1;
+    if (failRequest) {
+      throw StateError('permission service unavailable');
+    }
     permissionStatus = 'authorized';
     return permissionStatus;
   }
