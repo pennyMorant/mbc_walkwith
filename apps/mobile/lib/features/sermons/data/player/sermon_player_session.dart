@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../../domain/sermon.dart';
 import '../sermon_progress_repository.dart';
 import 'sermon_audio_engine.dart';
+import 'sermon_playback_lifecycle.dart';
 import 'sermon_playback_progress_coordinator.dart';
 
 class SermonPlayerSession extends ChangeNotifier {
@@ -17,14 +18,12 @@ class SermonPlayerSession extends ChangeNotifier {
            audioEngineFactory ?? JustAudioSermonAudioEngine.new,
        _onRecentPlayedChanged = onRecentPlayedChanged;
   final SermonPlaybackProgressCoordinator _progress;
+  final SermonPlaybackSubscriptions _subscriptions =
+      SermonPlaybackSubscriptions();
+  final SermonPlaybackScheduler _scheduler = SermonPlaybackScheduler();
   final SermonAudioEngine Function() _audioEngineFactory;
   final ValueChanged<String>? _onRecentPlayedChanged;
   SermonAudioEngine? _engine;
-  StreamSubscription<Duration>? _positionSubscription;
-  StreamSubscription<Duration?>? _durationSubscription;
-  StreamSubscription<SermonAudioEngineState>? _engineStateSubscription;
-  Timer? _progressReportTimer;
-  Timer? _positionSaveDebounce;
   Sermon? _sermon;
   double _speed = 1;
   int _loadVersion = 0;
@@ -86,7 +85,7 @@ class SermonPlayerSession extends ChangeNotifier {
       }
       await _progress.saveRecentPlayedSermonId(sermon.id);
       _onRecentPlayedChanged?.call(sermon.id);
-      _startProgressReporting();
+      _scheduler.startProgressReporting(_saveAndReportProgress);
       await _engine?.play();
     }
   }
@@ -141,10 +140,7 @@ class SermonPlayerSession extends ChangeNotifier {
   }
 
   Future<void> _prepareForSourceSwitch(Sermon? previous) async {
-    _progressReportTimer?.cancel();
-    _progressReportTimer = null;
-    _positionSaveDebounce?.cancel();
-    _positionSaveDebounce = null;
+    _scheduler.cancelAll();
 
     final previousPosition = position;
     final previousDuration = previous == null
@@ -170,12 +166,9 @@ class SermonPlayerSession extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
-    _progressReportTimer?.cancel();
-    _positionSaveDebounce?.cancel();
+    _scheduler.cancelAll();
     unawaited(_saveAndReportProgress());
-    _positionSubscription?.cancel();
-    _durationSubscription?.cancel();
-    _engineStateSubscription?.cancel();
+    _subscriptions.cancel();
     final engine = _engine;
     if (engine != null) unawaited(engine.dispose());
     super.dispose();
@@ -189,19 +182,22 @@ class SermonPlayerSession extends ChangeNotifier {
 
     final engine = _audioEngineFactory();
     _engine = engine;
-    _positionSubscription = engine.positionStream.listen((nextPosition) {
-      position = nextPosition;
-      _notify();
-      _schedulePositionSave(nextPosition);
-    });
-    _durationSubscription = engine.durationStream.listen((nextDuration) {
-      if (nextDuration == null) {
-        return;
-      }
-      duration = nextDuration;
-      _notify();
-    });
-    _engineStateSubscription = engine.stateStream.listen(_handleEngineState);
+    _subscriptions.bind(
+      engine: engine,
+      onPosition: (nextPosition) {
+        position = nextPosition;
+        _notify();
+        _schedulePositionSave(nextPosition);
+      },
+      onDuration: (nextDuration) {
+        if (nextDuration == null) {
+          return;
+        }
+        duration = nextDuration;
+        _notify();
+      },
+      onState: _handleEngineState,
+    );
     return engine;
   }
 
@@ -278,15 +274,12 @@ class SermonPlayerSession extends ChangeNotifier {
     if (sermon == null || !sermon.hasAudio || isCompleted) {
       return;
     }
-    _positionSaveDebounce?.cancel();
-    _positionSaveDebounce = Timer(const Duration(seconds: 1), () {
-      unawaited(
-        _progress.saveLocalPosition(
-          sermonId: sermon.id,
-          position: nextPosition,
-        ),
-      );
-    });
+    _scheduler.schedulePositionSave(
+      () => _progress.saveLocalPosition(
+        sermonId: sermon.id,
+        position: nextPosition,
+      ),
+    );
   }
 
   void _handleEngineState(SermonAudioEngineState nextState) {
@@ -297,13 +290,13 @@ class SermonPlayerSession extends ChangeNotifier {
     isCompleted = nextState.isCompleted;
 
     if (isPlaying) {
-      _startProgressReporting();
+      _scheduler.startProgressReporting(_saveAndReportProgress);
     } else {
-      _stopProgressReporting();
+      _scheduler.stopProgressReporting();
     }
 
     if (becameCompleted) {
-      _positionSaveDebounce?.cancel();
+      _scheduler.cancelPositionSave();
       final sermon = _sermon;
       if (sermon != null) {
         final completedPosition = effectiveDuration(sermon);
@@ -317,17 +310,6 @@ class SermonPlayerSession extends ChangeNotifier {
     }
 
     _notify();
-  }
-
-  void _startProgressReporting() {
-    _progressReportTimer ??= Timer.periodic(const Duration(seconds: 15), (_) {
-      unawaited(_saveAndReportProgress());
-    });
-  }
-
-  void _stopProgressReporting() {
-    _progressReportTimer?.cancel();
-    _progressReportTimer = null;
   }
 
   bool _isCurrentLoad(int version, String sermonId, String audioUrl) =>

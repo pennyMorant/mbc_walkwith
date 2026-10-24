@@ -15,6 +15,7 @@
 - Shared media session：`apps/mobile/lib/core/media/app_media_session.dart`
 - Audio engine：`apps/mobile/lib/features/sermons/data/player/sermon_audio_engine.dart`
 - Playback session：`apps/mobile/lib/features/sermons/data/player/sermon_player_session.dart`
+- Session lifecycle：`apps/mobile/lib/features/sermons/data/player/sermon_playback_lifecycle.dart`
 
 ## Provider Boundary
 
@@ -79,6 +80,8 @@ iOS 必须具备：
 - 切换讲道 source 前先以旧讲道快照保存本地进度，远端上报在后台继续；原生
   source replacement 产生的 pause 事件不能把旧位置写入新讲道。
 - 系统媒体 artwork 优先使用后端发布的 `thumbnailUrl`；缺失时使用 App 内置讲道默认封面。
+- `SermonPlayerSession` 是唯一状态机 owner；内部 lifecycle helper 只管理 engine stream
+  subscription、进度上报计时器和位置保存防抖，不持有讲道或播放状态。
 
 ## Errors
 
