@@ -6,6 +6,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/utils/app_formatters.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/life_post.dart';
+import '../life_post_action.dart';
 import 'life_post_card_parts.dart';
 import 'life_post_image.dart';
 import 'life_post_read_state.dart';
@@ -109,9 +110,10 @@ class LifePostCard extends ConsumerWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: FilledButton.icon(
-                        onPressed: () => openLifePostActionUrl(
-                          post,
-                          ref.read(externalLinkServiceProvider),
+                        onPressed: () => openLifePostAction(
+                          context: context,
+                          post: post,
+                          linkService: ref.read(externalLinkServiceProvider),
                         ),
                         icon: const Icon(Icons.open_in_new),
                         label: Text(lifePostActionLabel(l10n, post)),

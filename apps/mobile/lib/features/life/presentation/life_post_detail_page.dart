@@ -12,6 +12,7 @@ import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/life_repository.dart';
 import '../domain/life_post.dart';
+import 'life_post_action.dart';
 import 'life_post_read_controller.dart';
 import 'widgets/event_registration_card.dart';
 import 'widgets/life_error_view.dart';
@@ -205,19 +206,20 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
               ),
             ),
           ),
-        if (_hasAction(post))
+        if (lifePostHasAction(post))
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: FilledButton.icon(
-                  onPressed: () => _openActionUrl(
-                    post,
-                    ref.read(externalLinkServiceProvider),
+                  onPressed: () => openLifePostAction(
+                    context: context,
+                    post: post,
+                    linkService: ref.read(externalLinkServiceProvider),
                   ),
                   icon: const Icon(Icons.open_in_new),
-                  label: Text(_actionLabel(l10n, post)),
+                  label: Text(lifePostActionLabel(l10n, post)),
                 ),
               ),
             ),
@@ -357,12 +359,6 @@ String? _detailDateLabel(BuildContext context, LifePost post) {
   return updatedAt == null ? null : formatDateOnly(context, updatedAt);
 }
 
-bool _hasAction(LifePost post) {
-  final label = post.ctaLabel?.trim();
-  final url = post.ctaUrl?.trim();
-  return label != null && label.isNotEmpty && url != null && url.isNotEmpty;
-}
-
 String _registrationErrorMessage(AppLocalizations l10n, Object error) {
   if (error is! ApiError) {
     return formatApiErrorMessage(error);
@@ -378,16 +374,4 @@ String _registrationErrorMessage(AppLocalizations l10n, Object error) {
     'auth_required' => l10n.eventRegistrationSignInBody,
     _ => error.message,
   };
-}
-
-String _actionLabel(AppLocalizations l10n, LifePost post) {
-  final label = post.ctaLabel?.trim();
-  return label == null || label.isEmpty ? l10n.lifePostActionOpen : label;
-}
-
-Future<void> _openActionUrl(
-  LifePost post,
-  ExternalLinkService linkService,
-) async {
-  await linkService.openExternalUrl(post.ctaUrl);
 }

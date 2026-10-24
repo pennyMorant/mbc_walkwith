@@ -536,6 +536,7 @@
   "lifePostTypeGiving": "奉獻",
   "lifePostUnread": "未讀",
   "lifePostActionOpen": "打開連結",
+  "lifePostActionOpenError": "暫時無法開啟這個連結，請重試。",
   "lifePostScheduleTbd": "時間待定",
   "myEventRegistrationsTitle": "我的報名",
   "groupsTitle": "小組與團契",

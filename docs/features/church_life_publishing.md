@@ -132,6 +132,8 @@ App 对周、月或分类列表的成功响应只增量写入离线内容缓存�
 - 附件授权失败时只隐藏附件，不伪造内容成功。
 - 无权限内容由后端过滤。
 - 管理员更新内容后 `life_posts.updated_at` 变化；如果旧 `read_at` 早于新 `updated_at`，member route 返回未读。
+- App 卡片与详情的 CTA 都通过共享 Life action 调用 Core 外链能力；平台返回失败或抛出
+  异常时显示本地化可恢复提示，不能形成未处理 Future。
 
 ## Verification Checklist
 

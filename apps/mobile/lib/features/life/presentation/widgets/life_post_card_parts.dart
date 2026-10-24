@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/platform/external_link_service.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/utils/app_formatters.dart';
 import '../../../../shared/widgets/app_chip.dart';
@@ -109,12 +108,6 @@ String lifePostRegistrationLabel(AppLocalizations l10n, LifePost post) {
   return l10n.eventRegistrationSpots(registeredCount, capacity);
 }
 
-bool lifePostHasAction(LifePost post) {
-  final label = post.ctaLabel?.trim();
-  final url = post.ctaUrl?.trim();
-  return label != null && label.isNotEmpty && url != null && url.isNotEmpty;
-}
-
 bool lifePostHasRegistrationDetails(LifePost post) {
   final summary = post.registrationSummary;
   if (summary == null || !summary.isRegistered) {
@@ -122,16 +115,4 @@ bool lifePostHasRegistrationDetails(LifePost post) {
   }
   final note = summary.myNote?.trim();
   return summary.myPartySize != null || (note != null && note.isNotEmpty);
-}
-
-String lifePostActionLabel(AppLocalizations l10n, LifePost post) {
-  final label = post.ctaLabel?.trim();
-  return label == null || label.isEmpty ? l10n.lifePostActionOpen : label;
-}
-
-Future<void> openLifePostActionUrl(
-  LifePost post,
-  ExternalLinkService linkService,
-) async {
-  await linkService.openExternalUrl(post.ctaUrl);
 }

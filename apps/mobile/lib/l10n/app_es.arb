@@ -536,6 +536,7 @@
   "lifePostTypeGiving": "Ofrenda",
   "lifePostUnread": "No leído",
   "lifePostActionOpen": "Abrir",
+  "lifePostActionOpenError": "No se pudo abrir este enlace. Inténtalo de nuevo.",
   "lifePostScheduleTbd": "Horario por definir",
   "myEventRegistrationsTitle": "Mis inscripciones",
   "groupsTitle": "Grupos",

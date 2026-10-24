@@ -536,6 +536,7 @@
   "lifePostTypeGiving": "Giving",
   "lifePostUnread": "Unread",
   "lifePostActionOpen": "Open link",
+  "lifePostActionOpenError": "This link could not be opened. Please try again.",
   "lifePostScheduleTbd": "Time to be announced",
   "myEventRegistrationsTitle": "My registrations",
   "groupsTitle": "Groups and fellowships",

@@ -536,6 +536,7 @@
   "lifePostTypeGiving": "奉献",
   "lifePostUnread": "未读",
   "lifePostActionOpen": "打开链接",
+  "lifePostActionOpenError": "暂时无法打开这个链接，请重试。",
   "lifePostScheduleTbd": "时间待定",
   "myEventRegistrationsTitle": "我的报名",
   "groupsTitle": "小组与团契",

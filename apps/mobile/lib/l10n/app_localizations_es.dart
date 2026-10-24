@@ -1278,6 +1278,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get lifePostActionOpen => 'Abrir';
 
   @override
+  String get lifePostActionOpenError =>
+      'No se pudo abrir este enlace. Inténtalo de nuevo.';
+
+  @override
   String get lifePostScheduleTbd => 'Horario por definir';
 
   @override

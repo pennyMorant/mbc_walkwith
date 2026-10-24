@@ -2302,6 +2302,12 @@ abstract class AppLocalizations {
   /// **'打开链接'**
   String get lifePostActionOpen;
 
+  /// No description provided for @lifePostActionOpenError.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂时无法打开这个链接，请重试。'**
+  String get lifePostActionOpenError;
+
   /// No description provided for @lifePostScheduleTbd.
   ///
   /// In zh, this message translates to:

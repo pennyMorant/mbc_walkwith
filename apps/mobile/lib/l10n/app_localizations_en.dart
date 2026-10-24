@@ -1270,6 +1270,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lifePostActionOpen => 'Open link';
 
   @override
+  String get lifePostActionOpenError =>
+      'This link could not be opened. Please try again.';
+
+  @override
   String get lifePostScheduleTbd => 'Time to be announced';
 
   @override

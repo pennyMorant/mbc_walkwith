@@ -1162,6 +1162,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lifePostActionOpen => '打开链接';
 
   @override
+  String get lifePostActionOpenError => '暂时无法打开这个链接，请重试。';
+
+  @override
   String get lifePostScheduleTbd => '时间待定';
 
   @override
@@ -3085,6 +3088,9 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get lifePostActionOpen => '打开链接';
 
   @override
+  String get lifePostActionOpenError => '暂时无法打开这个链接，请重试。';
+
+  @override
   String get lifePostScheduleTbd => '时间待定';
 
   @override
@@ -5006,6 +5012,9 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get lifePostActionOpen => '打開連結';
+
+  @override
+  String get lifePostActionOpenError => '暫時無法開啟這個連結，請重試。';
 
   @override
   String get lifePostScheduleTbd => '時間待定';
