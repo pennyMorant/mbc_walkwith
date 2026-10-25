@@ -15,10 +15,15 @@ const { locale, localeOptions, setLocale, t } = useI18n();
 
 const email = ref("");
 const password = ref("");
+const emailTouched = ref(false);
+const passwordVisible = ref(false);
 
 const normalizedEmail = computed(() => email.value.trim());
+const emailValid = computed(() =>
+  /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(normalizedEmail.value)
+);
 const canSubmit = computed(
-  () => normalizedEmail.value.length > 0 && password.value.length > 0
+  () => emailValid.value && password.value.length > 0
 );
 const redirectPath = computed(() => safeInternalRedirect(route.query.redirect));
 
@@ -40,6 +45,13 @@ function safeInternalRedirect(value: unknown) {
   }
   return value.startsWith("/") && !value.startsWith("//") ? value : "/";
 }
+
+function submit() {
+  emailTouched.value = true;
+  if (canSubmit.value && !loginMutation.isPending.value) {
+    loginMutation.mutate();
+  }
+}
 </script>
 
 <template>
@@ -48,31 +60,39 @@ function safeInternalRedirect(value: unknown) {
       <div class="login-shell">
         <v-card class="login-card">
           <div class="login-brand">
-            <div>
-              <div class="text-h5 font-weight-bold">{{ t("app.brand") }}</div>
-              <div class="text-body-2 text-medium-emphasis mt-1">
-                {{ t("auth.subtitle") }}
+            <div class="d-flex align-center ga-3">
+              <v-avatar color="primary" variant="tonal" rounded="lg" size="44">
+                <v-icon icon="mdi-church" size="24" />
+              </v-avatar>
+              <div>
+                <div class="text-h6 font-weight-bold">{{ t("app.brand") }}</div>
+                <div class="text-caption text-medium-emphasis">
+                  {{ t("auth.subtitle") }}
+                </div>
               </div>
             </div>
-            <div class="d-flex align-center ga-2">
-              <v-select
-                :model-value="locale"
-                :items="localeOptions"
-                density="compact"
-                variant="outlined"
-                hide-details
-                class="locale-select"
-                @update:model-value="setLocale"
-              />
-              <v-avatar color="primary" variant="tonal" rounded="lg">
-                <v-icon icon="mdi-church" />
-              </v-avatar>
-            </div>
+            <v-select
+              :model-value="locale"
+              :items="localeOptions"
+              density="compact"
+              variant="outlined"
+              hide-details
+              class="locale-select"
+              :aria-label="t('Change language')"
+              @update:model-value="setLocale"
+            />
+          </div>
+
+          <div class="mt-8">
+            <h1 class="text-h5 font-weight-bold">{{ t("auth.welcomeTitle") }}</h1>
+            <p class="text-body-2 text-medium-emphasis mt-2 mb-0">
+              {{ t("auth.welcomeBody") }}
+            </p>
           </div>
 
           <v-form
-            class="mt-8"
-            @submit.prevent="canSubmit && loginMutation.mutate()"
+            class="mt-6"
+            @submit.prevent="submit"
           >
             <v-text-field
               v-model="email"
@@ -81,15 +101,28 @@ function safeInternalRedirect(value: unknown) {
               autocomplete="username"
               variant="outlined"
               density="comfortable"
+              :error-messages="emailTouched && !emailValid ? [t('auth.invalidEmail')] : []"
+              :disabled="loginMutation.isPending.value"
+              @blur="emailTouched = true"
             />
             <v-text-field
               v-model="password"
               :label="t('auth.password')"
-              type="password"
+              :type="passwordVisible ? 'text' : 'password'"
               autocomplete="current-password"
               variant="outlined"
               density="comfortable"
               class="mt-2"
+              :disabled="loginMutation.isPending.value"
+            />
+
+            <v-checkbox
+              v-model="passwordVisible"
+              :label="t('auth.showPassword')"
+              density="compact"
+              hide-details
+              class="mt-n2"
+              :disabled="loginMutation.isPending.value"
             />
 
             <v-alert
@@ -127,12 +160,13 @@ function safeInternalRedirect(value: unknown) {
 <style scoped>
 .login-main {
   background:
-    linear-gradient(135deg, rgba(56, 106, 32, 0.12), transparent 42%),
+    linear-gradient(145deg, rgba(56, 106, 32, 0.14), transparent 46%),
     rgb(var(--v-theme-background));
 }
 
 .login-shell {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: 24px;
@@ -140,7 +174,7 @@ function safeInternalRedirect(value: unknown) {
 
 .login-card {
   width: min(100%, 440px);
-  padding: 28px;
+  padding: 32px;
   border: 1px solid rgba(86, 98, 76, 0.12);
 }
 
@@ -153,5 +187,28 @@ function safeInternalRedirect(value: unknown) {
 
 .locale-select {
   width: 120px;
+  flex: 0 0 120px;
+}
+
+@media (max-width: 420px) {
+  .login-shell {
+    align-items: start;
+    padding: 16px;
+  }
+
+  .login-card {
+    margin-top: 24px;
+    padding: 24px;
+  }
+
+  .login-brand {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .locale-select {
+    width: 100%;
+    flex-basis: auto;
+  }
 }
 </style>

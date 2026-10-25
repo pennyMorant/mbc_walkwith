@@ -150,6 +150,10 @@ Surface rule:
 - Admin authentication changes clear the shared query cache before another session
   can render role-scoped results. Search and recent-content links identify a record
   with `?open=<resourceId>`; the destination Feature owns detail loading and errors.
+- Admin login keeps local email validation, password visibility, pending state, and
+  safe internal redirects in the auth surface. Password changes use the dedicated
+  auth dialog, require matching confirmation, clear transient state whenever it is
+  closed, and return to login after the Backend accepts the change.
 - The public `app.defaultLocale` setting can be `system`, `en`, `es`,
   `zh-Hans`, or `zh-Hant`. `system` means client surfaces should follow the
   device or browser locale.

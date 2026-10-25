@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { useMutation } from "@tanstack/vue-query";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 
-import { formatApiErrorMessage } from "@/core/api/api_errors";
-import { changeAdminPassword, logoutAdmin } from "@/core/api/auth";
+import { logoutAdmin } from "@/core/api/auth";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminCommandSearch from "@/core/navigation/AdminCommandSearch.vue";
 import { adminNavigationGroups } from "@/core/navigation/admin_navigation";
+import AdminPasswordDialog from "@/features/auth/components/AdminPasswordDialog.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -18,10 +17,6 @@ const { locale, localeOptions, setLocale, t } = useI18n();
 const { mobile } = useDisplay();
 const navigationDrawer = ref(false);
 const passwordDialog = ref(false);
-const passwordForm = reactive({
-  currentPassword: "",
-  newPassword: ""
-});
 
 const visibleGroups = computed(() =>
   adminNavigationGroups
@@ -64,20 +59,10 @@ async function logout() {
   await router.replace("/login");
 }
 
-const changePasswordMutation = useMutation({
-  mutationFn: () =>
-    changeAdminPassword({
-      currentPassword: passwordForm.currentPassword,
-      newPassword: passwordForm.newPassword
-    }),
-  onSuccess: async () => {
-    passwordDialog.value = false;
-    passwordForm.currentPassword = "";
-    passwordForm.newPassword = "";
-    authStore.clearSession();
-    await router.replace("/login");
-  }
-});
+async function handlePasswordChanged() {
+  authStore.clearSession();
+  await router.replace("/login");
+}
 </script>
 
 <template>
@@ -193,61 +178,10 @@ const changePasswordMutation = useMutation({
       </v-container>
     </v-main>
 
-    <v-dialog v-model="passwordDialog" max-width="420">
-      <v-card class="pa-5">
-        <div class="text-h6 font-weight-bold">
-          {{ t("auth.changePassword") }}
-        </div>
-        <v-form
-          class="mt-5"
-          @submit.prevent="changePasswordMutation.mutate()"
-        >
-          <v-text-field
-            v-model="passwordForm.currentPassword"
-            :label="t('auth.currentPassword')"
-            type="password"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-text-field
-            v-model="passwordForm.newPassword"
-            :label="t('auth.newPassword')"
-            type="password"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-alert
-            v-if="changePasswordMutation.error.value"
-            type="error"
-            variant="tonal"
-            class="mb-4"
-          >
-            {{
-              formatApiErrorMessage(
-                changePasswordMutation.error.value,
-                t("common.error")
-              )
-            }}
-          </v-alert>
-          <div class="d-flex justify-end ga-3">
-            <v-btn variant="text" @click="passwordDialog = false">
-              {{ t("common.cancel") }}
-            </v-btn>
-            <v-btn
-              type="submit"
-              color="primary"
-              :loading="changePasswordMutation.isPending.value"
-              :disabled="
-                passwordForm.currentPassword.length === 0 ||
-                passwordForm.newPassword.length < 8
-              "
-            >
-              {{ t("common.save") }}
-            </v-btn>
-          </div>
-        </v-form>
-      </v-card>
-    </v-dialog>
+    <AdminPasswordDialog
+      v-model="passwordDialog"
+      @changed="handlePasswordChanged"
+    />
   </v-app>
 </template>
 
