@@ -1126,6 +1126,30 @@ abstract class AppLocalizations {
   /// **'历史'**
   String get readingPlanHistoryTab;
 
+  /// No description provided for @readingPlanBrowseAction.
+  ///
+  /// In zh, this message translates to:
+  /// **'查找计划'**
+  String get readingPlanBrowseAction;
+
+  /// No description provided for @readingPlanCatalogTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'查找读经计划'**
+  String get readingPlanCatalogTitle;
+
+  /// No description provided for @readingPlanCatalogBody.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择已发布的计划，加入你的个人读经旅程。'**
+  String get readingPlanCatalogBody;
+
+  /// No description provided for @readingPlanCatalogEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'目前没有其他可加入的读经计划。'**
+  String get readingPlanCatalogEmpty;
+
   /// No description provided for @readingPlanCurrentEmpty.
   ///
   /// In zh, this message translates to:

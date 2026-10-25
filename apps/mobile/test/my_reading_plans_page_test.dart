@@ -173,6 +173,47 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
+
+  testWidgets('discovers only published plans without an open assignment', (
+    tester,
+  ) async {
+    final joinedPlan = _plan(id: 'plan-1', title: 'Already joined');
+    final availablePlan = _plan(id: 'plan-2', title: 'Available plan');
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          activeReadingPlanAssignmentsProvider.overrideWith(
+            (ref) async => [
+              _assignment(title: joinedPlan.title, planId: joinedPlan.id),
+            ],
+          ),
+          publishedReadingPlansProvider.overrideWith(
+            (ref) async => [joinedPlan, availablePlan],
+          ),
+          readingPlanDaysProvider.overrideWith((ref, planId) async => const []),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: const MyReadingPlansPage(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Find plans'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Already joined'), findsOneWidget);
+    expect(find.text('Available plan'), findsOneWidget);
+
+    await tester.tap(find.text('Available plan'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Start'), findsOneWidget);
+    expect(find.text('This plan has no daily references yet.'), findsOneWidget);
+  });
 }
 
 Future<void> _pausePlan(WidgetTester tester, int menuIndex) async {
@@ -208,6 +249,20 @@ ReadingPlanAssignment _assignment({
     progress: const [],
     createdAt: DateTime.utc(2026, 9, 1),
     updatedAt: endedAt ?? DateTime.utc(2026, 9, 1),
+  );
+}
+
+ReadingPlan _plan({required String id, required String title}) {
+  return ReadingPlan(
+    id: id,
+    title: title,
+    description: 'A published reading plan.',
+    status: 'published',
+    visibility: 'public',
+    locale: 'en',
+    durationDays: 7,
+    createdAt: DateTime.utc(2026, 9, 1),
+    updatedAt: DateTime.utc(2026, 9, 1),
   );
 }
 

@@ -591,6 +591,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get readingPlanHistoryTab => 'Historial';
 
   @override
+  String get readingPlanBrowseAction => 'Buscar planes';
+
+  @override
+  String get readingPlanCatalogTitle => 'Encuentra un plan de lectura';
+
+  @override
+  String get readingPlanCatalogBody =>
+      'Elige un plan publicado para incorporarlo a tu camino personal de lectura.';
+
+  @override
+  String get readingPlanCatalogEmpty =>
+      'No hay otros planes de lectura disponibles en este momento.';
+
+  @override
   String get readingPlanCurrentEmpty =>
       'No hay ningún plan de lectura en curso.';
 

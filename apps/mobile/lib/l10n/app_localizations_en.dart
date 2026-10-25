@@ -589,6 +589,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get readingPlanHistoryTab => 'History';
 
   @override
+  String get readingPlanBrowseAction => 'Find plans';
+
+  @override
+  String get readingPlanCatalogTitle => 'Find a reading plan';
+
+  @override
+  String get readingPlanCatalogBody =>
+      'Choose a published plan to make it part of your personal reading journey.';
+
+  @override
+  String get readingPlanCatalogEmpty =>
+      'There are no additional reading plans available right now.';
+
+  @override
   String get readingPlanCurrentEmpty => 'No reading plan is in progress.';
 
   @override

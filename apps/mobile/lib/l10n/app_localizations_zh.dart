@@ -545,6 +545,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get readingPlanHistoryTab => '历史';
 
   @override
+  String get readingPlanBrowseAction => '查找计划';
+
+  @override
+  String get readingPlanCatalogTitle => '查找读经计划';
+
+  @override
+  String get readingPlanCatalogBody => '选择已发布的计划，加入你的个人读经旅程。';
+
+  @override
+  String get readingPlanCatalogEmpty => '目前没有其他可加入的读经计划。';
+
+  @override
   String get readingPlanCurrentEmpty => '当前没有进行中的读经计划。';
 
   @override
@@ -2526,6 +2538,18 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get readingPlanHistoryTab => '历史';
 
   @override
+  String get readingPlanBrowseAction => '查找计划';
+
+  @override
+  String get readingPlanCatalogTitle => '查找读经计划';
+
+  @override
+  String get readingPlanCatalogBody => '选择已发布的计划，加入你的个人读经旅程。';
+
+  @override
+  String get readingPlanCatalogEmpty => '目前没有其他可加入的读经计划。';
+
+  @override
   String get readingPlanCurrentEmpty => '当前没有进行中的读经计划。';
 
   @override
@@ -4505,6 +4529,18 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get readingPlanHistoryTab => '歷史';
+
+  @override
+  String get readingPlanBrowseAction => '尋找計畫';
+
+  @override
+  String get readingPlanCatalogTitle => '尋找讀經計畫';
+
+  @override
+  String get readingPlanCatalogBody => '選擇已發布的計畫，加入你的個人讀經旅程。';
+
+  @override
+  String get readingPlanCatalogEmpty => '目前沒有其他可加入的讀經計畫。';
 
   @override
   String get readingPlanCurrentEmpty => '目前沒有進行中的讀經計畫。';

@@ -106,7 +106,7 @@ Surface rule:
 - Serving schedule v2：App Mine 展示 canonical 可用性并提交新增可用时间，详情页提交到岗 intent；`swap_requested` / `covered` 当前只展示。换班和替补 action 在后端 member contract 完成前不创建占位 UI，App 始终不决定最终排班。
 - Newcomer follow-up：App 或公开入口可提交新朋友资料，未登录时使用 external user id；内部跟进记录不返回普通 App。
 - Discipleship journey：App 展示自己的成长路径、阶段和下一步，任务跳转到原 feature，不复制课程、小组、服事或讲道数据。
-- Reading plan：App 按后端计划引用读取本地 Bible 正文，TTS 仍走本地系统 TTS capability，跨设备进度以后端为准；Mine 分开显示进行中 assignment 与不可变 attempt 历史，暂停、恢复、结束和重新开始只提交后端 intent；plan/day/assignment/progress 契约畸形时 Study、详情和 Mine 显示可重试错误，不能伪装为空数据或未加入并开放操作。
+- Reading plan：App 按后端计划引用读取本地 Bible 正文，TTS 仍走本地系统 TTS capability，跨设备进度以后端为准；Mine 分开显示进行中 assignment 与不可变 attempt 历史，并提供独立的 published 模板发现与 self-assignment 入口；Study 首页不展示未加入模板；暂停、恢复、结束和重新开始只提交后端 intent；plan/day/assignment/progress 契约畸形时 Study、详情和 Mine 显示可重试错误，不能伪装为空数据或未加入并开放操作。
 - Sermon discussion guide：App 只展示 public projection 的已发布讨论包，不接收 Admin-only `generatedMetadata`；个人回应默认私密，畸形 payload 显示可重试错误而不是静默隐藏。
 - Prayer moderation：App 默认按私密提交代祷，只展示后端允许的代祷。
 - Life detail cache：后端返回 404、`event_not_found` 或 `life_post_not_found` 时必须清理本地缓存，不能继续展示旧活动或旧生活内容。
