@@ -44,7 +44,9 @@ This document covers local Bible reading, search, TTS, reader assist, and backen
 
 - Bible text reading should work offline from packaged assets.
 - TTS reads local Bible text; it is not audio Bible playback.
-- Reader assist should fall back to bundled knowledge when backend is unavailable.
+- Reader assist should fall back to bundled knowledge only when the backend
+  request fails with an API/transport error. A successful but malformed
+  knowledge envelope or item is a contract failure and must remain visible.
 - Search and chapter navigation should not require network access for packaged translations.
 - Backend knowledge APIs can enrich people/place data but should not block reading.
 - Public verse notes are backend-owned and linked by stable `verseId`; do not copy Bible text into note payloads.

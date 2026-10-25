@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_client.dart';
+import '../../../core/api/api_error.dart';
 import '../../../core/config/app_config.dart';
+import 'dto/bible_knowledge_envelope.dart';
 import '../domain/bible_place.dart';
 
 final biblePlacesRepositoryProvider = Provider<BiblePlacesRepository>((ref) {
@@ -64,7 +66,7 @@ class RemoteFirstBiblePlacesRepository implements BiblePlacesRepository {
       if (places.isNotEmpty) {
         return places;
       }
-    } catch (_) {
+    } on ApiError {
       // Fall back to bundled knowledge when the backend is unavailable.
     }
     return assetRepository.getPlaces(translationId);
@@ -80,15 +82,11 @@ class RemoteFirstBiblePlacesRepository implements BiblePlacesRepository {
       },
     ).query;
     final response = await apiClient.getJsonMap('/bible-knowledge?$query');
-    final data = response['data'];
-    final items = data is Map<String, Object?> ? data['items'] : null;
-    if (items is! List<Object?>) {
-      return const [];
-    }
-
-    return items
-        .cast<Map<String, Object?>>()
-        .where((json) => json['translationId'] == translationId)
+    return readBibleKnowledgeItems(
+          response,
+          expectedType: 'place',
+          translationId: translationId,
+        )
         .map((json) => _placeFromApiJson(json, translationId))
         .toList(growable: false);
   }
