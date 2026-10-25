@@ -176,6 +176,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get memberRoleLabel => 'Rol';
 
   @override
+  String get memberStatusActive => 'Activo';
+
+  @override
+  String get memberStatusInactive => 'Inactivo';
+
+  @override
+  String get memberStatusPending => 'Pendiente';
+
+  @override
+  String get memberStatusBlocked => 'Bloqueado';
+
+  @override
+  String get memberRoleMember => 'Miembro';
+
+  @override
+  String get memberRoleLeader => 'Líder';
+
+  @override
+  String get memberRolePastor => 'Pastor';
+
+  @override
   String get memberGroupLabel => 'Grupo';
 
   @override

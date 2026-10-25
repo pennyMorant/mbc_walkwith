@@ -31,6 +31,10 @@ void main() {
 
     expect(find.text(_session.member.displayName), findsOneWidget);
     expect(find.text(_session.member.email), findsOneWidget);
+    expect(find.text('Activo'), findsOneWidget);
+    expect(find.text('Miembro'), findsOneWidget);
+    expect(find.text('active'), findsNothing);
+    expect(find.text('member'), findsNothing);
     expect(
       find.text('Grupo de compañerismo con un nombre largo'),
       findsOneWidget,

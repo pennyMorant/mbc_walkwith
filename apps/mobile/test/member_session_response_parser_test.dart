@@ -66,6 +66,36 @@ void main() {
       throwsFormatException,
     );
   });
+
+  test('rejects unknown member status and role values', () {
+    expect(
+      () => parser.registrationFromEnvelope({
+        'data': {
+          'status': 'signed_in',
+          'session': {
+            'accessToken': 'member-token',
+            'member': {..._memberJson, 'status': 'unexpected'},
+          },
+        },
+      }),
+      throwsFormatException,
+    );
+    expect(
+      () => parser.registrationFromEnvelope({
+        'data': {
+          'status': 'signed_in',
+          'session': {
+            'accessToken': 'member-token',
+            'member': {
+              ..._memberJson,
+              'roles': <Object?>['member', 'unexpected'],
+            },
+          },
+        },
+      }),
+      throwsFormatException,
+    );
+  });
 }
 
 const _memberJson = <String, Object?>{

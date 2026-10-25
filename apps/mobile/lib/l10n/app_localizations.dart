@@ -414,6 +414,48 @@ abstract class AppLocalizations {
   /// **'身份'**
   String get memberRoleLabel;
 
+  /// No description provided for @memberStatusActive.
+  ///
+  /// In zh, this message translates to:
+  /// **'正常'**
+  String get memberStatusActive;
+
+  /// No description provided for @memberStatusInactive.
+  ///
+  /// In zh, this message translates to:
+  /// **'已停用'**
+  String get memberStatusInactive;
+
+  /// No description provided for @memberStatusPending.
+  ///
+  /// In zh, this message translates to:
+  /// **'待审核'**
+  String get memberStatusPending;
+
+  /// No description provided for @memberStatusBlocked.
+  ///
+  /// In zh, this message translates to:
+  /// **'已封锁'**
+  String get memberStatusBlocked;
+
+  /// No description provided for @memberRoleMember.
+  ///
+  /// In zh, this message translates to:
+  /// **'会友'**
+  String get memberRoleMember;
+
+  /// No description provided for @memberRoleLeader.
+  ///
+  /// In zh, this message translates to:
+  /// **'同工'**
+  String get memberRoleLeader;
+
+  /// No description provided for @memberRolePastor.
+  ///
+  /// In zh, this message translates to:
+  /// **'牧者'**
+  String get memberRolePastor;
+
   /// No description provided for @memberGroupLabel.
   ///
   /// In zh, this message translates to:

@@ -166,6 +166,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get memberRoleLabel => '身份';
 
   @override
+  String get memberStatusActive => '正常';
+
+  @override
+  String get memberStatusInactive => '已停用';
+
+  @override
+  String get memberStatusPending => '待审核';
+
+  @override
+  String get memberStatusBlocked => '已封锁';
+
+  @override
+  String get memberRoleMember => '会友';
+
+  @override
+  String get memberRoleLeader => '同工';
+
+  @override
+  String get memberRolePastor => '牧者';
+
+  @override
   String get memberGroupLabel => '小组';
 
   @override
@@ -2126,6 +2147,27 @@ class AppLocalizationsZhHans extends AppLocalizationsZh {
   String get memberRoleLabel => '身份';
 
   @override
+  String get memberStatusActive => '正常';
+
+  @override
+  String get memberStatusInactive => '已停用';
+
+  @override
+  String get memberStatusPending => '待审核';
+
+  @override
+  String get memberStatusBlocked => '已封锁';
+
+  @override
+  String get memberRoleMember => '会友';
+
+  @override
+  String get memberRoleLeader => '同工';
+
+  @override
+  String get memberRolePastor => '牧者';
+
+  @override
   String get memberGroupLabel => '小组';
 
   @override
@@ -4084,6 +4126,27 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
 
   @override
   String get memberRoleLabel => '身份';
+
+  @override
+  String get memberStatusActive => '正常';
+
+  @override
+  String get memberStatusInactive => '已停用';
+
+  @override
+  String get memberStatusPending => '待審核';
+
+  @override
+  String get memberStatusBlocked => '已封鎖';
+
+  @override
+  String get memberRoleMember => '會友';
+
+  @override
+  String get memberRoleLeader => '同工';
+
+  @override
+  String get memberRolePastor => '牧者';
 
   @override
   String get memberGroupLabel => '小組';

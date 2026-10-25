@@ -149,10 +149,10 @@ class MemberProfile {
       joinedChurchAt: json['joinedChurchAt'] as String?,
       emergencyContactName: json['emergencyContactName'] as String?,
       emergencyContactPhone: json['emergencyContactPhone'] as String?,
-      status: _requiredString(json, 'status'),
+      status: _requiredMemberEnum(json, 'status', _memberStatuses),
       roles: roles
           .map((role) {
-            if (role is! String || role.isEmpty) {
+            if (role is! String || !_memberRoles.contains(role)) {
               throw const FormatException('Member role is invalid.');
             }
             return role;
@@ -185,6 +185,21 @@ class MemberProfile {
       'notificationSettings': notificationSettings.toJson(),
     };
   }
+}
+
+const _memberStatuses = {'active', 'inactive', 'pending', 'blocked'};
+const _memberRoles = {'member', 'leader', 'pastor'};
+
+String _requiredMemberEnum(
+  Map<String, Object?> json,
+  String key,
+  Set<String> supportedValues,
+) {
+  final value = _requiredString(json, key);
+  if (!supportedValues.contains(value)) {
+    throw FormatException('Member $key is invalid.');
+  }
+  return value;
 }
 
 String _requiredString(Map<String, Object?> json, String key) {

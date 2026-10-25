@@ -28,6 +28,8 @@ void main() {
     final emailValue = find.text('member.with.long.email@example.com');
     expect(emailLabel, findsOneWidget);
     expect(emailValue, findsOneWidget);
+    expect(find.text('Activo'), findsOneWidget);
+    expect(find.text('active'), findsNothing);
     expect(
       tester.getTopLeft(emailValue).dy,
       greaterThan(tester.getTopLeft(emailLabel).dy),

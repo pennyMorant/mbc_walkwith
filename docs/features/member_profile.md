@@ -41,6 +41,10 @@
 
 App 展示我的资料、偏好、系统通知权限入口、设备绑定、Mine 教会生活状态聚合和登出。认证入口由独立 `member_auth` feature 承担。access token 和离线 session profile 只进入 secure storage；401、403、session invalid 或会员停用时必须清除本地 session，只有网络或服务暂时失败时才能使用安全缓存。App 只能写会友自助字段：姓名、电话、地址、信仰年份、受洗年份、加入教会日期、紧急联系人和 locale。App 不写角色、高权限状态、小组成员关系、课程报名状态、服事排班状态或关怀最终状态。
 
+App 必须严格解析共享 contract 定义的 member status 与 role enum，并在 Mine/资料
+surface 使用本地化标签展示。内部值（如 `active`、`member`）只参与契约和权限，不能
+作为面向用户的身份文案；未知值属于 contract failure，不能静默显示。
+
 ## Admin Web Surface Boundary
 
 后台维护会员资料、角色、状态、备注、导出、权限和注册设置。会员列表只返回姓名、邮箱、状态、角色、locale 和小组归属等运营摘要；电话、地址、紧急联系人和通知偏好只在管理员明确打开单条详情后返回。注册设置包括：是否开放 App 注册、是否需要邮箱验证、是否需要管理员审核、注册提示文案。

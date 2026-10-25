@@ -32,7 +32,7 @@ void main() {
               member: MemberProfile(
                 id: 'member-1',
                 email: 'member@example.com',
-                displayName: 'Member',
+                displayName: 'Test Member',
                 roles: ['member'],
                 appLocale: 'en',
                 fellowshipGroupId: null,
@@ -108,10 +108,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('My church life'), findsNothing);
-    expect(find.text('Member'), findsOneWidget);
+    expect(find.text('Test Member'), findsOneWidget);
     expect(find.text('member@example.com'), findsOneWidget);
-    expect(find.text('active'), findsOneWidget);
-    expect(find.text('member'), findsOneWidget);
+    expect(find.text('Active'), findsOneWidget);
+    expect(find.text('Member'), findsOneWidget);
+    expect(find.text('active'), findsNothing);
+    expect(find.text('member'), findsNothing);
     expect(find.text('Friday Fellowship'), findsOneWidget);
     expect(find.text('1 class'), findsOneWidget);
     expect(find.text('1 serving role'), findsOneWidget);

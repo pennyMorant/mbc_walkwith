@@ -10,6 +10,7 @@ import '../../../life/domain/course_learning.dart';
 import '../../../life/domain/ministry_group.dart';
 import '../../../life/domain/serving_assignment.dart';
 import '../../../member_auth/data/member_session_repository.dart';
+import '../member_profile_labels.dart';
 import 'member_guest_session_content.dart';
 
 class MemberSessionCard extends StatelessWidget {
@@ -114,14 +115,17 @@ class _MemberContent extends StatelessWidget {
           runSpacing: 8,
           children: [
             AppChip(
-              label: session.member.status,
+              label: memberStatusLabel(l10n, session.member.status),
               icon: Icons.verified_user_outlined,
               variant: AppChipVariant.filled,
               backgroundColor: colorScheme.primaryContainer,
               foregroundColor: colorScheme.onPrimaryContainer,
             ),
             for (final role in session.member.roles)
-              AppChip(label: role, variant: AppChipVariant.filled),
+              AppChip(
+                label: memberRoleLabel(l10n, role),
+                variant: AppChipVariant.filled,
+              ),
             _ChipAction(
               tooltip: l10n.groupMyGroupsTitle,
               onPressed: () => context.pushNamed(AppRouteNames.myGroups),

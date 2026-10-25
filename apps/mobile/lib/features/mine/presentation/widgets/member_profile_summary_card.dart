@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../member_auth/data/member_session_repository.dart';
+import '../member_profile_labels.dart';
 
 class MemberProfileSummaryCard extends StatelessWidget {
   const MemberProfileSummaryCard({super.key, required this.member});
@@ -25,7 +26,10 @@ class MemberProfileSummaryCard extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             _SummaryRow(label: l10n.memberEmailLabel, value: member.email),
-            _SummaryRow(label: l10n.memberStatusLabel, value: member.status),
+            _SummaryRow(
+              label: l10n.memberStatusLabel,
+              value: memberStatusLabel(l10n, member.status),
+            ),
             _SummaryRow(
               label: l10n.memberGroupLabel,
               value: member.fellowshipGroupId ?? l10n.memberNoGroupLabel,
