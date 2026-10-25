@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type {
-  CareFollowUpStatus,
+  CareFollowUpCreateRequest,
   CarePrivacyLevel,
   CareRequestAdmin,
-  CareRequestStatus
+  CareRequestStatus,
+  CareRequestUpdateRequest
 } from "@mbc/api-contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, ref } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { requireSelected } from "@/core/actions/action_guard";
@@ -15,41 +16,59 @@ import {
   listCareAssignees,
   listCareFollowUps,
   listCareRequests,
-  updateCareRequest
+  updateCareRequest,
+  type CareRequestFilters
 } from "@/core/api/care";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
-import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import CareRequestDrawer from "../components/CareRequestDrawer.vue";
 import CareRequestResults from "../components/CareRequestResults.vue";
+import {
+  careFilterSnapshot,
+  careFollowUpPayloadFromForm,
+  careRequestPayloadFromForm,
+  createCareFollowUpEditorForm,
+  createCareRequestEditorForm,
+  dateTimeInputToIso,
+  loadCareRequestEditorForm,
+  resetCareFollowUpEditorForm,
+  type CareFilterDraft
+} from "../care_workspace_models";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
 const { optionItems, t } = useI18n();
 
-const filters = reactive({
+const filters = reactive<CareFilterDraft>({
   query: "",
-  status: "" as CareRequestStatus | ""
+  status: ""
 });
+const appliedFilters = ref<CareRequestFilters>(careFilterSnapshot(filters));
 const selectedRequest = ref<CareRequestAdmin | null>(null);
-const form = reactive({
-  status: "submitted" as CareRequestStatus,
-  privacyLevel: "pastoral_only" as CarePrivacyLevel,
-  assigneeAdminUserId: null as string | null,
-  nextFollowUpAt: "",
-  internalNote: ""
-});
-const followUpForm = reactive({
-  note: "",
-  status: "completed" as CareFollowUpStatus,
-  plannedAt: ""
-});
+const form = reactive(createCareRequestEditorForm());
+const followUpForm = reactive(createCareFollowUpEditorForm());
+const updateErrorMessage = ref("");
+const followUpErrorMessage = ref("");
+let careContextVersion = 0;
+
+type CareUpdateIntent = {
+  requestId: string;
+  contextVersion: number;
+  payload: CareRequestUpdateRequest;
+};
+
+type CareFollowUpIntent = {
+  requestId: string;
+  contextVersion: number;
+  payload: CareFollowUpCreateRequest;
+};
 
 const requestsQuery = useQuery({
-  queryKey: computed(() => ["care-requests", { ...filters }]),
-  queryFn: () => listCareRequests({ ...filters, limit: 100 })
+  queryKey: ["care-requests", appliedFilters],
+  queryFn: () => listCareRequests(appliedFilters.value)
 });
 const assigneesQuery = useQuery({
   queryKey: ["care-assignees"],
@@ -62,49 +81,51 @@ const followUpsQuery = useQuery({
 });
 
 const updateMutation = useMutation({
-  mutationFn: () => {
-    const request = requireSelected(
-      selectedRequest.value,
-      t("No care request selected.")
-    );
-    if (!canManage.value) {
-      throw new Error(t("Care manage access required"));
-    }
-    return updateCareRequest(request.id, {
-      status: form.status,
-      privacyLevel: form.privacyLevel,
-      assigneeAdminUserId: form.assigneeAdminUserId,
-      nextFollowUpAt: dateTimeInputToIso(form.nextFollowUpAt),
-      internalNote: form.internalNote.trim()
-    });
+  onMutate: (intent: CareUpdateIntent) => {
+    updateErrorMessage.value = "";
+    return intent;
   },
-  onSuccess: async (request) => {
-    selectedRequest.value = request;
+  mutationFn: (intent: CareUpdateIntent) =>
+    updateCareRequest(intent.requestId, intent.payload),
+  onSuccess: async (request, _variables, context) => {
+    if (isCurrentCareContext(context)) {
+      selectedRequest.value = request;
+      loadCareRequestEditorForm(form, request);
+    }
     await queryClient.invalidateQueries({ queryKey: ["care-requests"] });
     await queryClient.invalidateQueries({ queryKey: ["care-follow-ups"] });
+  },
+  onError: (error, _variables, context) => {
+    if (isCurrentCareContext(context)) {
+      updateErrorMessage.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 });
 
 const followUpMutation = useMutation({
-  mutationFn: () => {
-    const request = requireSelected(
-      selectedRequest.value,
-      t("No care request selected.")
-    );
-    if (!canCreateFollowUp.value) {
-      throw new Error(t("Care manage access required"));
-    }
-    return createCareFollowUp(request.id, {
-      note: followUpForm.note.trim(),
-      status: followUpForm.status,
-      plannedAt: dateTimeInputToIso(followUpForm.plannedAt)
-    });
+  onMutate: (intent: CareFollowUpIntent) => {
+    followUpErrorMessage.value = "";
+    return intent;
   },
-  onSuccess: async () => {
-    followUpForm.note = "";
-    followUpForm.plannedAt = "";
+  mutationFn: (intent: CareFollowUpIntent) =>
+    createCareFollowUp(intent.requestId, intent.payload),
+  onSuccess: async (_followUp, _variables, context) => {
+    if (isCurrentCareContext(context)) {
+      resetCareFollowUpEditorForm(followUpForm);
+    }
     await queryClient.invalidateQueries({ queryKey: ["care-requests"] });
     await queryClient.invalidateQueries({ queryKey: ["care-follow-ups"] });
+  },
+  onError: (error, _variables, context) => {
+    if (isCurrentCareContext(context)) {
+      followUpErrorMessage.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 });
 
@@ -120,15 +141,33 @@ const scheduledCount = computed(
     requests.value.filter((request) => Boolean(request.nextFollowUpAt)).length
 );
 const summaryMetrics = computed(() => [
-  { id: "requests", label: t("Care requests"), value: requests.value.length, icon: "mdi-hand-heart-outline", tone: "primary" as const },
-  { id: "submitted", label: t("New submissions"), value: submittedCount.value, icon: "mdi-inbox-arrow-down-outline", tone: "warning" as const },
-  { id: "scheduled", label: t("Scheduled follow-ups"), value: scheduledCount.value, icon: "mdi-calendar-clock-outline", tone: "info" as const }
+  {
+    id: "requests",
+    label: t("Care requests"),
+    value: requests.value.length,
+    icon: "mdi-hand-heart-outline",
+    tone: "primary" as const
+  },
+  {
+    id: "submitted",
+    label: t("New submissions"),
+    value: submittedCount.value,
+    icon: "mdi-inbox-arrow-down-outline",
+    tone: "warning" as const
+  },
+  {
+    id: "scheduled",
+    label: t("Scheduled follow-ups"),
+    value: scheduledCount.value,
+    icon: "mdi-calendar-clock-outline",
+    tone: "info" as const
+  }
 ]);
 const drawer = computed({
   get: () => Boolean(selectedRequest.value),
   set: (value: boolean) => {
     if (!value) {
-      selectedRequest.value = null;
+      closeRequest();
     }
   }
 });
@@ -145,29 +184,45 @@ const listErrorMessage = computed(() =>
     ? formatApiErrorMessage(requestsQuery.error.value, t("common.error"))
     : ""
 );
-const detailErrorMessage = computed(() =>
-  formatApiErrorMessage(
-    assigneesQuery.error.value ||
-      updateMutation.error.value ||
-      followUpMutation.error.value ||
-      followUpsQuery.error.value,
-    t("common.error")
-  )
+const assigneesErrorMessage = computed(() =>
+  assigneesQuery.error.value
+    ? formatApiErrorMessage(assigneesQuery.error.value, t("common.error"))
+    : ""
+);
+const followUpsErrorMessage = computed(() =>
+  followUpsQuery.error.value
+    ? formatApiErrorMessage(followUpsQuery.error.value, t("common.error"))
+    : ""
 );
 
-watch(selectedRequest, (request) => {
-  if (!request) {
-    return;
-  }
-  form.status = request.status;
-  form.privacyLevel = request.privacyLevel;
-  form.assigneeAdminUserId = request.assigneeAdminUserId;
-  form.nextFollowUpAt = isoToDateTimeInput(request.nextFollowUpAt);
-  form.internalNote = request.internalNote;
-});
-
 function openRequest(request: CareRequestAdmin) {
+  beginCareContext();
   selectedRequest.value = request;
+  loadCareRequestEditorForm(form, request);
+}
+
+function closeRequest() {
+  beginCareContext();
+  selectedRequest.value = null;
+}
+
+function beginCareContext() {
+  careContextVersion += 1;
+  updateErrorMessage.value = "";
+  followUpErrorMessage.value = "";
+  resetCareFollowUpEditorForm(followUpForm);
+  updateMutation.reset();
+  followUpMutation.reset();
+}
+
+function isCurrentCareContext(
+  context: { requestId: string; contextVersion: number } | undefined
+) {
+  return Boolean(
+    context &&
+      context.contextVersion === careContextVersion &&
+      context.requestId === selectedRequest.value?.id
+  );
 }
 
 function statusColor(status: CareRequestStatus) {
@@ -183,30 +238,43 @@ function privacyColor(privacy: CarePrivacyLevel) {
   return "warning";
 }
 
-function isoToDateTimeInput(value: string | null) {
-  return value ? new Date(value).toISOString().slice(0, 16) : "";
-}
-
-function dateTimeInputToIso(value: string) {
-  if (!value) {
-    return null;
+function applyFilters() {
+  const nextFilters = careFilterSnapshot(filters);
+  if (JSON.stringify(nextFilters) === JSON.stringify(appliedFilters.value)) {
+    void requestsQuery.refetch();
+    return;
   }
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  appliedFilters.value = nextFilters;
 }
 
 function saveCareRequest() {
   if (!canSave.value || updateMutation.isPending.value) {
     return;
   }
-  updateMutation.mutate();
+  const request = requireSelected(
+    selectedRequest.value,
+    t("No care request selected.")
+  );
+  updateMutation.mutate({
+    requestId: request.id,
+    contextVersion: careContextVersion,
+    payload: careRequestPayloadFromForm(form)
+  });
 }
 
 function addCareFollowUp() {
   if (!canCreateFollowUp.value || followUpMutation.isPending.value) {
     return;
   }
-  followUpMutation.mutate();
+  const request = requireSelected(
+    selectedRequest.value,
+    t("No care request selected.")
+  );
+  followUpMutation.mutate({
+    requestId: request.id,
+    contextVersion: careContextVersion,
+    payload: careFollowUpPayloadFromForm(followUpForm)
+  });
 }
 </script>
 
@@ -229,10 +297,6 @@ function addCareFollowUp() {
       </template>
     </AdminPageHeader>
 
-    <v-alert v-if="detailErrorMessage" type="error" variant="tonal" class="mt-4">
-      {{ detailErrorMessage }}
-    </v-alert>
-
     <AdminMetricGrid :items="summaryMetrics" />
 
     <v-card class="mt-6" variant="outlined">
@@ -245,7 +309,7 @@ function addCareFollowUp() {
               density="compact"
               variant="outlined"
               hide-details
-              @keyup.enter="requestsQuery.refetch()"
+              @keyup.enter="applyFilters"
             />
           </v-col>
           <v-col cols="12" md="4">
@@ -265,11 +329,11 @@ function addCareFollowUp() {
               density="compact"
               variant="outlined"
               hide-details
-              @update:model-value="requestsQuery.refetch()"
+              @update:model-value="applyFilters"
             />
           </v-col>
           <v-col cols="12" md="3">
-            <v-btn block variant="tonal" @click="requestsQuery.refetch()">
+            <v-btn block variant="tonal" @click="applyFilters">
               {{ t("common.go") }}
             </v-btn>
           </v-col>
@@ -287,176 +351,30 @@ function addCareFollowUp() {
       />
     </v-card>
 
-    <AdminResponsiveDrawer v-model="drawer" :desktop-width="620">
-      <div v-if="selectedRequest" class="pa-5">
-        <div class="d-flex align-start justify-space-between ga-4">
-          <div>
-            <div class="text-h6 font-weight-bold">
-              {{ selectedRequest.title }}
-            </div>
-            <div class="text-caption text-medium-emphasis mt-1">
-              {{ selectedRequest.memberDisplayName }} · {{ selectedRequest.memberEmail }}
-            </div>
-          </div>
-          <v-chip
-            size="small"
-            variant="tonal"
-            :color="privacyColor(selectedRequest.privacyLevel)"
-          >
-            {{ t(selectedRequest.privacyLevel) }}
-          </v-chip>
-        </div>
-
-        <v-alert type="warning" variant="tonal" class="mt-5">
-          {{ t("Care notes are sensitive and are not returned to member App APIs.") }}
-        </v-alert>
-
-        <div class="mt-5 text-body-1 care-body">
-          {{ selectedRequest.body }}
-        </div>
-
-        <v-divider class="my-5" />
-
-        <v-form @submit.prevent="saveCareRequest">
-          <v-row dense>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.status"
-                :label="t('Status')"
-                :items="
-                  optionItems([
-                    'submitted',
-                    'assigned',
-                    'in_progress',
-                    'resolved',
-                    'archived'
-                  ])
-                "
-                :disabled="!canManage"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.privacyLevel"
-                :label="t('Privacy')"
-                :items="optionItems(['pastoral_only', 'assigned_team', 'admin_restricted'])"
-                :disabled="!canManage"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-          </v-row>
-          <v-row dense>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.assigneeAdminUserId"
-                :label="t('Assignee')"
-                :items="assignees"
-                item-title="name"
-                item-value="id"
-                clearable
-                :disabled="!canManage"
-                :loading="assigneesQuery.isFetching.value"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="form.nextFollowUpAt"
-                :label="t('Next follow-up')"
-                type="datetime-local"
-                :disabled="!canManage"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-          </v-row>
-          <v-textarea
-            v-model="form.internalNote"
-            :label="t('Internal note')"
-            :disabled="!canManage"
-            rows="4"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-btn
-            type="submit"
-            color="primary"
-            :disabled="!canSave || updateMutation.isPending.value"
-            :loading="updateMutation.isPending.value"
-          >
-            {{ t("common.save") }}
-          </v-btn>
-        </v-form>
-
-        <v-divider class="my-5" />
-
-        <div class="text-subtitle-1 font-weight-bold">
-          {{ t("Follow-up records") }}
-        </div>
-        <v-form class="mt-3" @submit.prevent="addCareFollowUp">
-          <v-select
-            v-model="followUpForm.status"
-            :label="t('Status')"
-            :items="optionItems(['completed', 'planned', 'cancelled'])"
-            :disabled="!canManage"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-text-field
-            v-model="followUpForm.plannedAt"
-            :label="t('Planned time')"
-            type="datetime-local"
-            :disabled="!canManage"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-textarea
-            v-model="followUpForm.note"
-            :label="t('Follow-up note')"
-            :disabled="!canManage"
-            rows="3"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-btn
-            type="submit"
-            color="primary"
-            variant="tonal"
-            :disabled="!canCreateFollowUp || followUpMutation.isPending.value"
-            :loading="followUpMutation.isPending.value"
-          >
-            {{ t("Add follow-up") }}
-          </v-btn>
-        </v-form>
-
-        <v-list class="mt-4" lines="three">
-          <v-list-item v-if="followUps.length === 0">
-            <v-list-item-title>{{ t("No follow-ups recorded.") }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item v-for="followUp in followUps" :key="followUp.id">
-            <v-list-item-title>
-              {{ followUp.authorName || t("Admin") }} · {{ t(followUp.status) }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ followUp.note }}
-            </v-list-item-subtitle>
-          </v-list-item>
-        </v-list>
-      </div>
-    </AdminResponsiveDrawer>
+    <CareRequestDrawer
+      v-model="drawer"
+      :request="selectedRequest"
+      :form="form"
+      :follow-up-form="followUpForm"
+      :assignees="assignees"
+      :follow-ups="followUps"
+      :can-manage="canManage"
+      :can-save="canSave"
+      :can-create-follow-up="canCreateFollowUp"
+      :update-saving="updateMutation.isPending.value"
+      :follow-up-saving="followUpMutation.isPending.value"
+      :assignees-loading="assigneesQuery.isFetching.value"
+      :assignees-error-message="assigneesErrorMessage"
+      :follow-ups-loading="followUpsQuery.isPending.value"
+      :follow-ups-error-message="followUpsErrorMessage"
+      :update-error-message="updateErrorMessage"
+      :follow-up-error-message="followUpErrorMessage"
+      :status-color="statusColor"
+      :privacy-color="privacyColor"
+      @save="saveCareRequest"
+      @add-follow-up="addCareFollowUp"
+      @retry-assignees="assigneesQuery.refetch()"
+      @retry-follow-ups="followUpsQuery.refetch()"
+    />
   </div>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.care-body {
-  white-space: pre-wrap;
-}
-</style>

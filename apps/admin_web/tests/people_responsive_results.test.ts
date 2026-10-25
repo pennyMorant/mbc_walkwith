@@ -43,6 +43,13 @@ describe("people workspace responsive results", () => {
     expect(careResults).toContain("t('care.empty')");
   });
 
+  test("localizes sensitive care workflow copy beyond the English fallback", () => {
+    expect(messages).toContain("Las notas de cuidado son confidenciales");
+    expect(messages).toContain("Seguimientos programados");
+    expect(messages).toContain("關懷記錄屬於敏感資訊");
+    expect(messages).toContain("已安排跟進");
+  });
+
   test("keeps member filter and detail recovery page-owned", async () => {
     const [page, editor] = await Promise.all([
       Bun.file(
@@ -66,5 +73,32 @@ describe("people workspace responsive results", () => {
     expect(editor).not.toContain("@/core/api");
     expect(editor).not.toContain("auth_store");
     expect(editor).toContain(":disabled=\"editorDisabled\"");
+  });
+
+  test("keeps care filter, command, and recovery ownership in its page", async () => {
+    const [page, drawer] = await Promise.all([
+      Bun.file(
+        new URL("../src/features/care/pages/CarePage.vue", import.meta.url)
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/care/components/CareRequestDrawer.vue",
+          import.meta.url
+        )
+      ).text()
+    ]);
+
+    expect(page).toContain("appliedFilters");
+    expect(page).toContain("careFilterSnapshot(filters)");
+    expect(page).toContain("careContextVersion");
+    expect(page).toContain("isCurrentCareContext");
+    expect(page).toContain('updateErrorMessage = ref("")');
+    expect(page).toContain('followUpErrorMessage = ref("")');
+    expect(page).toContain('@retry-assignees="assigneesQuery.refetch()"');
+    expect(page).toContain('@retry-follow-ups="followUpsQuery.refetch()"');
+    expect(page).toContain("<CareRequestDrawer");
+    expect(drawer).toContain("AdminDataState");
+    expect(drawer).not.toContain("@/core/api");
+    expect(drawer).not.toContain("auth_store");
   });
 });

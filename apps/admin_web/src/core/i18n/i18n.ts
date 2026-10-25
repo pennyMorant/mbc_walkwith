@@ -4406,6 +4406,94 @@ Object.assign(messages["zh-Hant"], {
   "dashboard.health.failedJobs": "失敗任務"
 });
 
+Object.assign(messages.en, {
+  "Add follow-up": "Add follow-up",
+  "Care notes are sensitive and are not returned to member App APIs.":
+    "Care notes are sensitive and are not returned to member App APIs.",
+  "Care request assignment, privacy, follow-up, and audit queue.":
+    "Assign care requests, protect privacy, and manage follow-up records.",
+  "Care requests": "Care requests",
+  "Follow-up note": "Follow-up note",
+  "Follow-up records": "Follow-up records",
+  "Internal note": "Internal note",
+  "New submissions": "New submissions",
+  "Next follow-up": "Next follow-up",
+  "No care request selected.": "No care request selected.",
+  "No follow-ups recorded.": "No follow-ups recorded.",
+  "Planned time": "Planned time",
+  "Privacy": "Privacy",
+  "Scheduled follow-ups": "Scheduled follow-ups",
+  "admin_restricted": "Admin restricted",
+  "assigned_team": "Assigned team",
+  "pastoral_only": "Pastoral only"
+});
+
+Object.assign(messages["zh-Hans"], {
+  "Add follow-up": "添加跟进",
+  "Care notes are sensitive and are not returned to member App APIs.":
+    "关怀记录属于敏感信息，不会返回给普通会友 App 接口。",
+  "Care request assignment, privacy, follow-up, and audit queue.":
+    "分配关怀请求、保护隐私并管理跟进记录。",
+  "Care requests": "关怀请求",
+  "Follow-up note": "跟进记录",
+  "Follow-up records": "跟进记录",
+  "Internal note": "内部备注",
+  "New submissions": "新提交",
+  "Next follow-up": "下次跟进",
+  "No care request selected.": "尚未选择关怀请求。",
+  "No follow-ups recorded.": "暂无跟进记录。",
+  "Planned time": "计划时间",
+  "Privacy": "隐私级别",
+  "Scheduled follow-ups": "已安排跟进",
+  "admin_restricted": "仅限管理员",
+  "assigned_team": "指定团队",
+  "pastoral_only": "仅限牧者"
+});
+
+Object.assign(messages.es, {
+  "Add follow-up": "Añadir seguimiento",
+  "Care notes are sensitive and are not returned to member App APIs.":
+    "Las notas de cuidado son confidenciales y no se devuelven a las API de la aplicación para miembros.",
+  "Care request assignment, privacy, follow-up, and audit queue.":
+    "Asigna solicitudes de cuidado, protege la privacidad y gestiona los seguimientos.",
+  "Care requests": "Solicitudes de cuidado",
+  "Follow-up note": "Nota de seguimiento",
+  "Follow-up records": "Registros de seguimiento",
+  "Internal note": "Nota interna",
+  "New submissions": "Nuevas solicitudes",
+  "Next follow-up": "Próximo seguimiento",
+  "No care request selected.": "No se ha seleccionado una solicitud de cuidado.",
+  "No follow-ups recorded.": "No hay seguimientos registrados.",
+  "Planned time": "Hora planificada",
+  "Privacy": "Privacidad",
+  "Scheduled follow-ups": "Seguimientos programados",
+  "admin_restricted": "Solo administradores",
+  "assigned_team": "Equipo asignado",
+  "pastoral_only": "Solo equipo pastoral"
+});
+
+Object.assign(messages["zh-Hant"], {
+  "Add follow-up": "新增跟進",
+  "Care notes are sensitive and are not returned to member App APIs.":
+    "關懷記錄屬於敏感資訊，不會回傳給一般會友 App 介面。",
+  "Care request assignment, privacy, follow-up, and audit queue.":
+    "分配關懷請求、保護隱私並管理跟進記錄。",
+  "Care requests": "關懷請求",
+  "Follow-up note": "跟進記錄",
+  "Follow-up records": "跟進記錄",
+  "Internal note": "內部備註",
+  "New submissions": "新提交",
+  "Next follow-up": "下次跟進",
+  "No care request selected.": "尚未選擇關懷請求。",
+  "No follow-ups recorded.": "暫無跟進記錄。",
+  "Planned time": "計畫時間",
+  "Privacy": "隱私層級",
+  "Scheduled follow-ups": "已安排跟進",
+  "admin_restricted": "僅限管理員",
+  "assigned_team": "指定團隊",
+  "pastoral_only": "僅限牧者"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });
