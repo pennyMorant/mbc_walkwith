@@ -31,6 +31,9 @@ class LifePostCard extends StatelessWidget {
     final readState = LifePostReadState.fromPost(post);
     final shouldShowSchedule = lifePostShouldShowScheduleInCard(post);
     final visibilityLabel = lifePostVisibilityLabel(l10n, post.visibility);
+    final showRegistrationStatus = post.registrationEnabled;
+    final showSecondaryMetadata =
+        visibilityLabel != null || showRegistrationStatus;
     final bodyPreview = plainTextPreview(
       post.body,
       maxLength: compactBody ? 130 : 240,
@@ -59,18 +62,6 @@ class LifePostCard extends StatelessWidget {
                       AppChip(label: lifePostTypeLabel(l10n, post)),
                       if (showUnreadBadge && readState.isUnread)
                         AppChip(label: l10n.lifePostUnread, selected: true),
-                      if (visibilityLabel != null)
-                        AppChip(
-                          label: visibilityLabel,
-                          icon: Icons.lock_outline,
-                        ),
-                      if (post.registrationEnabled)
-                        AppChip(
-                          label: lifePostRegistrationLabel(l10n, post),
-                          icon: Icons.event_available_outlined,
-                          selected:
-                              post.registrationSummary?.isRegistered ?? false,
-                        ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -95,6 +86,27 @@ class LifePostCard extends StatelessWidget {
                         color: readState.bodyColor(colorScheme),
                         fontWeight: FontWeight.w700,
                       ),
+                    ),
+                  ],
+                  if (showSecondaryMetadata) ...[
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        if (visibilityLabel != null)
+                          AppChip(
+                            label: visibilityLabel,
+                            icon: Icons.lock_outline,
+                          ),
+                        if (showRegistrationStatus)
+                          AppChip(
+                            label: lifePostRegistrationLabel(l10n, post),
+                            icon: Icons.event_available_outlined,
+                            selected:
+                                post.registrationSummary?.isRegistered ?? false,
+                          ),
+                      ],
                     ),
                   ],
                   if (showRegistrationDetails &&
