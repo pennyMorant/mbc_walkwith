@@ -105,7 +105,7 @@
 2026-10-24 最近通过的基础验证：
 
 - `flutter analyze`：无问题。
-- `flutter test`：406 项通过。
+- `flutter test`：407 项通过。
 - `bun run check`：类型、29 组 259 条 API contract、l10n、公开仓库、SDK、surface、capability 和后端测试全部通过。
 - Backend：80 个测试文件、319 项通过；11 项真实 PostgreSQL integration tests 因当前未配置数据库跳过。
 

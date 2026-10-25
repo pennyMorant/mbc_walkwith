@@ -47,7 +47,7 @@ git diff --check
 
 - `bun run check`：通过。
 - `flutter analyze`：通过。
-- `flutter test`：406 tests passed。
+- `flutter test`：407 tests passed。
 - Admin Web build：通过，有 Vite chunk size warning。
 - 后端测试：319 passed，11 skipped；skipped 项均为缺少真实 `DATABASE_URL` 的 Postgres integration。
 

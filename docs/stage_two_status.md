@@ -58,7 +58,7 @@ bun run check:capabilities
 验证结果：
 
 - Backend tests：319 passed，11 skipped；skipped 项均为未配置真实 `DATABASE_URL` 的 Postgres integration。
-- Mobile tests：406 passed。
+- Mobile tests：407 passed。
 - Admin Web build：通过，有 Vite chunk size warning。
 
 已知非阻断提醒：
