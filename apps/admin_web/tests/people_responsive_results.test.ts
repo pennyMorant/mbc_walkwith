@@ -42,4 +42,29 @@ describe("people workspace responsive results", () => {
     expect(messages.match(/care\.empty/g)).toHaveLength(4);
     expect(careResults).toContain("t('care.empty')");
   });
+
+  test("keeps member filter and detail recovery page-owned", async () => {
+    const [page, editor] = await Promise.all([
+      Bun.file(
+        new URL("../src/features/members/pages/MembersPage.vue", import.meta.url)
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/members/components/MemberEditorDrawer.vue",
+          import.meta.url
+        )
+      ).text()
+    ]);
+
+    expect(page).toContain("appliedFilters");
+    expect(page).toContain("memberFilterSnapshot(filters)");
+    expect(page).toContain("detailRequestVersion");
+    expect(page).toContain("editorContextVersion");
+    expect(page).toContain("captureCommandError");
+    expect(page).toContain('@retry="retryMemberDetail"');
+    expect(page).toContain("<MemberEditorDrawer");
+    expect(editor).not.toContain("@/core/api");
+    expect(editor).not.toContain("auth_store");
+    expect(editor).toContain(":disabled=\"editorDisabled\"");
+  });
 });

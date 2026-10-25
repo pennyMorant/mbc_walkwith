@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import type {
-  MemberCreateRequest,
   MemberListItem,
   MemberProfile,
-  MemberRole,
-  MemberStatus,
-  MemberUpdateRequest
+  MemberStatus
 } from "@mbc/api-contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { requireSelected } from "@/core/actions/action_guard";
@@ -16,15 +13,24 @@ import {
   createMember,
   getMember,
   listMembers,
-  updateMember
+  updateMember,
+  type MemberListFilters
 } from "@/core/api/members";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
-import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import MemberEditorDrawer from "../components/MemberEditorDrawer.vue";
 import MemberResults from "../components/MemberResults.vue";
+import {
+  createMemberEditorForm,
+  loadMemberEditorForm,
+  memberFilterSnapshot,
+  memberPayloadFromForm,
+  resetMemberEditorForm,
+  type MemberFilterDraft
+} from "../member_workspace_models";
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -35,47 +41,52 @@ const drawerTitle = ref("");
 const isCreating = ref(false);
 const detailLoading = ref(false);
 const detailError = ref<unknown>(null);
+const detailMemberId = ref<string | null>(null);
+const commandErrorMessage = ref("");
+let detailRequestVersion = 0;
+let editorContextVersion = 0;
 
-const filters = reactive({
+const filters = reactive<MemberFilterDraft>({
   query: "",
-  status: "" as MemberStatus | "",
+  status: "",
   fellowshipGroupId: ""
 });
+const appliedFilters = ref<MemberListFilters>(memberFilterSnapshot(filters));
 
-const form = reactive({
-  email: "",
-  displayName: "",
-  phone: "",
-  status: "active" as MemberStatus,
-  roles: ["member"] as MemberRole[],
-  appLocale: "en" as "en" | "es" | "zh-Hans" | "zh-Hant",
-  fellowshipGroupId: "",
-  weeklyBulletin: true,
-  sermonPublished: true,
-  lifePostPublished: true,
-  prayerUpdates: false
-});
+const form = reactive(createMemberEditorForm());
 
-const activeFilters = computed(() => ({ ...filters, limit: 50 }));
 const membersQuery = useQuery({
-  queryKey: ["members", activeFilters],
-  queryFn: () => listMembers(activeFilters.value)
+  queryKey: ["members", appliedFilters],
+  queryFn: () => listMembers(appliedFilters.value)
 });
 
 const createMutation = useMutation({
+  onMutate: () => {
+    commandErrorMessage.value = "";
+    return { editorContextVersion };
+  },
   mutationFn: () => {
     if (!canManage.value || !canSave.value) {
       throw new Error(t("Member manage access required"));
     }
-    return createMember(buildMemberPayload());
+    return createMember(memberPayloadFromForm(form));
   },
-  onSuccess: async (member) => {
-    applyMember(member);
+  onSuccess: async (member, _variables, context) => {
+    if (context?.editorContextVersion === editorContextVersion) {
+      applyMember(member);
+    }
     await queryClient.invalidateQueries({ queryKey: ["members"] });
+  },
+  onError: (error, _variables, context) => {
+    captureCommandError(error, context?.editorContextVersion);
   }
 });
 
 const updateMutation = useMutation({
+  onMutate: () => {
+    commandErrorMessage.value = "";
+    return { editorContextVersion };
+  },
   mutationFn: () => {
     const member = requireSelected(
       selectedMember.value,
@@ -84,11 +95,16 @@ const updateMutation = useMutation({
     if (!canManage.value || !canSave.value) {
       throw new Error(t("Member manage access required"));
     }
-    return updateMember(member.id, buildMemberPayload());
+    return updateMember(member.id, memberPayloadFromForm(form));
   },
-  onSuccess: async (member) => {
-    applyMember(member);
+  onSuccess: async (member, _variables, context) => {
+    if (context?.editorContextVersion === editorContextVersion) {
+      applyMember(member);
+    }
     await queryClient.invalidateQueries({ queryKey: ["members"] });
+  },
+  onError: (error, _variables, context) => {
+    captureCommandError(error, context?.editorContextVersion);
   }
 });
 
@@ -100,98 +116,99 @@ const canSave = computed(
     form.displayName.trim().length > 0 &&
     form.roles.length > 0
 );
-const errorMessage = computed(
-  () =>
-    formatApiErrorMessage(
-      createMutation.error.value ||
-        updateMutation.error.value ||
-        detailError.value,
-      t("common.error")
-    )
+const detailErrorMessage = computed(() =>
+  detailError.value
+    ? formatApiErrorMessage(detailError.value, t("common.error"))
+    : ""
+);
+const saving = computed(
+  () => createMutation.isPending.value || updateMutation.isPending.value
 );
 
-const deepLink = useAdminResourceDeepLink(getMember, applyMember);
+const deepLink = useAdminResourceDeepLink(getMember, (member) => {
+  beginEditorContext();
+  applyMember(member);
+});
 
 async function openMember(member: MemberListItem) {
+  detailMemberId.value = member.id;
+  await loadMemberDetail(member.id, member.displayName);
+}
+
+async function retryMemberDetail() {
+  if (detailMemberId.value) {
+    await loadMemberDetail(detailMemberId.value, drawerTitle.value);
+  }
+}
+
+async function loadMemberDetail(memberId: string, title: string) {
+  const requestVersion = ++detailRequestVersion;
   selectedMember.value = null;
   isCreating.value = false;
-  drawerTitle.value = member.displayName;
+  drawerTitle.value = title;
   detailError.value = null;
   detailLoading.value = true;
-  resetForm();
+  beginEditorContext();
+  resetMemberEditorForm(form);
   drawer.value = true;
   try {
-    applyMember(await getMember(member.id));
+    const member = await getMember(memberId);
+    if (requestVersion === detailRequestVersion) {
+      applyMember(member);
+    }
   } catch (error) {
-    detailError.value = error;
+    if (requestVersion === detailRequestVersion) {
+      detailError.value = error;
+    }
   } finally {
-    detailLoading.value = false;
+    if (requestVersion === detailRequestVersion) {
+      detailLoading.value = false;
+    }
   }
 }
 
 function applyMember(member: MemberProfile) {
   selectedMember.value = member;
   isCreating.value = false;
+  detailMemberId.value = member.id;
   drawerTitle.value = member.displayName;
   detailError.value = null;
-  form.email = member.email;
-  form.displayName = member.displayName;
-  form.phone = member.phone ?? "";
-  form.status = member.status;
-  form.roles = member.roles.length > 0 ? [...member.roles] : ["member"];
-  form.appLocale = member.appLocale;
-  form.fellowshipGroupId = member.fellowshipGroupId ?? "";
-  form.weeklyBulletin = member.notificationSettings.weeklyBulletin;
-  form.sermonPublished = member.notificationSettings.sermonPublished;
-  form.lifePostPublished = member.notificationSettings.lifePostPublished;
-  form.prayerUpdates = member.notificationSettings.prayerUpdates;
+  loadMemberEditorForm(form, member);
   drawer.value = true;
 }
 
 function newMember() {
   selectedMember.value = null;
   isCreating.value = true;
+  detailMemberId.value = null;
   drawerTitle.value = t("New member");
   detailError.value = null;
   detailLoading.value = false;
-  resetForm();
+  beginEditorContext();
+  resetMemberEditorForm(form);
   drawer.value = true;
 }
 
-function resetForm() {
-  form.email = "";
-  form.displayName = "";
-  form.phone = "";
-  form.status = "active";
-  form.roles = ["member"];
-  form.appLocale = "en";
-  form.fellowshipGroupId = "";
-  form.weeklyBulletin = true;
-  form.sermonPublished = true;
-  form.lifePostPublished = true;
-  form.prayerUpdates = false;
+function beginEditorContext() {
+  editorContextVersion += 1;
+  commandErrorMessage.value = "";
+  createMutation.reset();
+  updateMutation.reset();
 }
 
-function notificationSettings() {
-  return {
-    weeklyBulletin: form.weeklyBulletin,
-    sermonPublished: form.sermonPublished,
-    lifePostPublished: form.lifePostPublished,
-    prayerUpdates: form.prayerUpdates
-  };
+function captureCommandError(error: unknown, contextVersion?: number) {
+  if (contextVersion === editorContextVersion) {
+    commandErrorMessage.value = formatApiErrorMessage(error, t("common.error"));
+  }
 }
 
-function buildMemberPayload(): MemberCreateRequest & MemberUpdateRequest {
-  return {
-    email: form.email.trim(),
-    displayName: form.displayName.trim(),
-    phone: form.phone.trim() || null,
-    status: form.status,
-    roles: [...form.roles],
-    appLocale: form.appLocale,
-    fellowshipGroupId: form.fellowshipGroupId.trim() || null,
-    notificationSettings: notificationSettings()
-  };
+function applyFilters() {
+  const nextFilters = memberFilterSnapshot(filters);
+  if (JSON.stringify(nextFilters) === JSON.stringify(appliedFilters.value)) {
+    void membersQuery.refetch();
+    return;
+  }
+  appliedFilters.value = nextFilters;
 }
 
 function saveMember() {
@@ -221,6 +238,14 @@ function statusColor(status: MemberStatus) {
   }
   return "error";
 }
+
+watch(drawer, (open) => {
+  if (!open) {
+    detailRequestVersion += 1;
+    editorContextVersion += 1;
+    commandErrorMessage.value = "";
+  }
+});
 </script>
 
 <template>
@@ -256,7 +281,7 @@ function statusColor(status: MemberStatus) {
               density="compact"
               variant="outlined"
               hide-details
-              @keyup.enter="membersQuery.refetch()"
+              @keyup.enter="applyFilters"
             />
           </v-col>
           <v-col cols="12" md="3">
@@ -267,7 +292,6 @@ function statusColor(status: MemberStatus) {
               density="compact"
               variant="outlined"
               hide-details
-              @update:model-value="membersQuery.refetch()"
             />
           </v-col>
           <v-col cols="12" md="3">
@@ -277,11 +301,11 @@ function statusColor(status: MemberStatus) {
               density="compact"
               variant="outlined"
               hide-details
-              @keyup.enter="membersQuery.refetch()"
+              @keyup.enter="applyFilters"
             />
           </v-col>
           <v-col cols="12" md="2">
-            <v-btn block variant="tonal" @click="membersQuery.refetch()">
+            <v-btn block variant="tonal" @click="applyFilters">
               {{ t("common.go") }}
             </v-btn>
           </v-col>
@@ -298,150 +322,20 @@ function statusColor(status: MemberStatus) {
       />
     </v-card>
 
-    <AdminResponsiveDrawer v-model="drawer" :desktop-width="500">
-      <div class="pa-5">
-        <div class="text-h6 font-weight-bold">
-          {{ drawerTitle }}
-        </div>
-        <v-progress-linear
-          v-if="detailLoading"
-          indeterminate
-          color="primary"
-          class="mt-5"
-        />
-        <v-alert
-          v-else-if="detailError"
-          type="error"
-          variant="tonal"
-          class="mt-5"
-        >
-          {{ formatApiErrorMessage(detailError, t("common.error")) }}
-        </v-alert>
-        <v-form
-          v-else-if="isCreating || selectedMember"
-          class="mt-5"
-          @submit.prevent="saveMember"
-        >
-          <v-text-field
-            v-model="form.email"
-            :label="t('Email')"
-            type="email"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-text-field
-            v-model="form.displayName"
-            :label="t('Display name')"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-text-field
-            v-model="form.phone"
-            :label="t('Phone')"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-row dense>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.status"
-                :label="t('Status')"
-                :items="optionItems(['active', 'pending', 'inactive', 'blocked'])"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.roles"
-                :label="t('Roles')"
-                :items="optionItems(['member', 'leader', 'pastor'])"
-                multiple
-                chips
-                closable-chips
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-          </v-row>
-          <v-row dense>
-            <v-col cols="12" md="6">
-              <v-select
-                v-model="form.appLocale"
-                :label="t('App locale')"
-                :items="optionItems(['en', 'es', 'zh-Hans', 'zh-Hant'])"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="form.fellowshipGroupId"
-                :label="t('Fellowship group')"
-                density="comfortable"
-                variant="outlined"
-              />
-            </v-col>
-          </v-row>
-
-          <div class="text-subtitle-2 font-weight-bold mb-3">
-            {{ t("Notifications") }}
-          </div>
-          <v-checkbox
-            v-model="form.weeklyBulletin"
-            :label="t('Weekly bulletin')"
-            density="compact"
-            hide-details
-          />
-          <v-checkbox
-            v-model="form.sermonPublished"
-            :label="t('Sermon published')"
-            density="compact"
-            hide-details
-          />
-          <v-checkbox
-            v-model="form.lifePostPublished"
-            :label="t('Life post published')"
-            density="compact"
-            hide-details
-          />
-          <v-checkbox
-            v-model="form.prayerUpdates"
-            :label="t('Prayer updates')"
-            density="compact"
-            hide-details
-            class="mb-4"
-          />
-
-          <v-alert v-if="errorMessage" type="error" variant="tonal" class="mb-4">
-            {{ errorMessage }}
-          </v-alert>
-
-          <div class="d-flex justify-end ga-3">
-            <v-btn
-              type="submit"
-              color="primary"
-              :disabled="
-                !canManage ||
-                !canSave ||
-                createMutation.isPending.value ||
-                updateMutation.isPending.value
-              "
-              :loading="
-                createMutation.isPending.value || updateMutation.isPending.value
-              "
-            >
-              {{ t("common.save") }}
-            </v-btn>
-          </div>
-        </v-form>
-      </div>
-    </AdminResponsiveDrawer>
+    <MemberEditorDrawer
+      v-model="drawer"
+      :title="drawerTitle"
+      :member="selectedMember"
+      :creating="isCreating"
+      :form="form"
+      :detail-loading="detailLoading"
+      :detail-error-message="detailErrorMessage"
+      :command-error-message="commandErrorMessage"
+      :can-manage="canManage"
+      :can-save="canSave"
+      :saving="saving"
+      @retry="retryMemberDetail"
+      @save="saveMember"
+    />
   </div>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>

@@ -115,6 +115,9 @@ Surface rule:
   tables and compact mobile records. Both projections emit the same page-owned
   detail intent and share Core loading, error, retry, and empty presentation.
   Their pages retain query retry, selection, permission, and mutation ownership.
+  Member filters keep draft input separate from the applied query snapshot;
+  member detail failures remain retryable in the drawer, and late responses from
+  a previously selected or closed member cannot replace the current editor.
 - System workspaces apply the same rule to notification deliveries, admin users,
   and audit logs. Operational commands and sensitive detail remain page-owned;
   responsive result components only present records and emit detail intents.
