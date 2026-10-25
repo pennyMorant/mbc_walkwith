@@ -76,6 +76,14 @@ for selected-month feeds and member registration history, so a high-content
 month cannot silently hide later records. Ordinary compact surfaces may still
 request a bounded page deliberately.
 
+The App preserves repository ordering when it projects posts into Life tabs;
+category filtering must not replace backend-owned `sort` priority with a UI
+timeline order. Weekly bulletin, weekly posts, monthly posts, and member support
+sections keep independent loading, empty, and error states, so one failed
+projection does not hide another successful section. Group, course, serving,
+prayer, and care support data is loaded when its tab is first visited and then
+kept alive by the provider cache for later tab switches.
+
 App 展示 Life 首页、分类筛选、详情、报名/课程/小组等行动入口。App 不决定内容发布状态、可见性、展示权重或未读状态。展示权重不显示为 App chip；App 只展示本地化后的内容类型和用户状态。
 
 ## Admin Web Surface Boundary

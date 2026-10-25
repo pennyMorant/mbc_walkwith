@@ -14,16 +14,19 @@ import 'life_dashboard_tab_views.dart';
 import 'life_post_classification.dart';
 import 'life_post_read_state.dart';
 import 'life_prayer_tab_view.dart';
-import 'life_sunday_hero_card.dart';
+import 'life_sunday_hero_state_view.dart';
 
 class LifeDashboardView extends StatefulWidget {
   const LifeDashboardView({
     super.key,
-    required this.weekPosts,
-    required this.monthPosts,
-    required this.heroPost,
+    required this.weekPostsAsync,
+    required this.monthPostsAsync,
+    required this.heroPostAsync,
     required this.selectedTab,
     required this.onTabChanged,
+    required this.onRetryWeekPosts,
+    required this.onRetryMonthPosts,
+    required this.onRetryHero,
     required this.prayerEnabled,
     required this.publicPrayerRequestsAsync,
     required this.memberPrayerRequestsAsync,
@@ -32,13 +35,17 @@ class LifeDashboardView extends StatefulWidget {
     required this.coursesAsync,
     required this.servingAsync,
     required this.careRequestsAsync,
+    required this.memberSessionResolved,
   });
 
-  final List<LifePost> weekPosts;
-  final List<LifePost> monthPosts;
-  final LifePost? heroPost;
+  final AsyncValue<List<LifePost>> weekPostsAsync;
+  final AsyncValue<List<LifePost>> monthPostsAsync;
+  final AsyncValue<LifePost?> heroPostAsync;
   final LifeDashboardTab selectedTab;
   final ValueChanged<LifeDashboardTab> onTabChanged;
+  final VoidCallback onRetryWeekPosts;
+  final VoidCallback onRetryMonthPosts;
+  final VoidCallback onRetryHero;
   final bool prayerEnabled;
   final AsyncValue<List<PrayerRequest>> publicPrayerRequestsAsync;
   final AsyncValue<List<PrayerRequest>> memberPrayerRequestsAsync;
@@ -47,6 +54,7 @@ class LifeDashboardView extends StatefulWidget {
   final AsyncValue<List<CourseLearning>> coursesAsync;
   final AsyncValue<List<ServingAssignment>> servingAsync;
   final AsyncValue<List<CareRequest>> careRequestsAsync;
+  final bool memberSessionResolved;
 
   @override
   State<LifeDashboardView> createState() => _LifeDashboardViewState();
@@ -93,35 +101,46 @@ class _LifeDashboardViewState extends State<LifeDashboardView>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final heroPost = widget.heroPost;
-    final weekPosts = [...widget.weekPosts]..sort(compareLifePostTimeline);
-    final monthPosts = [...widget.monthPosts]..sort(compareLifePostTimeline);
-    final weekCardPosts = _withoutHero(weekPosts, heroPost);
-    final groupPosts = monthPosts.where(lifePostIsGroupLike).toList()
-      ..sort(compareLifePostTimeline);
-    final coursePosts = monthPosts.where(lifePostIsCourseLike).toList()
-      ..sort(compareLifePostTimeline);
-    final servingPosts = monthPosts.where(lifePostIsServingLike).toList()
-      ..sort(compareLifePostTimeline);
-    final prayerPosts = monthPosts.where(lifePostIsPrayerLike).toList()
-      ..sort(compareLifePostTimeline);
-    final eventPosts =
-        monthPosts
-            .where(
-              (post) =>
-                  lifePostIsEventLike(post) &&
-                  !lifePostIsGroupLike(post) &&
-                  !lifePostIsCourseLike(post) &&
-                  !lifePostIsServingLike(post) &&
-                  !lifePostIsPrayerLike(post),
-            )
-            .toList()
-          ..sort(compareLifePostTimeline);
-    final eventCardPosts = _withoutHero(eventPosts, heroPost);
-    final groupCardPosts = _withoutHero(groupPosts, heroPost);
-    final courseCardPosts = _withoutHero(coursePosts, heroPost);
-    final servingCardPosts = _withoutHero(servingPosts, heroPost);
-    final prayerCardPosts = _withoutHero(prayerPosts, heroPost);
+    final heroPost = widget.heroPostAsync.value;
+    final weekPosts = widget.weekPostsAsync.value ?? const <LifePost>[];
+    final weekCardPostsAsync = widget.weekPostsAsync.whenData(
+      (posts) => _withoutHero(posts, heroPost),
+    );
+    final eventPostsAsync = _categoryPosts(
+      widget.monthPostsAsync,
+      heroPost: heroPost,
+      matches: (post) =>
+          lifePostIsEventLike(post) &&
+          !lifePostIsGroupLike(post) &&
+          !lifePostIsCourseLike(post) &&
+          !lifePostIsServingLike(post) &&
+          !lifePostIsPrayerLike(post),
+    );
+    final groupPostsAsync = _categoryPosts(
+      widget.monthPostsAsync,
+      heroPost: heroPost,
+      matches: lifePostIsGroupLike,
+    );
+    final coursePostsAsync = _categoryPosts(
+      widget.monthPostsAsync,
+      heroPost: heroPost,
+      matches: lifePostIsCourseLike,
+    );
+    final servingPostsAsync = _categoryPosts(
+      widget.monthPostsAsync,
+      heroPost: heroPost,
+      matches: lifePostIsServingLike,
+    );
+    final prayerPostsAsync = _categoryPosts(
+      widget.monthPostsAsync,
+      heroPost: heroPost,
+      matches: lifePostIsPrayerLike,
+    );
+    final eventPosts = eventPostsAsync.value ?? const <LifePost>[];
+    final groupPosts = groupPostsAsync.value ?? const <LifePost>[];
+    final coursePosts = coursePostsAsync.value ?? const <LifePost>[];
+    final servingPosts = servingPostsAsync.value ?? const <LifePost>[];
+    final prayerPosts = prayerPostsAsync.value ?? const <LifePost>[];
     final memberSession = widget.memberSession;
     final showUnreadBadges = memberSession != null;
     final unreadCounts = <LifeDashboardTab, int>{
@@ -157,9 +176,10 @@ class _LifeDashboardViewState extends State<LifeDashboardView>
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-            child: LifeSundayHeroCard(
-              post: heroPost,
+            child: LifeSundayHeroStateView(
+              postAsync: widget.heroPostAsync,
               showUnreadBadge: showUnreadBadges,
+              onRetry: widget.onRetryHero,
             ),
           ),
         ),
@@ -196,33 +216,47 @@ class _LifeDashboardViewState extends State<LifeDashboardView>
         controller: _tabController,
         children: [
           LifeWeekTabView(
-            posts: weekCardPosts,
+            postsAsync: weekCardPostsAsync,
+            onRetry: widget.onRetryWeekPosts,
+            showNewcomerAction:
+                widget.memberSessionResolved && memberSession == null,
             showUnreadBadges: showUnreadBadges,
           ),
           LifeEventsTabView(
-            posts: eventCardPosts,
+            postsAsync: eventPostsAsync,
+            onRetry: widget.onRetryMonthPosts,
             showUnreadBadges: showUnreadBadges,
           ),
           LifeGroupsTabView(
-            posts: groupCardPosts,
+            postsAsync: groupPostsAsync,
+            onRetryPosts: widget.onRetryMonthPosts,
             groupsAsync: widget.groupsAsync,
             memberSession: memberSession,
+            showMemberSignInCard:
+                widget.memberSessionResolved && memberSession == null,
             showUnreadBadges: showUnreadBadges,
           ),
           LifeCoursesTabView(
-            posts: courseCardPosts,
+            postsAsync: coursePostsAsync,
+            onRetryPosts: widget.onRetryMonthPosts,
             coursesAsync: widget.coursesAsync,
             memberSession: memberSession,
+            showMemberSignInCard:
+                widget.memberSessionResolved && memberSession == null,
             showUnreadBadges: showUnreadBadges,
           ),
           LifeServingTabView(
-            posts: servingCardPosts,
+            postsAsync: servingPostsAsync,
+            onRetryPosts: widget.onRetryMonthPosts,
             servingAsync: widget.servingAsync,
             memberSession: memberSession,
+            showMemberSignInCard:
+                widget.memberSessionResolved && memberSession == null,
             showUnreadBadges: showUnreadBadges,
           ),
           LifePrayerTabView(
-            posts: prayerCardPosts,
+            postsAsync: prayerPostsAsync,
+            onRetryPosts: widget.onRetryMonthPosts,
             prayerEnabled: widget.prayerEnabled,
             publicPrayerRequestsAsync: widget.publicPrayerRequestsAsync,
             memberPrayerRequestsAsync: widget.memberPrayerRequestsAsync,
@@ -234,6 +268,16 @@ class _LifeDashboardViewState extends State<LifeDashboardView>
       ),
     );
   }
+}
+
+AsyncValue<List<LifePost>> _categoryPosts(
+  AsyncValue<List<LifePost>> source, {
+  required LifePost? heroPost,
+  required bool Function(LifePost post) matches,
+}) {
+  return source.whenData(
+    (posts) => _withoutHero(posts.where(matches).toList(), heroPost),
+  );
 }
 
 List<LifePost> _withoutHero(List<LifePost> posts, LifePost? heroPost) {

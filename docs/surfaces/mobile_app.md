@@ -94,7 +94,7 @@ Surface rule:
 - Sermon discovery：App 默认按选中月份浏览，可在该月份内搜索，并使用后端 published-only facets 按讲员、系列或主题精确筛选。筛选状态只属于页面 intent；网络失败时 repository 可从已缓存讲道派生建议并保持同样的离线筛选语义，内容可见性仍以后端为准。
 - Sermon empty state：选中月份没有已发布讲道时，App 保留月份选择和下拉刷新，并说明当前月份为空；空数据不能呈现为加载错误，也不能创建本地占位讲道。
 - Sermon detail cache：后端返回 `sermon_not_found` 或 404 时必须清理本地缓存，不能继续展示旧讲道。
-- Church life publishing：App 只展示当前身份可见且已发布生活内容。
+- Church life publishing：App 只展示当前身份可见且已发布生活内容；分类投影保留后端展示权重顺序，周报、内容列表和小组/课程等支持区域分别表达加载与错误状态。
 - Church life periods：Life 的本周 tab 读取选中周，其他生活 tab 读取选中月；主日/周报 hero 自动读取最新可见周报，不跟随当前 tab 周期。
 - Church life read state：App 只展示后端返回的 `isRead/readAt`，打开详情时提交 mark-read intent；本地缓存不是未读 source of truth。
 - Event registration：App 提交 intent，后端返回 canonical state。

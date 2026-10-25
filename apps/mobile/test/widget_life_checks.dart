@@ -1,5 +1,7 @@
 part of 'widget_test.dart';
 
+void _noop() {}
+
 void registerLifeWidgetChecks() {
   testWidgets(
     'life category tabs use the selected month instead of this week',
@@ -28,11 +30,14 @@ void registerLifeWidgetChecks() {
           theme: AppTheme.build(null, Brightness.light),
           home: Scaffold(
             body: LifeDashboardView(
-              weekPosts: [weekOnlyPost],
-              monthPosts: [monthPost],
-              heroPost: null,
+              weekPostsAsync: AsyncData([weekOnlyPost]),
+              monthPostsAsync: AsyncData([monthPost]),
+              heroPostAsync: const AsyncData(null),
               selectedTab: LifeDashboardTab.events,
               onTabChanged: (_) {},
+              onRetryWeekPosts: _noop,
+              onRetryMonthPosts: _noop,
+              onRetryHero: _noop,
               prayerEnabled: false,
               publicPrayerRequestsAsync: const AsyncData([]),
               memberPrayerRequestsAsync: const AsyncData([]),
@@ -41,6 +46,7 @@ void registerLifeWidgetChecks() {
               coursesAsync: const AsyncData([]),
               servingAsync: const AsyncData([]),
               careRequestsAsync: const AsyncData([]),
+              memberSessionResolved: true,
             ),
           ),
         ),
@@ -203,7 +209,7 @@ void registerLifeWidgetChecks() {
     expect(find.text('团契'), findsOneWidget);
     expect(find.text('夏季爱宴报名'), findsWidgets);
     expect(find.byIcon(Icons.push_pin_outlined), findsNothing);
-    expect(find.widgetWithText(FilledButton, '报名参加'), findsOneWidget);
+    expect(find.widgetWithText(FilledButton, '报名参加'), findsNothing);
     expect(find.text('会众可见'), findsOneWidget);
     expect(find.textContaining('02:30-04:00'), findsOneWidget);
     expect(find.byType(LifePostImage), findsOneWidget);

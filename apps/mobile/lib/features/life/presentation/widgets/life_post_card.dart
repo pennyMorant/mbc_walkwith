@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/platform/external_link_service.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/utils/app_formatters.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/life_post.dart';
-import '../life_post_action.dart';
 import 'life_post_card_parts.dart';
 import 'life_post_image.dart';
 import 'life_post_read_state.dart';
 
-class LifePostCard extends ConsumerWidget {
+class LifePostCard extends StatelessWidget {
   const LifePostCard({
     super.key,
     required this.post,
@@ -28,7 +25,7 @@ class LifePostCard extends ConsumerWidget {
   final bool showUnreadBadge;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final readState = LifePostReadState.fromPost(post);
@@ -104,21 +101,6 @@ class LifePostCard extends ConsumerWidget {
                       lifePostHasRegistrationDetails(post)) ...[
                     const SizedBox(height: 10),
                     LifePostRegistrationDetails(post: post),
-                  ],
-                  if (lifePostHasAction(post)) ...[
-                    const SizedBox(height: 12),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: FilledButton.icon(
-                        onPressed: () => openLifePostAction(
-                          context: context,
-                          post: post,
-                          linkService: ref.read(externalLinkServiceProvider),
-                        ),
-                        icon: const Icon(Icons.open_in_new),
-                        label: Text(lifePostActionLabel(l10n, post)),
-                      ),
-                    ),
                   ],
                 ],
               ),

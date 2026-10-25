@@ -18,12 +18,9 @@ import '../data/group_repository.dart';
 import '../data/life_repository.dart';
 import '../data/prayer_repository.dart';
 import '../data/serving_repository.dart';
-import '../domain/life_post.dart';
 import '../domain/life_post_list_request.dart';
 import 'widgets/life_dashboard_tab_bar.dart';
 import 'widgets/life_dashboard_view.dart';
-import 'widgets/life_error_view.dart';
-import 'widgets/life_loading_view.dart';
 
 class LifeTab extends ConsumerStatefulWidget {
   const LifeTab({super.key});
@@ -35,15 +32,12 @@ class LifeTab extends ConsumerStatefulWidget {
 class _LifeTabState extends ConsumerState<LifeTab> {
   DatePeriod _monthPeriod = DatePeriod.current(DatePeriodMode.month);
   LifeDashboardTab _selectedTab = LifeDashboardTab.week;
+  final Set<LifeDashboardTab> _loadedSupportTabs = {LifeDashboardTab.week};
 
   LifePostListRequest get _monthRequest => _requestForPeriod(_monthPeriod);
 
   LifePostListRequest get _weekRequest {
     return _requestForPeriod(DatePeriod.current(DatePeriodMode.week));
-  }
-
-  LifePostListRequest get _activeRequest {
-    return _selectedTab == LifeDashboardTab.week ? _weekRequest : _monthRequest;
   }
 
   LifePostListRequest _requestForPeriod(DatePeriod period) {
@@ -60,20 +54,11 @@ class _LifeTabState extends ConsumerState<LifeTab> {
     final l10n = AppLocalizations.of(context)!;
     final weekRequest = _weekRequest;
     final monthRequest = _monthRequest;
-    final activeRequest = _activeRequest;
-    final activePostsAsync = ref.watch(lifePostListProvider(activeRequest));
-    final weekPosts = _postsOrEmpty(
-      ref.watch(lifePostListProvider(weekRequest)),
-    );
-    final monthPosts = _postsOrEmpty(
-      ref.watch(lifePostListProvider(monthRequest)),
-    );
-    final heroPost = ref
-        .watch(latestLifeBulletinProvider(weekRequest))
-        .maybeWhen(data: (post) => post, orElse: () => null);
-    final memberSession = ref
-        .watch(memberSessionProvider)
-        .maybeWhen(data: (session) => session, orElse: () => null);
+    final weekPostsAsync = ref.watch(lifePostListProvider(weekRequest));
+    final monthPostsAsync = ref.watch(lifePostListProvider(monthRequest));
+    final heroPostAsync = ref.watch(latestLifeBulletinProvider(weekRequest));
+    final memberSessionAsync = ref.watch(memberSessionProvider);
+    final memberSession = memberSessionAsync.value;
     final settings = ref
         .watch(appSettingsProvider)
         .maybeWhen(
@@ -99,34 +84,54 @@ class _LifeTabState extends ConsumerState<LifeTab> {
                 ),
         ],
       ),
-      body: activePostsAsync.when(
-        loading: () => const LifeLoadingView(),
-        error: (error, stackTrace) => LifeErrorView(
-          onRetry: () => ref.invalidate(lifePostListProvider(activeRequest)),
+      body: RefreshIndicator(
+        triggerMode: RefreshIndicatorTriggerMode.onEdge,
+        onRefresh: () => _refreshLife(
+          ref,
+          weekRequest: weekRequest,
+          monthRequest: monthRequest,
         ),
-        data: (_) => RefreshIndicator(
-          triggerMode: RefreshIndicatorTriggerMode.onEdge,
-          onRefresh: () => _refreshLife(
-            ref,
-            weekRequest: weekRequest,
-            monthRequest: monthRequest,
-          ),
-          notificationPredicate: _lifeRefreshNotificationPredicate,
-          child: LifeDashboardView(
-            weekPosts: weekPosts,
-            monthPosts: monthPosts,
-            heroPost: heroPost,
-            selectedTab: _selectedTab,
-            onTabChanged: _changeTab,
-            prayerEnabled: settings.prayerEnabled,
-            publicPrayerRequestsAsync: ref.watch(publicPrayerRequestsProvider),
-            memberPrayerRequestsAsync: ref.watch(memberPrayerRequestsProvider),
-            memberSession: memberSession,
-            groupsAsync: ref.watch(ministryGroupsProvider),
-            coursesAsync: ref.watch(coursesProvider),
-            servingAsync: ref.watch(servingAssignmentsProvider),
-            careRequestsAsync: ref.watch(careRequestsProvider),
-          ),
+        notificationPredicate: _lifeRefreshNotificationPredicate,
+        child: LifeDashboardView(
+          weekPostsAsync: weekPostsAsync,
+          monthPostsAsync: monthPostsAsync,
+          heroPostAsync: heroPostAsync,
+          selectedTab: _selectedTab,
+          onTabChanged: _changeTab,
+          onRetryWeekPosts: () =>
+              ref.invalidate(lifePostListProvider(weekRequest)),
+          onRetryMonthPosts: () =>
+              ref.invalidate(lifePostListProvider(monthRequest)),
+          onRetryHero: () =>
+              ref.invalidate(latestLifeBulletinProvider(weekRequest)),
+          prayerEnabled: settings.prayerEnabled,
+          publicPrayerRequestsAsync:
+              _shouldLoad(LifeDashboardTab.prayer) && settings.prayerEnabled
+              ? ref.watch(publicPrayerRequestsProvider)
+              : const AsyncData([]),
+          memberPrayerRequestsAsync:
+              _shouldLoad(LifeDashboardTab.prayer) &&
+                  settings.prayerEnabled &&
+                  memberSession != null
+              ? ref.watch(memberPrayerRequestsProvider)
+              : const AsyncData([]),
+          memberSession: memberSession,
+          groupsAsync: _shouldLoad(LifeDashboardTab.groups)
+              ? ref.watch(ministryGroupsProvider)
+              : const AsyncData([]),
+          coursesAsync: _shouldLoad(LifeDashboardTab.courses)
+              ? ref.watch(coursesProvider)
+              : const AsyncData([]),
+          servingAsync:
+              _shouldLoad(LifeDashboardTab.serving) && memberSession != null
+              ? ref.watch(servingAssignmentsProvider)
+              : const AsyncData([]),
+          careRequestsAsync:
+              _shouldLoad(LifeDashboardTab.prayer) && memberSession != null
+              ? ref.watch(careRequestsProvider)
+              : const AsyncData([]),
+          memberSessionResolved:
+              memberSessionAsync.hasValue || memberSessionAsync.hasError,
         ),
       ),
     );
@@ -149,8 +154,11 @@ class _LifeTabState extends ConsumerState<LifeTab> {
     }
     setState(() {
       _selectedTab = tab;
+      _loadedSupportTabs.add(tab);
     });
   }
+
+  bool _shouldLoad(LifeDashboardTab tab) => _loadedSupportTabs.contains(tab);
 }
 
 Future<void> _refreshLife(
@@ -190,10 +198,6 @@ bool _lifeRefreshNotificationPredicate(ScrollNotification notification) {
 }
 
 const _refreshTopEdgeTolerance = 24.0;
-List<LifePost> _postsOrEmpty(AsyncValue<List<LifePost>> postsAsync) {
-  return postsAsync.maybeWhen(data: (posts) => posts, orElse: () => const []);
-}
-
 String _lifeMonthLabel(BuildContext context, DatePeriod period) {
   final locale = Localizations.localeOf(context).toLanguageTag();
   return DateFormat.MMM(locale).format(period.start);

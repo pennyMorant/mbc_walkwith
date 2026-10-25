@@ -36,18 +36,21 @@ class PrayerRequestSection extends ConsumerWidget {
       ...publicRequests,
     ];
     final dedupedRequests = _dedupeRequests(requests);
+    final isLoading =
+        publicPrayerRequestsAsync.isLoading ||
+        (memberSession != null && memberPrayerRequestsAsync.isLoading);
+    final hasPartialError =
+        publicPrayerRequestsAsync.hasError ||
+        (memberSession != null && memberPrayerRequestsAsync.hasError);
 
-    if (publicPrayerRequestsAsync.isLoading ||
-        memberPrayerRequestsAsync.isLoading) {
+    if (isLoading && dedupedRequests.isEmpty) {
       return const Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
         child: LinearProgressIndicator(),
       );
     }
 
-    if (dedupedRequests.isEmpty &&
-        (publicPrayerRequestsAsync.hasError ||
-            memberPrayerRequestsAsync.hasError)) {
+    if (dedupedRequests.isEmpty && hasPartialError) {
       return LifeEmptyTabCard(
         title: l10n.prayerTitle,
         body: l10n.lifeSectionLoadError,
@@ -78,6 +81,19 @@ class PrayerRequestSection extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
       child: Column(
         children: [
+          if (isLoading) ...[
+            const LinearProgressIndicator(),
+            const SizedBox(height: 12),
+          ],
+          if (hasPartialError) ...[
+            _PrayerPartialErrorNotice(
+              onRetry: () {
+                ref.invalidate(publicPrayerRequestsProvider);
+                ref.invalidate(memberPrayerRequestsProvider);
+              },
+            ),
+            const SizedBox(height: 12),
+          ],
           for (final request in dedupedRequests) ...[
             PrayerRequestCard(
               request: request,
@@ -88,6 +104,41 @@ class PrayerRequestSection extends ConsumerWidget {
             const SizedBox(height: 8),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _PrayerPartialErrorNotice extends StatelessWidget {
+  const _PrayerPartialErrorNotice({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    return Material(
+      color: colorScheme.errorContainer,
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                l10n.lifeSectionLoadError,
+                style: TextStyle(color: colorScheme.onErrorContainer),
+              ),
+            ),
+            IconButton(
+              onPressed: onRetry,
+              tooltip: l10n.retryAction,
+              color: colorScheme.onErrorContainer,
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
+        ),
       ),
     );
   }

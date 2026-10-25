@@ -9,12 +9,14 @@ import '../../domain/life_post.dart';
 import '../../domain/prayer_request.dart';
 import 'care_request_section.dart';
 import 'life_dashboard_support_widgets.dart';
+import 'life_post_feed_sliver.dart';
 import 'prayer_request_section.dart';
 
 class LifePrayerTabView extends StatelessWidget {
   const LifePrayerTabView({
     super.key,
-    required this.posts,
+    required this.postsAsync,
+    required this.onRetryPosts,
     required this.prayerEnabled,
     required this.publicPrayerRequestsAsync,
     required this.memberPrayerRequestsAsync,
@@ -23,7 +25,8 @@ class LifePrayerTabView extends StatelessWidget {
     required this.showUnreadBadges,
   });
 
-  final List<LifePost> posts;
+  final AsyncValue<List<LifePost>> postsAsync;
+  final VoidCallback onRetryPosts;
   final bool prayerEnabled;
   final AsyncValue<List<PrayerRequest>> publicPrayerRequestsAsync;
   final AsyncValue<List<PrayerRequest>> memberPrayerRequestsAsync;
@@ -42,12 +45,14 @@ class LifePrayerTabView extends StatelessWidget {
             child: LifeEmptyTabCard(body: l10n.lifeTabPrayerDisabled),
           )
         else ...[
-          if (posts.isNotEmpty)
-            LifePostSliverList(
-              posts: posts,
-              compactBody: true,
-              showUnreadBadge: showUnreadBadges,
-            ),
+          LifePostFeedSliver(
+            postsAsync: postsAsync,
+            onRetry: onRetryPosts,
+            emptyBody: '',
+            showEmpty: false,
+            compactBody: true,
+            showUnreadBadge: showUnreadBadges,
+          ),
           SliverToBoxAdapter(
             child: LifePrayerActionCard(memberSession: memberSession),
           ),

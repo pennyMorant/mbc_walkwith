@@ -6,7 +6,6 @@ import '../../../../shared/utils/app_formatters.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/life_post.dart';
 import '../life_post_detail_presentation.dart';
-import 'life_post_card_parts.dart';
 import 'life_post_image.dart';
 import 'life_post_read_state.dart';
 
@@ -76,7 +75,6 @@ class _PublishedSundayHeroCard extends StatelessWidget {
                     runSpacing: 8,
                     children: [
                       AppChip(label: l10n.weeklyBulletinTitle),
-                      AppChip(label: lifePostTypeLabel(l10n, post)),
                       if (showUnreadBadge && readState.isUnread)
                         AppChip(label: l10n.lifePostUnread, selected: true),
                     ],

@@ -34,6 +34,7 @@ void main() {
       final courses = Completer<List<CourseLearning>>();
       final servingAssignments = Completer<List<ServingAssignment>>();
       final careRequests = Completer<List<CareRequest>>();
+      var supportProviderReads = 0;
 
       addTearDown(() {
         if (!publicPrayerRequests.isCompleted) {
@@ -56,18 +57,30 @@ void main() {
             appSettingsProvider.overrideWith(
               (ref) async => AppSettings.defaults,
             ),
-            publicPrayerRequestsProvider.overrideWith(
-              (ref) => publicPrayerRequests.future,
-            ),
-            memberPrayerRequestsProvider.overrideWith(
-              (ref) => memberPrayerRequests.future,
-            ),
-            ministryGroupsProvider.overrideWith((ref) => ministryGroups.future),
-            coursesProvider.overrideWith((ref) => courses.future),
-            servingAssignmentsProvider.overrideWith(
-              (ref) => servingAssignments.future,
-            ),
-            careRequestsProvider.overrideWith((ref) => careRequests.future),
+            publicPrayerRequestsProvider.overrideWith((ref) {
+              supportProviderReads += 1;
+              return publicPrayerRequests.future;
+            }),
+            memberPrayerRequestsProvider.overrideWith((ref) {
+              supportProviderReads += 1;
+              return memberPrayerRequests.future;
+            }),
+            ministryGroupsProvider.overrideWith((ref) {
+              supportProviderReads += 1;
+              return ministryGroups.future;
+            }),
+            coursesProvider.overrideWith((ref) {
+              supportProviderReads += 1;
+              return courses.future;
+            }),
+            servingAssignmentsProvider.overrideWith((ref) {
+              supportProviderReads += 1;
+              return servingAssignments.future;
+            }),
+            careRequestsProvider.overrideWith((ref) {
+              supportProviderReads += 1;
+              return careRequests.future;
+            }),
           ],
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -79,6 +92,7 @@ void main() {
       );
 
       await _pumpUntilFound(tester, find.byType(RefreshIndicator));
+      expect(supportProviderReads, 0);
 
       final initialPeriods = lifeRepository.requests
           .where((request) => request.from != null && request.to != null)
@@ -120,6 +134,7 @@ void main() {
       expect(courses.isCompleted, isFalse);
       expect(servingAssignments.isCompleted, isFalse);
       expect(careRequests.isCompleted, isFalse);
+      expect(supportProviderReads, 0);
     },
   );
 }

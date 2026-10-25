@@ -19,9 +19,11 @@ void main() {
           theme: AppTheme.build(null, Brightness.light),
           home: const Scaffold(
             body: LifeGroupsTabView(
-              posts: [],
+              postsAsync: AsyncData([]),
+              onRetryPosts: _noop,
               groupsAsync: AsyncData([_publicGroup]),
               memberSession: null,
+              showMemberSignInCard: true,
               showUnreadBadges: false,
             ),
           ),
@@ -38,6 +40,8 @@ void main() {
     expect(applyButton.onPressed, isNull);
   });
 }
+
+void _noop() {}
 
 const _publicGroup = MinistryGroup(
   id: 'public-fellowship',

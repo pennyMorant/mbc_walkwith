@@ -16,9 +16,11 @@ void main() {
         theme: AppTheme.build(null, Brightness.light),
         home: const Scaffold(
           body: LifeCoursesTabView(
-            posts: [],
+            postsAsync: AsyncData([]),
+            onRetryPosts: _noop,
             coursesAsync: AsyncData([_publicCourse]),
             memberSession: null,
+            showMemberSignInCard: true,
             showUnreadBadges: false,
           ),
         ),
@@ -34,6 +36,8 @@ void main() {
     expect(enrollButton.onPressed, isNull);
   });
 }
+
+void _noop() {}
 
 const _publicCourse = CourseLearning(
   id: 'public-foundations',

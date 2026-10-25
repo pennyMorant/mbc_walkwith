@@ -11,17 +11,22 @@ import '../../domain/ministry_group.dart';
 import '../../domain/serving_assignment.dart';
 import 'course_learning_section.dart';
 import 'life_dashboard_support_widgets.dart';
+import 'life_post_feed_sliver.dart';
 import 'ministry_group_section.dart';
 import 'serving_assignment_section.dart';
 
 class LifeWeekTabView extends StatelessWidget {
   const LifeWeekTabView({
     super.key,
-    required this.posts,
+    required this.postsAsync,
+    required this.onRetry,
+    required this.showNewcomerAction,
     required this.showUnreadBadges,
   });
 
-  final List<LifePost> posts;
+  final AsyncValue<List<LifePost>> postsAsync;
+  final VoidCallback onRetry;
+  final bool showNewcomerAction;
   final bool showUnreadBadges;
 
   @override
@@ -31,18 +36,17 @@ class LifeWeekTabView extends StatelessWidget {
     return LifeTabScrollView(
       storageKey: const PageStorageKey<String>('life-week-tab'),
       slivers: [
-        const SliverToBoxAdapter(child: LifeNewcomerActionCard()),
-        if (posts.isEmpty)
-          SliverToBoxAdapter(
-            child: LifeEmptyTabCard(body: l10n.lifeTabWeekEmpty),
-          )
-        else
-          LifePostSliverList(
-            posts: posts,
-            compactBody: true,
-            showRegistrationDetails: true,
-            showUnreadBadge: showUnreadBadges,
-          ),
+        if (showNewcomerAction)
+          const SliverToBoxAdapter(child: LifeNewcomerActionCard()),
+        LifePostFeedSliver(
+          postsAsync: postsAsync,
+          onRetry: onRetry,
+          emptyBody: l10n.lifeTabWeekEmpty,
+          showEmpty: true,
+          compactBody: true,
+          showRegistrationDetails: true,
+          showUnreadBadge: showUnreadBadges,
+        ),
       ],
     );
   }
@@ -51,11 +55,13 @@ class LifeWeekTabView extends StatelessWidget {
 class LifeEventsTabView extends StatelessWidget {
   const LifeEventsTabView({
     super.key,
-    required this.posts,
+    required this.postsAsync,
+    required this.onRetry,
     required this.showUnreadBadges,
   });
 
-  final List<LifePost> posts;
+  final AsyncValue<List<LifePost>> postsAsync;
+  final VoidCallback onRetry;
   final bool showUnreadBadges;
 
   @override
@@ -64,16 +70,14 @@ class LifeEventsTabView extends StatelessWidget {
     return LifeTabScrollView(
       storageKey: const PageStorageKey<String>('life-events-tab'),
       slivers: [
-        if (posts.isEmpty)
-          SliverToBoxAdapter(
-            child: LifeEmptyTabCard(body: l10n.lifeTabEventsEmpty),
-          )
-        else
-          LifePostSliverList(
-            posts: posts,
-            showRegistrationDetails: true,
-            showUnreadBadge: showUnreadBadges,
-          ),
+        LifePostFeedSliver(
+          postsAsync: postsAsync,
+          onRetry: onRetry,
+          emptyBody: l10n.lifeTabEventsEmpty,
+          showEmpty: true,
+          showRegistrationDetails: true,
+          showUnreadBadge: showUnreadBadges,
+        ),
       ],
     );
   }
@@ -82,15 +86,19 @@ class LifeEventsTabView extends StatelessWidget {
 class LifeGroupsTabView extends StatelessWidget {
   const LifeGroupsTabView({
     super.key,
-    required this.posts,
+    required this.postsAsync,
+    required this.onRetryPosts,
     required this.groupsAsync,
     required this.memberSession,
+    required this.showMemberSignInCard,
     required this.showUnreadBadges,
   });
 
-  final List<LifePost> posts;
+  final AsyncValue<List<LifePost>> postsAsync;
+  final VoidCallback onRetryPosts;
   final AsyncValue<List<MinistryGroup>> groupsAsync;
   final MemberSession? memberSession;
+  final bool showMemberSignInCard;
   final bool showUnreadBadges;
 
   @override
@@ -98,14 +106,16 @@ class LifeGroupsTabView extends StatelessWidget {
     return LifeTabScrollView(
       storageKey: const PageStorageKey<String>('life-groups-tab'),
       slivers: [
-        if (posts.isNotEmpty)
-          LifePostSliverList(
-            posts: posts,
-            compactBody: true,
-            showRegistrationDetails: true,
-            showUnreadBadge: showUnreadBadges,
-          ),
-        if (memberSession == null)
+        LifePostFeedSliver(
+          postsAsync: postsAsync,
+          onRetry: onRetryPosts,
+          emptyBody: '',
+          showEmpty: false,
+          compactBody: true,
+          showRegistrationDetails: true,
+          showUnreadBadge: showUnreadBadges,
+        ),
+        if (showMemberSignInCard)
           SliverToBoxAdapter(child: const LifeMemberSignInCard()),
         SliverToBoxAdapter(
           child: MinistryGroupSection(
@@ -121,15 +131,19 @@ class LifeGroupsTabView extends StatelessWidget {
 class LifeCoursesTabView extends StatelessWidget {
   const LifeCoursesTabView({
     super.key,
-    required this.posts,
+    required this.postsAsync,
+    required this.onRetryPosts,
     required this.coursesAsync,
     required this.memberSession,
+    required this.showMemberSignInCard,
     required this.showUnreadBadges,
   });
 
-  final List<LifePost> posts;
+  final AsyncValue<List<LifePost>> postsAsync;
+  final VoidCallback onRetryPosts;
   final AsyncValue<List<CourseLearning>> coursesAsync;
   final MemberSession? memberSession;
+  final bool showMemberSignInCard;
   final bool showUnreadBadges;
 
   @override
@@ -137,14 +151,16 @@ class LifeCoursesTabView extends StatelessWidget {
     return LifeTabScrollView(
       storageKey: const PageStorageKey<String>('life-courses-tab'),
       slivers: [
-        if (posts.isNotEmpty)
-          LifePostSliverList(
-            posts: posts,
-            compactBody: true,
-            showRegistrationDetails: true,
-            showUnreadBadge: showUnreadBadges,
-          ),
-        if (memberSession == null)
+        LifePostFeedSliver(
+          postsAsync: postsAsync,
+          onRetry: onRetryPosts,
+          emptyBody: '',
+          showEmpty: false,
+          compactBody: true,
+          showRegistrationDetails: true,
+          showUnreadBadge: showUnreadBadges,
+        ),
+        if (showMemberSignInCard)
           SliverToBoxAdapter(child: const LifeMemberSignInCard()),
         SliverToBoxAdapter(
           child: CourseLearningSection(
@@ -160,15 +176,19 @@ class LifeCoursesTabView extends StatelessWidget {
 class LifeServingTabView extends StatelessWidget {
   const LifeServingTabView({
     super.key,
-    required this.posts,
+    required this.postsAsync,
+    required this.onRetryPosts,
     required this.servingAsync,
     required this.memberSession,
+    required this.showMemberSignInCard,
     required this.showUnreadBadges,
   });
 
-  final List<LifePost> posts;
+  final AsyncValue<List<LifePost>> postsAsync;
+  final VoidCallback onRetryPosts;
   final AsyncValue<List<ServingAssignment>> servingAsync;
   final MemberSession? memberSession;
+  final bool showMemberSignInCard;
   final bool showUnreadBadges;
 
   @override
@@ -177,16 +197,18 @@ class LifeServingTabView extends StatelessWidget {
     return LifeTabScrollView(
       storageKey: const PageStorageKey<String>('life-serving-tab'),
       slivers: [
-        if (posts.isNotEmpty)
-          LifePostSliverList(
-            posts: posts,
-            compactBody: true,
-            showRegistrationDetails: true,
-            showUnreadBadge: showUnreadBadges,
-          ),
-        if (session == null)
+        LifePostFeedSliver(
+          postsAsync: postsAsync,
+          onRetry: onRetryPosts,
+          emptyBody: '',
+          showEmpty: false,
+          compactBody: true,
+          showRegistrationDetails: true,
+          showUnreadBadge: showUnreadBadges,
+        ),
+        if (showMemberSignInCard)
           SliverToBoxAdapter(child: const LifeMemberSignInCard())
-        else
+        else if (session != null)
           SliverToBoxAdapter(
             child: ServingAssignmentSection(
               assignmentsAsync: servingAsync,
