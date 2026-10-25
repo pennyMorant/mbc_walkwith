@@ -87,6 +87,7 @@ class MyVerseNoteTab extends StatelessWidget {
           AppFilledTextField(
             controller: noteController,
             hintText: l10n.noteHint,
+            enabled: !saving,
             minLines: 3,
             maxLines: 5,
             textInputAction: TextInputAction.newline,

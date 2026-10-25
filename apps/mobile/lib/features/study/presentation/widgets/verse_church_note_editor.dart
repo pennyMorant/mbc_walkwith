@@ -54,6 +54,7 @@ class VerseChurchNoteEditor extends StatelessWidget {
             AppFilledTextField(
               controller: externalNameController,
               hintText: l10n.verseNotesDisplayNameHint,
+              enabled: !saving,
               textInputAction: TextInputAction.next,
               fillColor: colorScheme.insetSurfaceColor,
             ),
@@ -61,6 +62,7 @@ class VerseChurchNoteEditor extends StatelessWidget {
             AppFilledTextField(
               controller: noteController,
               hintText: l10n.verseNotesContentHint,
+              enabled: !saving,
               minLines: 4,
               maxLines: 7,
               textInputAction: TextInputAction.newline,

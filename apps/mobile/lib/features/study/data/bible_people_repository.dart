@@ -62,14 +62,11 @@ class RemoteFirstBiblePeopleRepository implements BiblePeopleRepository {
   @override
   Future<List<BiblePerson>> getPeople(String translationId) async {
     try {
-      final people = await _fetchRemotePeople(translationId);
-      if (people.isNotEmpty) {
-        return people;
-      }
+      return await _fetchRemotePeople(translationId);
     } on ApiError {
       // Fall back to bundled knowledge when the backend is unavailable.
+      return assetRepository.getPeople(translationId);
     }
-    return assetRepository.getPeople(translationId);
   }
 
   Future<List<BiblePerson>> _fetchRemotePeople(String translationId) async {

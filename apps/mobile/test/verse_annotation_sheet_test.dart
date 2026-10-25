@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -199,6 +201,94 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('private note input is disabled while save is pending', (
+    tester,
+  ) async {
+    final pendingSave = Completer<void>();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          bibleNotesRepositoryProvider.overrideWithValue(
+            _StaleDeleteBibleNotesRepository(),
+          ),
+        ],
+        child: MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: Scaffold(
+            body: VerseAnnotationSheet(
+              verse: _verse,
+              bookId: 'rom',
+              chapter: 8,
+              annotation: null,
+              onBookmarkChanged: (_) async {},
+              onHighlightChanged: (_) async {},
+              onNoteSaved: (_) => pendingSave.future,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField).first, 'Pending note');
+    final saveButton = find.widgetWithText(FilledButton, 'Save note');
+    await tester.ensureVisible(saveButton);
+    await tester.tap(saveButton);
+    await tester.pump();
+
+    expect(
+      tester.widget<TextField>(find.byType(TextField).first).enabled,
+      isFalse,
+    );
+    expect(find.text('Pending note'), findsOneWidget);
+
+    pendingSave.completeError(StateError('database unavailable'));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('church note inputs are disabled while update is pending', (
+    tester,
+  ) async {
+    final repository = _PendingUpdateBibleNotesRepository();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [bibleNotesRepositoryProvider.overrideWithValue(repository)],
+        child: MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: Scaffold(
+            body: VerseAnnotationSheet(
+              verse: _verse,
+              bookId: 'rom',
+              chapter: 8,
+              annotation: null,
+              initialTabIndex: 1,
+              onBookmarkChanged: (_) async {},
+              onHighlightChanged: (_) async {},
+              onNoteSaved: (_) async {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Update'));
+    await tester.pump();
+
+    final fields = tester.widgetList<TextField>(find.byType(TextField));
+    expect(fields, isNotEmpty);
+    expect(fields.every((field) => field.enabled == false), isTrue);
+
+    repository.pendingUpdate.completeError(StateError('network unavailable'));
+    await tester.pumpAndSettle();
+  });
+
   testWidgets('failed bookmark save rolls back and stays recoverable', (
     tester,
   ) async {
@@ -289,6 +379,19 @@ class _StaleDeleteBibleNotesRepository implements BibleNotesRepository {
   @override
   Future<void> delete(String noteId) async {
     deletedNoteIds.add(noteId);
+  }
+}
+
+class _PendingUpdateBibleNotesRepository
+    extends _StaleDeleteBibleNotesRepository {
+  final pendingUpdate = Completer<BibleVerseNote>();
+
+  @override
+  Future<BibleVerseNote> update({
+    required String noteId,
+    required String content,
+  }) {
+    return pendingUpdate.future;
   }
 }
 

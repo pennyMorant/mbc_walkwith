@@ -71,6 +71,23 @@ void main() {
     expect(people.single.id, 'fallback-person');
   });
 
+  test('keeps successful empty Bible knowledge responses empty', () async {
+    final emptyResponse = _StaticApiClient({
+      'data': {'items': <Object?>[]},
+    });
+    final people = RemoteFirstBiblePeopleRepository(
+      apiClient: emptyResponse,
+      assetRepository: const _FallbackPeopleRepository(),
+    );
+    final places = RemoteFirstBiblePlacesRepository(
+      apiClient: emptyResponse,
+      assetRepository: const _FallbackPlacesRepository(),
+    );
+
+    expect(await people.getPeople('web'), isEmpty);
+    expect(await places.getPlaces('web'), isEmpty);
+  });
+
   test('does not hide malformed people or place contracts', () async {
     final malformed = _StaticApiClient({'data': <String, Object?>{}});
     final people = RemoteFirstBiblePeopleRepository(

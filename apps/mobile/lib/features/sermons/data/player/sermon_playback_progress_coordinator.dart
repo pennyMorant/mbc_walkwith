@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/api/api_error.dart';
 import '../sermon_progress_repository.dart';
 import '../../domain/sermon.dart';
 
@@ -38,7 +39,7 @@ class SermonPlaybackProgressCoordinator {
             ? Duration.zero
             : remoteProgress.position;
       }
-    } catch (_) {
+    } on ApiError {
       // Playback recovery remains available when progress sync is offline.
     }
     final restoreDuration = loadedDuration ?? sermon.duration;

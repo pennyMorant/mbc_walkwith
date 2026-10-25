@@ -62,14 +62,11 @@ class RemoteFirstBiblePlacesRepository implements BiblePlacesRepository {
   @override
   Future<List<BiblePlace>> getPlaces(String translationId) async {
     try {
-      final places = await _fetchRemotePlaces(translationId);
-      if (places.isNotEmpty) {
-        return places;
-      }
+      return await _fetchRemotePlaces(translationId);
     } on ApiError {
       // Fall back to bundled knowledge when the backend is unavailable.
+      return assetRepository.getPlaces(translationId);
     }
-    return assetRepository.getPlaces(translationId);
   }
 
   Future<List<BiblePlace>> _fetchRemotePlaces(String translationId) async {

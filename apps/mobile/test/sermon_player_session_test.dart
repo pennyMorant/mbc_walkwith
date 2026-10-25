@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mbc_walkwith/core/api/api_client.dart';
+import 'package:mbc_walkwith/core/api/api_error.dart';
 import 'package:mbc_walkwith/core/config/app_config.dart';
 import 'package:mbc_walkwith/features/sermons/data/player/sermon_audio_engine.dart';
 import 'package:mbc_walkwith/features/sermons/data/player/sermon_player_session.dart';
@@ -230,6 +231,55 @@ void main() {
     expect(engine.seekCalls.last, const Duration(minutes: 10));
     expect(repository.savedPosition(_sermon.id), const Duration(minutes: 10));
   });
+
+  test(
+    'restores local progress when remote progress API is unavailable',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final preferences = await SharedPreferences.getInstance();
+      final repository = _RecordingSermonProgressRepository(preferences);
+      await repository.savePosition(
+        sermonId: _sermon.id,
+        position: const Duration(minutes: 4),
+      );
+      repository.fetchError = const ApiError(message: 'offline');
+      final engine = _FakeSermonAudioEngine();
+      final session = SermonPlayerSession(
+        repository: () => repository,
+        audioEngineFactory: () => engine,
+      );
+      addTearDown(session.dispose);
+
+      await session.update(sermon: _sermon, speed: 1);
+
+      expect(engine.seekCalls.last, const Duration(minutes: 4));
+      expect(session.loadError, isNull);
+      expect(session.loadedUrl, _sermon.audioUrl);
+    },
+  );
+
+  test('does not hide malformed remote playback progress', () async {
+    SharedPreferences.setMockInitialValues({});
+    final preferences = await SharedPreferences.getInstance();
+    final repository = _RecordingSermonProgressRepository(preferences);
+    await repository.savePosition(
+      sermonId: _sermon.id,
+      position: const Duration(minutes: 4),
+    );
+    repository.fetchError = const FormatException('malformed progress');
+    final engine = _FakeSermonAudioEngine();
+    final session = SermonPlayerSession(
+      repository: () => repository,
+      audioEngineFactory: () => engine,
+    );
+    addTearDown(session.dispose);
+
+    await session.update(sermon: _sermon, speed: 1);
+
+    expect(engine.seekCalls, isEmpty);
+    expect(session.loadError, 'unavailable');
+    expect(session.loadedUrl, isNull);
+  });
 }
 
 Future<void> _flushAsync() async {
@@ -378,9 +428,14 @@ class _RecordingSermonProgressRepository extends SermonProgressRepository {
   final clearedSermonIds = <String>[];
   final reports = <_ProgressReport>[];
   SermonRemoteProgress? remoteProgress;
+  Object? fetchError;
 
   @override
   Future<SermonRemoteProgress?> fetchRemoteProgress(String sermonId) async {
+    final error = fetchError;
+    if (error != null) {
+      throw error;
+    }
     return remoteProgress;
   }
 
