@@ -1,7 +1,7 @@
 # MBC WalkWith 闭环验证方案
 
 状态：执行入口  
-最后更新：2026-06-25
+最后更新：2026-10-24
 
 本文档把当前产品从“代码已实现”推进到“测试环境可验收”和“生产上线可决策”。它不替代 feature 文档；业务边界仍以 `docs/features/`、`docs/domains/`、`docs/surfaces/`、`docs/capabilities/` 和 `docs/sdk/` 为准。
 
@@ -47,9 +47,9 @@ git diff --check
 
 - `bun run check`：通过。
 - `flutter analyze`：通过。
-- `flutter test`：83 tests passed。
+- `flutter test`：406 tests passed。
 - Admin Web build：通过，有 Vite chunk size warning。
-- 后端测试：106 passed，1 skipped；skipped 项为缺少真实 `DATABASE_URL` 的 Postgres integration。
+- 后端测试：319 passed，11 skipped；skipped 项均为缺少真实 `DATABASE_URL` 的 Postgres integration。
 
 ## 4. 功能闭环矩阵
 

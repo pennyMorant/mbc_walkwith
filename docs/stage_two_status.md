@@ -1,7 +1,7 @@
 # Stage Two Status
 
 状态：第一版闭环完成，进入精修和真实环境验收阶段
-最后核查：2026-06-30
+最后核查：2026-10-24
 
 本文档记录第二阶段 core/features 架构接入后的当前产品状态、验证结果、精修优先级
 和上线前剩余事项。它不替代各 feature 文档；业务边界仍以 `docs/features/`、
@@ -57,8 +57,8 @@ bun run check:capabilities
 
 验证结果：
 
-- Backend tests：106 passed，1 skipped；skipped 项为未配置真实 `DATABASE_URL` 的 Postgres integration。
-- Mobile tests：83 passed。
+- Backend tests：319 passed，11 skipped；skipped 项均为未配置真实 `DATABASE_URL` 的 Postgres integration。
+- Mobile tests：406 passed。
 - Admin Web build：通过，有 Vite chunk size warning。
 
 已知非阻断提醒：

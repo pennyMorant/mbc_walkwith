@@ -6,26 +6,18 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../core/storage/shared_preferences_provider.dart';
-import '../../../features/sermons/data/sermons_repository.dart';
 import '../../../features/sermons/domain/sermon.dart';
 import '../../../l10n/app_localizations.dart';
-import '../data/bible_people_repository.dart';
-import '../data/bible_places_repository.dart';
 import '../data/study_repository.dart';
-import '../domain/bible_person.dart';
-import '../domain/bible_person_matcher.dart';
-import '../domain/bible_place.dart';
-import '../domain/bible_place_matcher.dart';
 import '../domain/bible_translation.dart';
-import '../domain/study_annotation.dart';
 import 'bible_book_display.dart';
 import 'bible_chapter_prefetcher.dart';
 import 'bible_reader_app_bar.dart';
+import 'bible_reader_chapter_state.dart';
 import 'bible_reader_scroll_session.dart';
 import 'bible_reader_sheet_actions.dart';
 import 'bible_reader_tts_session.dart';
 import 'bible_reader_tts_session_provider.dart';
-import 'reader_assist_settings_provider.dart';
 import 'widgets/bible_reader_content_view.dart';
 import 'widgets/bible_reader_loading_view.dart';
 import 'widgets/reader_load_error.dart';
@@ -103,78 +95,16 @@ class _BibleReaderPageState extends ConsumerState<BibleReaderPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final translation = BibleTranslation.fromLocale(
-      Localizations.localeOf(context),
-    );
-    final bookRequest = BibleBookRequest(
-      bookId: widget.bookId,
-      translationId: translation.id,
-    );
-    final chapterRequest = BibleChapterRequest(
+    final chapterState = BibleReaderChapterState.watch(
+      ref: ref,
+      locale: Localizations.localeOf(context),
       bookId: widget.bookId,
       chapter: widget.chapter,
-      translationId: translation.id,
+      targetVerseId: widget.targetVerseId,
     );
-    final annotationsRequest = StudyAnnotationsRequest(
-      bookId: widget.bookId,
-      chapter: widget.chapter,
-    );
-    final bookAsync = ref.watch(bibleBookProvider(bookRequest));
-    final versesAsync = ref.watch(bibleChapterVersesProvider(chapterRequest));
-    final annotationsAsync = ref.watch(
-      studyAnnotationsProvider(annotationsRequest),
-    );
-    final recommendedSermonsAsync = ref.watch(
-      recommendedSermonsProvider(
-        SermonRecommendationRequest(
-          bookId: widget.bookId,
-          chapter: widget.chapter,
-          verseId: widget.targetVerseId,
-        ),
-      ),
-    );
-    final recommendedSermons = recommendedSermonsAsync.maybeWhen(
-      data: (sermons) => sermons,
-      orElse: () => const <Sermon>[],
-    );
-    final Map<String, StudyVerseAnnotation> annotations = annotationsAsync
-        .maybeWhen(
-          data: (annotations) => annotations,
-          orElse: () => const <String, StudyVerseAnnotation>{},
-        );
-    final readerAssistSettings = ref.watch(readerAssistSettingsProvider);
-    final people = readerAssistSettings.showChapterPeople
-        ? ref
-              .watch(biblePeopleProvider(translation.id))
-              .maybeWhen(
-                data: (people) => people,
-                orElse: () => const <BiblePerson>[],
-              )
-        : const <BiblePerson>[];
-    final chapterPeople =
-        readerAssistSettings.showChapterPeople && people.isNotEmpty
-        ? versesAsync.maybeWhen(
-            data: (verses) =>
-                findUniqueBiblePeopleInChapter(verses: verses, people: people),
-            orElse: () => const <BiblePerson>[],
-          )
-        : const <BiblePerson>[];
-    final places = readerAssistSettings.showChapterPlaces
-        ? ref
-              .watch(biblePlacesProvider(translation.id))
-              .maybeWhen(
-                data: (places) => places,
-                orElse: () => const <BiblePlace>[],
-              )
-        : const <BiblePlace>[];
-    final chapterPlaces =
-        readerAssistSettings.showChapterPlaces && places.isNotEmpty
-        ? versesAsync.maybeWhen(
-            data: (verses) =>
-                findUniqueBiblePlacesInChapter(verses: verses, places: places),
-            orElse: () => const <BiblePlace>[],
-          )
-        : const <BiblePlace>[];
+    final translation = chapterState.translation;
+    final bookAsync = chapterState.book;
+    final versesAsync = chapterState.verses;
 
     _scrollSession.syncScrollOffsetKey(
       translationId: translation.id,
@@ -195,10 +125,12 @@ class _BibleReaderPageState extends ConsumerState<BibleReaderPage> {
           orElse: () => l10n.readerFallbackTitle,
         ),
         onBack: _closeReader,
-        showChapterPeople: chapterPeople.isNotEmpty,
-        showChapterPlaces: chapterPlaces.isNotEmpty,
-        onShowChapterPeople: () => _sheets.showChapterPeople(chapterPeople),
-        onShowChapterPlaces: () => _sheets.showChapterPlaces(chapterPlaces),
+        showChapterPeople: chapterState.chapterPeople.isNotEmpty,
+        showChapterPlaces: chapterState.chapterPlaces.isNotEmpty,
+        onShowChapterPeople: () =>
+            _sheets.showChapterPeople(chapterState.chapterPeople),
+        onShowChapterPlaces: () =>
+            _sheets.showChapterPlaces(chapterState.chapterPlaces),
         onShowVersePicker: versesAsync.maybeWhen(
           data: (verses) =>
               verses.isEmpty ? null : () => _sheets.showVersePicker(verses),
@@ -220,8 +152,10 @@ class _BibleReaderPageState extends ConsumerState<BibleReaderPage> {
           error: (error, stackTrace) => ReaderLoadError(
             key: const ValueKey('reader-book-error'),
             onRetry: () {
-              ref.invalidate(bibleBookProvider(bookRequest));
-              ref.invalidate(bibleChapterVersesProvider(chapterRequest));
+              ref.invalidate(bibleBookProvider(chapterState.bookRequest));
+              ref.invalidate(
+                bibleChapterVersesProvider(chapterState.chapterRequest),
+              );
             },
           ),
           data: (book) {
@@ -232,7 +166,9 @@ class _BibleReaderPageState extends ConsumerState<BibleReaderPage> {
               error: (error, stackTrace) => ReaderLoadError(
                 key: const ValueKey('reader-verses-error'),
                 onRetry: () {
-                  ref.invalidate(bibleChapterVersesProvider(chapterRequest));
+                  ref.invalidate(
+                    bibleChapterVersesProvider(chapterState.chapterRequest),
+                  );
                 },
               ),
               data: (verses) {
@@ -258,8 +194,8 @@ class _BibleReaderPageState extends ConsumerState<BibleReaderPage> {
                   translation: translation,
                   verses: verses,
                   scrollController: _scrollSession.controller,
-                  recommendedSermons: recommendedSermons,
-                  annotations: annotations,
+                  recommendedSermons: chapterState.recommendedSermons,
+                  annotations: chapterState.annotations,
                   ttsState: _ttsSession.state,
                   readerScale: _readerScale,
                   highlightedVerseId: _scrollSession.highlightedVerseId,
@@ -310,8 +246,9 @@ class _BibleReaderPageState extends ConsumerState<BibleReaderPage> {
                   },
                   onOpenVerseTools: (verse) => _sheets.showVerseAnnotationSheet(
                     verse: verse,
-                    annotationsRequest: annotationsRequest,
-                    includeLexicon: readerAssistSettings.showLexicon,
+                    annotationsRequest: chapterState.annotationsRequest,
+                    includeLexicon:
+                        chapterState.readerAssistSettings.showLexicon,
                   ),
                   onSermonReferenceSelected: _openSermonReference,
                   onChapterSelected: _openChapter,
