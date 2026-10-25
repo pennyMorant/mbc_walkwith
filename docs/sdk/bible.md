@@ -74,6 +74,7 @@ This document covers local Bible reading, search, TTS, reader assist, and backen
 - App rendering and TTS for a reading plan must resolve those references against local Bible assets.
 - Study opens reading plan references through the existing local Bible reader route; it does not request Bible text from the reading plan API.
 - Mine owns the independent published-plan discovery surface and joins a selected template through the reading-plan repository; Study continues to render only open personal assignments.
+- Because the current published-plan response has no pagination metadata, the App requests the backend-supported catalog limit and keeps both populated and empty discovery states refreshable.
 - Mine reads active and historical reading-plan assignments by `scope`; completion state, attempt number, snapshots, `completedAt`, and `endedAt` remain backend-owned.
 - Completed and abandoned assignments are immutable. Restarting a plan calls the self-assignment endpoint and receives a new attempt; clients never reset historical progress locally.
 - Mine consumes `nextCursor` to load older attempts and uses detail

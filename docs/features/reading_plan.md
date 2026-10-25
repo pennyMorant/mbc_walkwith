@@ -81,6 +81,7 @@ App 可以：
 - 展示今日读经。
 - 在“我的 > 读经计划”分别展示进行中和历史记录，并读取历史详情。
 - 在“我的 > 读经计划”的独立发现入口读取当前身份可见的 published 模板，过滤已有 open assignment 的计划，并通过 canonical self-assignment endpoint 主动加入。
+- 模板发现入口必须读取后端当前支持的完整 published catalog；空目录仍可下拉刷新，不能把首次空响应缓存成整个 App 会话的最终状态。
 - 对已完成或已放弃的计划发起重新开始，创建新的个人 assignment。
 - 历史列表必须消费后端 `nextCursor`，不能只展示首屏记录；只有后端详情明确
   `canRestart` 时才显示重新开始操作。
@@ -187,6 +188,7 @@ App installation 的受控 external user id。
 - 计划归档后不再接受新分配，已有进度保留。
 - App 收到畸形响应时进入可重试错误态；assignment 未加载成功前不得暴露
   开始计划、阅读当天或完成当天操作。
+- 公开模板首次返回空列表后，管理员新发布的计划必须可由用户主动刷新取得。
 
 ## Verification Checklist
 
@@ -200,6 +202,7 @@ App installation 的受控 external user id。
 - App DTO 和 envelope parser 拒绝缺失、错误类型、未知枚举和畸形嵌套项；
   Study、详情和 Mine sibling surface 不把解析失败当作空数据或未加入。
 - 计划引用可作为 discipleship task reference，但当前不自动创建 Reading Plan assignment。
+- App 验证空模板目录刷新、open assignment 过滤和 self-assignment intent 到 repository 的完整链路。
 - 计划创建/更新、日程 upsert 和 Admin 个人分配有审计。
 
 ## Related Docs

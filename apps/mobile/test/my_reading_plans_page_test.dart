@@ -214,6 +214,86 @@ void main() {
     expect(find.text('Start'), findsOneWidget);
     expect(find.text('This plan has no daily references yet.'), findsOneWidget);
   });
+
+  testWidgets('refreshes an empty reading plan catalog', (tester) async {
+    var planReads = 0;
+    final availablePlan = _plan(id: 'plan-2', title: 'Newly published plan');
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          activeReadingPlanAssignmentsProvider.overrideWith(
+            (ref) async => const [],
+          ),
+          publishedReadingPlansProvider.overrideWith((ref) async {
+            planReads += 1;
+            return planReads == 1 ? const [] : [availablePlan];
+          }),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: const MyReadingPlansPage(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Find plans'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('There are no additional reading plans available right now.'),
+      findsOneWidget,
+    );
+
+    await tester.drag(
+      find.byKey(const ValueKey('reading-plan-catalog-empty-scroll')),
+      const Offset(0, 300),
+    );
+    await tester.pumpAndSettle();
+
+    expect(planReads, 2);
+    expect(find.text('Newly published plan'), findsOneWidget);
+  });
+
+  testWidgets('starts a discovered plan through the repository', (
+    tester,
+  ) async {
+    final repository = _RecordingReadingPlanRepository();
+    final availablePlan = _plan(id: 'plan-2', title: 'Available plan');
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          memberSessionProvider.overrideWith((ref) async => null),
+          externalUserIdProvider.overrideWith((ref) async => 'ext-test'),
+          readingPlanRepositoryProvider.overrideWithValue(repository),
+          activeReadingPlanAssignmentsProvider.overrideWith(
+            (ref) async => const [],
+          ),
+          publishedReadingPlansProvider.overrideWith(
+            (ref) async => [availablePlan],
+          ),
+          readingPlanDaysProvider.overrideWith((ref, planId) async => const []),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: const MyReadingPlansPage(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Find plans'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Available plan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Start'));
+    await tester.pumpAndSettle();
+
+    expect(repository.assignedPlanIds, ['plan-2']);
+  });
 }
 
 Future<void> _pausePlan(WidgetTester tester, int menuIndex) async {
@@ -282,5 +362,18 @@ class _PendingReadingPlanRepository extends MockReadingPlanRepository {
 
   void complete(String assignmentId, ReadingPlanAssignment assignment) {
     pending.remove(assignmentId)!.complete(assignment);
+  }
+}
+
+class _RecordingReadingPlanRepository extends MockReadingPlanRepository {
+  final List<String> assignedPlanIds = [];
+
+  @override
+  Future<ReadingPlanAssignment> selfAssign(
+    String planId,
+    ReadingPlanIdentity identity,
+  ) async {
+    assignedPlanIds.add(planId);
+    return _assignment(title: 'Available plan', planId: planId);
   }
 }

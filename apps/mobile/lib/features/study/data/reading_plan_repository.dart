@@ -85,7 +85,7 @@ class ApiReadingPlanRepository implements ReadingPlanRepository {
     ReadingPlanIdentity identity,
   ) async {
     final response = await apiClient.getJsonMapWithIdentity(
-      _pathWithQuery('/reading-plans', {'limit': '20', 'status': 'published'}),
+      _pathWithQuery('/reading-plans', {'limit': '500', 'status': 'published'}),
       accessToken: identity.accessToken,
       externalUserId: identity.externalUserId,
     );

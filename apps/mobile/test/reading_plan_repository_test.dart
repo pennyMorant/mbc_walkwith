@@ -18,7 +18,7 @@ void main() {
     expect(plans.single.durationDays, 7);
     expect(
       dio.requests.single.path,
-      '/reading-plans?limit=20&status=published',
+      '/reading-plans?limit=500&status=published',
     );
     expect(dio.requests.single.authorization, 'Bearer member-token');
     expect(dio.requests.single.externalUserId, 'ext_test_user');

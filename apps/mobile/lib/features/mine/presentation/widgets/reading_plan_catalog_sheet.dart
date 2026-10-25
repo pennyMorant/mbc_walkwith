@@ -64,28 +64,39 @@ class ReadingPlanCatalogSheet extends ConsumerWidget {
                           .where((plan) => !assignedPlanIds.contains(plan.id))
                           .toList(growable: false);
                       if (available.isEmpty) {
-                        return Center(
-                          child: Text(
-                            l10n.readingPlanCatalogEmpty,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
+                        return RefreshIndicator(
+                          onRefresh: () => _refresh(ref),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) => ListView(
+                              key: const ValueKey(
+                                'reading-plan-catalog-empty-scroll',
+                              ),
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              children: [
+                                SizedBox(
+                                  height: constraints.maxHeight,
+                                  child: Center(
+                                    child: Text(
+                                      l10n.readingPlanCatalogEmpty,
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
+                                    ),
+                                  ),
                                 ),
+                              ],
+                            ),
                           ),
                         );
                       }
                       return RefreshIndicator(
-                        onRefresh: () async {
-                          await Future.wait([
-                            ref.refresh(publishedReadingPlansProvider.future),
-                            ref.refresh(
-                              activeReadingPlanAssignmentsProvider.future,
-                            ),
-                          ]);
-                        },
+                        onRefresh: () => _refresh(ref),
                         child: ListView.separated(
                           physics: const AlwaysScrollableScrollPhysics(),
                           itemCount: available.length,
@@ -109,6 +120,13 @@ class ReadingPlanCatalogSheet extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _refresh(WidgetRef ref) async {
+    await Future.wait([
+      ref.refresh(publishedReadingPlansProvider.future),
+      ref.refresh(activeReadingPlanAssignmentsProvider.future),
+    ]);
   }
 }
 

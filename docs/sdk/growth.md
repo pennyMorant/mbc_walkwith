@@ -155,6 +155,7 @@ Mobile App repository and surface：
 - App clients must send member auth when available and `X-External-User-Id` for guest reading progress.
 - App clients must jump to the local Bible reader for scripture references instead of requesting Bible text from the backend.
 - Mine may list published templates in its dedicated discovery surface, must filter plans with an open assignment, and must join through `POST /v1/reading-plans/:planId/assignments`; unjoined templates remain absent from Study home.
+- The published-plan list currently has no pagination envelope; App clients request the supported maximum catalog size and must keep an empty discovery result refreshable.
 - Reading plan progress updates must not send `completedAt`; the backend sets
   and clears completion time from the submitted status.
 - `GET /v1/me/reading-plans` accepts `scope=active|history|all`, `limit`, and an opaque `cursor`; clients preserve `nextCursor` for pagination.
