@@ -8,9 +8,8 @@ import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../study/data/reading_plan_repository.dart';
 import '../../study/domain/reading_plan.dart';
-import '../../study/presentation/widgets/reading_plan_detail_sheet.dart';
+import 'reading_plan_navigation.dart';
 import 'widgets/reading_plan_assignment_card.dart';
-import 'widgets/reading_plan_catalog_sheet.dart';
 import 'widgets/reading_plan_collection_states.dart';
 import 'widgets/reading_plan_history_sheet.dart';
 
@@ -49,7 +48,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
         actions: [
           IconButton(
             tooltip: l10n.readingPlanBrowseAction,
-            onPressed: _openCatalog,
+            onPressed: () => showReadingPlanCatalog(context),
             icon: const Icon(Icons.playlist_add_rounded),
           ),
           const SizedBox(width: 8),
@@ -182,42 +181,6 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
         onRestart: (history) {
           Navigator.of(sheetContext).pop();
           _restart(history);
-        },
-      ),
-    );
-  }
-
-  Future<void> _openCatalog() async {
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: false,
-      builder: (sheetContext) => ReadingPlanCatalogSheet(
-        onOpenPlan: (plan) {
-          Navigator.of(sheetContext).pop();
-          _openPlan(plan);
-        },
-      ),
-    );
-  }
-
-  Future<void> _openPlan(ReadingPlan plan) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: false,
-      builder: (sheetContext) => ReadingPlanDetailSheet(
-        plan: plan,
-        onOpenReference: (reference) {
-          Navigator.of(sheetContext).pop();
-          context.pushNamed(
-            AppRouteNames.studyReader,
-            pathParameters: {
-              'bookId': reference.bookId,
-              'chapter': '${reference.chapter}',
-            },
-            queryParameters: {'verse': '${reference.startVerse}'},
-          );
         },
       ),
     );
