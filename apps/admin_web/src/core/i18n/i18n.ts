@@ -4494,6 +4494,134 @@ Object.assign(messages["zh-Hant"], {
   "pastoral_only": "僅限牧者"
 });
 
+Object.assign(messages.en, {
+  "users.pageTitle": "Admin users and roles",
+  "users.createSubtitle":
+    "Create admin accounts, assign roles, disable access, and reset passwords.",
+  "users.createTitle": "Create admin user",
+  "users.createHelp": "Create a backend-authenticated account with an initial role.",
+  "users.createAction": "Create user",
+  "users.readOnly": "Your role can review admin users but cannot change accounts.",
+  "users.listTitle": "Admin users",
+  "users.listHelp": "Backend-authenticated accounts and their current roles.",
+  "users.confirmPassword": "Confirm password",
+  "users.currentAccount": "Current account",
+  "users.saveAction": "Save account",
+  "users.passwordResetTitle": "Reset password",
+  "users.passwordResetHelp":
+    "Set a new password for this account. The action requires confirmation.",
+  "users.passwordResetAction": "Reset password",
+  "users.passwordResetConfirmTitle": "Reset this account password?",
+  "users.passwordResetConfirmBody":
+    "The new password will replace the current password for this admin account.",
+  "users.userCreated": "Admin user created.",
+  "users.userUpdated": "Admin user updated.",
+  "users.passwordResetSuccess": "Admin password reset.",
+  "owner": "Owner",
+  "admin": "Administrator",
+  "pastor": "Pastor",
+  "content_editor": "Content editor",
+  "finance": "Finance",
+  "viewer": "Read only",
+  "active": "Active",
+  "disabled": "Disabled"
+});
+
+Object.assign(messages["zh-Hans"], {
+  "users.pageTitle": "后台用户与角色",
+  "users.createSubtitle": "创建后台账号、分配角色、停用访问并重置密码。",
+  "users.createTitle": "创建后台用户",
+  "users.createHelp": "创建由后端认证并具有初始角色的管理账号。",
+  "users.createAction": "创建用户",
+  "users.readOnly": "你的角色可以查看后台用户，但不能更改账号。",
+  "users.listTitle": "后台用户",
+  "users.listHelp": "由后端认证的账号及其当前角色。",
+  "users.confirmPassword": "确认密码",
+  "users.currentAccount": "当前账号",
+  "users.saveAction": "保存账号",
+  "users.passwordResetTitle": "重置密码",
+  "users.passwordResetHelp": "为此账号设置新密码，此操作需要再次确认。",
+  "users.passwordResetAction": "重置密码",
+  "users.passwordResetConfirmTitle": "重置此账号的密码？",
+  "users.passwordResetConfirmBody": "新密码将替换此后台账号当前使用的密码。",
+  "users.userCreated": "后台用户已创建。",
+  "users.userUpdated": "后台用户已更新。",
+  "users.passwordResetSuccess": "后台密码已重置。",
+  "owner": "所有者",
+  "admin": "管理员",
+  "pastor": "牧者",
+  "content_editor": "内容编辑",
+  "finance": "财务",
+  "viewer": "只读",
+  "active": "启用",
+  "disabled": "已停用"
+});
+
+Object.assign(messages.es, {
+  "users.pageTitle": "Usuarios administradores y roles",
+  "users.createSubtitle":
+    "Crea cuentas administrativas, asigna roles, desactiva accesos y restablece contraseñas.",
+  "users.createTitle": "Crear usuario administrador",
+  "users.createHelp":
+    "Crea una cuenta autenticada por el servidor con un rol inicial.",
+  "users.createAction": "Crear usuario",
+  "users.readOnly":
+    "Tu rol puede consultar usuarios administradores, pero no cambiar cuentas.",
+  "users.listTitle": "Usuarios administradores",
+  "users.listHelp": "Cuentas autenticadas por el servidor y sus roles actuales.",
+  "users.confirmPassword": "Confirmar contraseña",
+  "users.currentAccount": "Cuenta actual",
+  "users.saveAction": "Guardar cuenta",
+  "users.passwordResetTitle": "Restablecer contraseña",
+  "users.passwordResetHelp":
+    "Establece una nueva contraseña para esta cuenta. La acción requiere confirmación.",
+  "users.passwordResetAction": "Restablecer contraseña",
+  "users.passwordResetConfirmTitle": "¿Restablecer la contraseña de esta cuenta?",
+  "users.passwordResetConfirmBody":
+    "La nueva contraseña reemplazará la contraseña actual de esta cuenta administrativa.",
+  "users.userCreated": "Usuario administrador creado.",
+  "users.userUpdated": "Usuario administrador actualizado.",
+  "users.passwordResetSuccess": "Contraseña administrativa restablecida.",
+  "owner": "Propietario",
+  "admin": "Administrador",
+  "pastor": "Pastor",
+  "content_editor": "Editor de contenido",
+  "finance": "Finanzas",
+  "viewer": "Solo lectura",
+  "active": "Activo",
+  "disabled": "Desactivado"
+});
+
+Object.assign(messages["zh-Hant"], {
+  "users.pageTitle": "後台使用者與角色",
+  "users.createSubtitle": "建立後台帳號、分配角色、停用存取並重設密碼。",
+  "users.createTitle": "建立後台使用者",
+  "users.createHelp": "建立由後端驗證並具有初始角色的管理帳號。",
+  "users.createAction": "建立使用者",
+  "users.readOnly": "你的角色可以查看後台使用者，但不能變更帳號。",
+  "users.listTitle": "後台使用者",
+  "users.listHelp": "由後端驗證的帳號及其目前角色。",
+  "users.confirmPassword": "確認密碼",
+  "users.currentAccount": "目前帳號",
+  "users.saveAction": "儲存帳號",
+  "users.passwordResetTitle": "重設密碼",
+  "users.passwordResetHelp": "為此帳號設定新密碼，此操作需要再次確認。",
+  "users.passwordResetAction": "重設密碼",
+  "users.passwordResetConfirmTitle": "重設此帳號的密碼？",
+  "users.passwordResetConfirmBody": "新密碼將取代此後台帳號目前使用的密碼。",
+  "users.userCreated": "後台使用者已建立。",
+  "users.userUpdated": "後台使用者已更新。",
+  "users.passwordResetSuccess": "後台密碼已重設。",
+  "owner": "擁有者",
+  "admin": "管理員",
+  "pastor": "牧者",
+  "content_editor": "內容編輯",
+  "finance": "財務",
+  "viewer": "唯讀",
+  "active": "啟用",
+  "disabled": "已停用"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });

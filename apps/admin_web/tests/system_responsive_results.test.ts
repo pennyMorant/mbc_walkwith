@@ -59,4 +59,54 @@ describe("system workspace responsive results", () => {
       expect(page).toMatch(/@retry="\w+Query\.refetch\(\)"/);
     }
   });
+
+  test("keeps admin user commands and stale-response guards page-owned", async () => {
+    const [page, createCard, editor] = await Promise.all([
+      Bun.file(
+        new URL("../src/features/users/pages/UsersPage.vue", import.meta.url)
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/users/components/AdminUserCreateCard.vue",
+          import.meta.url
+        )
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/users/components/AdminUserEditorDrawer.vue",
+          import.meta.url
+        )
+      ).text()
+    ]);
+
+    expect(page).toContain("editorContextVersion");
+    expect(page).toContain("isCurrentEditorContext");
+    expect(page).toContain("syncCurrentAdminSession");
+    expect(page).toContain("authStore.clearSession()");
+    expect(page).toContain("<AdminUserCreateCard");
+    expect(page).toContain("<AdminUserEditorDrawer");
+    expect(editor).toContain(":disabled=\"editorDisabled\"");
+    expect(editor).toContain('v-model="drawerProxy"');
+    expect(editor).toContain("passwordResetConfirmTitle");
+    expect(page).toContain("resetPasswordMutation.isPending.value");
+    expect(page).toContain("updateMutation.isPending.value");
+    for (const source of [createCard, editor]) {
+      expect(source).not.toContain("@/core/api");
+      expect(source).not.toContain("auth_store");
+    }
+  });
+
+  test("defines the refined admin user copy in every locale", () => {
+    for (const key of [
+      "users.pageTitle",
+      "users.confirmPassword",
+      "users.currentAccount",
+      "users.passwordResetConfirmTitle",
+      "users.passwordResetSuccess"
+    ]) {
+      expect(messages.match(new RegExp(`"${key}"`, "g"))?.length).toBe(4);
+    }
+    expect(messages).toContain('"viewer": "Solo lectura"');
+    expect(messages).toContain('"viewer": "唯讀"');
+  });
 });

@@ -128,6 +128,12 @@ Surface rule:
 - System workspaces apply the same rule to notification deliveries, admin users,
   and audit logs. Operational commands and sensitive detail remain page-owned;
   responsive result components only present records and emit detail intents.
+- Admin user creation and editing use presentation-only forms while the page owns
+  permissions, API commands, canonical session refresh, and stale-response guards.
+  Password confirmation is UI validation only; the backend remains authoritative
+  for roles and account status. Resetting the current account password ends the
+  current browser session, while changing its role reloads permissions from the
+  backend before the shell continues.
 - System result projections use the shared Admin data-state presentation for
   loading, error, retry, and empty feedback. The shared component owns no query,
   permission, or transport state; each page connects retry to its own query.

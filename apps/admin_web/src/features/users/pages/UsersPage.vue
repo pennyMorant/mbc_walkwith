@@ -2,57 +2,76 @@
 import type {
   AdminCreateUserRequest,
   AdminResetPasswordRequest,
-  AdminRole,
   AdminUpdateUserRequest,
   AdminUser,
   AdminUserStatus
 } from "@mbc/api-contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
-import { requireSelected } from "@/core/actions/action_guard";
 import {
   createAdminUser,
   listAdminUsers,
   resetAdminUserPassword,
   updateAdminUser
 } from "@/core/api/admin_users";
+import { getAdminSession } from "@/core/api/auth";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
-import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import {
+  adminRoleItems,
+  adminUserCreatePayloadFromForm,
+  adminUserResetPasswordPayloadFromForm,
+  adminUserUpdatePayloadFromForm,
+  createAdminUserCreateForm,
+  createAdminUserEditForm,
+  isValidAdminEmail,
+  loadAdminUserEditForm,
+  passwordsMatch,
+  resetAdminUserCreateForm,
+  resetAdminUserPasswordForm
+} from "../admin_user_workspace_models";
+import AdminUserCreateCard from "../components/AdminUserCreateCard.vue";
+import AdminUserEditorDrawer from "../components/AdminUserEditorDrawer.vue";
 import AdminUserResults from "../components/AdminUserResults.vue";
 
+type UserCommandContext = {
+  userId: string;
+  contextVersion: number;
+};
+
+type CreateUserIntent = {
+  payload: AdminCreateUserRequest;
+  contextVersion: number;
+};
+
+type UpdateUserIntent = UserCommandContext & {
+  payload: AdminUpdateUserRequest;
+};
+
+type ResetPasswordIntent = UserCommandContext & {
+  payload: AdminResetPasswordRequest;
+};
+
 const queryClient = useQueryClient();
+const router = useRouter();
 const authStore = useAdminAuthStore();
-const { optionItems, t } = useI18n();
+const { t } = useI18n();
 const selectedUser = ref<AdminUser | null>(null);
 const drawer = ref(false);
-
-const createForm = reactive({
-  email: "",
-  name: "",
-  role: "viewer" as AdminRole,
-  password: ""
-});
-
-const editForm = reactive({
-  name: "",
-  role: "viewer" as AdminRole,
-  status: "active" as AdminUserStatus,
-  password: ""
-});
-
-const roleItems: AdminRole[] = [
-  "owner",
-  "admin",
-  "pastor",
-  "content_editor",
-  "finance",
-  "viewer"
-];
+const createForm = reactive(createAdminUserCreateForm());
+const editForm = reactive(createAdminUserEditForm());
+const createErrorMessage = ref("");
+const updateErrorMessage = ref("");
+const resetErrorMessage = ref("");
+const successMessage = ref("");
+const successVisible = ref(false);
+let createContextVersion = 0;
+let editorContextVersion = 0;
 
 const usersQuery = useQuery({
   queryKey: ["admin-users"],
@@ -60,53 +79,80 @@ const usersQuery = useQuery({
 });
 
 const createMutation = useMutation({
-  mutationFn: () => {
-    if (!canManage.value || !canCreate.value) {
-      throw new Error(t("User manage access required"));
-    }
-    return createAdminUser(buildCreateUserPayload());
+  onMutate: (intent: CreateUserIntent) => {
+    createErrorMessage.value = "";
+    return intent;
   },
-  onSuccess: async () => {
-    createForm.email = "";
-    createForm.name = "";
-    createForm.role = "viewer";
-    createForm.password = "";
+  mutationFn: (intent: CreateUserIntent) => createAdminUser(intent.payload),
+  onSuccess: async (_user, _variables, context) => {
+    if (context?.contextVersion === createContextVersion) {
+      resetAdminUserCreateForm(createForm);
+      showSuccess(t("users.userCreated"));
+    }
     await queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+  },
+  onError: (error, _variables, context) => {
+    if (context?.contextVersion === createContextVersion) {
+      createErrorMessage.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 });
 
 const updateMutation = useMutation({
-  mutationFn: () => {
-    const user = requireSelected(
-      selectedUser.value,
-      t("No admin user selected.")
-    );
-    if (!canManage.value || !canUpdate.value) {
-      throw new Error(t("User manage access required"));
-    }
-    return updateAdminUser(user.id, buildUpdateUserPayload());
+  onMutate: (intent: UpdateUserIntent) => {
+    updateErrorMessage.value = "";
+    return intent;
   },
-  onSuccess: async (user) => {
-    openUser(user);
+  mutationFn: (intent: UpdateUserIntent) =>
+    updateAdminUser(intent.userId, intent.payload),
+  onSuccess: async (user, _variables, context) => {
+    if (isCurrentEditorContext(context)) {
+      selectedUser.value = user;
+      loadAdminUserEditForm(editForm, user);
+      showSuccess(t("users.userUpdated"));
+    }
+    void syncCurrentAdminSession(user);
     await queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+  },
+  onError: (error, _variables, context) => {
+    if (isCurrentEditorContext(context)) {
+      updateErrorMessage.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 });
 
 const resetPasswordMutation = useMutation({
-  mutationFn: () => {
-    const user = requireSelected(
-      selectedUser.value,
-      t("No admin user selected.")
-    );
-    if (!canManage.value || !canResetPassword.value) {
-      throw new Error(t("User manage access required"));
-    }
-    return resetAdminUserPassword(user.id, buildResetPasswordPayload());
+  onMutate: (intent: ResetPasswordIntent) => {
+    resetErrorMessage.value = "";
+    return intent;
   },
-  onSuccess: async (user) => {
-    editForm.password = "";
-    openUser(user);
+  mutationFn: (intent: ResetPasswordIntent) =>
+    resetAdminUserPassword(intent.userId, intent.payload),
+  onSuccess: async (user, _variables, context) => {
+    if (isCurrentEditorContext(context)) {
+      selectedUser.value = user;
+      resetAdminUserPasswordForm(editForm);
+      showSuccess(t("users.passwordResetSuccess"));
+    }
+    if (user.id === authStore.user?.id) {
+      authStore.clearSession();
+      await router.replace({ name: "login" });
+    }
     await queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+  },
+  onError: (error, _variables, context) => {
+    if (isCurrentEditorContext(context)) {
+      resetErrorMessage.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 });
 
@@ -114,78 +160,143 @@ const users = computed(() => usersQuery.data.value ?? []);
 const canManage = computed(() => authStore.can("users:manage"));
 const canCreate = computed(
   () =>
-    createForm.email.trim().length > 0 &&
+    canManage.value &&
+    isValidAdminEmail(createForm.email) &&
     createForm.name.trim().length > 0 &&
-    createForm.password.length >= 8
+    createForm.password.length >= 8 &&
+    createForm.confirmPassword.length >= 8 &&
+    passwordsMatch(createForm.password, createForm.confirmPassword)
 );
-const canUpdate = computed(() => editForm.name.trim().length > 0);
-const canResetPassword = computed(() => editForm.password.length >= 8);
+const canUpdate = computed(
+  () => canManage.value && editForm.name.trim().length > 0
+);
+const canResetPassword = computed(
+  () =>
+    canManage.value &&
+    editForm.password.length >= 8 &&
+    editForm.confirmPassword.length >= 8 &&
+    passwordsMatch(editForm.password, editForm.confirmPassword)
+);
+const listErrorMessage = computed(() =>
+  usersQuery.error.value
+    ? formatApiErrorMessage(usersQuery.error.value, t("common.error"))
+    : ""
+);
 
 function openUser(user: AdminUser) {
+  beginEditorContext();
   selectedUser.value = user;
-  editForm.name = user.name;
-  editForm.role = user.role;
-  editForm.status = user.status;
-  editForm.password = "";
+  loadAdminUserEditForm(editForm, user);
   drawer.value = true;
+}
+
+function beginEditorContext() {
+  editorContextVersion += 1;
+  updateErrorMessage.value = "";
+  resetErrorMessage.value = "";
+  updateMutation.reset();
+  resetPasswordMutation.reset();
+}
+
+function isCurrentEditorContext(context: UserCommandContext | undefined) {
+  return Boolean(
+    context &&
+      context.contextVersion === editorContextVersion &&
+      context.userId === selectedUser.value?.id
+  );
+}
+
+function createUser() {
+  if (!canCreate.value || createMutation.isPending.value) {
+    return;
+  }
+  createContextVersion += 1;
+  createMutation.mutate({
+    payload: adminUserCreatePayloadFromForm(createForm),
+    contextVersion: createContextVersion
+  });
+}
+
+function saveUser() {
+  const user = selectedUser.value;
+  if (
+    !user ||
+    !canUpdate.value ||
+    updateMutation.isPending.value ||
+    resetPasswordMutation.isPending.value
+  ) {
+    return;
+  }
+  updateMutation.mutate({
+    userId: user.id,
+    contextVersion: editorContextVersion,
+    payload: adminUserUpdatePayloadFromForm(editForm)
+  });
+}
+
+function resetUserPassword() {
+  const user = selectedUser.value;
+  if (
+    !user ||
+    !canResetPassword.value ||
+    updateMutation.isPending.value ||
+    resetPasswordMutation.isPending.value
+  ) {
+    return;
+  }
+  resetPasswordMutation.mutate({
+    userId: user.id,
+    contextVersion: editorContextVersion,
+    payload: adminUserResetPasswordPayloadFromForm(editForm)
+  });
+}
+
+async function syncCurrentAdminSession(user: AdminUser) {
+  if (user.id !== authStore.user?.id) {
+    return;
+  }
+  if (user.status !== "active") {
+    authStore.clearSession();
+    await router.replace({ name: "login" });
+    return;
+  }
+  try {
+    const session = await getAdminSession();
+    authStore.setCurrentSession(session);
+    if (!session.permissions.includes("users:read")) {
+      drawer.value = false;
+      await router.replace({ name: "dashboard" });
+    }
+  } catch {
+    authStore.clearSession();
+    await router.replace({ name: "login" });
+  }
+}
+
+function showSuccess(message: string) {
+  successMessage.value = message;
+  successVisible.value = true;
 }
 
 function statusColor(status: AdminUserStatus) {
   return status === "active" ? "success" : "error";
 }
 
-function buildCreateUserPayload(): AdminCreateUserRequest {
-  return {
-    email: createForm.email.trim(),
-    name: createForm.name.trim(),
-    role: createForm.role,
-    password: createForm.password
-  };
-}
-
-function buildUpdateUserPayload(): AdminUpdateUserRequest {
-  return {
-    name: editForm.name.trim(),
-    role: editForm.role,
-    status: editForm.status
-  };
-}
-
-function buildResetPasswordPayload(): AdminResetPasswordRequest {
-  return {
-    password: editForm.password
-  };
-}
-
-function createUser() {
-  if (!canManage.value || !canCreate.value || createMutation.isPending.value) {
-    return;
+watch(drawer, (open) => {
+  if (!open) {
+    editorContextVersion += 1;
+    updateErrorMessage.value = "";
+    resetErrorMessage.value = "";
   }
-  createMutation.mutate();
-}
-
-function saveUser() {
-  if (!canManage.value || !canUpdate.value || updateMutation.isPending.value) {
-    return;
-  }
-  updateMutation.mutate();
-}
-
-function resetUserPassword() {
-  if (
-    !canManage.value ||
-    !canResetPassword.value ||
-    resetPasswordMutation.isPending.value
-  ) {
-    return;
-  }
-  resetPasswordMutation.mutate();
-}
+});
 </script>
 
 <template>
   <div>
-    <AdminPageHeader :title="t('Users and Roles')" :subtitle="t('users.createSubtitle')">
+    <AdminPageHeader
+      :title="t('users.pageTitle')"
+      :subtitle="t('users.createSubtitle')"
+    >
       <template #actions>
         <v-btn
           color="primary"
@@ -201,62 +312,15 @@ function resetUserPassword() {
 
     <v-row class="mt-6" dense>
       <v-col cols="12" lg="4">
-        <v-card v-if="canManage" class="pa-5">
-          <div class="text-subtitle-1 font-weight-bold">
-            {{ t("Create admin user") }}
-          </div>
-          <v-form class="mt-5" @submit.prevent="createUser">
-            <v-text-field
-              v-model="createForm.email"
-              :label="t('Email')"
-              type="email"
-              density="comfortable"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="createForm.name"
-              :label="t('Name')"
-              density="comfortable"
-              variant="outlined"
-            />
-            <v-select
-              v-model="createForm.role"
-              :label="t('Role')"
-              :items="optionItems(roleItems)"
-              density="comfortable"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="createForm.password"
-              :label="t('Temporary password')"
-              type="password"
-              density="comfortable"
-              variant="outlined"
-            />
-            <v-alert
-              v-if="createMutation.error.value"
-              type="error"
-              variant="tonal"
-              class="mb-4"
-            >
-              {{
-                formatApiErrorMessage(
-                  createMutation.error.value,
-                  t("common.error")
-                )
-              }}
-            </v-alert>
-            <v-btn
-              type="submit"
-              color="primary"
-              block
-              :disabled="!canCreate || createMutation.isPending.value"
-              :loading="createMutation.isPending.value"
-            >
-              {{ t("Create user") }}
-            </v-btn>
-          </v-form>
-        </v-card>
+        <AdminUserCreateCard
+          v-if="canManage"
+          :form="createForm"
+          :roles="adminRoleItems"
+          :can-create="canCreate"
+          :pending="createMutation.isPending.value"
+          :error-message="createErrorMessage"
+          @create="createUser"
+        />
         <v-alert v-else type="info" variant="tonal">
           {{ t("users.readOnly") }}
         </v-alert>
@@ -264,13 +328,13 @@ function resetUserPassword() {
 
       <v-col cols="12" lg="8">
         <v-card>
-          <div class="pa-5 d-flex align-center justify-space-between">
+          <div class="pa-5 d-flex align-center justify-space-between ga-3">
             <div>
               <div class="text-subtitle-1 font-weight-bold">
-                {{ t("Admin users") }}
+                {{ t("users.listTitle") }}
               </div>
               <div class="text-body-2 text-medium-emphasis">
-                {{ t("users.createHelp") }}
+                {{ t("users.listHelp") }}
               </div>
             </div>
             <v-chip>{{ users.length }}</v-chip>
@@ -279,7 +343,7 @@ function resetUserPassword() {
           <AdminUserResults
             :users="users"
             :pending="usersQuery.isPending.value"
-            :error-message="usersQuery.error.value ? formatApiErrorMessage(usersQuery.error.value, t('common.error')) : ''"
+            :error-message="listErrorMessage"
             :status-color="statusColor"
             @open="openUser"
             @retry="usersQuery.refetch()"
@@ -288,101 +352,25 @@ function resetUserPassword() {
       </v-col>
     </v-row>
 
-    <AdminResponsiveDrawer
+    <AdminUserEditorDrawer
       v-model="drawer"
-      :desktop-width="440"
-    >
-      <div v-if="selectedUser" class="pa-5">
-        <div class="text-h6 font-weight-bold">{{ selectedUser.name }}</div>
-        <div class="text-body-2 text-medium-emphasis mt-1">
-          {{ selectedUser.email }}
-        </div>
+      :user="selectedUser"
+      :form="editForm"
+      :roles="adminRoleItems"
+      :can-manage="canManage"
+      :can-update="canUpdate"
+      :can-reset-password="canResetPassword"
+      :update-pending="updateMutation.isPending.value"
+      :reset-pending="resetPasswordMutation.isPending.value"
+      :update-error-message="updateErrorMessage"
+      :reset-error-message="resetErrorMessage"
+      :current-user-id="authStore.user?.id ?? null"
+      @save="saveUser"
+      @reset-password="resetUserPassword"
+    />
 
-        <v-form class="mt-6" @submit.prevent="saveUser">
-          <v-text-field
-            v-model="editForm.name"
-            :label="t('Name')"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-select
-            v-model="editForm.role"
-            :label="t('Role')"
-            :items="optionItems(roleItems)"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-select
-            v-model="editForm.status"
-            :label="t('Status')"
-            :items="optionItems(['active', 'disabled'])"
-            density="comfortable"
-            variant="outlined"
-          />
-          <v-alert
-            v-if="updateMutation.error.value"
-            type="error"
-            variant="tonal"
-            class="mb-4"
-          >
-            {{
-              formatApiErrorMessage(updateMutation.error.value, t("common.error"))
-            }}
-          </v-alert>
-          <v-btn
-            type="submit"
-            color="primary"
-            block
-            :loading="updateMutation.isPending.value"
-            :disabled="!canManage || !canUpdate || updateMutation.isPending.value"
-          >
-            {{ t("Save user") }}
-          </v-btn>
-        </v-form>
-
-        <v-divider class="my-6" />
-        <div class="text-subtitle-2 font-weight-bold">
-          {{ t("Reset password") }}
-        </div>
-        <v-text-field
-          v-model="editForm.password"
-          :label="t('New password')"
-          type="password"
-          density="comfortable"
-          variant="outlined"
-          class="mt-4"
-        />
-        <v-alert
-          v-if="resetPasswordMutation.error.value"
-          type="error"
-          variant="tonal"
-          class="mb-4"
-        >
-          {{
-            formatApiErrorMessage(
-              resetPasswordMutation.error.value,
-              t("common.error")
-            )
-          }}
-        </v-alert>
-        <v-btn
-          color="warning"
-          variant="tonal"
-          block
-          :disabled="!canResetPassword || resetPasswordMutation.isPending.value"
-          :loading="resetPasswordMutation.isPending.value"
-          v-if="canManage"
-          @click="resetUserPassword"
-        >
-          {{ t("Reset password") }}
-        </v-btn>
-      </div>
-    </AdminResponsiveDrawer>
+    <v-snackbar v-model="successVisible" color="success" timeout="2600">
+      {{ successMessage }}
+    </v-snackbar>
   </div>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>
