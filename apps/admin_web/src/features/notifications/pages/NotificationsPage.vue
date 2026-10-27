@@ -3,121 +3,148 @@ import type {
   NotificationDeliveryStatus,
   NotificationDeliveryTask
 } from "@mbc/api-contracts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { computed, ref, watch } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import {
   cancelNotificationDelivery,
-  listNotificationDeliveries,
   retryNotificationDelivery,
-  retryDueNotificationDeliveries,
-  type NotificationDeliveryListFilters
+  retryDueNotificationDeliveries
 } from "@/core/api/notifications";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
-import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import NotificationDeliveryDetailDrawer from "../components/NotificationDeliveryDetailDrawer.vue";
+import NotificationDeliveryFiltersCard from "../components/NotificationDeliveryFiltersCard.vue";
 import NotificationDeliveryResults from "../components/NotificationDeliveryResults.vue";
+import { useNotificationDeliveryQuery } from "../composables/use_notification_delivery_query";
+import {
+  canCancelNotificationDelivery,
+  canRetryNotificationDelivery,
+  isCurrentNotificationTaskContext,
+  notificationDeliveryStatuses,
+  type NotificationTaskCommandContext
+} from "../notification_delivery_workspace_models";
+
+type TaskCommandIntent = NotificationTaskCommandContext;
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
-const { optionItems, t } = useI18n();
+const { t } = useI18n();
 const selectedTask = ref<NotificationDeliveryTask | null>(null);
 const drawer = ref(false);
+const taskCommandError = ref("");
+const retryDueError = ref("");
+const successMessage = ref("");
+const successVisible = ref(false);
+let taskContextVersion = 0;
 
-const filters = reactive({
-  status: "" as NotificationDeliveryStatus | "",
-  type: "",
-  cursor: null as string | null
-});
-const loadedPages = ref<
-  Array<{ items: NotificationDeliveryTask[]; nextCursor: string | null }>
->([]);
-
-const statuses: Array<NotificationDeliveryStatus | ""> = [
-  "",
-  "queued",
-  "sent",
-  "failed",
-  "retrying",
-  "cancelled"
-];
-
-const activeFilters = computed<NotificationDeliveryListFilters>(() => ({
-  status: filters.status,
-  type: filters.type,
-  cursor: filters.cursor,
-  limit: 50
-}));
-
-const deliveriesQuery = useQuery({
-  queryKey: ["admin-notification-deliveries", activeFilters],
-  queryFn: async () => {
-    const page = await listNotificationDeliveries(activeFilters.value);
-    if (filters.cursor) {
-      loadedPages.value.push(page);
-    } else {
-      loadedPages.value = [page];
-    }
-    return page;
-  }
-});
+const {
+  filters,
+  deliveriesQuery,
+  deliveries,
+  applyFilters,
+  clearFilters,
+  refreshList,
+  restartList,
+  loadMore
+} = useNotificationDeliveryQuery(queryClient);
 
 const retryDueMutation = useMutation({
-  mutationFn: () => {
-    if (!canManage.value) {
-      throw new Error(t("Notification manage access required"));
-    }
-    return retryDueNotificationDeliveries(20);
+  onMutate: () => {
+    retryDueError.value = "";
   },
-  onSuccess: async () => {
-    resetList();
+  mutationFn: () => retryDueNotificationDeliveries(20),
+  onSuccess: async (result) => {
+    showSuccess(
+      t("notifications.retryProcessed").replace(
+        "{count}",
+        String(result.processed)
+      )
+    );
+    await restartList();
+  },
+  onError: (error) => {
+    retryDueError.value = formatApiErrorMessage(error, t("common.error"));
   }
 });
 
 const retryTaskMutation = useMutation({
-  mutationFn: (task: NotificationDeliveryTask) => {
-    if (!canManage.value || !canRetry(task)) {
-      throw new Error(t("Notification task cannot be retried"));
-    }
-    return retryNotificationDelivery(task.id);
+  onMutate: (intent: TaskCommandIntent) => {
+    taskCommandError.value = "";
+    return intent;
   },
-  onSuccess: async () => {
-    drawer.value = false;
-    selectedTask.value = null;
-    resetList();
+  mutationFn: (intent: TaskCommandIntent) =>
+    retryNotificationDelivery(intent.taskId),
+  onSuccess: async (_result, _variables, context) => {
+    if (isCurrentTaskContext(context)) {
+      drawer.value = false;
+      showSuccess(t("notifications.retrySuccess"));
+    }
+    await restartList();
+  },
+  onError: (error, _variables, context) => {
+    if (isCurrentTaskContext(context)) {
+      taskCommandError.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 });
 
 const cancelTaskMutation = useMutation({
-  mutationFn: (task: NotificationDeliveryTask) => {
-    if (!canManage.value || !canCancel(task)) {
-      throw new Error(t("Notification task cannot be cancelled"));
-    }
-    return cancelNotificationDelivery(task.id);
+  onMutate: (intent: TaskCommandIntent) => {
+    taskCommandError.value = "";
+    return intent;
   },
-  onSuccess: async (result) => {
-    selectedTask.value = result.task;
-    resetList();
+  mutationFn: (intent: TaskCommandIntent) =>
+    cancelNotificationDelivery(intent.taskId),
+  onSuccess: async (result, _variables, context) => {
+    if (isCurrentTaskContext(context)) {
+      selectedTask.value = result.task;
+      showSuccess(t("notifications.cancelSuccess"));
+    }
+    await restartList();
+  },
+  onError: (error, _variables, context) => {
+    if (isCurrentTaskContext(context)) {
+      taskCommandError.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 });
 
-const deliveries = computed(() =>
-  loadedPages.value.flatMap((page) => page.items)
-);
 const canManage = computed(() => authStore.can("notifications:manage"));
-const nextCursor = computed(
-  () => loadedPages.value[loadedPages.value.length - 1]?.nextCursor ?? null
+const taskCommandPending = computed(
+  () =>
+    retryTaskMutation.isPending.value || cancelTaskMutation.isPending.value
 );
-const retryErrorMessage = computed(() =>
-  formatApiErrorMessage(
-    retryDueMutation.error.value ||
-      retryTaskMutation.error.value ||
-      cancelTaskMutation.error.value,
-    t("common.error")
-  )
+const anyCommandPending = computed(
+  () => taskCommandPending.value || retryDueMutation.isPending.value
+);
+const canRetrySelectedTask = computed(() => {
+  const task = selectedTask.value;
+  return task ? canRetryNotificationDelivery(task) : false;
+});
+const canCancelSelectedTask = computed(() => {
+  const task = selectedTask.value;
+  return task ? canCancelNotificationDelivery(task) : false;
+});
+const queryErrorMessage = computed(() =>
+  deliveriesQuery.error.value
+    ? formatApiErrorMessage(deliveriesQuery.error.value, t("common.error"))
+    : ""
+);
+const initialQueryError = computed(() =>
+  deliveries.value.length === 0 ? queryErrorMessage.value : ""
+);
+const backgroundQueryError = computed(() =>
+  deliveries.value.length > 0 ? queryErrorMessage.value : ""
 );
 const statusSummary = computed(() => {
   const counts: Record<NotificationDeliveryStatus, number> = {
@@ -133,22 +160,65 @@ const statusSummary = computed(() => {
   return counts;
 });
 
-function resetList() {
-  filters.cursor = null;
-  void queryClient.invalidateQueries({
-    queryKey: ["admin-notification-deliveries"]
+function openTask(task: NotificationDeliveryTask) {
+  if (anyCommandPending.value) {
+    return;
+  }
+  taskContextVersion += 1;
+  taskCommandError.value = "";
+  retryTaskMutation.reset();
+  cancelTaskMutation.reset();
+  selectedTask.value = task;
+  drawer.value = true;
+}
+
+function isCurrentTaskContext(
+  context: NotificationTaskCommandContext | undefined
+) {
+  return isCurrentNotificationTaskContext(
+    context,
+    selectedTask.value?.id,
+    taskContextVersion
+  );
+}
+
+function retryDueDeliveries() {
+  if (!canManage.value || anyCommandPending.value) {
+    return;
+  }
+  retryDueMutation.mutate();
+}
+
+function retryTask() {
+  const task = selectedTask.value;
+  if (
+    !task ||
+    !canManage.value ||
+    !canRetryNotificationDelivery(task) ||
+    anyCommandPending.value
+  ) {
+    return;
+  }
+  retryTaskMutation.mutate({
+    taskId: task.id,
+    contextVersion: taskContextVersion
   });
 }
 
-function loadMore() {
-  if (nextCursor.value && !deliveriesQuery.isFetching.value) {
-    filters.cursor = nextCursor.value;
+function cancelTask() {
+  const task = selectedTask.value;
+  if (
+    !task ||
+    !canManage.value ||
+    !canCancelNotificationDelivery(task) ||
+    anyCommandPending.value
+  ) {
+    return;
   }
-}
-
-function openTask(task: NotificationDeliveryTask) {
-  selectedTask.value = task;
-  drawer.value = true;
+  cancelTaskMutation.mutate({
+    taskId: task.id,
+    contextVersion: taskContextVersion
+  });
 }
 
 function statusColor(status: NotificationDeliveryStatus) {
@@ -161,54 +231,34 @@ function statusColor(status: NotificationDeliveryStatus) {
   }[status];
 }
 
-function canRetry(task: NotificationDeliveryTask) {
-  return task.status === "failed" || task.status === "retrying";
+function showSuccess(message: string) {
+  successMessage.value = message;
+  successVisible.value = true;
 }
 
-function canCancel(task: NotificationDeliveryTask) {
-  return task.status === "queued" || task.status === "retrying";
-}
-
-function json(value: unknown) {
-  return JSON.stringify(value ?? null, null, 2);
-}
-
-function retryDueDeliveries() {
-  if (!canManage.value || retryDueMutation.isPending.value) {
-    return;
+watch(drawer, (open) => {
+  if (!open) {
+    taskContextVersion += 1;
+    selectedTask.value = null;
+    taskCommandError.value = "";
   }
-  retryDueMutation.mutate();
-}
-
-function retryTask(task: NotificationDeliveryTask) {
-  if (!canManage.value || !canRetry(task) || retryTaskMutation.isPending.value) {
-    return;
-  }
-  retryTaskMutation.mutate(task);
-}
-
-function cancelTask(task: NotificationDeliveryTask) {
-  if (
-    !canManage.value ||
-    !canCancel(task) ||
-    cancelTaskMutation.isPending.value
-  ) {
-    return;
-  }
-  cancelTaskMutation.mutate(task);
-}
+});
 </script>
 
 <template>
   <div>
-    <AdminPageHeader :title="t('nav.notifications')" :subtitle="t('notifications.subtitle')">
+    <AdminPageHeader
+      :title="t('nav.notifications')"
+      :subtitle="t('notifications.subtitle')"
+    >
       <template #actions>
         <v-btn
           color="primary"
           variant="tonal"
           prepend-icon="mdi-refresh"
           :loading="deliveriesQuery.isFetching.value"
-          @click="resetList"
+          :disabled="anyCommandPending"
+          @click="refreshList"
         >
           {{ t("common.refresh") }}
         </v-btn>
@@ -217,7 +267,7 @@ function cancelTask(task: NotificationDeliveryTask) {
           color="warning"
           variant="tonal"
           prepend-icon="mdi-reload-alert"
-          :disabled="retryDueMutation.isPending.value"
+          :disabled="anyCommandPending"
           :loading="retryDueMutation.isPending.value"
           @click="retryDueDeliveries"
         >
@@ -227,29 +277,33 @@ function cancelTask(task: NotificationDeliveryTask) {
     </AdminPageHeader>
 
     <v-alert
-      v-if="retryDueMutation.data.value"
-      type="success"
-      variant="tonal"
-      class="mt-4"
-    >
-      {{
-        t("notifications.retryProcessed").replace(
-          "{count}",
-          String(retryDueMutation.data.value.processed)
-        )
-      }}
-    </v-alert>
-    <v-alert
-      v-else-if="
-        retryDueMutation.error.value ||
-        retryTaskMutation.error.value ||
-        cancelTaskMutation.error.value
-      "
+      v-if="retryDueError"
       type="error"
       variant="tonal"
       class="mt-4"
     >
-      {{ retryErrorMessage }}
+      {{ retryDueError }}
+    </v-alert>
+    <v-alert
+      v-if="backgroundQueryError"
+      type="warning"
+      variant="tonal"
+      class="mt-4"
+    >
+      <div
+        class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
+      >
+        <span>{{ t("notifications.refreshFailed") }}</span>
+        <v-btn
+          color="warning"
+          variant="tonal"
+          size="small"
+          prepend-icon="mdi-refresh"
+          @click="refreshList"
+        >
+          {{ t("Retry") }}
+        </v-btn>
+      </div>
     </v-alert>
 
     <v-row class="mt-6" dense>
@@ -269,56 +323,41 @@ function cancelTask(task: NotificationDeliveryTask) {
           <div class="text-h5 font-weight-bold mt-2">
             {{ statusSummary[status] }}
           </div>
+          <div class="text-caption text-medium-emphasis mt-1">
+            {{ t("notifications.loadedResults") }}
+          </div>
         </v-card>
       </v-col>
     </v-row>
 
-    <v-card class="mt-6">
-      <div class="pa-5">
-        <v-row dense>
-          <v-col cols="12" md="4">
-            <v-select
-              v-model="filters.status"
-              :items="optionItems(statuses)"
-              :label="t('Status')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @update:model-value="resetList"
-            />
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-text-field
-              v-model="filters.type"
-              :label="t('Type')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @keyup.enter="resetList"
-            />
-          </v-col>
-          <v-col cols="12" md="4" class="d-flex align-center justify-end">
-            <v-chip color="primary" variant="tonal">
-              {{ t("notifications.loaded") }} {{ deliveries.length }}
-            </v-chip>
-          </v-col>
-        </v-row>
-      </div>
-      <v-divider />
+    <NotificationDeliveryFiltersCard
+      class="mt-6"
+      :filters="filters"
+      :statuses="notificationDeliveryStatuses"
+      :loaded-count="deliveries.length"
+      :pending="deliveriesQuery.isFetching.value"
+      @apply="applyFilters"
+      @clear="clearFilters"
+    />
+
+    <v-card class="mt-4">
       <NotificationDeliveryResults
         :deliveries="deliveries"
         :pending="deliveriesQuery.isPending.value"
-        :error-message="deliveriesQuery.error.value ? formatApiErrorMessage(deliveriesQuery.error.value, t('common.error')) : ''"
+        :error-message="initialQueryError"
         :status-color="statusColor"
         @open="openTask"
-        @retry="deliveriesQuery.refetch()"
+        @retry="refreshList"
       />
-      <v-divider v-if="nextCursor" />
-      <div v-if="nextCursor" class="pa-4 text-center">
+      <v-divider v-if="deliveriesQuery.hasNextPage.value" />
+      <div
+        v-if="deliveriesQuery.hasNextPage.value"
+        class="pa-4 text-center"
+      >
         <v-btn
           variant="tonal"
           color="primary"
-          :loading="deliveriesQuery.isFetching.value"
+          :loading="deliveriesQuery.isFetchingNextPage.value"
           @click="loadMore"
         >
           {{ t("Load more") }}
@@ -326,84 +365,23 @@ function cancelTask(task: NotificationDeliveryTask) {
       </div>
     </v-card>
 
-    <AdminResponsiveDrawer
+    <NotificationDeliveryDetailDrawer
       v-model="drawer"
-      :desktop-width="520"
-    >
-      <div v-if="selectedTask" class="pa-5">
-        <div class="d-flex align-center justify-space-between ga-3">
-          <div>
-            <div class="text-h6 font-weight-bold">
-              {{ selectedTask.payload.title }}
-            </div>
-            <div class="text-body-2 text-medium-emphasis">
-              {{ selectedTask.type }} · {{ selectedTask.id }}
-            </div>
-          </div>
-          <v-chip :color="statusColor(selectedTask.status)">
-            {{ t(selectedTask.status) }}
-          </v-chip>
-        </div>
+      :task="selectedTask"
+      :can-manage="canManage"
+      :can-retry="canRetrySelectedTask"
+      :can-cancel="canCancelSelectedTask"
+      :retry-pending="retryTaskMutation.isPending.value"
+      :cancel-pending="cancelTaskMutation.isPending.value"
+      :commands-disabled="retryDueMutation.isPending.value"
+      :error-message="taskCommandError"
+      :status-color="statusColor"
+      @retry="retryTask"
+      @cancel="cancelTask"
+    />
 
-        <v-list density="compact" class="mt-4">
-          <v-list-item :title="t('Message ID')" :subtitle="selectedTask.messageId || '-'" />
-          <v-list-item :title="t('Audience')" :subtitle="t(selectedTask.audience)" />
-          <v-list-item :title="t('Preference')" :subtitle="selectedTask.preferenceKey || '-'" />
-          <v-list-item :title="t('Recipients')" :subtitle="String(selectedTask.recipientCount)" />
-          <v-list-item :title="t('Attempts')" :subtitle="String(selectedTask.attempts)" />
-          <v-list-item :title="t('Next attempt')" :subtitle="selectedTask.nextAttemptAt || '-'" />
-          <v-list-item :title="t('Last error')" :subtitle="selectedTask.lastErrorMessage || '-'" />
-        </v-list>
-
-        <div
-          v-if="canManage"
-          class="d-flex flex-wrap ga-2 mt-4"
-        >
-          <v-btn
-            color="warning"
-            variant="tonal"
-            :disabled="!canRetry(selectedTask) || retryTaskMutation.isPending.value"
-            :loading="retryTaskMutation.isPending.value"
-            @click="retryTask(selectedTask)"
-          >
-            {{ t("notifications.retryOne") }}
-          </v-btn>
-          <v-btn
-            color="error"
-            variant="tonal"
-            :disabled="!canCancel(selectedTask) || cancelTaskMutation.isPending.value"
-            :loading="cancelTaskMutation.isPending.value"
-            @click="cancelTask(selectedTask)"
-          >
-            {{ t("notifications.cancel") }}
-          </v-btn>
-        </div>
-
-        <div class="text-subtitle-2 font-weight-bold mt-6">
-          {{ t("Payload JSON") }}
-        </div>
-        <pre class="json-block mt-2">{{ json(selectedTask.payload) }}</pre>
-
-        <div class="text-subtitle-2 font-weight-bold mt-6">
-          {{ t("Provider evidence") }}
-        </div>
-        <pre class="json-block mt-2">{{ json(selectedTask.providerEvidence) }}</pre>
-      </div>
-    </AdminResponsiveDrawer>
+    <v-snackbar v-model="successVisible" color="success" timeout="2800">
+      {{ successMessage }}
+    </v-snackbar>
   </div>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.json-block {
-  max-height: 260px;
-  overflow: auto;
-  border-radius: 8px;
-  background: rgba(var(--v-theme-surface-variant), 0.32);
-  padding: 12px;
-  white-space: pre-wrap;
-}
-</style>

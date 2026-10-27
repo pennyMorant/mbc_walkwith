@@ -1628,14 +1628,6 @@ Object.assign(messages.en, {
   "queued": "Queued",
   "retrying": "Retrying",
   "sent": "Sent",
-  "notifications.cancel": "Cancel task",
-  "notifications.empty": "No notification deliveries yet.",
-  "notifications.loaded": "Loaded deliveries",
-  "notifications.retryDue": "Retry due",
-  "notifications.retryOne": "Retry task",
-  "notifications.retryProcessed": "Processed {count} due delivery tasks.",
-  "notifications.subtitle":
-    "Review App notification delivery status, payloads, provider evidence, and retry due failures.",
   "prayer.notifyAppOnApprove": "Push to App when approved",
   "prayer.notifyAppOnApproveHint":
     "Sends a generic member-only prayer update notification without prayer text.",
@@ -1654,14 +1646,6 @@ Object.assign(messages["zh-Hans"], {
   "members": "会友",
   "public": "公开",
   "retrying": "等待重试",
-  "notifications.cancel": "取消任务",
-  "notifications.empty": "暂无通知投递任务。",
-  "notifications.loaded": "已加载投递",
-  "notifications.retryDue": "重试到期失败",
-  "notifications.retryOne": "重试此任务",
-  "notifications.retryProcessed": "已处理 {count} 个到期投递任务。",
-  "notifications.subtitle":
-    "查看 App 通知投递状态、通知内容、服务商回执，并重试到期失败任务。",
   "prayer.notifyAppOnApprove": "批准时推送到 App",
   "prayer.notifyAppOnApproveHint":
     "只发送会友可见的泛化祷告更新通知，不包含祷告正文。"
@@ -4620,6 +4604,153 @@ Object.assign(messages["zh-Hant"], {
   "viewer": "唯讀",
   "active": "啟用",
   "disabled": "已停用"
+});
+
+Object.assign(messages.en, {
+  "notifications.subtitle":
+    "Review App notification deliveries, inspect provider evidence, and recover eligible failures.",
+  "notifications.retryDue": "Retry due failures",
+  "notifications.retryProcessed": "Processed {count} due delivery tasks.",
+  "notifications.retryOne": "Retry task",
+  "notifications.retrySuccess": "The notification task was retried.",
+  "notifications.cancel": "Cancel task",
+  "notifications.cancelSuccess": "The notification task was cancelled.",
+  "notifications.cancelConfirmTitle": "Cancel this delivery task?",
+  "notifications.cancelConfirmBody":
+    "The backend will stop this queued or retrying task. This action does not change the original church content.",
+  "notifications.empty": "No notification deliveries match these filters.",
+  "notifications.loaded": "Loaded",
+  "notifications.loadedResults": "loaded results",
+  "notifications.statusFilter": "Delivery status",
+  "notifications.typeFilter": "Notification type",
+  "notifications.applyFilters": "Apply filters",
+  "notifications.clearFilters": "Clear",
+  "notifications.refreshFailed":
+    "The latest refresh failed. Previously loaded deliveries remain visible.",
+  "notifications.messageId": "Message ID",
+  "notifications.audience": "Audience",
+  "notifications.preference": "Preference key",
+  "notifications.recipients": "Recipient devices",
+  "notifications.attempts": "Attempts",
+  "notifications.nextAttempt": "Next attempt",
+  "notifications.lastErrorCode": "Last error code",
+  "notifications.lastError": "Last error",
+  "notifications.updatedAt": "Updated",
+  "notifications.payload": "Payload",
+  "notifications.payloadHelp":
+    "The message snapshot submitted to the notification provider.",
+  "notifications.providerEvidence": "Provider evidence",
+  "notifications.providerEvidenceHelp":
+    "Delivery evidence returned by the configured push provider."
+});
+
+Object.assign(messages["zh-Hans"], {
+  "notifications.subtitle":
+    "查看 App 通知投递、检查服务商回执，并恢复符合条件的失败任务。",
+  "notifications.retryDue": "重试到期失败",
+  "notifications.retryProcessed": "已处理 {count} 个到期投递任务。",
+  "notifications.retryOne": "重试任务",
+  "notifications.retrySuccess": "通知任务已重新投递。",
+  "notifications.cancel": "取消任务",
+  "notifications.cancelSuccess": "通知任务已取消。",
+  "notifications.cancelConfirmTitle": "取消此投递任务？",
+  "notifications.cancelConfirmBody":
+    "后端将停止这个排队中或等待重试的任务，此操作不会改变原始教会内容。",
+  "notifications.empty": "当前筛选条件下没有通知投递任务。",
+  "notifications.loaded": "已加载",
+  "notifications.loadedResults": "条已加载结果",
+  "notifications.statusFilter": "投递状态",
+  "notifications.typeFilter": "通知类型",
+  "notifications.applyFilters": "应用筛选",
+  "notifications.clearFilters": "清除",
+  "notifications.refreshFailed": "最新刷新失败，之前加载的投递仍然保留。",
+  "notifications.messageId": "消息 ID",
+  "notifications.audience": "受众",
+  "notifications.preference": "偏好键",
+  "notifications.recipients": "接收设备",
+  "notifications.attempts": "尝试次数",
+  "notifications.nextAttempt": "下次尝试",
+  "notifications.lastErrorCode": "最近错误代码",
+  "notifications.lastError": "最近错误",
+  "notifications.updatedAt": "更新时间",
+  "notifications.payload": "投递内容",
+  "notifications.payloadHelp": "提交给通知服务商的消息快照。",
+  "notifications.providerEvidence": "服务商回执",
+  "notifications.providerEvidenceHelp": "由当前推送服务商返回的投递证据。"
+});
+
+Object.assign(messages.es, {
+  "notifications.subtitle":
+    "Revisa las entregas de la App, inspecciona la evidencia del proveedor y recupera fallos elegibles.",
+  "notifications.retryDue": "Reintentar fallos vencidos",
+  "notifications.retryProcessed":
+    "Se procesaron {count} tareas de entrega vencidas.",
+  "notifications.retryOne": "Reintentar tarea",
+  "notifications.retrySuccess": "La tarea de notificación se reintentó.",
+  "notifications.cancel": "Cancelar tarea",
+  "notifications.cancelSuccess": "La tarea de notificación se canceló.",
+  "notifications.cancelConfirmTitle": "¿Cancelar esta tarea de entrega?",
+  "notifications.cancelConfirmBody":
+    "El servidor detendrá esta tarea en cola o pendiente de reintento. El contenido original de la iglesia no cambiará.",
+  "notifications.empty": "No hay entregas de notificaciones con estos filtros.",
+  "notifications.loaded": "Cargadas",
+  "notifications.loadedResults": "resultados cargados",
+  "notifications.statusFilter": "Estado de entrega",
+  "notifications.typeFilter": "Tipo de notificación",
+  "notifications.applyFilters": "Aplicar filtros",
+  "notifications.clearFilters": "Limpiar",
+  "notifications.refreshFailed":
+    "La última actualización falló. Las entregas cargadas siguen visibles.",
+  "notifications.messageId": "ID del mensaje",
+  "notifications.audience": "Audiencia",
+  "notifications.preference": "Clave de preferencia",
+  "notifications.recipients": "Dispositivos destinatarios",
+  "notifications.attempts": "Intentos",
+  "notifications.nextAttempt": "Próximo intento",
+  "notifications.lastErrorCode": "Código del último error",
+  "notifications.lastError": "Último error",
+  "notifications.updatedAt": "Actualizada",
+  "notifications.payload": "Contenido de entrega",
+  "notifications.payloadHelp":
+    "La instantánea del mensaje enviada al proveedor de notificaciones.",
+  "notifications.providerEvidence": "Evidencia del proveedor",
+  "notifications.providerEvidenceHelp":
+    "Evidencia de entrega devuelta por el proveedor push configurado."
+});
+
+Object.assign(messages["zh-Hant"], {
+  "notifications.subtitle":
+    "查看 App 通知投遞、檢查服務商回執，並恢復符合條件的失敗任務。",
+  "notifications.retryDue": "重試到期失敗",
+  "notifications.retryProcessed": "已處理 {count} 個到期投遞任務。",
+  "notifications.retryOne": "重試任務",
+  "notifications.retrySuccess": "通知任務已重新投遞。",
+  "notifications.cancel": "取消任務",
+  "notifications.cancelSuccess": "通知任務已取消。",
+  "notifications.cancelConfirmTitle": "取消此投遞任務？",
+  "notifications.cancelConfirmBody":
+    "後端將停止這個排隊中或等待重試的任務，此操作不會變更原始教會內容。",
+  "notifications.empty": "目前篩選條件下沒有通知投遞任務。",
+  "notifications.loaded": "已載入",
+  "notifications.loadedResults": "筆已載入結果",
+  "notifications.statusFilter": "投遞狀態",
+  "notifications.typeFilter": "通知類型",
+  "notifications.applyFilters": "套用篩選",
+  "notifications.clearFilters": "清除",
+  "notifications.refreshFailed": "最新重新整理失敗，先前載入的投遞仍然保留。",
+  "notifications.messageId": "訊息 ID",
+  "notifications.audience": "受眾",
+  "notifications.preference": "偏好鍵",
+  "notifications.recipients": "接收裝置",
+  "notifications.attempts": "嘗試次數",
+  "notifications.nextAttempt": "下次嘗試",
+  "notifications.lastErrorCode": "最近錯誤代碼",
+  "notifications.lastError": "最近錯誤",
+  "notifications.updatedAt": "更新時間",
+  "notifications.payload": "投遞內容",
+  "notifications.payloadHelp": "提交給通知服務商的訊息快照。",
+  "notifications.providerEvidence": "服務商回執",
+  "notifications.providerEvidenceHelp": "由目前推送服務商回傳的投遞證據。"
 });
 
 watchEffect(() => {

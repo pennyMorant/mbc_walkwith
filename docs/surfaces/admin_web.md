@@ -134,6 +134,11 @@ Surface rule:
   for roles and account status. Resetting the current account password ends the
   current browser session, while changing its role reloads permissions from the
   backend before the shell continues.
+- Notification delivery filters keep editable drafts separate from applied query
+  snapshots and use the backend cursor through an infinite query. The page owns
+  retry/cancel commands, command context, permission checks, and recovery feedback;
+  filter and detail components only render state and emit intents. Background
+  refresh failures preserve already loaded delivery records.
 - System result projections use the shared Admin data-state presentation for
   loading, error, retry, and empty feedback. The shared component owns no query,
   permission, or transport state; each page connects retry to its own query.

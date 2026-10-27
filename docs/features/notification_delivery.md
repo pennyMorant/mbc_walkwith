@@ -47,6 +47,8 @@ App 展示系统通知权限、设备注册结果和通知中心。系统通知�
 
 后台展示通知任务、audience、偏好键、失败原因、payload、provider evidence，并提供到期失败任务批量重试、单任务重试和 queued/retrying 任务取消。
 
+通知目录以筛选快照和后端复合游标分页为准。筛选表单只是草稿，管理员明确应用后才改变查询；翻页由 query cache 管理，不能在 query function 内累加页面副作用。已有投递加载成功后，后台刷新失败必须保留现有结果并显示可重试提示。单任务 retry/cancel 使用不可变 task id 和编辑上下文，迟到结果不得关闭或覆盖管理员随后打开的另一任务；取消任务必须二次确认，任何状态转换仍由后端裁决。
+
 ## Backend Service Boundary
 
 后端负责偏好、token、audience、任务创建、dedupe、投递、retry 查询入口、Admin 投递列表、手动重试到期任务、单任务 retry/cancel、进程内 retry scheduler 和 provider evidence。

@@ -56,7 +56,9 @@ describe("system workspace responsive results", () => {
     expect(dataState).not.toContain("useQuery");
     expect(dataState).not.toContain("useAdminAuthStore");
     for (const page of systemPages) {
-      expect(page).toMatch(/@retry="\w+Query\.refetch\(\)"/);
+      expect(page).toMatch(
+        /@retry="(?:\w+Query\.refetch\(\)|refreshList)"/
+      );
     }
   });
 
@@ -108,5 +110,60 @@ describe("system workspace responsive results", () => {
     }
     expect(messages).toContain('"viewer": "Solo lectura"');
     expect(messages).toContain('"viewer": "唯讀"');
+  });
+
+  test("keeps notification pagination and command ownership out of presentation", async () => {
+    const [page, filters, drawer, query] = await Promise.all([
+      Bun.file(
+        new URL(
+          "../src/features/notifications/pages/NotificationsPage.vue",
+          import.meta.url
+        )
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/notifications/components/NotificationDeliveryFiltersCard.vue",
+          import.meta.url
+        )
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/notifications/components/NotificationDeliveryDetailDrawer.vue",
+          import.meta.url
+        )
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/notifications/composables/use_notification_delivery_query.ts",
+          import.meta.url
+        )
+      ).text()
+    ]);
+
+    expect(page).toContain("taskContextVersion");
+    expect(page).toContain("isCurrentTaskContext");
+    expect(page).toContain("taskCommandPending");
+    expect(page).toContain("backgroundQueryError");
+    expect(page).toContain("<NotificationDeliveryFiltersCard");
+    expect(page).toContain("<NotificationDeliveryDetailDrawer");
+    expect(query).toContain("useInfiniteQuery");
+    expect(query).toContain("appliedFilters");
+    expect(drawer).toContain('v-model="drawerProxy"');
+    expect(drawer).toContain("cancelConfirmTitle");
+    for (const source of [filters, drawer]) {
+      expect(source).not.toContain("@/core/api");
+      expect(source).not.toContain("auth_store");
+    }
+  });
+
+  test("defines the notification recovery copy in every locale", () => {
+    for (const key of [
+      "notifications.applyFilters",
+      "notifications.refreshFailed",
+      "notifications.cancelConfirmTitle",
+      "notifications.providerEvidenceHelp"
+    ]) {
+      expect(messages.match(new RegExp(`"${key}"`, "g"))?.length).toBe(4);
+    }
   });
 });
