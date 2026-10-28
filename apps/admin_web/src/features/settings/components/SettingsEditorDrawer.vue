@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { AppSetting } from "@mbc/api-contracts";
+import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
@@ -14,7 +15,7 @@ const valueBoolean = defineModel<boolean>("valueBoolean", { required: true });
 const valueNumber = defineModel<number | null>("valueNumber", { required: true });
 const structuredValue = defineModel<unknown>("structuredValue", { required: true });
 
-defineProps<{
+const props = defineProps<{
   setting: AppSetting | null;
   editorType: SettingEditorType;
   selectItems: Array<{ title: string; value: string }>;
@@ -29,10 +30,18 @@ defineProps<{
 
 defineEmits<{ save: [] }>();
 const { t } = useI18n();
+const drawerProxy = computed({
+  get: () => open.value,
+  set: (value: boolean) => {
+    if (value || !props.savePending) {
+      open.value = value;
+    }
+  }
+});
 </script>
 
 <template>
-  <AdminResponsiveDrawer v-model="open" :desktop-width="560">
+  <AdminResponsiveDrawer v-model="drawerProxy" :desktop-width="560">
     <div v-if="setting" class="pa-4 pa-sm-5">
       <div class="d-flex align-start justify-space-between ga-4">
         <div>
@@ -45,7 +54,8 @@ const { t } = useI18n();
           icon="mdi-close"
           variant="text"
           :aria-label="t('common.close')"
-          @click="open = false"
+          :disabled="savePending"
+          @click="drawerProxy = false"
         />
       </div>
 
@@ -108,7 +118,13 @@ const { t } = useI18n();
           {{ errorMessage }}
         </v-alert>
         <div class="d-flex flex-column flex-sm-row justify-end ga-3">
-          <v-btn variant="text" @click="open = false">{{ t("common.cancel") }}</v-btn>
+          <v-btn
+            variant="text"
+            :disabled="savePending"
+            @click="drawerProxy = false"
+          >
+            {{ t("common.cancel") }}
+          </v-btn>
           <v-btn type="submit" color="primary" :disabled="!canUpdate" :loading="savePending">
             {{ t("common.save") }}
           </v-btn>

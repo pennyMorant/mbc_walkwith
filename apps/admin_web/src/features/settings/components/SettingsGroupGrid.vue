@@ -13,6 +13,7 @@ defineProps<{
   settingPreview: (setting: AppSetting) => string;
   settingPreviewColor: (setting: AppSetting) => string;
   editLabel: string;
+  disabled: boolean;
 }>();
 
 defineEmits<{ open: [setting: AppSetting] }>();
@@ -44,6 +45,7 @@ defineEmits<{ open: [setting: AppSetting] }>();
             v-for="setting in group.items"
             :key="setting.key"
             class="setting-item"
+            :disabled="disabled"
             @click="$emit('open', setting)"
           >
             <template #prepend>
@@ -67,7 +69,13 @@ defineEmits<{ open: [setting: AppSetting] }>();
                 >
                   {{ settingPreview(setting) }}
                 </v-chip>
-                <v-btn icon="mdi-pencil" size="small" variant="text" :aria-label="editLabel" />
+                <v-btn
+                  icon="mdi-pencil"
+                  size="small"
+                  variant="text"
+                  :aria-label="editLabel"
+                  :disabled="disabled"
+                />
               </div>
             </template>
           </v-list-item>

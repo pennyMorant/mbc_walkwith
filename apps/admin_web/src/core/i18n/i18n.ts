@@ -4813,6 +4813,33 @@ Object.assign(messages["zh-Hant"], {
   "notifications.providerEvidenceHelp": "由目前推送服務商回傳的投遞證據。"
 });
 
+Object.assign(messages.en, {
+  "settings.applyFilters": "Apply filters",
+  "settings.clearFilters": "Clear filters",
+  "settings.loaded": "Loaded",
+  "settings.refreshFailed":
+    "The latest settings could not be loaded. Existing results are still shown."
+});
+Object.assign(messages.es, {
+  "settings.applyFilters": "Aplicar filtros",
+  "settings.clearFilters": "Borrar filtros",
+  "settings.loaded": "Cargadas",
+  "settings.refreshFailed":
+    "No se pudo cargar la configuración más reciente. Se conservan los resultados actuales."
+});
+Object.assign(messages["zh-Hans"], {
+  "settings.applyFilters": "应用筛选",
+  "settings.clearFilters": "清除筛选",
+  "settings.loaded": "已加载",
+  "settings.refreshFailed": "无法加载最新设置，当前结果仍会保留。"
+});
+Object.assign(messages["zh-Hant"], {
+  "settings.applyFilters": "套用篩選",
+  "settings.clearFilters": "清除篩選",
+  "settings.loaded": "已載入",
+  "settings.refreshFailed": "無法載入最新設定，目前結果仍會保留。"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });

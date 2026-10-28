@@ -1,19 +1,27 @@
 <script setup lang="ts">
 import type { AppSetting } from "@mbc/api-contracts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { computed, ref, watch } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
-import { listSettings, updateSetting } from "@/core/api/settings";
+import { updateSetting } from "@/core/api/settings";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
-import { useI18n, type AppLocale } from "@/core/i18n/i18n";
+import { formatAdminDateTime } from "@/core/i18n/date_time";
+import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import SettingsEditorDrawer from "../components/SettingsEditorDrawer.vue";
 import SettingsFiltersCard from "../components/SettingsFiltersCard.vue";
 import SettingsGroupGrid from "../components/SettingsGroupGrid.vue";
+import { useSettingsQuery } from "../composables/use_settings_query";
 import { cloneLandingSettingValue, isPublicLandingStructuredSetting } from "../public_landing_editor";
+import {
+  settingEditorType,
+  settingIcon,
+  settingPreview,
+  settingPreviewColor
+} from "../settings_editor_presenters";
 import {
   baseSettingCategories,
   categoryColor,
@@ -24,8 +32,12 @@ import {
   settingDescription,
   settingTitle
 } from "../settings_presenters";
+import {
+  isCurrentSettingEditorContext,
+  type SettingEditorContext
+} from "../settings_workspace_models";
 
-type SettingEditorType = "boolean" | "number" | "select" | "string" | "json" | "landing";
+type SettingUpdateIntent = SettingEditorContext & { value: unknown };
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -38,40 +50,44 @@ const valueBoolean = ref(false);
 const valueNumber = ref<number | null>(null);
 const structuredValue = ref<unknown>(null);
 const parseError = ref("");
+const editorCommandError = ref("");
+let editorContextVersion = 0;
 
-const filters = reactive({
-  category: "",
-  query: ""
-});
-
-const activeFilters = computed(() => ({ ...filters, limit: 100 }));
-const settingsQuery = useQuery({
-  queryKey: ["settings", activeFilters],
-  queryFn: () => listSettings(activeFilters.value)
-});
+const {
+  filters,
+  settingsQuery,
+  settings,
+  applyFilters,
+  clearFilters,
+  refreshList
+} = useSettingsQuery(queryClient);
 
 const updateMutation = useMutation({
-  mutationFn: (input: { key: string; value: unknown }) =>
-    updateSetting(input.key, { value: input.value }),
-  onSuccess: async (setting) => {
-    if (setting.key === "app.defaultLocale") {
-      if (setting.value === "system") {
-        resetLocaleToSystem();
-      } else if (
-        setting.value === "en" ||
-        setting.value === "es" ||
-        setting.value === "zh-Hans" ||
-        setting.value === "zh-Hant"
-      ) {
-        setLocale(setting.value);
-      }
+  onMutate: (intent: SettingUpdateIntent) => {
+    if (isCurrentEditorContext(intent)) {
+      editorCommandError.value = "";
     }
-    openSetting(setting);
+    return intent;
+  },
+  mutationFn: (intent: SettingUpdateIntent) =>
+    updateSetting(intent.settingKey, { value: intent.value }),
+  onSuccess: async (setting, _intent, context) => {
+    applyLocaleSideEffect(setting);
+    if (isCurrentEditorContext(context)) {
+      syncSettingEditor(setting);
+    }
     await queryClient.invalidateQueries({ queryKey: ["settings"] });
+  },
+  onError: (error, _intent, context) => {
+    if (isCurrentEditorContext(context)) {
+      editorCommandError.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 });
 
-const settings = computed(() => settingsQuery.data.value ?? []);
 const canUpdate = computed(() => authStore.can("settings:update"));
 const groupedSettings = computed(() => {
   const groups = new Map<string, AppSetting[]>();
@@ -127,40 +143,19 @@ const memberRegistrationModeItems = computed(() => [
 ]);
 
 const errorMessage = computed(
-  () =>
-    parseError.value ||
-    formatApiErrorMessage(updateMutation.error.value, t("common.error"))
+  () => parseError.value || editorCommandError.value
 );
-
-function settingEditorType(setting: AppSetting): SettingEditorType {
-  if (isPublicLandingStructuredSetting(setting.key)) return "landing";
-  if (
-    setting.key === "app.defaultLocale" ||
-    setting.key === "church.timezone" ||
-    setting.key === "member.registrationMode"
-  ) {
-    return "select";
-  }
-  if (typeof setting.value === "boolean") return "boolean";
-  if (typeof setting.value === "number") return "number";
-  if (
-    typeof setting.value === "string" ||
-    setting.value === null ||
-    setting.value === undefined
-  ) {
-    return "string";
-  }
-  return "json";
-}
-
-function settingIcon(setting: AppSetting) {
-  const editorType = settingEditorType(setting);
-  if (editorType === "boolean") return "mdi-toggle-switch-outline";
-  if (editorType === "select") return "mdi-format-list-bulleted";
-  if (editorType === "number") return "mdi-numeric";
-  if (editorType === "json") return "mdi-code-json";
-  return "mdi-form-textbox";
-}
+const queryError = computed(() =>
+  settingsQuery.error.value
+    ? formatApiErrorMessage(settingsQuery.error.value, t("common.error"))
+    : ""
+);
+const initialQueryError = computed(() =>
+  settings.value.length === 0 ? queryError.value : ""
+);
+const backgroundQueryError = computed(() =>
+  settings.value.length > 0 ? queryError.value : ""
+);
 
 function selectItems(setting: AppSetting) {
   if (setting.key === "app.defaultLocale") {
@@ -175,60 +170,26 @@ function selectItems(setting: AppSetting) {
   return [];
 }
 
-function settingPreview(setting: AppSetting) {
-  if (typeof setting.value === "boolean") {
-    return setting.value ? t("common.enabled") : t("common.disabled");
-  }
-  if (setting.value === null || setting.value === undefined || setting.value === "") {
-    return t("common.notSet");
-  }
-  if (setting.key === "app.defaultLocale") {
-    return (
-      localeSettingItems.value.find((item) => item.value === setting.value)
-        ?.title ?? String(setting.value)
-    );
-  }
-  if (setting.key === "member.registrationMode") {
-    return (
-      memberRegistrationModeItems.value.find(
-        (item) => item.value === setting.value
-      )?.title ?? String(setting.value)
-    );
-  }
-  if (typeof setting.value === "object") {
-    if (Array.isArray(setting.value)) {
-      return `${setting.value.length} ${t("settings.arrayItems")}`;
-    }
-    const preview = objectPreview(setting.value);
-    if (preview) {
-      return preview;
-    }
-    return t("settings.objectValue");
-  }
-  return String(setting.value);
-}
-
-function objectPreview(value: object) {
-  if ("title" in value && typeof value.title === "string") {
-    return value.title;
-  }
-  if ("name" in value && typeof value.name === "string") {
-    return value.name;
-  }
-  if ("eyebrow" in value && typeof value.eyebrow === "string") {
-    return value.eyebrow;
-  }
-  return "";
-}
-
-function settingPreviewColor(setting: AppSetting) {
-  if (typeof setting.value !== "boolean") {
-    return "primary";
-  }
-  return setting.value ? "success" : "grey";
+function settingPreviewText(setting: AppSetting) {
+  return settingPreview(setting, {
+    localeItems: localeSettingItems.value,
+    registrationModeItems: memberRegistrationModeItems.value,
+    t
+  });
 }
 
 function openSetting(setting: AppSetting) {
+  if (updateMutation.isPending.value) {
+    return;
+  }
+  editorContextVersion += 1;
+  updateMutation.reset();
+  editorCommandError.value = "";
+  syncSettingEditor(setting);
+  drawer.value = true;
+}
+
+function syncSettingEditor(setting: AppSetting) {
   selectedSetting.value = setting;
   valueText.value =
     typeof setting.value === "string"
@@ -243,11 +204,14 @@ function openSetting(setting: AppSetting) {
   structuredValue.value = isPublicLandingStructuredSetting(setting.key)
     ? cloneLandingSettingValue(setting.value)
     : null;
-  drawer.value = true;
 }
 
 function saveSetting() {
-  if (!selectedSetting.value || !canUpdate.value) {
+  if (
+    !selectedSetting.value ||
+    !canUpdate.value ||
+    updateMutation.isPending.value
+  ) {
     return;
   }
   parseError.value = "";
@@ -273,23 +237,39 @@ function saveSetting() {
   } else {
     value = valueText.value;
   }
-  updateMutation.mutate({ key: selectedSetting.value.key, value });
+  updateMutation.mutate({
+    settingKey: selectedSetting.value.key,
+    contextVersion: editorContextVersion,
+    value
+  });
 }
 
 function formattedUpdatedAt(setting: AppSetting) {
-  return new Intl.DateTimeFormat(dateTimeLocale(locale.value), {
-    dateStyle: "medium",
-    timeStyle: "short"
-  }).format(new Date(setting.updatedAt));
+  return formatAdminDateTime(setting.updatedAt, locale.value);
 }
 
-function dateTimeLocale(value: AppLocale) {
-  return {
-    en: "en-US",
-    es: "es-US",
-    "zh-Hans": "zh-CN",
-    "zh-Hant": "zh-TW"
-  }[value];
+function isCurrentEditorContext(context: SettingEditorContext | undefined) {
+  return isCurrentSettingEditorContext(
+    context,
+    selectedSetting.value?.key,
+    editorContextVersion
+  );
+}
+
+function applyLocaleSideEffect(setting: AppSetting) {
+  if (setting.key !== "app.defaultLocale") {
+    return;
+  }
+  if (setting.value === "system") {
+    resetLocaleToSystem();
+  } else if (
+    setting.value === "en" ||
+    setting.value === "es" ||
+    setting.value === "zh-Hans" ||
+    setting.value === "zh-Hant"
+  ) {
+    setLocale(setting.value);
+  }
 }
 
 function currentEditorType() {
@@ -299,6 +279,14 @@ function currentEditorType() {
 function currentSelectItems() {
   return selectedSetting.value ? selectItems(selectedSetting.value) : [];
 }
+
+watch(drawer, (open) => {
+  if (!open) {
+    editorContextVersion += 1;
+    editorCommandError.value = "";
+    parseError.value = "";
+  }
+});
 </script>
 
 <template>
@@ -310,28 +298,53 @@ function currentSelectItems() {
           variant="tonal"
           prepend-icon="mdi-refresh"
           :loading="settingsQuery.isFetching.value"
-          @click="settingsQuery.refetch()"
+          @click="refreshList"
         >
           {{ t("common.refresh") }}
         </v-btn>
       </template>
     </AdminPageHeader>
 
+    <v-alert
+      v-if="backgroundQueryError"
+      type="warning"
+      variant="tonal"
+      class="mt-4"
+    >
+      <div
+        class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
+      >
+        <span>{{ t("settings.refreshFailed") }}</span>
+        <v-btn
+          color="warning"
+          variant="tonal"
+          size="small"
+          prepend-icon="mdi-refresh"
+          @click="refreshList"
+        >
+          {{ t("Retry") }}
+        </v-btn>
+      </div>
+    </v-alert>
+
     <SettingsFiltersCard
       :filters="filters"
       :category-filter-items="categoryFilterItems"
-      :refetch="settingsQuery.refetch"
+      :loaded-count="settings.length"
+      :pending="settingsQuery.isFetching.value"
+      @apply="applyFilters"
+      @clear="clearFilters"
     />
 
     <AdminDataState
       class="mt-6"
       :pending="settingsQuery.isPending.value"
-      :error-message="settingsQuery.error.value ? formatApiErrorMessage(settingsQuery.error.value, t('common.error')) : ''"
+      :error-message="initialQueryError"
       :empty="settings.length === 0"
       :empty-title="t('settings.empty')"
       empty-icon="mdi-tune-variant"
       :retry-label="t('common.refresh')"
-      @retry="settingsQuery.refetch()"
+      @retry="refreshList"
     >
       <SettingsGroupGrid
         :groups="groupedSettings"
@@ -342,9 +355,10 @@ function currentSelectItems() {
         :setting-title="(setting) => settingTitle(setting, t)"
         :setting-description="(setting) => settingDescription(setting, t)"
         :setting-icon="settingIcon"
-        :setting-preview="settingPreview"
+        :setting-preview="settingPreviewText"
         :setting-preview-color="settingPreviewColor"
         :edit-label="t('common.edit')"
+        :disabled="updateMutation.isPending.value"
         @open="openSetting"
       />
     </AdminDataState>
