@@ -49,6 +49,9 @@ This document covers admin Web API helper structure and admin-facing SDK rules.
 - Users and roles: `apps/admin_web/src/core/api/admin_users.ts`
 - Jobs: `apps/admin_web/src/core/api/jobs.ts`
 - Audit logs: `apps/admin_web/src/core/api/audit_logs.ts`
+  - The helper returns the typed audit page (`items` plus `nextCursor`) and
+    accepts the backend-issued composite cursor. Callers keep editable filters
+    separate from the applied query and must not synthesize older records.
 - Settings: `apps/admin_web/src/core/api/settings.ts`
   - `public_landing` category owns public website identity, navigation,
     new-friend links, recurring schedules, public people profiles, contact

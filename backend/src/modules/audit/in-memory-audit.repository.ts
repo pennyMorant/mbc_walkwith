@@ -1,7 +1,16 @@
 import type { AuditLog, AuditLogListQuery } from "@mbc/api-contracts";
 import { randomUUID } from "node:crypto";
 
-import type { AuditLogInput, AuditRepository } from "./audit.repository.js";
+import {
+  decodeAuditCursor,
+  encodeAuditCursor,
+  isAuditLogAfterCursor
+} from "./audit_cursor.js";
+import type {
+  AuditLogInput,
+  AuditLogPage,
+  AuditRepository
+} from "./audit.repository.js";
 
 export class InMemoryAuditRepository implements AuditRepository {
   readonly logs: AuditLog[] = [];
@@ -19,14 +28,17 @@ export class InMemoryAuditRepository implements AuditRepository {
     });
   }
 
-  async list(query: AuditLogListQuery): Promise<AuditLog[]> {
-    return this.logs
-      .map((log, index) => ({ log, index }))
-      .filter(({ log }) => {
+  async list(query: AuditLogListQuery): Promise<AuditLogPage> {
+    const cursor = query.cursor ? decodeAuditCursor(query.cursor) : null;
+    const matchingLogs = this.logs
+      .filter((log) => {
         if (query.actorUserId && log.actorUserId !== query.actorUserId) {
           return false;
         }
-        if (query.action && !log.action.includes(query.action)) {
+        if (
+          query.action &&
+          !log.action.toLowerCase().includes(query.action.toLowerCase())
+        ) {
           return false;
         }
         if (query.resourceType && log.resourceType !== query.resourceType) {
@@ -35,14 +47,22 @@ export class InMemoryAuditRepository implements AuditRepository {
         if (query.resourceId && log.resourceId !== query.resourceId) {
           return false;
         }
-        return true;
+        return cursor === null || isAuditLogAfterCursor(log, cursor);
       })
       .sort(
         (a, b) =>
-          b.log.createdAt.localeCompare(a.log.createdAt) || b.index - a.index
+          b.createdAt.localeCompare(a.createdAt) || b.id.localeCompare(a.id)
       )
-      .map(({ log }) => log)
-      .slice(0, query.limit);
+      .slice(0, query.limit + 1);
+    const logs = matchingLogs.slice(0, query.limit);
+    const lastLog = logs.at(-1);
+    return {
+      logs,
+      nextCursor:
+        matchingLogs.length > query.limit && lastLog
+          ? encodeAuditCursor(lastLog)
+          : null
+    };
   }
 
   async listAiRecords(): Promise<AuditLog[]> {

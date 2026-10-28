@@ -139,6 +139,10 @@ Surface rule:
   retry/cancel commands, command context, permission checks, and recovery feedback;
   filter and detail components only render state and emit intents. Background
   refresh failures preserve already loaded delivery records.
+- Audit log filters follow the same draft/applied boundary and consume the
+  backend `createdAt + id` cursor through an infinite query. The results and
+  detail drawer are presentation-only; background refresh failures preserve
+  already loaded audit records and the page never reconstructs audit history.
 - System result projections use the shared Admin data-state presentation for
   loading, error, retry, and empty feedback. The shared component owns no query,
   permission, or transport state; each page connects retry to its own query.

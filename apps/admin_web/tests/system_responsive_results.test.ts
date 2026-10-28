@@ -166,4 +166,52 @@ describe("system workspace responsive results", () => {
       expect(messages.match(new RegExp(`"${key}"`, "g"))?.length).toBe(4);
     }
   });
+
+  test("keeps audit pagination and transport out of presentation", async () => {
+    const [page, filters, drawer, query] = await Promise.all([
+      Bun.file(
+        new URL("../src/features/audit/pages/AuditLogsPage.vue", import.meta.url)
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/audit/components/AuditLogFiltersCard.vue",
+          import.meta.url
+        )
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/audit/components/AuditLogDetailDrawer.vue",
+          import.meta.url
+        )
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/audit/composables/use_audit_log_query.ts",
+          import.meta.url
+        )
+      ).text()
+    ]);
+
+    expect(page).toContain("backgroundQueryError");
+    expect(page).toContain("<AuditLogFiltersCard");
+    expect(page).toContain("<AuditLogDetailDrawer");
+    expect(query).toContain("useInfiniteQuery");
+    expect(query).toContain("appliedFilters");
+    expect(query).toContain("lastPage.nextCursor");
+    for (const source of [filters, drawer]) {
+      expect(source).not.toContain("@/core/api");
+      expect(source).not.toContain("auth_store");
+    }
+  });
+
+  test("defines the audit workspace copy in every locale", () => {
+    for (const key of [
+      "audit.applyFilters",
+      "audit.refreshFailed",
+      "audit.systemActor",
+      "audit.createdAt"
+    ]) {
+      expect(messages.match(new RegExp(`"${key}"`, "g"))?.length).toBe(4);
+    }
+  });
 });

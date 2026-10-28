@@ -9,8 +9,13 @@ export type AuditLogInput = {
   afterJson?: unknown;
 };
 
+export type AuditLogPage = {
+  logs: AuditLog[];
+  nextCursor: string | null;
+};
+
 export interface AuditRepository {
   record(input: AuditLogInput): Promise<void>;
-  list(query: AuditLogListQuery): Promise<AuditLog[]>;
+  list(query: AuditLogListQuery): Promise<AuditLogPage>;
   listAiRecords(): Promise<AuditLog[]>;
 }

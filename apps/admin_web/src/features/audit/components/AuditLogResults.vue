@@ -39,7 +39,7 @@ const { locale, t } = useI18n();
         >
           <td class="font-weight-bold">{{ log.action }}</td>
           <td>{{ log.resourceType }} · {{ log.resourceId }}</td>
-          <td>{{ log.actorUserId || "system" }}</td>
+          <td>{{ log.actorUserId || t("audit.systemActor") }}</td>
           <td>{{ formatAdminDateTime(log.createdAt, locale) }}</td>
         </tr>
       </tbody>
@@ -56,7 +56,7 @@ const { locale, t } = useI18n();
         <span class="audit-record__main">
           <strong>{{ log.action }}</strong>
           <span>{{ log.resourceType }} · {{ log.resourceId }}</span>
-          <span>{{ log.actorUserId || "system" }} · {{ formatAdminDateTime(log.createdAt, locale) }}</span>
+          <span>{{ log.actorUserId || t("audit.systemActor") }} · {{ formatAdminDateTime(log.createdAt, locale) }}</span>
         </span>
         <v-icon icon="mdi-chevron-right" size="20" />
       </button>
@@ -65,8 +65,36 @@ const { locale, t } = useI18n();
 </template>
 
 <style scoped>
-.cursor-pointer { cursor: pointer; }
-.audit-record { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; border: 0; border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08); padding: 14px 16px; color: inherit; background: transparent; text-align: left; }
-.audit-record__main { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
-.audit-record__main span { overflow: hidden; color: rgba(var(--v-theme-on-surface), 0.62); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.audit-record {
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  padding: 14px 16px;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+}
+
+.audit-record__main {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.audit-record__main span {
+  overflow: hidden;
+  color: rgba(var(--v-theme-on-surface), 0.62);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>

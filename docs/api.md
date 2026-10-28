@@ -2440,8 +2440,13 @@ Finance role required.
 ### 11.8 Audit Logs
 
 ```text
-GET /v1/admin/audit-logs?actorUserId=&entityType=&limit=50&cursor=
+GET /v1/admin/audit-logs?actorUserId=&action=&resourceType=&resourceId=&limit=50&cursor=
 ```
+
+The response contains `items` and `nextCursor`. Pagination is ordered by
+`createdAt DESC, id DESC`; `cursor` is the opaque composite cursor returned by
+the previous page. Clients must not construct a cursor from a timestamp or
+infer that the first 50 records are the complete audit history.
 
 Audit log should include:
 

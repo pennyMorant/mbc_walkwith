@@ -4,7 +4,7 @@ import {
 } from "@mbc/api-contracts";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import { ok } from "../../../shared/http/api-response.js";
+import { listMeta, ok } from "../../../shared/http/api-response.js";
 import type { AuditService } from "../../audit/audit.service.js";
 
 type AdminPreHandler = (
@@ -24,7 +24,11 @@ export async function registerAdminAuditRoutes(
     { preHandler: permissionPreHandler("audit:read") },
     async (request) => {
       const query = auditLogListQuerySchema.parse(request.query);
-      return ok({ items: await auditService.list(query) });
+      const result = await auditService.list(query);
+      return ok(
+        { items: result.logs, nextCursor: result.nextCursor },
+        listMeta(query.limit, result.nextCursor)
+      );
     }
   );
 }

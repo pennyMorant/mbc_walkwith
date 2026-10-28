@@ -2304,19 +2304,79 @@ Object.assign(messages["zh-Hant"], {
 
 Object.assign(messages.en, {
   "users.empty": "No admin users are available.",
-  "audit.empty": "No audit records match the current filters."
+  "audit.empty": "No audit records match the current filters.",
+  "audit.subtitle": "Review the administrative actions recorded by the backend.",
+  "audit.actionFilter": "Action",
+  "audit.resourceTypeFilter": "Resource type",
+  "audit.resourceIdFilter": "Resource ID",
+  "audit.actorFilter": "Actor user ID",
+  "audit.applyFilters": "Apply filters",
+  "audit.clearFilters": "Clear filters",
+  "audit.loaded": "Loaded",
+  "audit.refreshFailed": "The latest audit records could not be loaded. Existing results are still shown.",
+  "audit.systemActor": "System",
+  "audit.logId": "Audit log ID",
+  "audit.actor": "Actor",
+  "audit.createdAt": "Created",
+  "audit.before": "Before",
+  "audit.after": "After"
 });
 Object.assign(messages.es, {
   "users.empty": "No hay usuarios administradores disponibles.",
-  "audit.empty": "Ningún registro de auditoría coincide con los filtros actuales."
+  "audit.empty": "Ningún registro de auditoría coincide con los filtros actuales.",
+  "audit.subtitle": "Revise las acciones administrativas registradas por el servidor.",
+  "audit.actionFilter": "Acción",
+  "audit.resourceTypeFilter": "Tipo de recurso",
+  "audit.resourceIdFilter": "ID del recurso",
+  "audit.actorFilter": "ID del usuario actor",
+  "audit.applyFilters": "Aplicar filtros",
+  "audit.clearFilters": "Borrar filtros",
+  "audit.loaded": "Cargados",
+  "audit.refreshFailed": "No se pudieron cargar los registros más recientes. Se conservan los resultados actuales.",
+  "audit.systemActor": "Sistema",
+  "audit.logId": "ID del registro de auditoría",
+  "audit.actor": "Actor",
+  "audit.createdAt": "Creado",
+  "audit.before": "Antes",
+  "audit.after": "Después"
 });
 Object.assign(messages["zh-Hans"], {
   "users.empty": "暂无后台用户。",
-  "audit.empty": "当前筛选条件下没有审计记录。"
+  "audit.empty": "当前筛选条件下没有审计记录。",
+  "audit.subtitle": "查看由后端记录的管理操作。",
+  "audit.actionFilter": "操作",
+  "audit.resourceTypeFilter": "资源类型",
+  "audit.resourceIdFilter": "资源 ID",
+  "audit.actorFilter": "操作人用户 ID",
+  "audit.applyFilters": "应用筛选",
+  "audit.clearFilters": "清除筛选",
+  "audit.loaded": "已加载",
+  "audit.refreshFailed": "无法加载最新审计记录，当前结果仍会保留。",
+  "audit.systemActor": "系统",
+  "audit.logId": "审计记录 ID",
+  "audit.actor": "操作人",
+  "audit.createdAt": "创建时间",
+  "audit.before": "变更前",
+  "audit.after": "变更后"
 });
 Object.assign(messages["zh-Hant"], {
   "users.empty": "暫無後台使用者。",
-  "audit.empty": "目前篩選條件下沒有稽核紀錄。"
+  "audit.empty": "目前篩選條件下沒有稽核紀錄。",
+  "audit.subtitle": "查看由後端記錄的管理操作。",
+  "audit.actionFilter": "操作",
+  "audit.resourceTypeFilter": "資源類型",
+  "audit.resourceIdFilter": "資源 ID",
+  "audit.actorFilter": "操作人使用者 ID",
+  "audit.applyFilters": "套用篩選",
+  "audit.clearFilters": "清除篩選",
+  "audit.loaded": "已載入",
+  "audit.refreshFailed": "無法載入最新稽核紀錄，目前結果仍會保留。",
+  "audit.systemActor": "系統",
+  "audit.logId": "稽核紀錄 ID",
+  "audit.actor": "操作人",
+  "audit.createdAt": "建立時間",
+  "audit.before": "變更前",
+  "audit.after": "變更後"
 });
 
 Object.assign(messages.en, {
