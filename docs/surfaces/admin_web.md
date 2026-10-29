@@ -245,7 +245,9 @@ Surface rule:
 - Prayer moderation workspace：列表、摘要和审核抽屉只通过
   `prayer_requests.ts` helper 提交 intent；普通保存只修改 visibility、group
   scope 和审核备注，状态由 Approve/Hide/Archive 明确动作改变。Approve 原子提交
-  当前审核表单和通知 intent，删除敏感内容前必须二次确认。
+  当前审核表单和通知 intent，删除敏感内容前必须二次确认。列表筛选草稿只有明确
+  应用后才成为查询快照，刷新失败保留已有敏感内容。审核命令互斥并携带发起时的
+  request id；延迟结果不能重新打开、覆盖或关闭管理员后来选择的记录。
 - Giving flow：查看交易、费用、退款、争议、payout、对账。交易、年度证明、
   Provider 事件、基金和对账筛选先保留为可编辑草稿，只有管理员明确应用后才成为
   后端查询快照；交易导出必须使用当前已应用快照，不能读取尚未应用的输入值。

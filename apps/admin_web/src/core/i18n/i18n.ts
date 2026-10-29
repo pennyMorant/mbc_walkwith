@@ -3432,7 +3432,10 @@ Object.assign(messages.en, {
     "Prayer content is sensitive. Share it only with the audience approved for pastoral care.",
   "prayer.notifyAppOnApprove": "Push to App when approved",
   "prayer.notifyAppOnApproveHint":
-    "Sends a generic update to the approved audience without prayer text."
+    "Sends a generic update to the approved audience without prayer text.",
+  "prayer.applyFilters": "Apply filters",
+  "prayer.clearFilters": "Clear filters",
+  "prayer.refreshFailed": "The latest prayer request queue could not be loaded."
 });
 
 Object.assign(messages["zh-Hans"], {
@@ -3476,7 +3479,10 @@ Object.assign(messages["zh-Hans"], {
     "代祷内容属于敏感信息，只能分享给经过牧养审核的受众。",
   "prayer.notifyAppOnApprove": "批准时推送到 App",
   "prayer.notifyAppOnApproveHint":
-    "只向批准后的受众发送泛化更新，不包含代祷正文。"
+    "只向批准后的受众发送泛化更新，不包含代祷正文。",
+  "prayer.applyFilters": "应用筛选",
+  "prayer.clearFilters": "清除筛选",
+  "prayer.refreshFailed": "无法加载最新的代祷请求队列。"
 });
 
 Object.assign(messages.es, {
@@ -3522,7 +3528,10 @@ Object.assign(messages.es, {
     "El contenido de oración es sensible. Compártelo solo con la audiencia aprobada para el cuidado pastoral.",
   "prayer.notifyAppOnApprove": "Enviar a la App al aprobar",
   "prayer.notifyAppOnApproveHint":
-    "Envía una actualización genérica a la audiencia aprobada sin incluir el texto de oración."
+    "Envía una actualización genérica a la audiencia aprobada sin incluir el texto de oración.",
+  "prayer.applyFilters": "Aplicar filtros",
+  "prayer.clearFilters": "Borrar filtros",
+  "prayer.refreshFailed": "No se pudo cargar la cola más reciente de peticiones de oración."
 });
 
 Object.assign(messages["zh-Hant"], {
@@ -3566,7 +3575,10 @@ Object.assign(messages["zh-Hant"], {
     "代禱內容屬於敏感資訊，只能分享給經過牧養審核的受眾。",
   "prayer.notifyAppOnApprove": "批准時推送到 App",
   "prayer.notifyAppOnApproveHint":
-    "只向批准後的受眾發送泛化更新，不包含代禱正文。"
+    "只向批准後的受眾發送泛化更新，不包含代禱正文。",
+  "prayer.applyFilters": "套用篩選",
+  "prayer.clearFilters": "清除篩選",
+  "prayer.refreshFailed": "無法載入最新的代禱請求佇列。"
 });
 
 Object.assign(messages.en, {

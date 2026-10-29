@@ -16,6 +16,8 @@ const props = defineProps<{
   request: AdminPrayerRequest | null;
   canModerate: boolean;
   canUpdate: boolean;
+  commandPending: boolean;
+  errorMessage: string;
   savePending: boolean;
   approvePending: boolean;
   hidePending: boolean;
@@ -75,6 +77,14 @@ function confirmDelete() {
       <v-alert type="info" variant="tonal" class="mt-5">
         {{ t("prayer.sensitiveNotice") }}
       </v-alert>
+      <v-alert
+        v-if="errorMessage"
+        type="error"
+        variant="tonal"
+        class="mt-4"
+      >
+        {{ errorMessage }}
+      </v-alert>
       <div class="mt-5 text-body-1 prayer-body">{{ request.body }}</div>
       <v-divider class="my-5" />
 
@@ -85,6 +95,7 @@ function confirmDelete() {
           :items="optionItems(['private', 'public', 'group', 'members'])"
           density="comfortable"
           variant="outlined"
+          :disabled="!canModerate || commandPending"
         />
         <v-text-field
           v-if="form.visibility === 'group'"
@@ -92,6 +103,7 @@ function confirmDelete() {
           :label="t('Group ID')"
           density="comfortable"
           variant="outlined"
+          :disabled="!canModerate || commandPending"
         />
         <v-textarea
           v-model="form.moderationNote"
@@ -99,6 +111,7 @@ function confirmDelete() {
           rows="4"
           density="comfortable"
           variant="outlined"
+          :disabled="!canModerate || commandPending"
         />
         <v-switch
           v-model="form.notifyAppOnApprove"
@@ -107,7 +120,7 @@ function confirmDelete() {
           color="primary"
           density="comfortable"
           persistent-hint
-          :disabled="!canModerate"
+          :disabled="!canModerate || commandPending"
         />
 
         <v-btn
@@ -116,7 +129,7 @@ function confirmDelete() {
           color="primary"
           variant="tonal"
           class="mb-4"
-          :disabled="!canUpdate || savePending"
+          :disabled="!canUpdate || commandPending"
           :loading="savePending"
         >
           {{ t("Save moderation details") }}
@@ -127,7 +140,7 @@ function confirmDelete() {
         <v-btn
           color="success"
           variant="tonal"
-          :disabled="!canUpdate || approvePending"
+          :disabled="!canUpdate || commandPending"
           :loading="approvePending"
           @click="emit('approve')"
         >
@@ -136,7 +149,7 @@ function confirmDelete() {
         <v-btn
           color="error"
           variant="tonal"
-          :disabled="!canModerate || hidePending"
+          :disabled="!canModerate || commandPending"
           :loading="hidePending"
           @click="emit('hide')"
         >
@@ -145,7 +158,7 @@ function confirmDelete() {
         <v-btn
           color="secondary"
           variant="tonal"
-          :disabled="!canModerate || archivePending"
+          :disabled="!canModerate || commandPending"
           :loading="archivePending"
           @click="emit('archive')"
         >
@@ -157,7 +170,7 @@ function confirmDelete() {
           color="error"
           variant="text"
           :aria-label="t('Delete')"
-          :disabled="!canModerate || deletePending"
+          :disabled="!canModerate || commandPending"
           @click="deleteDialog = true"
         />
       </div>

@@ -2,8 +2,60 @@ import type {
   AdminPrayerRequest,
   AdminPrayerRequestApproveRequest,
   AdminPrayerRequestUpdateRequest,
+  PrayerStatus,
   PrayerVisibility
 } from "@mbc/api-contracts";
+
+export type PrayerListFilterForm = {
+  query: string;
+  status: PrayerStatus | "";
+  visibility: PrayerVisibility | "";
+  groupId: string;
+};
+
+export type PrayerListFilterSnapshot = PrayerListFilterForm;
+
+export function createPrayerListFilterForm(): PrayerListFilterForm {
+  return { query: "", status: "", visibility: "", groupId: "" };
+}
+
+export function prayerListFilterSnapshot(
+  filters: PrayerListFilterForm
+): PrayerListFilterSnapshot {
+  return {
+    query: filters.query.trim(),
+    status: filters.status,
+    visibility: filters.visibility,
+    groupId: filters.groupId.trim()
+  };
+}
+
+export function samePrayerListFilters(
+  current: PrayerListFilterSnapshot,
+  next: PrayerListFilterSnapshot
+) {
+  return (
+    current.query === next.query &&
+    current.status === next.status &&
+    current.visibility === next.visibility &&
+    current.groupId === next.groupId
+  );
+}
+
+export function resetPrayerListFilterForm(filters: PrayerListFilterForm) {
+  filters.query = "";
+  filters.status = "";
+  filters.visibility = "";
+  filters.groupId = "";
+}
+
+export function prayerCommandTargetsSelection(
+  selectedRequestId: string | null,
+  drawerOpen: boolean,
+  commandRequestId: string
+) {
+  return drawerOpen && selectedRequestId === commandRequestId;
+}
 
 export type PrayerModerationForm = {
   visibility: PrayerVisibility;

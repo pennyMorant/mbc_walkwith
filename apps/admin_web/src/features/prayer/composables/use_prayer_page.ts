@@ -1,10 +1,10 @@
 import type {
   AdminPrayerRequest,
-  PrayerStatus,
-  PrayerVisibility
+  AdminPrayerRequestApproveRequest,
+  AdminPrayerRequestUpdateRequest
 } from "@mbc/api-contracts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { computed, reactive, ref, watch } from "vue";
 
 import { requireSelected } from "@/core/actions/action_guard";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
@@ -13,7 +13,6 @@ import {
   archivePrayerRequest,
   deletePrayerRequest,
   hidePrayerRequest,
-  listPrayerRequests,
   updatePrayerRequest
 } from "@/core/api/prayer_requests";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
@@ -22,8 +21,23 @@ import {
   createPrayerModerationForm,
   fillPrayerModerationForm,
   prayerApprovalPayload,
+  prayerCommandTargetsSelection,
   prayerModerationPayload
 } from "../prayer_workspace_models";
+import { usePrayerListQuery } from "./use_prayer_list_query";
+
+type PrayerUpdateIntent = {
+  requestId: string;
+  payload: AdminPrayerRequestUpdateRequest;
+};
+
+type PrayerApproveIntent = {
+  requestId: string;
+  payload: AdminPrayerRequestApproveRequest;
+};
+
+type PrayerNoteIntent = { requestId: string; moderationNote: string };
+type PrayerRequestIntent = { requestId: string };
 
 export function usePrayerPage() {
   const queryClient = useQueryClient();
@@ -39,19 +53,16 @@ export function usePrayerPage() {
       if (!visible) successMessage.value = "";
     }
   });
-  const filters = reactive({
-    query: "",
-    status: "" as PrayerStatus | "",
-    visibility: "" as PrayerVisibility | "",
-    groupId: ""
-  });
   const form = reactive(createPrayerModerationForm());
-  const activeFilters = computed(() => ({ ...filters, limit: 50 }));
-  const requestsQuery = useQuery({
-    queryKey: ["prayer-requests", activeFilters],
-    queryFn: () => listPrayerRequests(activeFilters.value)
-  });
-  const requests = computed(() => requestsQuery.data.value ?? []);
+  const listQuery = usePrayerListQuery(queryClient);
+  const {
+    applyFilters,
+    clearFilters,
+    filters,
+    refreshList,
+    requests,
+    requestsQuery
+  } = listQuery;
   const canModerate = computed(() => authStore.can("prayer:moderate"));
   const canUpdate = computed(
     () =>
@@ -66,6 +77,27 @@ export function usePrayerPage() {
     () =>
       requests.value.filter((request) => request.visibility === "private").length
   );
+  const commandPending = computed(
+    () =>
+      updateMutation.isPending.value ||
+      approveMutation.isPending.value ||
+      hideMutation.isPending.value ||
+      archiveMutation.isPending.value ||
+      deleteMutation.isPending.value
+  );
+  const listErrorMessage = computed(() =>
+    listQuery.initialError.value
+      ? formatApiErrorMessage(listQuery.initialError.value, t("common.error"))
+      : ""
+  );
+  const listRefreshErrorMessage = computed(() =>
+    listQuery.refreshError.value
+      ? formatApiErrorMessage(
+          listQuery.refreshError.value,
+          t("prayer.refreshFailed")
+        )
+      : ""
+  );
 
   function selectedOrThrow() {
     if (!canModerate.value) {
@@ -76,116 +108,177 @@ export function usePrayerPage() {
       t("No prayer request selected.")
     );
   }
-  async function refreshSelected(request: AdminPrayerRequest, message: string) {
-    openRequest(request);
+  async function completeCommand(
+    request: AdminPrayerRequest,
+    commandRequestId: string,
+    message: string
+  ) {
+    if (
+      request.id === commandRequestId &&
+      prayerCommandTargetsSelection(
+        selectedRequest.value?.id ?? null,
+        drawer.value,
+        commandRequestId
+      )
+    ) {
+      selectedRequest.value = request;
+      fillPrayerModerationForm(form, request);
+    }
     successMessage.value = message;
     await queryClient.invalidateQueries({ queryKey: ["prayer-requests"] });
   }
 
   const updateMutation = useMutation({
-    onMutate: clearMutationError,
-    mutationFn: () =>
-      updatePrayerRequest(
-        selectedOrThrow().id,
-        prayerModerationPayload(form)
+    onMutate: () => clearMutationError(),
+    mutationFn: (intent: PrayerUpdateIntent) =>
+      updatePrayerRequest(intent.requestId, intent.payload),
+    onSuccess: (request, intent) =>
+      completeCommand(
+        request,
+        intent.requestId,
+        t("Prayer moderation saved.")
       ),
-    onSuccess: (request) =>
-      refreshSelected(request, t("Prayer moderation saved.")),
-    onError: captureMutationError
+    onError: (error, intent) => captureMutationError(error, intent.requestId)
   });
   const approveMutation = useMutation({
-    onMutate: clearMutationError,
-    mutationFn: () =>
-      approvePrayerRequest(selectedOrThrow().id, prayerApprovalPayload(form)),
-    onSuccess: (request) => refreshSelected(request, t("Prayer approved.")),
-    onError: captureMutationError
+    onMutate: () => clearMutationError(),
+    mutationFn: (intent: PrayerApproveIntent) =>
+      approvePrayerRequest(intent.requestId, intent.payload),
+    onSuccess: (request, intent) =>
+      completeCommand(request, intent.requestId, t("Prayer approved.")),
+    onError: (error, intent) => captureMutationError(error, intent.requestId)
   });
   const hideMutation = useMutation({
-    onMutate: clearMutationError,
-    mutationFn: () =>
-      hidePrayerRequest(selectedOrThrow().id, form.moderationNote.trim()),
-    onSuccess: (request) => refreshSelected(request, t("Prayer hidden.")),
-    onError: captureMutationError
+    onMutate: () => clearMutationError(),
+    mutationFn: (intent: PrayerNoteIntent) =>
+      hidePrayerRequest(intent.requestId, intent.moderationNote),
+    onSuccess: (request, intent) =>
+      completeCommand(request, intent.requestId, t("Prayer hidden.")),
+    onError: (error, intent) => captureMutationError(error, intent.requestId)
   });
   const archiveMutation = useMutation({
-    onMutate: clearMutationError,
-    mutationFn: () => archivePrayerRequest(selectedOrThrow().id),
-    onSuccess: (request) => refreshSelected(request, t("Prayer archived.")),
-    onError: captureMutationError
+    onMutate: () => clearMutationError(),
+    mutationFn: (intent: PrayerRequestIntent) =>
+      archivePrayerRequest(intent.requestId),
+    onSuccess: (request, intent) =>
+      completeCommand(request, intent.requestId, t("Prayer archived.")),
+    onError: (error, intent) => captureMutationError(error, intent.requestId)
   });
   const deleteMutation = useMutation({
-    onMutate: clearMutationError,
-    mutationFn: () => deletePrayerRequest(selectedOrThrow().id),
-    onSuccess: async () => {
-      selectedRequest.value = null;
-      drawer.value = false;
+    onMutate: () => clearMutationError(),
+    mutationFn: (intent: PrayerRequestIntent) =>
+      deletePrayerRequest(intent.requestId),
+    onSuccess: async (_result, intent) => {
+      if (
+        prayerCommandTargetsSelection(
+          selectedRequest.value?.id ?? null,
+          drawer.value,
+          intent.requestId
+        )
+      ) {
+        selectedRequest.value = null;
+        drawer.value = false;
+      }
       successMessage.value = t("Prayer deleted.");
       await queryClient.invalidateQueries({ queryKey: ["prayer-requests"] });
     },
-    onError: captureMutationError
-  });
-  const errorMessage = computed(() => {
-    const queryError = requestsQuery.error.value;
-    return queryError
-      ? formatApiErrorMessage(queryError, t("common.error"))
-      : mutationErrorMessage.value;
+    onError: (error, intent) => captureMutationError(error, intent.requestId)
   });
 
   function openRequest(request: AdminPrayerRequest) {
+    clearMutationError();
     selectedRequest.value = request;
     fillPrayerModerationForm(form, request);
     drawer.value = true;
   }
-  function mutateWhen(allowed: boolean, action: () => void) {
-    if (canModerate.value && allowed) action();
+  function save() {
+    if (!canUpdate.value || commandPending.value) return;
+    const request = selectedOrThrow();
+    updateMutation.mutate({
+      requestId: request.id,
+      payload: prayerModerationPayload(form)
+    });
+  }
+
+  function approve() {
+    if (!canUpdate.value || commandPending.value) return;
+    const request = selectedOrThrow();
+    approveMutation.mutate({
+      requestId: request.id,
+      payload: prayerApprovalPayload(form)
+    });
+  }
+
+  function hide() {
+    if (!canModerate.value || commandPending.value) return;
+    const request = selectedOrThrow();
+    hideMutation.mutate({
+      requestId: request.id,
+      moderationNote: form.moderationNote.trim()
+    });
+  }
+
+  function archive() {
+    if (!canModerate.value || commandPending.value) return;
+    archiveMutation.mutate({ requestId: selectedOrThrow().id });
+  }
+
+  function deleteSelected() {
+    if (!canModerate.value || commandPending.value) return;
+    deleteMutation.mutate({ requestId: selectedOrThrow().id });
   }
 
   function clearMutationError() {
     mutationErrorMessage.value = "";
   }
 
-  function captureMutationError(error: unknown) {
-    mutationErrorMessage.value = formatApiErrorMessage(
-      error,
-      t("common.error")
-    );
+  function captureMutationError(error: unknown, commandRequestId: string) {
+    if (
+      prayerCommandTargetsSelection(
+        selectedRequest.value?.id ?? null,
+        drawer.value,
+        commandRequestId
+      )
+    ) {
+      mutationErrorMessage.value = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
+    }
   }
 
+  watch(drawer, (open) => {
+    if (!open) clearMutationError();
+  });
+
   return {
-    approve: () =>
-      mutateWhen(canUpdate.value && !approveMutation.isPending.value, () =>
-        approveMutation.mutate()
-      ),
+    applyFilters,
+    approve,
     approveMutation,
-    archive: () =>
-      mutateWhen(!archiveMutation.isPending.value, () =>
-        archiveMutation.mutate()
-      ),
+    archive,
     archiveMutation,
     canModerate,
     canUpdate,
+    clearFilters,
+    commandPending,
     deleteMutation,
-    deleteSelected: () =>
-      mutateWhen(!deleteMutation.isPending.value, () =>
-        deleteMutation.mutate()
-      ),
+    deleteSelected,
     drawer,
-    errorMessage,
     filters,
     form,
-    hide: () =>
-      mutateWhen(!hideMutation.isPending.value, () => hideMutation.mutate()),
+    hide,
     hideMutation,
+    listErrorMessage,
+    listRefreshErrorMessage,
+    mutationErrorMessage,
     openRequest,
     optionItems,
     pendingCount,
     privateCount,
     requests,
     requestsQuery,
-    save: () =>
-      mutateWhen(canUpdate.value && !updateMutation.isPending.value, () =>
-        updateMutation.mutate()
-      ),
+    refreshList,
+    save,
     selectedRequest,
     successMessage,
     successVisible,

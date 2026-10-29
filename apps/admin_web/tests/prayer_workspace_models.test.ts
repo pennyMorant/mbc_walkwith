@@ -1,13 +1,59 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  createPrayerListFilterForm,
   createPrayerModerationForm,
   fillPrayerModerationForm,
   prayerApprovalPayload,
-  prayerModerationPayload
+  prayerCommandTargetsSelection,
+  prayerListFilterSnapshot,
+  prayerModerationPayload,
+  resetPrayerListFilterForm,
+  samePrayerListFilters
 } from "../src/features/prayer/prayer_workspace_models";
 
 describe("prayer workspace models", () => {
+  test("keeps editable filters separate from the applied snapshot", () => {
+    const filters = createPrayerListFilterForm();
+    Object.assign(filters, {
+      query: "  healing  ",
+      status: "pending",
+      visibility: "group",
+      groupId: "  group-1  "
+    });
+
+    const snapshot = prayerListFilterSnapshot(filters);
+
+    expect(snapshot).toEqual({
+      query: "healing",
+      status: "pending",
+      visibility: "group",
+      groupId: "group-1"
+    });
+    expect(filters.query).toBe("  healing  ");
+    expect(samePrayerListFilters(snapshot, { ...snapshot })).toBe(true);
+
+    resetPrayerListFilterForm(filters);
+    expect(filters).toEqual({
+      query: "",
+      status: "",
+      visibility: "",
+      groupId: ""
+    });
+  });
+
+  test("accepts command results only for the open canonical request", () => {
+    expect(prayerCommandTargetsSelection("prayer-1", true, "prayer-1")).toBe(
+      true
+    );
+    expect(prayerCommandTargetsSelection("prayer-2", true, "prayer-1")).toBe(
+      false
+    );
+    expect(prayerCommandTargetsSelection("prayer-1", false, "prayer-1")).toBe(
+      false
+    );
+  });
+
   test("builds an atomic approval intent from the current moderation form", () => {
     const form = createPrayerModerationForm();
     Object.assign(form, {

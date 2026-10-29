@@ -38,7 +38,10 @@ const requiredKeys = [
   "This permanently removes the prayer request content.",
   "prayer.notifyAppOnApprove",
   "prayer.notifyAppOnApproveHint",
+  "prayer.applyFilters",
+  "prayer.clearFilters",
   "prayer.pageSubtitle",
+  "prayer.refreshFailed",
   "prayer.sensitiveNotice"
 ] as const;
 

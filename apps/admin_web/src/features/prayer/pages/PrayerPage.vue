@@ -7,25 +7,31 @@ import PrayerSummaryCards from "../components/PrayerSummaryCards.vue";
 import { usePrayerPage } from "../composables/use_prayer_page";
 
 const {
+  applyFilters,
   approve,
   approveMutation,
   archive,
   archiveMutation,
   canModerate,
   canUpdate,
+  clearFilters,
+  commandPending,
   deleteMutation,
   deleteSelected,
   drawer,
-  errorMessage,
   filters,
   form,
   hide,
   hideMutation,
+  listErrorMessage,
+  listRefreshErrorMessage,
+  mutationErrorMessage,
   openRequest,
   pendingCount,
   privateCount,
   requests,
   requestsQuery,
+  refreshList,
   save,
   selectedRequest,
   successMessage,
@@ -44,22 +50,12 @@ const {
           variant="tonal"
           prepend-icon="mdi-refresh"
           :loading="requestsQuery.isFetching.value"
-          @click="requestsQuery.refetch()"
+          @click="refreshList"
         >
           {{ t("common.refresh") }}
         </v-btn>
       </template>
     </AdminPageHeader>
-
-    <v-alert
-      v-if="errorMessage"
-      type="error"
-      variant="tonal"
-      density="comfortable"
-      class="mt-4"
-    >
-      {{ errorMessage }}
-    </v-alert>
 
     <PrayerSummaryCards
       :loaded="requests.length"
@@ -69,9 +65,14 @@ const {
     <PrayerRequestsTable
       v-model:filters="filters"
       :requests="requests"
-      :loading="requestsQuery.isPending.value"
+      :pending="requestsQuery.isPending.value"
+      :fetching="requestsQuery.isFetching.value"
+      :error-message="listErrorMessage"
+      :refresh-error-message="listRefreshErrorMessage"
+      @apply="applyFilters"
+      @clear="clearFilters"
       @open="openRequest"
-      @refresh="requestsQuery.refetch()"
+      @retry="refreshList"
     />
     <PrayerModerationDrawer
       v-model="drawer"
@@ -79,6 +80,8 @@ const {
       :request="selectedRequest"
       :can-moderate="canModerate"
       :can-update="canUpdate"
+      :command-pending="commandPending"
+      :error-message="mutationErrorMessage"
       :save-pending="updateMutation.isPending.value"
       :approve-pending="approveMutation.isPending.value"
       :hide-pending="hideMutation.isPending.value"
