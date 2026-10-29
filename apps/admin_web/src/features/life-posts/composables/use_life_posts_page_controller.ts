@@ -1,14 +1,11 @@
 import {
   lifePostTypeSchema,
-  type LifePost,
-  type LifePostStatus,
-  type LifePostVisibility
+  type LifePost
 } from "@mbc/api-contracts";
-import { useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useQueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
-import { listLifePosts } from "@/core/api/life_posts";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import {
@@ -27,6 +24,7 @@ import { useLifePostAiDrafts } from "./use_life_post_ai_drafts";
 import { useLifePostConfirmActions } from "./use_life_post_confirm_actions";
 import { useLifePostEditorValidation } from "./use_life_post_editor_validation";
 import { useLifePostImageState } from "./use_life_post_image_state";
+import { useLifePostLibraryQuery } from "./use_life_post_library_query";
 
 export function useLifePostsPageController() {
   const queryClient = useQueryClient();
@@ -47,11 +45,16 @@ export function useLifePostsPageController() {
     { title: t("life.sort.veryImportant"), value: 100 }
   ]);
   
-  const filters = reactive({
-    query: "",
-    visibility: "" as LifePostVisibility | "",
-    status: "" as LifePostStatus | ""
-  });
+  const {
+    filters,
+    postsQuery,
+    posts,
+    initialError: postsError,
+    refreshError: postsRefreshError,
+    applyFilters: applyPostFilters,
+    clearFilters: clearPostFilters,
+    refreshList: refreshPosts
+  } = useLifePostLibraryQuery(queryClient);
   
   const form = reactive(createLifePostEditorForm());
   
@@ -113,13 +116,6 @@ export function useLifePostsPageController() {
     showToast
   });
   
-  const activeFilters = computed(() => ({ ...filters, limit: 50 }));
-  const postsQuery = useQuery({
-    queryKey: ["life-posts", activeFilters],
-    queryFn: () => listLifePosts(activeFilters.value)
-  });
-  
-  const posts = computed(() => postsQuery.data.value ?? []);
   const publicPostCount = computed(
     () => posts.value.filter((post) => post.status === "published").length
   );
@@ -277,6 +273,8 @@ export function useLifePostsPageController() {
     lifePostIcons,
     sortOptions,
     filters,
+    postsError,
+    postsRefreshError,
     form,
     registrationFilters,
     registrationPage,
@@ -320,6 +318,9 @@ export function useLifePostsPageController() {
     isScheduleValid,
     isCtaUrlValid,
     openPost,
+    applyPostFilters,
+    clearPostFilters,
+    refreshPosts,
     newPost,
     saveLifePost,
     submitCurrentLifePostReview,

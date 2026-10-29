@@ -204,7 +204,10 @@ Surface rule:
   正文。目录筛选只有在管理员明确应用后才请求；查询失败不显示为空目录，已有结果
   刷新失败时保留数据并可局部重试。更新和删除始终使用已选实体自身的 locale 与
   translation key，不能使用尚未应用的筛选草稿定位记录。
-- Church life publishing：创建生活内容、审核、发布、下架和归档。
+- Church life publishing：创建生活内容、审核、发布、下架和归档。内容目录筛选使用
+  草稿和已应用查询快照；应用、清除和重试是三个独立 intent。首次查询失败显示可恢复
+  状态，已有目录刷新失败时保留 canonical 列表，且不与编辑、发布、媒体或报名命令
+  错误合并。
 - Event registration：创建活动、查看名单、报名管理和导出。
 - Event attendance：扫码签到、手动补签、出席状态、缺席和导出。
 - Group ministry：Groups 页面左侧选择/编辑小组，右侧工作台按申请、成员、材料和

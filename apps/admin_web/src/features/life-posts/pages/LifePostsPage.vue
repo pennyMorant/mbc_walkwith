@@ -68,6 +68,8 @@ const {
   lifePostIcons,
   sortOptions,
   filters,
+  postsError,
+  postsRefreshError,
   form,
   registrationFilters,
   registrationPage,
@@ -111,6 +113,9 @@ const {
   isScheduleValid,
   isCtaUrlValid,
   openPost,
+  applyPostFilters,
+  clearPostFilters,
+  refreshPosts,
   newPost,
   saveLifePost,
   submitCurrentLifePostReview,
@@ -151,7 +156,7 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
           variant="tonal"
           prepend-icon="mdi-refresh"
           :loading="postsQuery.isFetching.value"
-          @click="postsQuery.refetch()"
+          @click="refreshPosts"
         >
           {{ t("common.refresh") }}
         </v-btn>
@@ -171,15 +176,18 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
       :posts="posts"
       :pending="postsQuery.isPending.value"
       :fetching="postsQuery.isFetching.value"
-      :error="postsQuery.error.value"
+      :error="postsError"
+      :refresh-error="postsRefreshError"
       :public-post-count="publicPostCount"
       :private-post-count="privatePostCount"
       :status-color="statusColor"
       :visibility-color="visibilityColor"
       :format-schedule="formatSchedule"
       :format-date-time="formatDateTime"
-      @refetch="postsQuery.refetch()"
+      @apply="applyPostFilters"
+      @clear="clearPostFilters"
       @open="openPost"
+      @retry="refreshPosts"
     />
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="520">
