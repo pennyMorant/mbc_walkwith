@@ -12,6 +12,7 @@ defineProps<{
   newcomers: NewcomerProfile[];
   pending: boolean;
   errorMessage: string;
+  refreshErrorMessage: string;
 }>();
 defineEmits<{ open: [newcomer: NewcomerProfile]; retry: [] }>();
 
@@ -19,6 +20,20 @@ const { t } = useI18n();
 </script>
 
 <template>
+  <v-alert
+    v-if="refreshErrorMessage"
+    class="ma-4 mb-0"
+    type="warning"
+    variant="tonal"
+    density="compact"
+  >
+    <div class="d-flex align-center justify-space-between ga-3">
+      <span>{{ refreshErrorMessage }}</span>
+      <v-btn size="small" variant="text" @click="$emit('retry')">
+        {{ t("common.refresh") }}
+      </v-btn>
+    </div>
+  </v-alert>
   <AdminDataState
     :pending="pending"
     :error-message="errorMessage"

@@ -15,7 +15,6 @@ import {
   createNewcomerFollowUp,
   getNewcomer,
   listNewcomerFollowUps,
-  listNewcomers,
   updateNewcomer
 } from "@/core/api/newcomers";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
@@ -28,16 +27,13 @@ import {
   newcomerFollowUpHasRequiredSchedule,
   newcomerResultTargetsSelection
 } from "../newcomer_workspace_models";
+import { useNewcomerListQuery } from "./use_newcomer_list_query";
 
 export function useNewcomerPage() {
   const queryClient = useQueryClient();
   const authStore = useAdminAuthStore();
   const { t } = useI18n();
 
-  const filters = reactive({
-    query: "",
-    status: "" as NewcomerStatus | ""
-  });
   const selectedNewcomer = ref<NewcomerProfile | null>(null);
   const mutationErrorMessage = ref("");
   const form = reactive({
@@ -55,10 +51,15 @@ export function useNewcomerPage() {
     plannedAt: ""
   });
 
-  const newcomersQuery = useQuery({
-    queryKey: computed(() => ["newcomers", { ...filters }]),
-    queryFn: () => listNewcomers({ ...filters, limit: 100 })
-  });
+  const listQuery = useNewcomerListQuery(queryClient);
+  const {
+    applyFilters,
+    clearFilters,
+    filters,
+    newcomers,
+    newcomersQuery,
+    refreshList
+  } = listQuery;
   const followUpsQuery = useQuery({
     queryKey: computed(() => [
       "newcomer-follow-ups",
@@ -118,9 +119,6 @@ export function useNewcomerPage() {
       return createNewcomerFollowUp(newcomer.id, buildFollowUpPayload());
     },
     onSuccess: async (followUp, _variables, context) => {
-      followUpForm.note = "";
-      followUpForm.status = "completed";
-      followUpForm.plannedAt = "";
       try {
         if (
           context?.newcomerId === followUp.newcomerId &&
@@ -139,6 +137,9 @@ export function useNewcomerPage() {
             selectedNewcomer.value = refreshed;
           }
         }
+        if (context?.newcomerId === selectedNewcomer.value?.id) {
+          resetFollowUpForm();
+        }
       } finally {
         await queryClient.invalidateQueries({ queryKey: ["newcomers"] });
         await queryClient.invalidateQueries({
@@ -153,7 +154,6 @@ export function useNewcomerPage() {
     }
   });
 
-  const newcomers = computed(() => newcomersQuery.data.value ?? []);
   const followUps = computed(() => followUpsQuery.data.value ?? []);
   const canManage = computed(() => authStore.can("newcomers:manage"));
   const newCount = computed(
@@ -191,16 +191,28 @@ export function useNewcomerPage() {
     );
   });
   const listErrorMessage = computed(() =>
-    newcomersQuery.error.value
-      ? formatApiErrorMessage(newcomersQuery.error.value, t("common.error"))
+    listQuery.initialError.value
+      ? formatApiErrorMessage(listQuery.initialError.value, t("common.error"))
       : ""
   );
-  const detailErrorMessage = computed(() => {
-    const error = followUpsQuery.error.value;
-    return error
-      ? formatApiErrorMessage(error, t("common.error"))
-      : mutationErrorMessage.value;
-  });
+  const listRefreshErrorMessage = computed(() =>
+    listQuery.refreshError.value
+      ? formatApiErrorMessage(
+          listQuery.refreshError.value,
+          t("newcomers.refreshFailed")
+        )
+      : ""
+  );
+  const followUpsInitialErrorMessage = computed(() =>
+    followUpsQuery.data.value === undefined && followUpsQuery.error.value
+      ? formatApiErrorMessage(followUpsQuery.error.value, t("common.error"))
+      : ""
+  );
+  const followUpsRefreshErrorMessage = computed(() =>
+    followUpsQuery.data.value !== undefined && followUpsQuery.error.value
+      ? formatApiErrorMessage(followUpsQuery.error.value, t("common.error"))
+      : ""
+  );
 
   watch(selectedNewcomer, (newcomer) => {
     if (!newcomer) return;
@@ -215,6 +227,7 @@ export function useNewcomerPage() {
 
   function openNewcomer(newcomer: NewcomerProfile) {
     clearMutationError();
+    resetFollowUpForm();
     selectedNewcomer.value = newcomer;
   }
 
@@ -250,6 +263,12 @@ export function useNewcomerPage() {
     }
   }
 
+  function resetFollowUpForm() {
+    followUpForm.note = "";
+    followUpForm.status = "completed";
+    followUpForm.plannedAt = "";
+  }
+
   function clearMutationError() {
     mutationErrorMessage.value = "";
   }
@@ -260,24 +279,30 @@ export function useNewcomerPage() {
 
   return {
     addFollowUp,
+    applyFilters,
     assignedCount,
     canCreateFollowUp,
     canManage,
     canSave,
     discipleshipCount,
     drawer,
-    detailErrorMessage,
+    clearFilters,
     filters,
     followUpForm,
     followUpMutation,
     followUps,
+    followUpsInitialErrorMessage,
     followUpsQuery,
+    followUpsRefreshErrorMessage,
     form,
     newCount,
     newcomers,
     newcomersQuery,
     listErrorMessage,
+    listRefreshErrorMessage,
+    mutationErrorMessage,
     openNewcomer,
+    refreshList,
     saveNewcomer,
     selectedNewcomer,
     updateMutation

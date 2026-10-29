@@ -2,10 +2,12 @@
 import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
+import NewcomerFiltersCard from "../components/NewcomerFiltersCard.vue";
 import NewcomerResults from "../components/NewcomerResults.vue";
 import { useNewcomerPage } from "../composables/use_newcomer_page";
 import {
@@ -20,24 +22,30 @@ import {
 const { optionItems, t } = useI18n();
 const {
   addFollowUp,
+  applyFilters,
   assignedCount,
   canCreateFollowUp,
   canManage,
   canSave,
+  clearFilters,
   discipleshipCount,
   drawer,
-  detailErrorMessage,
   filters,
   followUpForm,
   followUpMutation,
   followUps,
+  followUpsInitialErrorMessage,
   followUpsQuery,
+  followUpsRefreshErrorMessage,
   form,
   newCount,
   newcomers,
   newcomersQuery,
   listErrorMessage,
+  listRefreshErrorMessage,
+  mutationErrorMessage,
   openNewcomer,
+  refreshList,
   saveNewcomer,
   selectedNewcomer,
   updateMutation
@@ -58,57 +66,33 @@ const summaryMetrics = computed(() => [
           variant="tonal"
           :loading="newcomersQuery.isFetching.value"
           prepend-icon="mdi-refresh"
-          @click="newcomersQuery.refetch()"
+          @click="refreshList"
         >
           {{ t("common.refresh") }}
         </v-btn>
       </template>
     </AdminPageHeader>
 
-    <v-alert v-if="detailErrorMessage" type="error" variant="tonal" class="mt-4">
-      {{ detailErrorMessage }}
-    </v-alert>
-
     <AdminMetricGrid :items="summaryMetrics" />
 
-    <v-card class="mt-6" variant="outlined">
-      <div class="pa-5">
-        <v-row dense>
-          <v-col cols="12" md="5">
-            <v-text-field
-              v-model="filters.query"
-              :label="t('Search')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @keyup.enter="newcomersQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-select
-              v-model="filters.status"
-              :label="t('Status')"
-              :items="optionItems(newcomerFilterStatusOptions)"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @update:model-value="newcomersQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-btn block variant="tonal" @click="newcomersQuery.refetch()">
-              {{ t("common.go") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </div>
-      <v-divider />
+    <NewcomerFiltersCard
+      v-model:query="filters.query"
+      v-model:status="filters.status"
+      class="mt-6"
+      :fetching="newcomersQuery.isFetching.value"
+      :status-items="optionItems(newcomerFilterStatusOptions)"
+      @apply="applyFilters"
+      @clear="clearFilters"
+    />
+
+    <v-card class="mt-4" variant="outlined">
       <NewcomerResults
         :newcomers="newcomers"
         :pending="newcomersQuery.isPending.value"
         :error-message="listErrorMessage"
+        :refresh-error-message="listRefreshErrorMessage"
         @open="openNewcomer"
-        @retry="newcomersQuery.refetch()"
+        @retry="refreshList"
       />
     </v-card>
 
@@ -133,6 +117,15 @@ const summaryMetrics = computed(() => [
 
         <v-alert type="info" variant="tonal" class="mt-5">
           {{ t("newcomers.privacyNotice") }}
+        </v-alert>
+
+        <v-alert
+          v-if="mutationErrorMessage"
+          type="error"
+          variant="tonal"
+          class="mt-4"
+        >
+          {{ mutationErrorMessage }}
         </v-alert>
 
         <v-divider class="my-5" />
@@ -266,25 +259,41 @@ const summaryMetrics = computed(() => [
           </v-btn>
         </v-form>
 
-        <v-progress-linear
-          v-if="followUpsQuery.isPending.value"
+        <v-alert
+          v-if="followUpsRefreshErrorMessage"
+          type="warning"
+          variant="tonal"
+          density="compact"
           class="mt-4"
-          color="primary"
-          indeterminate
-        />
-        <v-list v-else class="mt-4" lines="three">
-          <v-list-item v-if="followUps.length === 0">
-            <v-list-item-title>{{ t("No follow-ups recorded.") }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item v-for="followUp in followUps" :key="followUp.id">
-            <v-list-item-title>
-              {{ followUp.authorName || t("Admin") }} · {{ t(followUp.status) }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ followUp.note }}
-            </v-list-item-subtitle>
-          </v-list-item>
-        </v-list>
+        >
+          <div class="d-flex align-center justify-space-between ga-3">
+            <span>{{ followUpsRefreshErrorMessage }}</span>
+            <v-btn size="small" variant="text" @click="followUpsQuery.refetch()">
+              {{ t("common.refresh") }}
+            </v-btn>
+          </div>
+        </v-alert>
+        <AdminDataState
+          class="mt-4"
+          :pending="followUpsQuery.isPending.value"
+          :error-message="followUpsInitialErrorMessage"
+          :empty="followUps.length === 0"
+          :empty-title="t('No follow-ups recorded.')"
+          empty-icon="mdi-account-clock-outline"
+          :retry-label="t('common.refresh')"
+          @retry="followUpsQuery.refetch()"
+        >
+          <v-list lines="three">
+            <v-list-item v-for="followUp in followUps" :key="followUp.id">
+              <v-list-item-title>
+                {{ followUp.authorName || t("Admin") }} · {{ t(followUp.status) }}
+              </v-list-item-title>
+              <v-list-item-subtitle>
+                {{ followUp.note }}
+              </v-list-item-subtitle>
+            </v-list-item>
+          </v-list>
+        </AdminDataState>
       </div>
     </AdminResponsiveDrawer>
   </div>

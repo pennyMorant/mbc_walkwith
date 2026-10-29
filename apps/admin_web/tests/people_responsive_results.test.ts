@@ -31,11 +31,18 @@ describe("people workspace responsive results", () => {
 
   test.each([
     ["members", "../src/features/members/pages/MembersPage.vue", "membersQuery"],
-    ["newcomers", "../src/features/newcomers/pages/NewcomersPage.vue", "newcomersQuery"],
     ["care", "../src/features/care/pages/CarePage.vue", "requestsQuery"]
   ])("keeps %s retry ownership in its page", async (_, path, query) => {
     const page = await Bun.file(new URL(path, import.meta.url)).text();
     expect(page).toContain(`@retry="${query}.refetch()"`);
+  });
+
+  test("keeps newcomer list retry ownership in its page", async () => {
+    const page = await Bun.file(
+      new URL("../src/features/newcomers/pages/NewcomersPage.vue", import.meta.url)
+    ).text();
+
+    expect(page).toContain('@retry="refreshList"');
   });
 
   test("localizes the care empty state in every supported locale", () => {
