@@ -2,9 +2,98 @@ import {
   givingFundCodeSchema,
   givingFundUpsertRequestSchema,
   type GivingFund,
+  type GivingFundStatus,
   type GivingFundUpdateRequest,
-  type GivingFundUpsertRequest
+  type GivingFundUpsertRequest,
+  type GivingReconciliationStatus,
+  type GivingStatementStatus,
+  type GivingTransactionStatus,
+  type PaymentProviderEventStatus
 } from "@mbc/api-contracts";
+
+export type GivingTransactionFilterForm = {
+  year: number;
+  status: GivingTransactionStatus | "";
+  category: string;
+  fundId: string;
+  query: string;
+};
+
+export type GivingStatementFilterForm = {
+  year: number;
+  status: GivingStatementStatus | "";
+  query: string;
+};
+
+export type GivingProviderEventFilterForm = {
+  provider: string;
+  status: PaymentProviderEventStatus | "";
+  query: string;
+};
+
+export type GivingFundFilterForm = {
+  status: GivingFundStatus | "";
+  query: string;
+};
+
+export type GivingReconciliationFilterForm = {
+  year: number;
+  provider: string;
+  status: GivingReconciliationStatus | "";
+  fundId: string;
+};
+
+export function createGivingTransactionFilters(
+  year: number
+): GivingTransactionFilterForm {
+  return { year, status: "", category: "", fundId: "", query: "" };
+}
+
+export function createGivingStatementFilters(
+  year: number
+): GivingStatementFilterForm {
+  return { year, status: "", query: "" };
+}
+
+export function createGivingProviderEventFilters(): GivingProviderEventFilterForm {
+  return { provider: "stripe", status: "", query: "" };
+}
+
+export function createGivingFundFilters(): GivingFundFilterForm {
+  return { status: "", query: "" };
+}
+
+export function createGivingReconciliationFilters(
+  year: number
+): GivingReconciliationFilterForm {
+  return { year, provider: "stripe", status: "", fundId: "" };
+}
+
+export function givingFilterSnapshot<T extends Record<string, unknown>>(
+  form: T
+): Readonly<T> {
+  return Object.fromEntries(
+    Object.entries(form).map(([key, value]) => [
+      key,
+      typeof value === "string" ? value.trim() : value
+    ])
+  ) as T;
+}
+
+export function sameGivingFilters(
+  first: Record<string, unknown>,
+  second: Record<string, unknown>
+) {
+  const keys = Object.keys(first);
+  return (
+    keys.length === Object.keys(second).length &&
+    keys.every((key) => first[key] === second[key])
+  );
+}
+
+export function resetGivingFilters<T extends object>(form: T, defaults: T) {
+  Object.assign(form, defaults);
+}
 
 export type GivingFundForm = {
   code: string;

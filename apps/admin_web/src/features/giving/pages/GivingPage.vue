@@ -16,11 +16,21 @@ import GivingTransactionsCard from "../components/GivingTransactionsCard.vue";
 import { useGivingPageController } from "../composables/use_giving_page_controller";
 
 const {
+  applyFundFilters,
+  applyProviderEventFilters,
+  applyReconciliationFilters,
+  applyStatementFilters,
+  applyTransactionFilters,
   canExport,
   canDownloadStatement,
   canGenerateStatement,
   canManageFunds,
   canSaveFund,
+  clearFundFilters,
+  clearProviderEventFilters,
+  clearReconciliationFilters,
+  clearStatementFilters,
+  clearTransactionFilters,
   dateTime,
   dollars,
   downloadStatement,
@@ -33,6 +43,7 @@ const {
   filters,
   fundDrawer,
   fundCodeValid,
+  fundDirectoryError,
   fundFilterItems,
   fundFilters,
   fundForm,
@@ -41,7 +52,9 @@ const {
   fundSaveError,
   funds,
   fundsError,
+  fundsFetching,
   fundsPending,
+  fundsRefreshError,
   generateStatement,
   generateStatementError,
   isDownloadingStatement,
@@ -56,11 +69,14 @@ const {
   providerEventsError,
   providerEventsFetching,
   providerEventsPending,
+  providerEventsRefreshError,
   reconciliation,
   reconciliationError,
   reconciliationFetching,
   reconciliationFilters,
   reconciliationPending,
+  reconciliationRefreshError,
+  refreshFundDirectory,
   refreshFunds,
   refreshProviderEvents,
   refreshReconciliation,
@@ -74,12 +90,16 @@ const {
   statementForm,
   statements,
   statementsError,
+  statementsFetching,
   statementsPending,
+  statementsRefreshError,
   summary,
   t,
   transactionDrawer,
   transactions,
   transactionsError,
+  transactionsFetching,
+  transactionsRefreshError,
   transactionsPending,
   openFund,
   openProviderEvent,
@@ -116,6 +136,31 @@ const {
 
     <GivingSummaryCards :summary="summary" :dollars="dollars" />
 
+    <v-alert
+      v-if="fundDirectoryError"
+      class="mt-6"
+      type="warning"
+      variant="tonal"
+    >
+      <div
+        class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
+      >
+        <span>
+          {{ t("giving.fundDirectoryFailed") }}
+          {{ formatApiErrorMessage(fundDirectoryError, t("common.error")) }}
+        </span>
+        <v-btn
+          color="warning"
+          variant="tonal"
+          size="small"
+          prepend-icon="mdi-refresh"
+          @click="refreshFundDirectory"
+        >
+          {{ t("Retry") }}
+        </v-btn>
+      </div>
+    </v-alert>
+
     <GivingReconciliationCard
       :filters="reconciliationFilters"
       :fund-items="fundFilterItems"
@@ -123,8 +168,11 @@ const {
       :is-pending="reconciliationPending"
       :is-fetching="reconciliationFetching"
       :error="reconciliationError"
+      :refresh-error="reconciliationRefreshError"
       :dollars="dollars"
-      :refetch="refreshReconciliation"
+      @apply="applyReconciliationFilters"
+      @clear="clearReconciliationFilters"
+      @retry="refreshReconciliation"
     />
 
     <v-row class="mt-6" dense>
@@ -134,13 +182,17 @@ const {
           :fund-items="fundFilterItems"
           :transactions="transactions"
           :is-pending="transactionsPending"
+          :is-fetching="transactionsFetching"
           :error="transactionsError"
+          :refresh-error="transactionsRefreshError"
           :dollars="dollars"
           :date-time="dateTime"
           :fund-name="fundName"
           :status-color="statusColor"
-          :refetch="refreshTransactions"
-          :open-transaction="openTransaction"
+          @apply="applyTransactionFilters"
+          @clear="clearTransactionFilters"
+          @open="openTransaction"
+          @retry="refreshTransactions"
         />
       </v-col>
 
@@ -150,12 +202,16 @@ const {
           :funds="funds"
           :can-manage="canManageFunds"
           :is-pending="fundsPending"
+          :is-fetching="fundsFetching"
           :error="fundsError"
+          :refresh-error="fundsRefreshError"
           :dollars="dollars"
           :fund-progress="fundProgress"
-          :refetch="refreshFunds"
-          :new-fund="newFund"
-          :open-fund="openFund"
+          @apply="applyFundFilters"
+          @clear="clearFundFilters"
+          @create="newFund"
+          @open="openFund"
+          @retry="refreshFunds"
         />
 
         <GivingCategoryReportCard :summary="summary" :dollars="dollars" />
@@ -178,11 +234,24 @@ const {
       :download-statement="downloadStatement"
       :is-downloading-statement="isDownloadingStatement"
       :is-pending="statementsPending"
-      :error="statementsError || downloadStatementError"
+      :is-fetching="statementsFetching"
+      :error="statementsError"
+      :refresh-error="statementsRefreshError"
       :dollars="dollars"
       :status-color="statusColor"
-      :refetch="refreshStatements"
+      @apply="applyStatementFilters"
+      @clear="clearStatementFilters"
+      @retry="refreshStatements"
     />
+
+    <v-alert
+      v-if="downloadStatementError"
+      class="mt-6"
+      type="error"
+      variant="tonal"
+    >
+      {{ formatApiErrorMessage(downloadStatementError, t("common.error")) }}
+    </v-alert>
 
     <v-alert
       v-if="exportTransactionsError"
@@ -214,9 +283,12 @@ const {
       :is-pending="providerEventsPending"
       :is-fetching="providerEventsFetching"
       :error="providerEventsError"
+      :refresh-error="providerEventsRefreshError"
       :event-status-color="eventStatusColor"
-      :refetch="refreshProviderEvents"
-      :open-provider-event="openProviderEvent"
+      @apply="applyProviderEventFilters"
+      @clear="clearProviderEventFilters"
+      @open="openProviderEvent"
+      @retry="refreshProviderEvents"
     />
 
     <GivingTransactionDrawer

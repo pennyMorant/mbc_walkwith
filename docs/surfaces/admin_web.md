@@ -239,7 +239,11 @@ Surface rule:
   `prayer_requests.ts` helper 提交 intent；普通保存只修改 visibility、group
   scope 和审核备注，状态由 Approve/Hide/Archive 明确动作改变。Approve 原子提交
   当前审核表单和通知 intent，删除敏感内容前必须二次确认。
-- Giving flow：查看交易、费用、退款、争议、payout、对账。
+- Giving flow：查看交易、费用、退款、争议、payout、对账。交易、年度证明、
+  Provider 事件、基金和对账筛选先保留为可编辑草稿，只有管理员明确应用后才成为
+  后端查询快照；交易导出必须使用当前已应用快照，不能读取尚未应用的输入值。
+  首次查询失败使用可重试错误状态，已有财务记录刷新失败时保留记录并局部提示；
+  下载、导出、生成和保存等命令错误不得替换对应查询结果。
 - Giving funds：维护奉献用途、专项基金、目标和统计。
 - Annual statement：生成、重生成、下载、导出、审计。
 - Member profile：会员资料、角色、状态、设备 token 和导出。

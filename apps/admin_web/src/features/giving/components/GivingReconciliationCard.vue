@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import type {
-  GivingReconciliationResponse,
-  GivingReconciliationStatus
-} from "@mbc/api-contracts";
+import type { GivingReconciliationResponse } from "@mbc/api-contracts";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 
+import type { GivingReconciliationFilterForm } from "../giving_workspace_models";
+import GivingFilterActions from "./GivingFilterActions.vue";
+import GivingRefreshError from "./GivingRefreshError.vue";
+
 defineProps<{
-  filters: {
-    year: number;
-    provider: string;
-    status: GivingReconciliationStatus | "";
-    fundId: string;
-  };
+  filters: GivingReconciliationFilterForm;
   fundItems: Array<{ title: string; value: string }>;
   reconciliation: GivingReconciliationResponse | undefined;
   isPending: boolean;
   isFetching: boolean;
   error: unknown;
+  refreshError: unknown;
   dollars: (amountCents: number | undefined) => string;
-  refetch: () => unknown;
 }>();
+
+defineEmits<{ apply: []; clear: []; retry: [] }>();
 
 const { optionItems, t } = useI18n();
 </script>
@@ -37,7 +35,10 @@ const { optionItems, t } = useI18n();
           {{ t("Fees, net deposits, refunds, disputes, and payout readiness.") }}
         </div>
       </div>
-      <div class="d-flex flex-column flex-sm-row ga-2 w-100 w-lg-auto">
+      <v-form
+        class="d-flex flex-column flex-sm-row align-sm-center ga-2 w-100 w-lg-auto"
+        @submit.prevent="$emit('apply')"
+      >
         <v-text-field
           v-model.number="filters.year"
           :label="t('Year')"
@@ -46,7 +47,6 @@ const { optionItems, t } = useI18n();
           variant="outlined"
           hide-details
           style="min-width: 120px"
-          @keyup.enter="refetch"
         />
         <v-select
           v-model="filters.fundId"
@@ -56,7 +56,6 @@ const { optionItems, t } = useI18n();
           variant="outlined"
           hide-details
           style="min-width: 190px"
-          @update:model-value="refetch"
         />
         <v-select
           v-model="filters.status"
@@ -66,19 +65,21 @@ const { optionItems, t } = useI18n();
           variant="outlined"
           hide-details
           style="min-width: 170px"
-          @update:model-value="refetch"
         />
-        <v-btn variant="tonal" :loading="isFetching" @click="refetch">
-          {{ t("common.refresh") }}
-        </v-btn>
-      </div>
+        <GivingFilterActions
+          :pending="isFetching"
+          @clear="$emit('clear')"
+        />
+      </v-form>
     </div>
     <v-divider />
     <v-progress-linear v-if="isPending" indeterminate color="primary" />
     <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">
       {{ formatApiErrorMessage(error, t("common.error")) }}
     </v-alert>
-    <v-row v-else class="pa-5" dense>
+    <template v-else>
+      <GivingRefreshError :error="refreshError" @retry="$emit('retry')" />
+      <v-row class="pa-5" dense>
       <v-col cols="12" sm="6" lg="3">
         <v-card class="pa-4" variant="outlined">
           <div class="text-caption text-medium-emphasis">{{ t("Gross") }}</div>
@@ -139,6 +140,7 @@ const { optionItems, t } = useI18n();
           {{ reconciliation?.unreconciledCount ?? 0 }}
         </div>
       </v-col>
-    </v-row>
+      </v-row>
+    </template>
   </v-card>
 </template>

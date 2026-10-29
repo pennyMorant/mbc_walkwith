@@ -1,23 +1,31 @@
 <script setup lang="ts">
-import type { GivingFund, GivingFundStatus } from "@mbc/api-contracts";
+import type { GivingFund } from "@mbc/api-contracts";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 
+import type { GivingFundFilterForm } from "../giving_workspace_models";
+import GivingFilterActions from "./GivingFilterActions.vue";
+import GivingRefreshError from "./GivingRefreshError.vue";
+
 defineProps<{
-  filters: {
-    status: GivingFundStatus | "";
-    query: string;
-  };
+  filters: GivingFundFilterForm;
   funds: GivingFund[];
   canManage: boolean;
   isPending: boolean;
+  isFetching: boolean;
   error: unknown;
+  refreshError: unknown;
   dollars: (amountCents: number | undefined) => string;
   fundProgress: (fund: GivingFund) => number | null;
-  refetch: () => unknown;
-  newFund: () => void;
-  openFund: (fund: GivingFund) => void;
+}>();
+
+defineEmits<{
+  apply: [];
+  clear: [];
+  create: [];
+  open: [fund: GivingFund];
+  retry: [];
 }>();
 
 const { optionItems, t } = useI18n();
@@ -42,13 +50,14 @@ const { optionItems, t } = useI18n();
         color="primary"
         size="small"
         variant="tonal"
-        @click="newFund"
+        @click="$emit('create')"
       >
         {{ t("New fund") }}
       </v-btn>
     </div>
 
-    <v-row class="mt-4" dense>
+    <v-form class="mt-4" @submit.prevent="$emit('apply')">
+      <v-row dense>
       <v-col cols="12" sm="6">
         <v-select
           v-model="filters.status"
@@ -57,7 +66,6 @@ const { optionItems, t } = useI18n();
           density="compact"
           variant="outlined"
           hide-details
-          @update:model-value="refetch"
         />
       </v-col>
       <v-col cols="12" sm="6">
@@ -67,29 +75,39 @@ const { optionItems, t } = useI18n();
           density="compact"
           variant="outlined"
           hide-details
-          @keyup.enter="refetch"
         />
       </v-col>
-    </v-row>
+      </v-row>
+      <GivingFilterActions
+        class="mt-4"
+        :pending="isFetching"
+        @clear="$emit('clear')"
+      />
+    </v-form>
 
     <v-progress-linear v-if="isPending" class="mt-4" indeterminate />
     <v-alert v-else-if="error" type="error" variant="tonal" class="mt-4">
       {{ formatApiErrorMessage(error, t("common.error")) }}
     </v-alert>
-    <v-alert
-      v-else-if="funds.length === 0"
-      type="info"
-      variant="tonal"
-      class="mt-4"
-    >
-      {{ t("No giving funds match the current filters.") }}
-    </v-alert>
-    <v-list v-else density="compact" class="mt-3">
+    <template v-else>
+      <GivingRefreshError
+        :error="refreshError"
+        @retry="$emit('retry')"
+      />
+      <v-alert
+        v-if="funds.length === 0"
+        type="info"
+        variant="tonal"
+        class="mt-4"
+      >
+        {{ t("No giving funds match the current filters.") }}
+      </v-alert>
+      <v-list v-else density="compact" class="mt-3">
       <v-list-item
         v-for="fund in funds"
         :key="fund.id"
         class="px-0"
-        @click="openFund(fund)"
+        @click="$emit('open', fund)"
       >
         <template #title>
           <div class="d-flex align-center ga-2">
@@ -124,6 +142,7 @@ const { optionItems, t } = useI18n();
           </div>
         </template>
       </v-list-item>
-    </v-list>
+      </v-list>
+    </template>
   </v-card>
 </template>

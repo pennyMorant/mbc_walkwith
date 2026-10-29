@@ -1,17 +1,48 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  createGivingReconciliationFilters,
+  createGivingTransactionFilters,
   createGivingFundForm,
   fillGivingFundForm,
   givingFundCreatePayload,
   givingFundUpdatePayload,
   isGivingFundCodeValid,
   isGivingFundFormValid,
+  givingFilterSnapshot,
   parseTargetAmountCents,
+  resetGivingFilters,
   resetGivingFundForm
 } from "../src/features/giving/giving_workspace_models";
 
 describe("giving workspace models", () => {
+  test("keeps editable finance filters separate from applied snapshots", () => {
+    const form = createGivingTransactionFilters(2026);
+    form.category = "  missions  ";
+    form.query = "  donor@example.com  ";
+
+    expect(givingFilterSnapshot(form)).toEqual({
+      year: 2026,
+      status: "",
+      category: "missions",
+      fundId: "",
+      query: "donor@example.com"
+    });
+    expect(form.category).toBe("  missions  ");
+  });
+
+  test("resets finance filters without replacing reactive identity", () => {
+    const form = createGivingReconciliationFilters(2026);
+    const identity = form;
+    form.status = "needs_review";
+    form.fundId = "fund-1";
+
+    resetGivingFilters(form, createGivingReconciliationFilters(2026));
+
+    expect(form).toBe(identity);
+    expect(form).toEqual(createGivingReconciliationFilters(2026));
+  });
+
   test("validates stable fund codes through the shared contract", () => {
     expect(isGivingFundCodeValid("community_care")).toBeTrue();
     expect(isGivingFundCodeValid("building-2026")).toBeTrue();

@@ -1,32 +1,13 @@
 import type {
-  GivingExportResponse,
-  GivingFund,
-  GivingFundStatus,
-  GivingReconciliationStatus,
-  GivingStatement,
   GivingStatementStatus,
   GivingTransaction,
   GivingTransactionStatus,
   PaymentProviderEvent,
   PaymentProviderEventStatus
 } from "@mbc/api-contracts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
+import { useQueryClient } from "@tanstack/vue-query";
+import { computed, ref } from "vue";
 
-import {
-  createGivingFund,
-  downloadGivingStatement,
-  exportGivingTransactions,
-  generateGivingStatement,
-  getGivingReconciliation,
-  listGivingFunds,
-  listGivingStatements,
-  listGivingTransactions,
-  listPaymentProviderEvents,
-  updateGivingFund
-} from "@/core/api/giving";
-import { useAdminAuthStore } from "@/core/auth/auth_store";
-import { downloadTextFile } from "@/core/files/download_text_file";
 import { useI18n } from "@/core/i18n/i18n";
 import {
   formatGivingCurrency,
@@ -35,166 +16,57 @@ import {
   givingFundName as resolveGivingFundName,
   givingFundProgress
 } from "../giving_presenters";
-import {
-  createGivingFundForm,
-  fillGivingFundForm,
-  givingFundCreatePayload,
-  givingFundUpdatePayload,
-  isGivingFundCodeValid,
-  isGivingFundFormValid,
-  resetGivingFundForm
-} from "../giving_workspace_models";
+import { useGivingCommands } from "./use_giving_commands";
+import { useGivingQueries } from "./use_giving_queries";
 
 export function useGivingPageController() {
   const queryClient = useQueryClient();
-  const authStore = useAdminAuthStore();
-  const { locale, optionItems, t } = useI18n();
+  const { locale, t } = useI18n();
   const currentYear = new Date().getFullYear();
 
   const selectedTransaction = ref<GivingTransaction | null>(null);
-  const selectedFund = ref<GivingFund | null>(null);
   const selectedProviderEvent = ref<PaymentProviderEvent | null>(null);
-  const fundDrawer = ref(false);
   const transactionDrawer = ref(false);
   const providerEventDrawer = ref(false);
-  const exportedCsv = ref("");
-  const exportedFilename = ref("");
 
-  const filters = reactive({
-    year: currentYear,
-    status: "" as GivingTransactionStatus | "",
-    category: "",
-    fundId: "",
-    query: ""
-  });
+  const {
+    filters,
+    statementFilters,
+    providerEventFilters,
+    fundFilters,
+    reconciliationFilters,
+    appliedTransactionFilters,
+    transactionsQuery,
+    statementsQuery,
+    providerEventsQuery,
+    fundsQuery,
+    fundDirectoryQuery,
+    reconciliationQuery,
+    applyTransactionFilters,
+    applyStatementFilters,
+    applyProviderEventFilters,
+    applyFundFilters,
+    applyReconciliationFilters,
+    clearTransactionFilters,
+    clearStatementFilters,
+    clearProviderEventFilters,
+    clearFundFilters,
+    clearReconciliationFilters,
+    refreshTransactions,
+    refreshStatements,
+    refreshProviderEvents,
+    refreshFunds,
+    refreshReconciliation,
+    refreshFundDirectory,
+    refreshAll
+  } = useGivingQueries(queryClient, currentYear);
 
-  const statementFilters = reactive({
-    year: currentYear,
-    status: "" as GivingStatementStatus | "",
-    query: ""
-  });
-
-  const providerEventFilters = reactive({
-    provider: "stripe",
-    status: "" as PaymentProviderEventStatus | "",
-    query: ""
-  });
-
-  const fundFilters = reactive({
-    status: "" as GivingFundStatus | "",
-    query: ""
-  });
-
-  const reconciliationFilters = reactive({
-    year: currentYear,
-    provider: "stripe",
-    status: "" as GivingReconciliationStatus | "",
-    fundId: ""
-  });
-
-  const statementForm = reactive({
-    year: currentYear,
-    userId: "",
-    donorName: "",
-    donorEmail: ""
-  });
-
-  const fundForm = reactive(createGivingFundForm());
-
-  const transactionsQuery = useQuery({
-    queryKey: computed(() => ["giving-transactions", { ...filters, limit: 50 }]),
-    queryFn: () => listGivingTransactions({ ...filters, limit: 50 })
-  });
-
-  const statementsQuery = useQuery({
-    queryKey: computed(() => ["giving-statements", { ...statementFilters }]),
-    queryFn: () => listGivingStatements({ ...statementFilters, limit: 50 })
-  });
-
-  const providerEventsQuery = useQuery({
-    queryKey: computed(() => [
-      "giving-provider-events",
-      { ...providerEventFilters }
-    ]),
-    queryFn: () =>
-      listPaymentProviderEvents({ ...providerEventFilters, limit: 50 })
-  });
-
-  const fundsQuery = useQuery({
-    queryKey: computed(() => ["giving-funds", { ...fundFilters }]),
-    queryFn: () => listGivingFunds({ ...fundFilters, limit: 50 })
-  });
-
-  const fundDirectoryQuery = useQuery({
-    queryKey: ["giving-fund-directory"],
-    queryFn: () => listGivingFunds({ limit: 200 })
-  });
-
-  const reconciliationQuery = useQuery({
-    queryKey: computed(() => [
-      "giving-reconciliation",
-      { ...reconciliationFilters }
-    ]),
-    queryFn: () => getGivingReconciliation(reconciliationFilters)
-  });
-
-  const generateStatementMutation = useMutation({
-    mutationFn: () => {
-      requireCanExport();
-      if (!canGenerateStatement.value) {
-        throw new Error(t("Statement year is invalid."));
-      }
-      return generateGivingStatement(
-        statementForm.year,
-        buildStatementGeneratePayload()
-      );
-    },
-    onSuccess: async (statement) => {
-      statementFilters.year = statement.taxYear;
-      await queryClient.invalidateQueries({ queryKey: ["giving-statements"] });
-    }
-  });
-
-  const exportTransactionsMutation = useMutation({
-    mutationFn: () => {
-      requireCanExport();
-      return exportGivingTransactions({ ...filters, limit: 200 });
-    },
-    onSuccess: applyExportResult
-  });
-
-  const downloadStatementMutation = useMutation({
-    mutationFn: (statement: GivingStatement) => {
-      requireCanExport();
-      if (!canDownloadStatement(statement)) {
-        throw new Error(t("Statement is not ready for download."));
-      }
-      return downloadGivingStatement(statement.id);
-    },
-    onSuccess: applyExportResult
-  });
-
-  const saveFundMutation = useMutation({
-    mutationFn: () => {
-      requireCanManageFunds();
-      if (!canSaveFund.value) {
-        throw new Error(t("Fund code and name are required."));
-      }
-      return selectedFund.value
-        ? updateGivingFund(
-            selectedFund.value.id,
-            givingFundUpdatePayload(fundForm)
-          )
-        : createGivingFund(givingFundCreatePayload(fundForm));
-    },
-    onSuccess: async (fund) => {
-      selectedFund.value = fund;
-      fillFundForm(fund);
-      await queryClient.invalidateQueries({ queryKey: ["giving-funds"] });
-      await queryClient.invalidateQueries({ queryKey: ["giving-fund-directory"] });
-      await queryClient.invalidateQueries({ queryKey: ["giving-transactions"] });
-      await queryClient.invalidateQueries({ queryKey: ["giving-reconciliation"] });
-    }
+  const commands = useGivingCommands({
+    appliedTransactionFilters,
+    applyStatementFilters,
+    currentYear,
+    queryClient,
+    statementFilters
   });
 
   const transactions = computed(() => transactionsQuery.data.value?.items ?? []);
@@ -205,12 +77,11 @@ export function useGivingPageController() {
   const fundDirectory = computed(
     () => fundDirectoryQuery.data.value ?? fundsQuery.data.value ?? []
   );
+  const fundDirectoryError = computed(() => fundDirectoryQuery.error.value);
   const fundFilterItems = computed(() =>
     buildGivingFundFilterItems(fundDirectory.value, t("All funds"))
   );
   const reconciliation = computed(() => reconciliationQuery.data.value);
-  const canExport = computed(() => authStore.can("giving:export"));
-  const canManageFunds = computed(() => authStore.can("giving:manage"));
   const isRefreshing = computed(
     () =>
       transactionsQuery.isFetching.value ||
@@ -229,106 +100,57 @@ export function useGivingPageController() {
   const reconciliationPending = computed(
     () => reconciliationQuery.isPending.value
   );
+  const transactionsFetching = computed(
+    () => transactionsQuery.isFetching.value
+  );
+  const statementsFetching = computed(() => statementsQuery.isFetching.value);
+  const fundsFetching = computed(() => fundsQuery.isFetching.value);
   const providerEventsFetching = computed(
     () => providerEventsQuery.isFetching.value
   );
   const reconciliationFetching = computed(
     () => reconciliationQuery.isFetching.value
   );
-  const isExportingTransactions = computed(
-    () => exportTransactionsMutation.isPending.value
+  const transactionsError = initialError(
+    transactionsQuery.error,
+    () => transactionsQuery.data.value !== undefined
   );
-  const isGeneratingStatement = computed(
-    () => generateStatementMutation.isPending.value
+  const transactionsRefreshError = backgroundError(
+    transactionsQuery.error,
+    () => transactionsQuery.data.value !== undefined
   );
-  const isDownloadingStatement = computed(
-    () => downloadStatementMutation.isPending.value
+  const statementsError = initialError(
+    statementsQuery.error,
+    () => statementsQuery.data.value !== undefined
   );
-  const isSavingFund = computed(() => saveFundMutation.isPending.value);
-  const canGenerateStatement = computed(
-    () =>
-      canExport.value &&
-      !isGeneratingStatement.value &&
-      isValidYear(statementForm.year)
+  const statementsRefreshError = backgroundError(
+    statementsQuery.error,
+    () => statementsQuery.data.value !== undefined
   );
-  const fundCodeValid = computed(() => isGivingFundCodeValid(fundForm.code));
-  const canSaveFund = computed(
-    () =>
-      canManageFunds.value &&
-      !isSavingFund.value &&
-      isGivingFundFormValid(fundForm)
+  const providerEventsError = initialError(
+    providerEventsQuery.error,
+    () => providerEventsQuery.data.value !== undefined
   );
-
-  function refreshAll() {
-    refreshTransactions();
-    refreshStatements();
-    refreshReconciliation();
-    refreshProviderEvents();
-    refreshFunds();
-    void fundDirectoryQuery.refetch();
-  }
-
-  function refreshTransactions() {
-    void transactionsQuery.refetch();
-  }
-
-  function refreshStatements() {
-    void statementsQuery.refetch();
-  }
-
-  function refreshProviderEvents() {
-    void providerEventsQuery.refetch();
-  }
-
-  function refreshFunds() {
-    void fundsQuery.refetch();
-  }
-
-  function refreshReconciliation() {
-    void reconciliationQuery.refetch();
-  }
-
-  function exportTransactions() {
-    if (canExport.value && !isExportingTransactions.value) {
-      exportTransactionsMutation.mutate();
-    }
-  }
-
-  function generateStatement() {
-    if (canGenerateStatement.value) {
-      generateStatementMutation.mutate();
-    }
-  }
-
-  function downloadStatement(statement: GivingStatement) {
-    if (!isDownloadingStatement.value && canDownloadStatement(statement)) {
-      downloadStatementMutation.mutate(statement);
-    }
-  }
-
-  function canDownloadStatement(statement: GivingStatement) {
-    return canExport.value && ["ready", "sent"].includes(statement.status);
-  }
-
-  function newFund() {
-    saveFundMutation.reset();
-    selectedFund.value = null;
-    resetFundForm();
-    fundDrawer.value = true;
-  }
-
-  function openFund(fund: GivingFund) {
-    saveFundMutation.reset();
-    selectedFund.value = fund;
-    fillFundForm(fund);
-    fundDrawer.value = true;
-  }
-
-  function saveFund() {
-    if (canSaveFund.value) {
-      saveFundMutation.mutate();
-    }
-  }
+  const providerEventsRefreshError = backgroundError(
+    providerEventsQuery.error,
+    () => providerEventsQuery.data.value !== undefined
+  );
+  const fundsError = initialError(
+    fundsQuery.error,
+    () => fundsQuery.data.value !== undefined
+  );
+  const fundsRefreshError = backgroundError(
+    fundsQuery.error,
+    () => fundsQuery.data.value !== undefined
+  );
+  const reconciliationError = initialError(
+    reconciliationQuery.error,
+    () => reconciliation.value !== undefined
+  );
+  const reconciliationRefreshError = backgroundError(
+    reconciliationQuery.error,
+    () => reconciliation.value !== undefined
+  );
 
   function dollars(amountCents: number | undefined) {
     return formatGivingCurrency(
@@ -388,119 +210,85 @@ export function useGivingPageController() {
     providerEventDrawer.value = true;
   }
 
-  function requireCanExport() {
-    if (!canExport.value) {
-      throw new Error(t("You do not have permission to export giving data."));
-    }
-  }
-
-  function requireCanManageFunds() {
-    if (!canManageFunds.value) {
-      throw new Error(t("You do not have permission to manage giving funds."));
-    }
-  }
-
-  function buildStatementGeneratePayload() {
-    return {
-      userId: statementForm.userId.trim() || null,
-      donorName: statementForm.donorName.trim() || undefined,
-      donorEmail: statementForm.donorEmail.trim() || null
-    };
-  }
-
-  function resetFundForm() {
-    resetGivingFundForm(fundForm);
-  }
-
-  function fillFundForm(fund: GivingFund) {
-    fillGivingFundForm(fundForm, fund);
-  }
-
-  function applyExportResult(result: GivingExportResponse) {
-    exportedCsv.value = result.csv;
-    exportedFilename.value = result.filename;
-    downloadTextFile({
-      content: result.csv,
-      filename: result.filename,
-      contentType: result.contentType
-    });
-  }
-
-  function isValidYear(value: number) {
-    return Number.isInteger(value) && value >= 2000 && value <= 2100;
-  }
-
   return {
-    canDownloadStatement,
-    canExport,
-    canGenerateStatement,
-    canManageFunds,
-    canSaveFund,
+    ...commands,
+    applyFundFilters,
+    applyProviderEventFilters,
+    applyReconciliationFilters,
+    applyStatementFilters,
+    applyTransactionFilters,
+    clearFundFilters,
+    clearProviderEventFilters,
+    clearReconciliationFilters,
+    clearStatementFilters,
+    clearTransactionFilters,
     dateTime,
     dollars,
-    downloadStatement,
-    downloadStatementError: downloadStatementMutation.error,
     eventStatusColor,
-    exportedCsv,
-    exportedFilename,
-    exportTransactions,
-    exportTransactionsError: exportTransactionsMutation.error,
     filters,
-    fundDrawer,
-    fundCodeValid,
     fundFilterItems,
+    fundDirectoryError,
     fundFilters,
-    fundForm,
     fundName,
     fundProgress: givingFundProgress,
-    fundSaveError: saveFundMutation.error,
     funds,
-    fundsError: fundsQuery.error,
+    fundsError,
+    fundsFetching,
     fundsPending,
-    generateStatement,
-    generateStatementError: generateStatementMutation.error,
-    isDownloadingStatement,
-    isExportingTransactions,
-    isGeneratingStatement,
+    fundsRefreshError,
     isRefreshing,
-    isSavingFund,
-    newFund,
-    openFund,
     openProviderEvent,
     openTransaction,
-    optionItems,
     providerEventDrawer,
     providerEventFilters,
     providerEvents,
-    providerEventsError: providerEventsQuery.error,
+    providerEventsError,
     providerEventsFetching,
     providerEventsPending,
+    providerEventsRefreshError,
     reconciliation,
-    reconciliationError: reconciliationQuery.error,
+    reconciliationError,
     reconciliationFetching,
     reconciliationFilters,
     reconciliationPending,
-    refreshAll,
+    reconciliationRefreshError,
     refreshFunds,
+    refreshFundDirectory,
+    refreshAll,
     refreshProviderEvents,
     refreshReconciliation,
     refreshStatements,
     refreshTransactions,
-    saveFund,
-    selectedFund,
     selectedProviderEvent,
     selectedTransaction,
     statementFilters,
-    statementForm,
     statements,
-    statementsError: statementsQuery.error,
+    statementsError,
+    statementsFetching,
     statementsPending,
+    statementsRefreshError,
     statusColor,
     summary,
     t,
     transactionDrawer,
     transactions,
-    transactionsError: transactionsQuery.error,
+    transactionsError,
+    transactionsFetching,
+    transactionsRefreshError,
     transactionsPending
   };
+}
+
+function initialError(
+  error: { readonly value: unknown },
+  hasData: () => boolean
+) {
+  return computed(() => (hasData() ? null : error.value));
+}
+
+function backgroundError(
+  error: { readonly value: unknown },
+  hasData: () => boolean
+) {
+  return computed(() => (hasData() ? error.value : null));
 }

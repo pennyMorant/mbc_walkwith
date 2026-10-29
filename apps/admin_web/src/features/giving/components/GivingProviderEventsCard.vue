@@ -7,20 +7,26 @@ import type {
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 
+import type { GivingProviderEventFilterForm } from "../giving_workspace_models";
+import GivingFilterActions from "./GivingFilterActions.vue";
+import GivingRefreshError from "./GivingRefreshError.vue";
+
 defineProps<{
-  filters: {
-    provider: string;
-    status: PaymentProviderEventStatus | "";
-    query: string;
-  };
+  filters: GivingProviderEventFilterForm;
   events: PaymentProviderEvent[];
   isPending: boolean;
   isFetching: boolean;
   error: unknown;
+  refreshError: unknown;
   dateTime: (value: string | null | undefined) => string;
   eventStatusColor: (status: PaymentProviderEventStatus) => string;
-  refetch: () => unknown;
-  openProviderEvent: (event: PaymentProviderEvent) => void;
+}>();
+
+defineEmits<{
+  apply: [];
+  clear: [];
+  open: [event: PaymentProviderEvent];
+  retry: [];
 }>();
 
 const { optionItems, t } = useI18n();
@@ -39,7 +45,10 @@ const { optionItems, t } = useI18n();
           {{ t("Stripe webhook delivery and processing history.") }}
         </div>
       </div>
-      <div class="d-flex flex-column flex-sm-row ga-2 w-100 w-lg-auto">
+      <v-form
+        class="d-flex flex-column flex-sm-row align-sm-center ga-2 w-100 w-lg-auto"
+        @submit.prevent="$emit('apply')"
+      >
         <v-text-field
           v-model="filters.query"
           :label="t('Search')"
@@ -47,7 +56,6 @@ const { optionItems, t } = useI18n();
           variant="outlined"
           hide-details
           style="min-width: 180px"
-          @keyup.enter="refetch"
         />
         <v-select
           v-model="filters.status"
@@ -57,19 +65,21 @@ const { optionItems, t } = useI18n();
           variant="outlined"
           hide-details
           style="min-width: 160px"
-          @update:model-value="refetch"
         />
-        <v-btn variant="tonal" :loading="isFetching" @click="refetch">
-          {{ t("common.refresh") }}
-        </v-btn>
-      </div>
+        <GivingFilterActions
+          :pending="isFetching"
+          @clear="$emit('clear')"
+        />
+      </v-form>
     </div>
     <v-divider />
     <v-progress-linear v-if="isPending" indeterminate color="primary" />
     <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">
       {{ formatApiErrorMessage(error, t("common.error")) }}
     </v-alert>
-    <v-table v-else density="comfortable">
+    <template v-else>
+      <GivingRefreshError :error="refreshError" @retry="$emit('retry')" />
+      <v-table density="comfortable">
       <thead>
         <tr>
           <th>{{ t("Provider") }}</th>
@@ -89,7 +99,7 @@ const { optionItems, t } = useI18n();
           v-for="event in events"
           :key="event.id"
           class="cursor-pointer"
-          @click="openProviderEvent(event)"
+          @click="$emit('open', event)"
         >
           <td>{{ event.provider }}</td>
           <td>{{ event.eventType }}</td>
@@ -113,7 +123,8 @@ const { optionItems, t } = useI18n();
           </td>
         </tr>
       </tbody>
-    </v-table>
+      </v-table>
+    </template>
   </v-card>
 </template>
 

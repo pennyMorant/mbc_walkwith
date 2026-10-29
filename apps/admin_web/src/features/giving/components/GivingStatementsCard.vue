@@ -7,28 +7,34 @@ import type {
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 
+import type { GivingStatementFilterForm } from "../giving_workspace_models";
+import GivingFilterActions from "./GivingFilterActions.vue";
+import GivingRefreshError from "./GivingRefreshError.vue";
+
 defineProps<{
-  filters: {
-    year: number;
-    status: GivingStatementStatus | "";
-  };
+  filters: GivingStatementFilterForm;
   statements: GivingStatement[];
   canDownloadStatement: (statement: GivingStatement) => boolean;
   downloadStatement: (statement: GivingStatement) => void;
   isPending: boolean;
+  isFetching: boolean;
   isDownloadingStatement: boolean;
   error: unknown;
+  refreshError: unknown;
   dollars: (amountCents: number | undefined) => string;
   statusColor: (status: GivingStatementStatus) => string;
-  refetch: () => unknown;
 }>();
+
+defineEmits<{ apply: []; clear: []; retry: [] }>();
 
 const { optionItems, t } = useI18n();
 </script>
 
 <template>
   <v-card class="mt-6">
-    <div class="pa-5 d-flex align-center justify-space-between">
+    <div
+      class="pa-5 d-flex flex-column flex-lg-row align-start align-lg-center justify-space-between ga-4"
+    >
       <div>
         <div class="text-subtitle-1 font-weight-bold">
           {{ t("Annual statements") }}
@@ -37,7 +43,10 @@ const { optionItems, t } = useI18n();
           {{ t("giving.statementsSubtitle") }}
         </div>
       </div>
-      <div class="d-flex ga-2">
+      <v-form
+        class="d-flex flex-column flex-sm-row align-sm-center ga-2 w-100 w-lg-auto"
+        @submit.prevent="$emit('apply')"
+      >
         <v-text-field
           v-model.number="filters.year"
           :label="t('Year')"
@@ -46,7 +55,6 @@ const { optionItems, t } = useI18n();
           variant="outlined"
           hide-details
           style="width: 120px"
-          @keyup.enter="refetch"
         />
         <v-select
           v-model="filters.status"
@@ -56,16 +64,21 @@ const { optionItems, t } = useI18n();
           variant="outlined"
           hide-details
           style="width: 150px"
-          @update:model-value="refetch"
         />
-      </div>
+        <GivingFilterActions
+          :pending="isFetching"
+          @clear="$emit('clear')"
+        />
+      </v-form>
     </div>
     <v-divider />
     <v-progress-linear v-if="isPending" indeterminate color="primary" />
     <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">
       {{ formatApiErrorMessage(error, t("common.error")) }}
     </v-alert>
-    <v-table v-else density="comfortable">
+    <template v-else>
+      <GivingRefreshError :error="refreshError" @retry="$emit('retry')" />
+      <v-table density="comfortable">
       <thead>
         <tr>
           <th>{{ t("Donor") }}</th>
@@ -77,6 +90,11 @@ const { optionItems, t } = useI18n();
         </tr>
       </thead>
       <tbody>
+        <tr v-if="statements.length === 0">
+          <td colspan="6" class="text-center text-medium-emphasis py-8">
+            {{ t("giving.noStatements") }}
+          </td>
+        </tr>
         <tr
           v-for="statement in statements"
           :key="statement.id"
@@ -103,6 +121,7 @@ const { optionItems, t } = useI18n();
           </td>
         </tr>
       </tbody>
-    </v-table>
+      </v-table>
+    </template>
   </v-card>
 </template>

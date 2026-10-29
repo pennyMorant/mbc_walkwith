@@ -7,24 +7,29 @@ import type {
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 
+import type { GivingTransactionFilterForm } from "../giving_workspace_models";
+import GivingFilterActions from "./GivingFilterActions.vue";
+import GivingRefreshError from "./GivingRefreshError.vue";
+
 defineProps<{
-  filters: {
-    year: number;
-    status: GivingTransactionStatus | "";
-    category: string;
-    fundId: string;
-    query: string;
-  };
+  filters: GivingTransactionFilterForm;
   fundItems: Array<{ title: string; value: string }>;
   transactions: GivingTransaction[];
   isPending: boolean;
+  isFetching: boolean;
   error: unknown;
+  refreshError: unknown;
   dollars: (amountCents: number | undefined) => string;
   dateTime: (value: string | null | undefined) => string;
   fundName: (fundId: string | null) => string;
   statusColor: (status: GivingTransactionStatus) => string;
-  refetch: () => unknown;
-  openTransaction: (transaction: GivingTransaction) => void;
+}>();
+
+defineEmits<{
+  apply: [];
+  clear: [];
+  open: [transaction: GivingTransaction];
+  retry: [];
 }>();
 
 const { optionItems, t } = useI18n();
@@ -32,7 +37,7 @@ const { optionItems, t } = useI18n();
 
 <template>
   <v-card>
-    <div class="pa-5">
+    <v-form class="pa-5" @submit.prevent="$emit('apply')">
       <v-row dense>
         <v-col cols="12" sm="6" lg="2">
           <v-text-field
@@ -42,7 +47,6 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @keyup.enter="refetch"
           />
         </v-col>
         <v-col cols="12" sm="6" lg="2">
@@ -53,7 +57,6 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="refetch"
           />
         </v-col>
         <v-col cols="12" sm="6" lg="3">
@@ -64,7 +67,6 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="refetch"
           />
         </v-col>
         <v-col cols="12" sm="6" lg="2">
@@ -74,7 +76,6 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @keyup.enter="refetch"
           />
         </v-col>
         <v-col cols="12" sm="6" lg="3">
@@ -84,17 +85,23 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @keyup.enter="refetch"
           />
         </v-col>
       </v-row>
-    </div>
+      <GivingFilterActions
+        class="mt-4"
+        :pending="isFetching"
+        @clear="$emit('clear')"
+      />
+    </v-form>
     <v-divider />
     <v-progress-linear v-if="isPending" indeterminate color="primary" />
     <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">
       {{ formatApiErrorMessage(error, t("common.error")) }}
     </v-alert>
-    <v-table v-else density="comfortable">
+    <template v-else>
+      <GivingRefreshError :error="refreshError" @retry="$emit('retry')" />
+      <v-table density="comfortable">
       <thead>
         <tr>
           <th>{{ t("Donor") }}</th>
@@ -116,7 +123,7 @@ const { optionItems, t } = useI18n();
           v-for="transaction in transactions"
           :key="transaction.id"
           class="cursor-pointer"
-          @click="openTransaction(transaction)"
+          @click="$emit('open', transaction)"
         >
           <td>
             <div class="font-weight-bold">
@@ -147,7 +154,8 @@ const { optionItems, t } = useI18n();
           <td>{{ dateTime(transaction.givenAt) }}</td>
         </tr>
       </tbody>
-    </v-table>
+      </v-table>
+    </template>
   </v-card>
 </template>
 

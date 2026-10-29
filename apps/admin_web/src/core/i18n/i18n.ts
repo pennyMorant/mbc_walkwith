@@ -4840,6 +4840,35 @@ Object.assign(messages["zh-Hant"], {
   "settings.refreshFailed": "無法載入最新設定，目前結果仍會保留。"
 });
 
+Object.assign(messages.en, {
+  "giving.applyFilters": "Apply filters",
+  "giving.clearFilters": "Clear filters",
+  "giving.fundDirectoryFailed": "The complete giving fund directory could not be loaded.",
+  "giving.noStatements": "No annual statements match the current filters.",
+  "giving.refreshFailed": "The latest finance data could not be loaded."
+});
+Object.assign(messages.es, {
+  "giving.applyFilters": "Aplicar filtros",
+  "giving.clearFilters": "Borrar filtros",
+  "giving.fundDirectoryFailed": "No se pudo cargar el directorio completo de fondos de donación.",
+  "giving.noStatements": "Ningún estado anual coincide con los filtros actuales.",
+  "giving.refreshFailed": "No se pudieron cargar los datos financieros más recientes."
+});
+Object.assign(messages["zh-Hans"], {
+  "giving.applyFilters": "应用筛选",
+  "giving.clearFilters": "清除筛选",
+  "giving.fundDirectoryFailed": "无法加载完整的奉献基金目录。",
+  "giving.noStatements": "当前筛选下没有年度证明。",
+  "giving.refreshFailed": "无法加载最新财务数据。"
+});
+Object.assign(messages["zh-Hant"], {
+  "giving.applyFilters": "套用篩選",
+  "giving.clearFilters": "清除篩選",
+  "giving.fundDirectoryFailed": "無法載入完整的奉獻基金目錄。",
+  "giving.noStatements": "目前篩選下沒有年度證明。",
+  "giving.refreshFailed": "無法載入最新財務資料。"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });
