@@ -1,12 +1,33 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  createGroupCatalogFilterForm,
+  groupCatalogFilterSnapshot,
+  resetGroupCatalogFilterForm,
   resetGroupActivityForms,
   type GroupAttendanceForm,
   type GroupMaterialForm
 } from "../src/features/groups/group_workspace_models";
 
 describe("group workspace models", () => {
+  test("keeps group catalog drafts separate from applied filters", () => {
+    const form = createGroupCatalogFilterForm();
+    const identity = form;
+    form.query = "  fellowship  ";
+    form.status = "active";
+
+    expect(groupCatalogFilterSnapshot(form)).toEqual({
+      query: "fellowship",
+      status: "active",
+      visibility: ""
+    });
+    expect(form.query).toBe("  fellowship  ");
+
+    resetGroupCatalogFilterForm(form);
+    expect(form).toBe(identity);
+    expect(form).toEqual(createGroupCatalogFilterForm());
+  });
+
   test("resets group-scoped command forms when the selected group changes", () => {
     const materialForm: GroupMaterialForm = {
       materialType: "course",

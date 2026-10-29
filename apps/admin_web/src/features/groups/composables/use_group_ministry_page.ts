@@ -16,7 +16,6 @@ import {
   createGroup,
   listGroupApplications,
   listGroupMemberships,
-  listGroups,
   reviewGroupApplication,
   updateGroup,
   updateGroupMembership
@@ -25,6 +24,7 @@ import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import type { GroupEditorForm } from "../group_workspace_models";
 import { useGroupActivityWorkspace } from "./use_group_activity_workspace";
+import { useGroupCatalogQuery } from "./use_group_catalog_query";
 import { useGroupMutationFeedback } from "./use_group_mutation_feedback";
 
 export function useGroupMinistryPage() {
@@ -48,11 +48,16 @@ export function useGroupMinistryPage() {
     }
   });
 
-  const filters = reactive({
-    query: "",
-    status: "" as MinistryGroupStatus | "",
-    visibility: "" as LifePostVisibility | ""
-  });
+  const {
+    filters,
+    groupsQuery,
+    groups,
+    initialError: groupsError,
+    refreshError: groupsRefreshError,
+    applyFilters: applyGroupFilters,
+    clearFilters: clearGroupFilters,
+    refreshList: refreshGroups
+  } = useGroupCatalogQuery(queryClient);
   const applicationFilters = reactive({
     status: "submitted" as GroupApplicationStatus | "",
     query: ""
@@ -73,11 +78,6 @@ export function useGroupMinistryPage() {
     capacity: null as number | null
   });
   const selectedGroupId = computed(() => selectedGroup.value?.id ?? null);
-  const activeFilters = computed(() => ({ ...filters, limit: 50 }));
-  const groupsQuery = useQuery({
-    queryKey: ["groups", activeFilters],
-    queryFn: () => listGroups(activeFilters.value)
-  });
   const applicationsQuery = useQuery({
     queryKey: computed(() => [
       "group-applications",
@@ -105,7 +105,6 @@ export function useGroupMinistryPage() {
   });
   const canManage = computed(() => authStore.can("groups:manage"));
   const canSave = computed(() => form.name.trim().length > 0);
-  const groups = computed(() => groupsQuery.data.value ?? []);
   const applications = computed(() => applicationsQuery.data.value ?? []);
   const memberships = computed(() => membershipsQuery.data.value ?? []);
   const filteredMemberships = computed(() => {
@@ -227,8 +226,13 @@ export function useGroupMinistryPage() {
       mutationFeedback.capture(error, variables, context)
   });
   const listErrorMessage = computed(() =>
-    groupsQuery.error.value
-      ? formatApiErrorMessage(groupsQuery.error.value, t("common.error"))
+    groupsError.value
+      ? formatApiErrorMessage(groupsError.value, t("common.error"))
+      : ""
+  );
+  const listRefreshErrorMessage = computed(() =>
+    groupsRefreshError.value
+      ? formatApiErrorMessage(groupsRefreshError.value, t("common.error"))
       : ""
   );
   const workspaceErrorMessage = computed(() =>
@@ -280,11 +284,13 @@ export function useGroupMinistryPage() {
 
   return {
     ...activity,
+    applyGroupFilters,
     applicationFilters,
     applications,
     applicationsQuery,
     canManage,
     canSave,
+    clearGroupFilters,
     drawer,
     editGroup,
     filters,
@@ -292,6 +298,7 @@ export function useGroupMinistryPage() {
     groups,
     groupsQuery,
     listErrorMessage,
+    listRefreshErrorMessage,
     membershipFilters,
     membershipMutation,
     filteredMemberships,
@@ -300,6 +307,7 @@ export function useGroupMinistryPage() {
     newGroup,
     optionItems,
     reviewMutation,
+    refreshGroups,
     saveMutation,
     selectedGroup,
     selectGroup,

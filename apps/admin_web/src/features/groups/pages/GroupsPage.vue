@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminCatalogFilters from "@/core/ui/AdminCatalogFilters.vue";
 
 import GroupCatalogCard from "../components/GroupCatalogCard.vue";
 import GroupEditorDrawer from "../components/GroupEditorDrawer.vue";
@@ -7,6 +8,7 @@ import GroupWorkspaceCard from "../components/GroupWorkspaceCard.vue";
 import { useGroupMinistryPage } from "../composables/use_group_ministry_page";
 
 const {
+  applyGroupFilters,
   applicationFilters,
   applications,
   applicationsQuery,
@@ -19,6 +21,7 @@ const {
   canManage,
   canRecordAttendance,
   canSave,
+  clearGroupFilters,
   drawer,
   editGroup,
   filters,
@@ -27,6 +30,7 @@ const {
   groups,
   groupsQuery,
   listErrorMessage,
+  listRefreshErrorMessage,
   materialCreateMutation,
   materialFilters,
   materialForm,
@@ -41,6 +45,7 @@ const {
   newGroup,
   optionItems,
   reviewMutation,
+  refreshGroups,
   saveMutation,
   selectedGroup,
   selectGroup,
@@ -79,58 +84,28 @@ const {
       {{ workspaceErrorMessage }}
     </v-alert>
 
-    <v-card class="mt-5" variant="outlined">
-      <v-card-text>
-        <v-row dense>
-          <v-col cols="12" md="5">
-            <v-text-field
-              v-model="filters.query"
-              :label="t('Search')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @keyup.enter="groupsQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-select
-              v-model="filters.status"
-              :label="t('Status')"
-              :items="optionItems(['', 'draft', 'active', 'paused', 'archived'])"
-              density="compact"
-              variant="outlined"
-              hide-details
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-select
-              v-model="filters.visibility"
-              :label="t('Visibility')"
-              :items="optionItems(['', 'public', 'members', 'group', 'private'])"
-              density="compact"
-              variant="outlined"
-              hide-details
-            />
-          </v-col>
-          <v-col cols="12" md="1">
-            <v-btn block variant="tonal" @click="groupsQuery.refetch()">
-              {{ t("common.go") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <AdminCatalogFilters
+      v-model:query="filters.query"
+      v-model:status="filters.status"
+      v-model:visibility="filters.visibility"
+      :status-items="optionItems(['', 'draft', 'active', 'paused', 'archived'])"
+      :visibility-items="optionItems(['', 'public', 'members', 'group', 'private'])"
+      :fetching="groupsQuery.isFetching.value"
+      @apply="applyGroupFilters"
+      @clear="clearGroupFilters"
+    />
 
     <v-row class="mt-2" dense>
       <v-col cols="12" lg="4">
         <GroupCatalogCard
           :can-manage="canManage"
           :error-message="listErrorMessage"
+          :refresh-error-message="listRefreshErrorMessage"
           :groups="groups"
           :pending="groupsQuery.isPending.value"
           :selected-group-id="selectedGroup?.id ?? null"
           @edit="editGroup"
-          @retry="groupsQuery.refetch()"
+          @retry="refreshGroups"
           @select="selectGroup"
         />
       </v-col>

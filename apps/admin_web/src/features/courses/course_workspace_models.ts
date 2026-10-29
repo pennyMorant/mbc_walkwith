@@ -1,7 +1,46 @@
 import type {
+  CourseStatus,
   CourseLessonStatus,
-  CourseUpsertRequest
+  CourseUpsertRequest,
+  LifePostVisibility
 } from "@mbc/api-contracts";
+
+export type CourseCatalogFilterForm = {
+  query: string;
+  status: CourseStatus | "";
+  visibility: LifePostVisibility | "";
+};
+
+export type CourseCatalogFilterSnapshot = Readonly<CourseCatalogFilterForm>;
+
+export function createCourseCatalogFilterForm(): CourseCatalogFilterForm {
+  return { query: "", status: "", visibility: "" };
+}
+
+export function courseCatalogFilterSnapshot(
+  form: CourseCatalogFilterForm
+): CourseCatalogFilterSnapshot {
+  return {
+    query: form.query.trim(),
+    status: form.status,
+    visibility: form.visibility
+  };
+}
+
+export function sameCourseCatalogFilters(
+  first: CourseCatalogFilterSnapshot,
+  second: CourseCatalogFilterSnapshot
+) {
+  return (
+    first.query === second.query &&
+    first.status === second.status &&
+    first.visibility === second.visibility
+  );
+}
+
+export function resetCourseCatalogFilterForm(form: CourseCatalogFilterForm) {
+  Object.assign(form, createCourseCatalogFilterForm());
+}
 
 export function emptyCourseForm(): CourseUpsertRequest {
   return {

@@ -3,13 +3,34 @@ import { describe, expect, test } from "bun:test";
 import {
   buildCoursePayload,
   clampLessonCount,
+  courseCatalogFilterSnapshot,
+  createCourseCatalogFilterForm,
   dateTimeInputToIso,
   emptyCourseForm,
   emptyLessonForm,
-  normalizeCapacity
+  normalizeCapacity,
+  resetCourseCatalogFilterForm
 } from "../src/features/courses/course_workspace_models";
 
 describe("course workspace models", () => {
+  test("keeps course catalog drafts separate from applied filters", () => {
+    const form = createCourseCatalogFilterForm();
+    const identity = form;
+    form.query = "  discipleship  ";
+    form.visibility = "members";
+
+    expect(courseCatalogFilterSnapshot(form)).toEqual({
+      query: "discipleship",
+      status: "",
+      visibility: "members"
+    });
+    expect(form.query).toBe("  discipleship  ");
+
+    resetCourseCatalogFilterForm(form);
+    expect(form).toBe(identity);
+    expect(form).toEqual(createCourseCatalogFilterForm());
+  });
+
   test("resets course-scoped forms without retaining another course", () => {
     expect(emptyCourseForm()).toMatchObject({
       title: "",

@@ -63,6 +63,9 @@ v2 中，小组长可以在 App 或后续轻量 surface 中查看本小组任务
 Groups 工作台按申请、成员、材料和出席分区；查询表达 loading、empty 和
 error，mutation 成功后刷新 canonical 小组与受影响子资源。出席成员选择只来自
 完整 active/leader membership 投影，不受成员 tab 的展示筛选影响。
+小组目录搜索、状态和可见性使用筛选草稿；只有明确应用后才更新后端查询快照。
+目录重试使用已应用快照，已有目录刷新失败时保留当前列表和选择，不把失败渲染成
+空目录，也不把目录错误并入右侧子资源或 mutation 反馈。
 材料和出席 command 表单按当前小组隔离；切换小组时重置。Admin controller
 使用小组 id 与 operation id 识别迟到 mutation，旧结果只可刷新缓存，不能覆盖
 当前 workspace 的反馈或表单。

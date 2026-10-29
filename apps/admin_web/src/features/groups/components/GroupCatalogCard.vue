@@ -7,6 +7,7 @@ import AdminDataState from "@/core/ui/AdminDataState.vue";
 defineProps<{
   canManage: boolean;
   errorMessage: string;
+  refreshErrorMessage: string;
   groups: MinistryGroup[];
   pending: boolean;
   selectedGroupId: string | null;
@@ -23,6 +24,27 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
+    <v-alert
+      v-if="refreshErrorMessage"
+      type="warning"
+      variant="tonal"
+      class="ma-4"
+    >
+      <div
+        class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
+      >
+        <span>{{ t("groups.refreshFailed") }} {{ refreshErrorMessage }}</span>
+        <v-btn
+          color="warning"
+          variant="tonal"
+          size="small"
+          prepend-icon="mdi-refresh"
+          @click="$emit('retry')"
+        >
+          {{ t("Retry") }}
+        </v-btn>
+      </div>
+    </v-alert>
     <AdminDataState
       :pending="pending"
       :error-message="errorMessage"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminCatalogFilters from "@/core/ui/AdminCatalogFilters.vue";
 
 import CourseCatalogCard from "../components/CourseCatalogCard.vue";
 import CourseEditorDrawer from "../components/CourseEditorDrawer.vue";
@@ -8,9 +9,11 @@ import { useCoursePageController } from "../composables/use_course_page_controll
 
 const {
   advanceProgress,
+  applyCourseFilters,
   canCreateLesson,
   canManage,
   canSave,
+  clearCourseFilters,
   courseStatusOptions,
   courses,
   coursesQuery,
@@ -28,10 +31,12 @@ const {
   lessonsQuery,
   lessonStatusMutation,
   listErrorMessage,
+  listRefreshErrorMessage,
   newCourse,
   optionItems,
   saveCourse,
   saveMutation,
+  refreshCourses,
   selectedCourse,
   selectCourse,
   t,
@@ -69,56 +74,26 @@ const {
       {{ workspaceErrorMessage }}
     </v-alert>
 
-    <v-card class="mt-5" variant="outlined">
-      <v-card-text>
-        <v-row dense>
-          <v-col cols="12" md="5">
-            <v-text-field
-              v-model="filters.query"
-              :label="t('Search')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @keyup.enter="coursesQuery.refetch()"
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-select
-              v-model="filters.status"
-              :label="t('Status')"
-              :items="optionItems(['', ...courseStatusOptions])"
-              density="compact"
-              variant="outlined"
-              hide-details
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-select
-              v-model="filters.visibility"
-              :label="t('Visibility')"
-              :items="optionItems(['', 'public', 'members', 'private'])"
-              density="compact"
-              variant="outlined"
-              hide-details
-            />
-          </v-col>
-          <v-col cols="12" md="1">
-            <v-btn block variant="tonal" @click="coursesQuery.refetch()">
-              {{ t("common.go") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <AdminCatalogFilters
+      v-model:query="filters.query"
+      v-model:status="filters.status"
+      v-model:visibility="filters.visibility"
+      :status-items="optionItems(['', ...courseStatusOptions])"
+      :visibility-items="optionItems(['', 'public', 'members', 'private'])"
+      :fetching="coursesQuery.isFetching.value"
+      @apply="applyCourseFilters"
+      @clear="clearCourseFilters"
+    />
 
     <v-row class="mt-2" dense>
       <v-col cols="12" lg="5">
         <CourseCatalogCard
           :courses="courses"
           :error-message="listErrorMessage"
+          :refresh-error-message="listRefreshErrorMessage"
           :pending="coursesQuery.isPending.value"
           :selected-course-id="selectedCourse?.id ?? null"
-          @retry="coursesQuery.refetch()"
+          @retry="refreshCourses"
           @select="selectCourse"
         />
       </v-col>

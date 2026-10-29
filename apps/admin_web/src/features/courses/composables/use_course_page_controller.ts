@@ -5,9 +5,7 @@ import type {
   CourseLesson,
   CourseLessonStatus,
   CourseLessonUpsertRequest,
-  CourseStatus,
-  CourseUpsertRequest,
-  LifePostVisibility
+  CourseUpsertRequest
 } from "@mbc/api-contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref } from "vue";
@@ -20,7 +18,6 @@ import {
   createCourseLesson,
   listCourseEnrollments,
   listCourseLessons,
-  listCourses,
   updateCourse,
   updateCourseEnrollment,
   updateCourseLesson
@@ -34,6 +31,7 @@ import {
   emptyCourseForm,
   emptyLessonForm
 } from "../course_workspace_models";
+import { useCourseCatalogQuery } from "./use_course_catalog_query";
 import { useCourseMutationFeedback } from "./use_course_mutation_feedback";
 
 export function useCoursePageController() {
@@ -43,27 +41,27 @@ export function useCoursePageController() {
   const selectedCourse = ref<Course | null>(null);
   const drawer = ref(false);
   const mutationFeedback = useCourseMutationFeedback(selectedCourse, t);
-  const filters = reactive({
-    query: "",
-    status: "" as CourseStatus | "",
-    visibility: "" as LifePostVisibility | ""
-  });
+  const {
+    filters,
+    coursesQuery,
+    courses,
+    initialError: coursesError,
+    refreshError: coursesRefreshError,
+    applyFilters: applyCourseFilters,
+    clearFilters: clearCourseFilters,
+    refreshList: refreshCourses
+  } = useCourseCatalogQuery(queryClient);
   const enrollmentFilters = reactive({
     status: "" as CourseEnrollmentStatus | "",
     query: ""
   });
   const form = reactive<CourseUpsertRequest>(emptyCourseForm());
   const lessonForm = reactive(emptyLessonForm());
-  const activeFilters = computed(() => ({ ...filters, limit: 50 }));
   const selectedCourseId = computed(() => selectedCourse.value?.id ?? null);
   const activeEnrollmentFilters = computed(() => ({
     ...enrollmentFilters,
     limit: 100
   }));
-  const coursesQuery = useQuery({
-    queryKey: ["courses", activeFilters],
-    queryFn: () => listCourses(activeFilters.value)
-  });
   const lessonsQuery = useQuery({
     queryKey: computed(() => ["course-lessons", selectedCourseId.value]),
     enabled: computed(() => Boolean(selectedCourseId.value)),
@@ -178,12 +176,16 @@ export function useCoursePageController() {
     onError: mutationFeedback.capture
   });
 
-  const courses = computed(() => coursesQuery.data.value ?? []);
   const lessons = computed(() => lessonsQuery.data.value ?? []);
   const enrollments = computed(() => enrollmentsQuery.data.value ?? []);
   const listErrorMessage = computed(() =>
-    coursesQuery.error.value
-      ? formatApiErrorMessage(coursesQuery.error.value, t("common.error"))
+    coursesError.value
+      ? formatApiErrorMessage(coursesError.value, t("common.error"))
+      : ""
+  );
+  const listRefreshErrorMessage = computed(() =>
+    coursesRefreshError.value
+      ? formatApiErrorMessage(coursesRefreshError.value, t("common.error"))
       : ""
   );
   const workspaceErrorMessage = computed(
@@ -339,9 +341,11 @@ export function useCoursePageController() {
 
   return {
     advanceProgress,
+    applyCourseFilters,
     canCreateLesson,
     canManage,
     canSave,
+    clearCourseFilters,
     courseStatusOptions,
     courses,
     coursesQuery,
@@ -359,10 +363,12 @@ export function useCoursePageController() {
     lessonsQuery,
     lessonStatusMutation,
     listErrorMessage,
+    listRefreshErrorMessage,
     newCourse,
     optionItems,
     saveCourse,
     saveMutation,
+    refreshCourses,
     selectedCourse,
     selectCourse,
     t,

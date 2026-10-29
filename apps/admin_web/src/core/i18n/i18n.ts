@@ -4870,24 +4870,40 @@ Object.assign(messages["zh-Hant"], {
 });
 
 Object.assign(messages.en, {
+  "catalog.applyFilters": "Apply filters",
+  "catalog.clearFilters": "Clear filters",
+  "courses.refreshFailed": "The latest course directory could not be loaded.",
+  "groups.refreshFailed": "The latest group directory could not be loaded.",
   "life.applyFilters": "Apply filters",
   "life.clearFilters": "Clear filters",
   "life.noPosts": "No church life content matches the current filters.",
   "life.refreshFailed": "The latest church life content could not be loaded."
 });
 Object.assign(messages.es, {
+  "catalog.applyFilters": "Aplicar filtros",
+  "catalog.clearFilters": "Borrar filtros",
+  "courses.refreshFailed": "No se pudo cargar el directorio de cursos más reciente.",
+  "groups.refreshFailed": "No se pudo cargar el directorio de grupos más reciente.",
   "life.applyFilters": "Aplicar filtros",
   "life.clearFilters": "Borrar filtros",
   "life.noPosts": "Ningún contenido de la vida de la iglesia coincide con los filtros actuales.",
   "life.refreshFailed": "No se pudo cargar el contenido más reciente de la vida de la iglesia."
 });
 Object.assign(messages["zh-Hans"], {
+  "catalog.applyFilters": "应用筛选",
+  "catalog.clearFilters": "清除筛选",
+  "courses.refreshFailed": "无法加载最新课程目录。",
+  "groups.refreshFailed": "无法加载最新小组目录。",
   "life.applyFilters": "应用筛选",
   "life.clearFilters": "清除筛选",
   "life.noPosts": "当前筛选下没有教会生活内容。",
   "life.refreshFailed": "无法加载最新的教会生活内容。"
 });
 Object.assign(messages["zh-Hant"], {
+  "catalog.applyFilters": "套用篩選",
+  "catalog.clearFilters": "清除篩選",
+  "courses.refreshFailed": "無法載入最新課程目錄。",
+  "groups.refreshFailed": "無法載入最新小組目錄。",
   "life.applyFilters": "套用篩選",
   "life.clearFilters": "清除篩選",
   "life.noPosts": "目前篩選下沒有教會生活內容。",
