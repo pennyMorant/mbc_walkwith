@@ -1,29 +1,10 @@
 <script setup lang="ts">
-import type {
-  SermonDiscussionGuide,
-  SermonDiscussionGuideCreateRequest,
-  SermonDiscussionGuideStatus,
-  SermonDiscussionAudienceType,
-  SermonDiscussionResponse
-} from "@mbc/api-contracts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
-
-import { formatApiErrorMessage } from "@/core/api/api_errors";
 import {
-  createSermonDiscussionGuide,
-  hideSermonDiscussionResponse,
-  listSermonDiscussionGuides,
-  listSermonDiscussionResponses,
   sermonDiscussionAudienceTypeOptions,
   sermonDiscussionGuideStatusOptions,
   sermonDiscussionQuestionTypeOptions,
-  sermonDiscussionResponseUserTypeOptions,
-  updateSermonDiscussionGuide,
-  type SermonDiscussionGuideFilters
+  sermonDiscussionResponseUserTypeOptions
 } from "@/core/api/sermon_discussion_guides";
-import { useAdminAuthStore } from "@/core/auth/auth_store";
-import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
@@ -31,338 +12,55 @@ import SermonDiscussionGuideEditor from "../components/SermonDiscussionGuideEdit
 import SermonDiscussionGuideFiltersCard from "../components/SermonDiscussionGuideFiltersCard.vue";
 import SermonDiscussionGuideListCard from "../components/SermonDiscussionGuideListCard.vue";
 import SermonDiscussionResponsesPanel from "../components/SermonDiscussionResponsesPanel.vue";
-import { createSermonDiscussionLocalIdFactory } from "../sermon_discussion_guide_workspace_models";
+import { useSermonDiscussionGuidesPage } from "../composables/use_sermon_discussion_guides_page";
 
-const queryClient = useQueryClient();
-const authStore = useAdminAuthStore();
-const { optionItems, t } = useI18n();
-
-const selectedGuide = ref<SermonDiscussionGuide | null>(null);
-const activePanel = ref<"guide" | "responses">("guide");
-const hidingResponseId = ref<string | null>(null);
-const mutationErrorMessage = ref("");
-const nextLocalId = createSermonDiscussionLocalIdFactory();
-
-const filters = reactive({
-  query: "",
-  sermonId: "",
-  status: "" as SermonDiscussionGuideStatus | "",
-  audienceType: "" as SermonDiscussionAudienceType | ""
-});
-const appliedFilters = ref<SermonDiscussionGuideFilters>({
-  query: "",
-  sermonId: "",
-  status: "",
-  audienceType: ""
-});
-
-const responseFilters = reactive({
-  userType: "" as "member" | "external" | ""
-});
-
-const guideForm = reactive<SermonDiscussionGuideCreateRequest>({
-  sermonId: "",
-  sourceLocale: "zh-Hans",
-  title: "",
-  summary: "",
-  status: "draft",
-  audienceType: "public",
-  audienceId: null,
-  questions: [],
-  actionSteps: [],
-  prayerPrompts: [],
-  generatedMetadata: {}
-});
-
-const guidesQuery = useQuery({
-  queryKey: computed(() => [
-    "sermon-discussion-guides",
-    appliedFilters.value
-  ]),
-  queryFn: () =>
-    listSermonDiscussionGuides({ ...appliedFilters.value, limit: 100 })
-});
-
-const responsesQuery = useQuery({
-  queryKey: computed(() => [
-    "sermon-discussion-responses",
-    selectedGuide.value?.id,
-    { ...responseFilters }
-  ]),
-  enabled: computed(() => Boolean(selectedGuide.value)),
-  queryFn: () =>
-    selectedGuide.value
-      ? listSermonDiscussionResponses(selectedGuide.value.id, {
-          ...responseFilters,
-          limit: 100
-        })
-      : Promise.resolve([] as SermonDiscussionResponse[])
-});
-
-const saveGuideMutation = useMutation({
-  onMutate: () => {
-    clearMutationError();
-    return { guideId: selectedGuide.value?.id ?? null };
-  },
-  mutationFn: () => {
-    if (!canManage.value || !canSaveGuide.value) {
-      throw new Error(t("Sermon guide manage access required"));
-    }
-    const payload = buildGuideCreatePayload();
-    if (!selectedGuide.value) {
-      return createSermonDiscussionGuide(payload);
-    }
-    const { sermonId: _sermonId, ...updatePayload } = payload;
-    return updateSermonDiscussionGuide(selectedGuide.value.id, {
-      ...updatePayload,
-      expectedRevision: selectedGuide.value.revision
-    });
-  },
-  onSuccess: async (guide) => {
-    selectGuide(guide);
-    await queryClient.invalidateQueries({
-      queryKey: ["sermon-discussion-guides"]
-    });
-    await queryClient.invalidateQueries({
-      queryKey: ["sermon-discussion-responses"]
-    });
-  },
-  onError: (error, _variables, context) => {
-    if (context?.guideId === (selectedGuide.value?.id ?? null)) {
-      captureMutationError(error);
-    }
-  }
-});
-
-const hideResponseMutation = useMutation({
-  onMutate: () => {
-    clearMutationError();
-    return { guideId: selectedGuide.value?.id ?? null };
-  },
-  mutationFn: (responseId: string) => {
-    if (!canManage.value || !responseId) {
-      throw new Error(t("Sermon guide manage access required"));
-    }
-    hidingResponseId.value = responseId;
-    return hideSermonDiscussionResponse(responseId);
-  },
-  onSettled: () => {
-    hidingResponseId.value = null;
-  },
-  onSuccess: async () => {
-    await queryClient.invalidateQueries({
-      queryKey: ["sermon-discussion-responses"]
-    });
-  },
-  onError: (error, _responseId, context) => {
-    if (context?.guideId === (selectedGuide.value?.id ?? null)) {
-      captureMutationError(error);
-    }
-  }
-});
-
-const guides = computed(() => guidesQuery.data.value ?? []);
-const responses = computed(() => responsesQuery.data.value ?? []);
-const canManage = computed(() => authStore.can("sermon_guides:manage"));
-const availableGuideStatusOptions = computed<SermonDiscussionGuideStatus[]>(
-  () => {
-    if (!selectedGuide.value) {
-      return ["draft", "review"];
-    }
-    return {
-      draft: ["draft", "review", "archived"],
-      review: ["draft", "review", "published", "archived"],
-      published: ["published", "review", "archived"],
-      archived: ["archived", "draft"]
-    }[selectedGuide.value.status] as SermonDiscussionGuideStatus[];
-  }
-);
-const guideContentLocked = computed(
-  () =>
-    selectedGuide.value != null &&
-    (selectedGuide.value.status === "published" ||
-      selectedGuide.value.status === "archived") &&
-    guideForm.status === selectedGuide.value.status
-);
-const canSaveGuide = computed(
-  () =>
-    canManage.value &&
-    guideForm.title.trim().length > 0 &&
-    (Boolean(selectedGuide.value) || guideForm.sermonId.trim().length > 0) &&
-    (guideForm.audienceType === "public" ||
-      Boolean(guideForm.audienceId?.trim()))
-);
-const guideErrorMessage = computed(() =>
-  guidesQuery.error.value
-    ? formatApiErrorMessage(guidesQuery.error.value, t("common.error"))
-    : ""
-);
-const responseErrorMessage = computed(() =>
-  responsesQuery.error.value
-    ? formatApiErrorMessage(responsesQuery.error.value, t("common.error"))
-    : ""
-);
-function selectGuide(guide: SermonDiscussionGuide) {
-  clearMutationError();
-  selectedGuide.value = guide;
-  guideForm.sermonId = guide.sermonId;
-  guideForm.sourceLocale = guide.sourceLocale;
-  guideForm.title = guide.title;
-  guideForm.summary = guide.summary;
-  guideForm.status = guide.status;
-  guideForm.audienceType = guide.audienceType;
-  guideForm.audienceId = guide.audienceId;
-  guideForm.questions = guide.questions.map((question, index) => ({
-    ...question,
-    sort: question.sort ?? index
-  }));
-  guideForm.actionSteps = guide.actionSteps.map((action, index) => ({
-    ...action,
-    sort: action.sort ?? index
-  }));
-  guideForm.prayerPrompts = [...guide.prayerPrompts];
-  guideForm.generatedMetadata = { ...guide.generatedMetadata };
-}
-
-function newGuide() {
-  clearMutationError();
-  selectedGuide.value = null;
-  activePanel.value = "guide";
-  guideForm.sermonId = "";
-  guideForm.sourceLocale = "zh-Hans";
-  guideForm.title = "";
-  guideForm.summary = "";
-  guideForm.status = "draft";
-  guideForm.audienceType = "public";
-  guideForm.audienceId = null;
-  guideForm.questions = [];
-  guideForm.actionSteps = [];
-  guideForm.prayerPrompts = [];
-  guideForm.generatedMetadata = {};
-}
-
-function addQuestion() {
-  const index = guideForm.questions.length;
-  guideForm.questions.push({
-    id: nextLocalId("question"),
-    type: "application",
-    prompt: "",
-    sort: index,
-    startSeconds: null
-  });
-}
-
-function addActionStep() {
-  const index = guideForm.actionSteps.length;
-  guideForm.actionSteps.push({
-    id: nextLocalId("action"),
-    title: "",
-    description: "",
-    sort: index
-  });
-}
-
-function addPrayerPrompt() {
-  guideForm.prayerPrompts.push("");
-}
-
-function removeQuestion(index: number) {
-  guideForm.questions.splice(index, 1);
-}
-
-function removeActionStep(index: number) {
-  guideForm.actionSteps.splice(index, 1);
-}
-
-function removePrayerPrompt(index: number) {
-  guideForm.prayerPrompts.splice(index, 1);
-}
-
-function buildGuideCreatePayload(): SermonDiscussionGuideCreateRequest {
-  return {
-    sermonId: guideForm.sermonId.trim(),
-    sourceLocale: guideForm.sourceLocale,
-    title: guideForm.title.trim(),
-    summary: guideForm.summary.trim(),
-    status: guideForm.status,
-    audienceType: guideForm.audienceType,
-    audienceId:
-      guideForm.audienceType === "public"
-        ? null
-        : guideForm.audienceId?.trim() || null,
-    questions: guideForm.questions
-      .map((question, index) => ({
-        id: question.id.trim() || nextLocalId("question"),
-        type: question.type,
-        prompt: question.prompt.trim(),
-        sort: index,
-        startSeconds: question.startSeconds
-      }))
-      .filter((question) => question.prompt.length > 0),
-    actionSteps: guideForm.actionSteps
-      .map((action, index) => ({
-        id: action.id.trim() || nextLocalId("action"),
-        title: action.title.trim(),
-        description: action.description.trim(),
-        sort: index
-      }))
-      .filter((action) => action.title.length > 0),
-    prayerPrompts: guideForm.prayerPrompts
-      .map((prompt) => prompt.trim())
-      .filter(Boolean),
-    generatedMetadata: guideForm.generatedMetadata
-  };
-}
-
-function guideStatusColor(status: SermonDiscussionGuideStatus) {
-  return {
-    draft: "grey",
-    review: "warning",
-    published: "success",
-    archived: "secondary"
-  }[status];
-}
-
-function clearMutationError() {
-  mutationErrorMessage.value = "";
-}
-
-function captureMutationError(error: unknown) {
-  mutationErrorMessage.value = formatApiErrorMessage(error, t("common.error"));
-}
-
-function applyGuideFilters() {
-  const nextFilters: SermonDiscussionGuideFilters = {
-    query: filters.query,
-    sermonId: filters.sermonId,
-    status: filters.status,
-    audienceType: filters.audienceType
-  };
-  if (JSON.stringify(nextFilters) === JSON.stringify(appliedFilters.value)) {
-    void guidesQuery.refetch();
-    return;
-  }
-  appliedFilters.value = nextFilters;
-}
-
-function saveGuide() {
-  if (!canSaveGuide.value || saveGuideMutation.isPending.value) {
-    return;
-  }
-  saveGuideMutation.mutate();
-}
-
-function hideResponse(responseId: string) {
-  if (!canManage.value || hidingResponseId.value || !responseId) {
-    return;
-  }
-  hideResponseMutation.mutate(responseId);
-}
+const {
+  activePanel,
+  addActionStep,
+  addPrayerPrompt,
+  addQuestion,
+  applyGuideFilters,
+  applyResponseFilters,
+  availableGuideStatusOptions,
+  canManage,
+  canSaveGuide,
+  canUseAi,
+  filters,
+  guideContentLocked,
+  guideErrorMessage,
+  guideForm,
+  guideRefreshErrorMessage,
+  guideStatusColor,
+  guides,
+  guidesQuery,
+  hideResponse,
+  hideResponseErrorMessage,
+  hidingResponseId,
+  newGuide,
+  optionItems,
+  removeActionStep,
+  removePrayerPrompt,
+  removeQuestion,
+  responseErrorMessage,
+  responseFilters,
+  responseRefreshErrorMessage,
+  responses,
+  responsesQuery,
+  saveErrorMessage,
+  saveGuide,
+  saveGuideMutation,
+  selectedGuide,
+  selectGuide,
+  t
+} = useSermonDiscussionGuidesPage();
 </script>
 
 <template>
   <div>
-    <AdminPageHeader :title="t('nav.sermonGuides')" :subtitle="t('sermonGuides.subtitle')">
+    <AdminPageHeader
+      :title="t('nav.sermonGuides')"
+      :subtitle="t('sermonGuides.subtitle')"
+    >
       <template #actions>
         <v-btn
           v-if="canManage"
@@ -375,20 +73,11 @@ function hideResponse(responseId: string) {
       </template>
     </AdminPageHeader>
 
-    <v-alert
-      v-if="mutationErrorMessage"
-      class="mt-4"
-      type="error"
-      variant="tonal"
-    >
-      {{ mutationErrorMessage }}
-    </v-alert>
-
     <SermonDiscussionGuideFiltersCard
       v-model="filters"
       :status-items="optionItems(['', ...sermonDiscussionGuideStatusOptions])"
       :audience-items="optionItems(['', ...sermonDiscussionAudienceTypeOptions])"
-      @refresh="applyGuideFilters"
+      @apply="applyGuideFilters"
     />
 
     <v-row class="mt-2" dense>
@@ -399,6 +88,7 @@ function hideResponse(responseId: string) {
           :pending="guidesQuery.isPending.value"
           :fetching="guidesQuery.isFetching.value"
           :error-message="guideErrorMessage"
+          :refresh-error-message="guideRefreshErrorMessage"
           :status-color="guideStatusColor"
           @retry="guidesQuery.refetch()"
           @select="selectGuide"
@@ -428,6 +118,15 @@ function hideResponse(responseId: string) {
               <v-btn value="responses">{{ t("Responses") }}</v-btn>
             </v-btn-toggle>
 
+            <v-alert
+              v-if="activePanel === 'guide' && saveErrorMessage"
+              class="mb-4"
+              type="error"
+              variant="tonal"
+            >
+              {{ saveErrorMessage }}
+            </v-alert>
+
             <SermonDiscussionGuideEditor
               v-if="activePanel === 'guide'"
               :audience-type-options="sermonDiscussionAudienceTypeOptions"
@@ -453,9 +152,12 @@ function hideResponse(responseId: string) {
               resource-type="sermon_discussion_guide"
               :resource-id="selectedGuide.id"
               :revision="selectedGuide.revision"
-              :fields="{ title: guideForm.title, ...(guideForm.summary ? { summary: guideForm.summary } : {}) }"
-              :can-edit="canManage"
-              :can-use-ai="authStore.can('ai:use')"
+              :fields="{
+                title: guideForm.title,
+                ...(guideForm.summary ? { summary: guideForm.summary } : {})
+              }"
+              :can-edit="canManage && !saveGuideMutation.isPending.value"
+              :can-use-ai="canUseAi"
               :source-locale="guideForm.sourceLocale"
               @update:source-locale="guideForm.sourceLocale = $event"
             />
@@ -463,7 +165,9 @@ function hideResponse(responseId: string) {
             <SermonDiscussionResponsesPanel
               v-else
               :can-manage="canManage"
+              :command-error-message="hideResponseErrorMessage"
               :error-message="responseErrorMessage"
+              :refresh-error-message="responseRefreshErrorMessage"
               :filters="responseFilters"
               :hiding-response-id="hidingResponseId"
               :pending="Boolean(selectedGuide) && responsesQuery.isPending.value"
@@ -471,8 +175,9 @@ function hideResponse(responseId: string) {
               :responses="responses"
               :selected-guide="selectedGuide"
               :user-type-items="optionItems(['', ...sermonDiscussionResponseUserTypeOptions])"
+              @apply="applyResponseFilters"
               @hide-response="hideResponse"
-              @refresh="responsesQuery.refetch()"
+              @retry="responsesQuery.refetch()"
             />
           </v-card-text>
         </v-card>

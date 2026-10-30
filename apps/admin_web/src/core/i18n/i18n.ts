@@ -1423,6 +1423,10 @@ Object.assign(messages.en, {
   "Sermon ID": "Sermon ID",
   "sermonGuides.subtitle":
     "Create, publish, assign, and moderate sermon discussion material.",
+  "sermonGuides.libraryRefreshFailed":
+    "Discussion guides could not be refreshed. The last loaded results remain visible.",
+  "sermonGuides.responsesRefreshFailed":
+    "Responses could not be refreshed. The last loaded results remain visible.",
   "Assignment": "Assignment",
   "Assignment title": "Assignment title",
   "Assignments": "Assignments",
@@ -1567,6 +1571,10 @@ Object.assign(messages["zh-Hans"], {
   "Select a discussion guide to review responses.": "请选择讨论包来查看回应。",
   "Sermon ID": "讲道 ID",
   "sermonGuides.subtitle": "创建、发布、分配并审核讲道讨论材料。",
+  "sermonGuides.libraryRefreshFailed":
+    "讨论包列表刷新失败，已保留上次成功加载的结果。",
+  "sermonGuides.responsesRefreshFailed":
+    "回应列表刷新失败，已保留上次成功加载的结果。",
   "Assignment": "排班",
   "Assignment title": "排班标题",
   "Assignments": "排班",
@@ -1861,6 +1869,10 @@ Object.assign(messages.es, messages.en, {
   "Sermon ID": "ID del sermón",
   "sermonGuides.subtitle":
     "Crea, publica, asigna y modera material de discusión.",
+  "sermonGuides.libraryRefreshFailed":
+    "No se pudieron actualizar las guías. Se mantienen los últimos resultados cargados.",
+  "sermonGuides.responsesRefreshFailed":
+    "No se pudieron actualizar las respuestas. Se mantienen los últimos resultados cargados.",
   "life.sort.label": "Prioridad de visualización",
   "common.sort": "Prioridad de visualización",
   "life.sort.normal": "Normal",
@@ -2057,6 +2069,10 @@ Object.assign(messages["zh-Hant"], messages["zh-Hans"], {
   "Select a discussion guide to review responses.": "請選擇討論包來查看回應。",
   "Sermon ID": "講道 ID",
   "sermonGuides.subtitle": "建立、發布、分配並審核講道討論材料。",
+  "sermonGuides.libraryRefreshFailed":
+    "討論包列表重新整理失敗，已保留上次成功載入的結果。",
+  "sermonGuides.responsesRefreshFailed":
+    "回應列表重新整理失敗，已保留上次成功載入的結果。",
   "life.sort.label": "展示優先級",
   "common.sort": "展示優先級",
   "life.sort.normal": "普通",

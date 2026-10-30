@@ -6,6 +6,13 @@ const pageSource = readFileSync(
   new URL("../src/features/sermon-discussion-guides/pages/SermonDiscussionGuidesPage.vue", import.meta.url),
   "utf8"
 );
+const controllerSource = readFileSync(
+  new URL(
+    "../src/features/sermon-discussion-guides/composables/use_sermon_discussion_guides_page.ts",
+    import.meta.url
+  ),
+  "utf8"
+);
 const presentationSources = [
   "SermonDiscussionGuideFiltersCard.vue",
   "SermonDiscussionGuideListCard.vue"
@@ -17,13 +24,16 @@ const presentationSources = [
 );
 
 describe("sermon discussion guide page composition", () => {
-  it("keeps revision-safe mutations and response moderation page-owned", () => {
-    expect(pageSource).toContain("createSermonDiscussionGuide");
-    expect(pageSource).toContain("updateSermonDiscussionGuide");
-    expect(pageSource).toContain("expectedRevision");
-    expect(pageSource).toContain("hideSermonDiscussionResponse");
-    expect(pageSource).toContain("buildGuideCreatePayload");
-    expect(pageSource).toContain("authStore.can");
+  it("keeps revision-safe mutations and response moderation controller-owned", () => {
+    expect(controllerSource).toContain("createSermonDiscussionGuide");
+    expect(controllerSource).toContain("updateSermonDiscussionGuide");
+    expect(controllerSource).toContain("expectedRevision");
+    expect(controllerSource).toContain("hideSermonDiscussionResponse");
+    expect(controllerSource).toContain("sermonDiscussionGuidePayload");
+    expect(controllerSource).toContain("authStore.can");
+    expect(pageSource).toContain("useSermonDiscussionGuidesPage");
+    expect(pageSource).not.toContain("useMutation");
+    expect(pageSource).not.toContain("useQuery");
   });
 
   it("delegates filters and results without moving transport ownership", () => {

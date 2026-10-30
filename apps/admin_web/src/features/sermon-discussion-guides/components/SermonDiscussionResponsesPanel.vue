@@ -14,7 +14,9 @@ type ResponseFilters = {
 
 defineProps<{
   canManage: boolean;
+  commandErrorMessage: string;
   errorMessage: string;
+  refreshErrorMessage: string;
   filters: ResponseFilters;
   hidingResponseId: string | null;
   pending: boolean;
@@ -25,8 +27,9 @@ defineProps<{
 }>();
 
 defineEmits<{
+  apply: [];
   hideResponse: [responseId: string];
-  refresh: [];
+  retry: [];
 }>();
 
 const { locale, t } = useI18n();
@@ -65,15 +68,14 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
           hide-details
           style="min-width: 180px"
           variant="outlined"
-          @update:model-value="$emit('refresh')"
         />
         <v-btn
           :disabled="!selectedGuide"
           :loading="fetching"
           variant="tonal"
-          @click="$emit('refresh')"
+          @click="$emit('apply')"
         >
-          {{ t("common.refresh") }}
+          {{ t("common.go") }}
         </v-btn>
       </div>
     </div>
@@ -88,8 +90,27 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
       {{ t("No discussion guide selected.") }}
     </v-alert>
 
+    <v-alert
+      v-else-if="refreshErrorMessage"
+      type="warning"
+      variant="tonal"
+      class="mt-4 mb-0"
+    >
+      <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
+        <span>{{ refreshErrorMessage }}</span>
+        <v-btn
+          prepend-icon="mdi-refresh"
+          size="small"
+          variant="tonal"
+          @click="$emit('retry')"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
+
     <AdminDataState
-      v-else
+      v-if="selectedGuide"
       class="mt-4"
       :pending="(pending || fetching) && responses.length === 0"
       :error-message="responses.length === 0 ? errorMessage : ''"
@@ -97,7 +118,7 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
       :empty-title="t('No responses match the current filters.')"
       empty-icon="mdi-message-text-off-outline"
       :retry-label="t('common.refresh')"
-      @retry="$emit('refresh')"
+      @retry="$emit('retry')"
     >
     <v-progress-linear
       v-if="fetching && responses.length > 0"
@@ -105,23 +126,12 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
       indeterminate
     />
     <v-alert
-      v-if="responses.length > 0 && errorMessage"
+      v-if="commandErrorMessage"
       type="error"
       variant="tonal"
       class="mb-4"
     >
-      <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-        <span>{{ errorMessage }}</span>
-        <v-btn
-          color="error"
-          prepend-icon="mdi-refresh"
-          size="small"
-          variant="tonal"
-          @click="$emit('refresh')"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
-      </div>
+      {{ commandErrorMessage }}
     </v-alert>
     <v-table class="d-none d-md-block" density="comfortable">
       <thead>

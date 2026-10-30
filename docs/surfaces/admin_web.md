@@ -240,7 +240,9 @@ Surface rule:
   action。页面只审核明确共享给小组的回应，私密回应不进入 Admin surface；页面按
   canonical status 提示允许迁移并锁定 published/archived 内容，但 Backend service
   仍拥有 transition 规则。讨论包目录与回应列表分别呈现 loading、empty、error、
-  retry，查询失败不冒充空结果，也不与保存或隐藏回应的命令错误合并。
+  retry，查询失败不冒充空结果，也不与保存或隐藏回应的命令错误合并。页面 controller
+  冻结保存 payload、guide ID 和 revision，并只把异步结果应用到仍匹配的编辑上下文；
+  目录与回应筛选都通过明确应用动作更新查询快照，展示组件不持有 transport 或权限。
 - Prayer moderation：待审核、批准、隐藏、归档和隐私可见性。
 - Prayer moderation workspace：列表、摘要和审核抽屉只通过
   `prayer_requests.ts` helper 提交 intent；普通保存只修改 visibility、group

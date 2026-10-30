@@ -10,6 +10,7 @@ defineProps<{
   pending: boolean;
   fetching: boolean;
   errorMessage: string;
+  refreshErrorMessage: string;
   statusColor: (status: SermonDiscussionGuideStatus) => string;
 }>();
 defineEmits<{ retry: []; select: [guide: SermonDiscussionGuide] }>();
@@ -18,6 +19,25 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
+    <v-alert
+      v-if="refreshErrorMessage"
+      type="warning"
+      variant="tonal"
+      class="ma-4 mb-0"
+    >
+      <div class="d-flex flex-column ga-3">
+        <span>{{ refreshErrorMessage }}</span>
+        <v-btn
+          align-self="start"
+          prepend-icon="mdi-refresh"
+          size="small"
+          variant="tonal"
+          @click="$emit('retry')"
+        >
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
     <AdminDataState
       :pending="(pending || fetching) && guides.length === 0"
       :error-message="guides.length === 0 ? errorMessage : ''"
@@ -32,26 +52,6 @@ const { t } = useI18n();
         color="primary"
         indeterminate
       />
-      <v-alert
-        v-if="guides.length > 0 && errorMessage"
-        type="error"
-        variant="tonal"
-        class="ma-4"
-      >
-        <div class="d-flex flex-column ga-3">
-          <span>{{ errorMessage }}</span>
-          <v-btn
-            align-self="start"
-            color="error"
-            prepend-icon="mdi-refresh"
-            size="small"
-            variant="tonal"
-            @click="$emit('retry')"
-          >
-            {{ t("common.refresh") }}
-          </v-btn>
-        </div>
-      </v-alert>
       <v-list lines="three">
         <v-list-item
           v-for="guide in guides"

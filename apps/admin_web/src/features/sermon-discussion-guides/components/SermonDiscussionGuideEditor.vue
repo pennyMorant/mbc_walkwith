@@ -40,7 +40,7 @@ const { optionItems, t } = useI18n();
       <v-col cols="12" md="6">
         <v-text-field
           v-model="form.title"
-          :disabled="!canManage || contentLocked"
+          :disabled="!canManage || contentLocked || saving"
           :label="t('Title')"
           density="compact"
           variant="outlined"
@@ -49,7 +49,7 @@ const { optionItems, t } = useI18n();
       <v-col cols="12" md="3">
         <v-select
           v-model="form.status"
-          :disabled="!canManage"
+          :disabled="!canManage || saving"
           :items="optionItems(statusOptions)"
           :label="t('Status')"
           density="compact"
@@ -59,7 +59,7 @@ const { optionItems, t } = useI18n();
       <v-col cols="12" md="3">
         <v-text-field
           v-model="form.sermonId"
-          :disabled="isEditing || !canManage || contentLocked"
+          :disabled="isEditing || !canManage || contentLocked || saving"
           :label="t('Sermon ID')"
           density="compact"
           variant="outlined"
@@ -68,7 +68,7 @@ const { optionItems, t } = useI18n();
       <v-col cols="12" md="4">
         <v-select
           v-model="form.audienceType"
-          :disabled="!canManage || contentLocked"
+          :disabled="!canManage || contentLocked || saving"
           :items="optionItems(audienceTypeOptions)"
           :label="t('Audience')"
           density="compact"
@@ -78,7 +78,7 @@ const { optionItems, t } = useI18n();
       <v-col cols="12" md="8">
         <v-text-field
           v-model="form.audienceId"
-          :disabled="!canManage || contentLocked || form.audienceType === 'public'"
+          :disabled="!canManage || contentLocked || saving || form.audienceType === 'public'"
           :label="t('Audience ID')"
           density="compact"
           variant="outlined"
@@ -87,7 +87,7 @@ const { optionItems, t } = useI18n();
       <v-col cols="12">
         <v-textarea
           v-model="form.summary"
-          :disabled="!canManage || contentLocked"
+          :disabled="!canManage || contentLocked || saving"
           :label="t('Summary')"
           density="compact"
           rows="3"
@@ -108,7 +108,7 @@ const { optionItems, t } = useI18n();
         </div>
       </div>
       <v-btn
-        v-if="canManage && !contentLocked"
+        v-if="canManage && !contentLocked && !saving"
         size="small"
         variant="tonal"
         prepend-icon="mdi-plus"
@@ -131,7 +131,7 @@ const { optionItems, t } = useI18n();
     <SermonDiscussionQuestionCard
       v-for="(question, index) in form.questions"
       :key="question.id"
-      :can-manage="canManage && !contentLocked"
+      :can-manage="canManage && !contentLocked && !saving"
       :index="index"
       :question="question"
       :question-type-options="questionTypeOptions"
@@ -145,7 +145,7 @@ const { optionItems, t } = useI18n();
         {{ t("Action steps") }}
       </div>
       <v-btn
-        v-if="canManage && !contentLocked"
+        v-if="canManage && !contentLocked && !saving"
         size="small"
         variant="tonal"
         prepend-icon="mdi-plus"
@@ -165,7 +165,7 @@ const { optionItems, t } = useI18n();
           <v-col cols="12" md="4">
             <v-text-field
               v-model="action.title"
-              :disabled="!canManage || contentLocked"
+              :disabled="!canManage || contentLocked || saving"
               :label="t('Action title')"
               density="compact"
               variant="outlined"
@@ -174,7 +174,7 @@ const { optionItems, t } = useI18n();
           <v-col cols="12" md="7">
             <v-text-field
               v-model="action.description"
-              :disabled="!canManage || contentLocked"
+              :disabled="!canManage || contentLocked || saving"
               :label="t('Description')"
               density="compact"
               variant="outlined"
@@ -182,7 +182,7 @@ const { optionItems, t } = useI18n();
           </v-col>
           <v-col cols="12" md="1">
             <v-btn
-              v-if="canManage && !contentLocked"
+              v-if="canManage && !contentLocked && !saving"
               block
               color="error"
               icon="mdi-delete-outline"
@@ -201,7 +201,7 @@ const { optionItems, t } = useI18n();
         {{ t("Prayer prompts") }}
       </div>
       <v-btn
-        v-if="canManage && !contentLocked"
+        v-if="canManage && !contentLocked && !saving"
         size="small"
         variant="tonal"
         prepend-icon="mdi-plus"
@@ -221,7 +221,7 @@ const { optionItems, t } = useI18n();
           <v-col cols="12" md="11">
             <v-text-field
               v-model="form.prayerPrompts[index]"
-              :disabled="!canManage || contentLocked"
+              :disabled="!canManage || contentLocked || saving"
               :label="t('Prayer prompt')"
               density="compact"
               variant="outlined"
@@ -229,7 +229,7 @@ const { optionItems, t } = useI18n();
           </v-col>
           <v-col cols="12" md="1">
             <v-btn
-              v-if="canManage && !contentLocked"
+              v-if="canManage && !contentLocked && !saving"
               block
               color="error"
               icon="mdi-delete-outline"
