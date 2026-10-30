@@ -2152,6 +2152,12 @@ Object.assign(messages.en, {
     "Build discipleship journeys, stages, tasks, and assignments.",
   "discipleship.subtitle":
     "Orchestrate discipleship journeys without copying source feature content.",
+  "discipleship.libraryRefreshFailed":
+    "Journeys could not be refreshed. The last loaded results remain visible.",
+  "discipleship.structureRefreshFailed":
+    "Stages and tasks could not be refreshed. The last loaded structure remains visible.",
+  "discipleship.assignmentsRefreshFailed":
+    "Assignments could not be refreshed. The last loaded results remain visible.",
   "event_registration": "Event registration",
   "group_application": "Group application",
   "locked": "Locked",
@@ -2209,6 +2215,12 @@ Object.assign(messages["zh-Hans"], {
   "care_request": "关怀请求",
   "dashboard.workspace.discipleship": "维护门徒成长路径、阶段、任务和分配。",
   "discipleship.subtitle": "编排门徒成长路径，不复制其他功能的源内容。",
+  "discipleship.libraryRefreshFailed":
+    "成长路径刷新失败，仍保留上次加载的结果。",
+  "discipleship.structureRefreshFailed":
+    "阶段和任务刷新失败，仍保留上次加载的结构。",
+  "discipleship.assignmentsRefreshFailed":
+    "分配记录刷新失败，仍保留上次加载的结果。",
   "event_registration": "活动报名",
   "group_application": "小组申请",
   "locked": "锁定",
@@ -2269,6 +2281,12 @@ Object.assign(messages.es, {
     "Crea caminos, etapas, tareas y asignaciones de discipulado.",
   "discipleship.subtitle":
     "Organiza caminos de discipulado sin copiar contenido de otras funciones.",
+  "discipleship.libraryRefreshFailed":
+    "No se pudieron actualizar los caminos. Se mantienen visibles los últimos resultados.",
+  "discipleship.structureRefreshFailed":
+    "No se pudieron actualizar las etapas y tareas. Se mantiene visible la última estructura.",
+  "discipleship.assignmentsRefreshFailed":
+    "No se pudieron actualizar las asignaciones. Se mantienen visibles los últimos resultados.",
   "event_registration": "Registro de evento",
   "group_application": "Solicitud de grupo",
   "locked": "Bloqueado",
@@ -2328,6 +2346,12 @@ Object.assign(messages["zh-Hant"], {
   "care_request": "關懷請求",
   "dashboard.workspace.discipleship": "維護門徒成長路徑、階段、任務和分配。",
   "discipleship.subtitle": "編排門徒成長路徑，不複製其他功能的源內容。",
+  "discipleship.libraryRefreshFailed":
+    "成長路徑重新整理失敗，仍保留上次載入的結果。",
+  "discipleship.structureRefreshFailed":
+    "階段和任務重新整理失敗，仍保留上次載入的結構。",
+  "discipleship.assignmentsRefreshFailed":
+    "分配記錄重新整理失敗，仍保留上次載入的結果。",
   "event_registration": "活動報名",
   "group_application": "小組申請",
   "locked": "鎖定",

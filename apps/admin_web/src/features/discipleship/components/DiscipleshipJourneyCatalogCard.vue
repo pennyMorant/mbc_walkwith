@@ -7,8 +7,10 @@ import { discipleshipJourneyStatusColor } from "../discipleship_workspace_models
 
 defineProps<{
   errorMessage: string;
+  fetching: boolean;
   journeys: DiscipleshipJourney[];
   pending: boolean;
+  refreshErrorMessage: string;
   selectedJourneyId: string | null;
 }>();
 
@@ -22,6 +24,19 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
+    <v-alert
+      v-if="refreshErrorMessage"
+      class="ma-4 mb-0"
+      type="warning"
+      variant="tonal"
+    >
+      <div class="d-flex align-center justify-space-between ga-3">
+        <span>{{ refreshErrorMessage }}</span>
+        <v-btn size="small" variant="text" @click="$emit('retry')">
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
     <AdminDataState
       :pending="pending"
       :error-message="errorMessage"
@@ -31,6 +46,7 @@ const { t } = useI18n();
       :retry-label="t('common.refresh')"
       @retry="$emit('retry')"
     >
+      <v-progress-linear v-if="fetching" color="primary" indeterminate />
       <v-list lines="three">
         <v-list-item
           v-for="journey in journeys"

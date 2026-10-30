@@ -8,7 +8,6 @@ import type {
 } from "@mbc/api-contracts";
 import { computed, reactive, watch } from "vue";
 
-import { discipleshipTaskStatusOptions } from "@/core/api/discipleship";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
@@ -26,8 +25,10 @@ const drawer = defineModel<boolean>({ required: true });
 const props = defineProps<{
   assignment: DiscipleshipAssignment | null;
   canManage: boolean;
+  errorMessage: string;
   saving: boolean;
   stages: DiscipleshipStage[];
+  statusItems: unknown[];
   tasks: DiscipleshipTask[];
 }>();
 
@@ -42,10 +43,9 @@ const emit = defineEmits<{
   ];
 }>();
 
-const { optionItems, t } = useI18n();
+const { t } = useI18n();
 const drafts = reactive<Record<string, TaskDraft>>({});
 
-const statusItems = computed(() => optionItems(discipleshipTaskStatusOptions));
 const taskRows = computed(() =>
   props.tasks.map((task) => ({
     task,
@@ -164,6 +164,15 @@ function saveTask(task: DiscipleshipTask, draft: TaskDraft) {
           {{ assignment.completedTaskCount }}/{{ assignment.taskTotalCount }}
         </v-chip>
       </div>
+
+      <v-alert
+        v-if="errorMessage"
+        class="mt-4"
+        type="error"
+        variant="tonal"
+      >
+        {{ errorMessage }}
+      </v-alert>
 
       <v-alert v-if="tasks.length === 0" class="mt-5" type="info" variant="tonal">
         {{ t("No tasks yet.") }}

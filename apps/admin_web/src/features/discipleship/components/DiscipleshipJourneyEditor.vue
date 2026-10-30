@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {
   DiscipleshipJourneyCreateRequest,
-  DiscipleshipJourneyStatus,
   DiscipleshipStage,
   DiscipleshipTask,
   DiscipleshipTaskReferenceType
@@ -9,6 +8,8 @@ import type {
 import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import DiscipleshipJourneyFields from "./DiscipleshipJourneyFields.vue";
+import DiscipleshipRecoveryAlerts from "./DiscipleshipRecoveryAlerts.vue";
 import DiscipleshipStagesTable from "./DiscipleshipStagesTable.vue";
 import DiscipleshipTasksTable from "./DiscipleshipTasksTable.vue";
 
@@ -33,27 +34,32 @@ const props = defineProps<{
   canAddTask: boolean;
   canManage: boolean;
   canSaveJourney: boolean;
+  journeyCommandError: string;
   journeyForm: DiscipleshipJourneyCreateRequest;
-  journeyStatusOptions: DiscipleshipJourneyStatus[];
+  journeyStatusItems: unknown[];
   lastCreatedStageId: string;
   savingJourney: boolean;
   savingStage: boolean;
   savingTask: boolean;
   stageForm: StageForm;
   stages: DiscipleshipStage[];
+  structureCommandError: string;
+  structureErrorMessage: string;
   structurePending: boolean;
+  structureRefreshErrorMessage: string;
   taskForm: TaskForm;
-  taskReferenceTypeOptions: DiscipleshipTaskReferenceType[];
+  taskReferenceTypeItems: unknown[];
   tasks: DiscipleshipTask[];
 }>();
 
 defineEmits<{
   addStage: [];
   addTask: [];
+  retryStructure: [];
   saveJourney: [];
 }>();
 
-const { optionItems, t } = useI18n();
+const { t } = useI18n();
 
 const stageOptions = computed(() => [
   { title: t("No stage"), value: "" },
@@ -66,50 +72,32 @@ const stageOptions = computed(() => [
 
 <template>
   <div>
-    <v-row dense>
-      <v-col cols="12" md="8">
-        <v-text-field
-          v-model="journeyForm.title"
-          :disabled="!canManage"
-          :label="t('Title')"
-          density="compact"
-          variant="outlined"
-        />
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-select
-          v-model="journeyForm.status"
-          :disabled="!canManage"
-          :items="optionItems(journeyStatusOptions)"
-          :label="t('Status')"
-          density="compact"
-          variant="outlined"
-        />
-      </v-col>
-      <v-col cols="12">
-        <v-textarea
-          v-model="journeyForm.description"
-          :disabled="!canManage"
-          :label="t('Description')"
-          density="compact"
-          rows="3"
-          variant="outlined"
-        />
-      </v-col>
-    </v-row>
-    <div class="d-flex justify-end">
-      <v-btn
-        v-if="canManage"
-        color="primary"
-        :disabled="!canSaveJourney || savingJourney"
-        :loading="savingJourney"
-        @click="$emit('saveJourney')"
-      >
-        {{ t("common.save") }}
-      </v-btn>
-    </div>
+    <DiscipleshipRecoveryAlerts :error-message="journeyCommandError" />
+    <DiscipleshipJourneyFields
+      :can-manage="canManage"
+      :can-save="canSaveJourney"
+      :form="journeyForm"
+      :saving="savingJourney"
+      :status-items="journeyStatusItems"
+      @save="$emit('saveJourney')"
+    />
 
     <v-divider class="my-5" />
+
+    <DiscipleshipRecoveryAlerts
+      :error-message="structureErrorMessage || structureCommandError"
+      :refresh-error-message="structureRefreshErrorMessage"
+      @retry="$emit('retryStructure')"
+    />
+    <v-btn
+      v-if="structureErrorMessage"
+      class="mb-4"
+      size="small"
+      variant="tonal"
+      @click="$emit('retryStructure')"
+    >
+      {{ t("common.refresh") }}
+    </v-btn>
 
     <div class="text-subtitle-2 font-weight-bold">
       {{ t("Journey stage") }}
@@ -132,7 +120,7 @@ const stageOptions = computed(() => [
       <v-col cols="12" md="6">
         <v-text-field
           v-model="stageForm.title"
-          :disabled="!canManage"
+          :disabled="!canManage || savingStage || Boolean(structureErrorMessage)"
           :label="t('Stage title')"
           density="compact"
           variant="outlined"
@@ -141,7 +129,7 @@ const stageOptions = computed(() => [
       <v-col cols="12" md="3">
         <v-text-field
           v-model.number="stageForm.position"
-          :disabled="!canManage"
+          :disabled="!canManage || savingStage || Boolean(structureErrorMessage)"
           :label="t('Order')"
           density="compact"
           min="0"
@@ -165,7 +153,7 @@ const stageOptions = computed(() => [
       <v-col cols="12">
         <v-textarea
           v-model="stageForm.description"
-          :disabled="!canManage"
+          :disabled="!canManage || savingStage || Boolean(structureErrorMessage)"
           :label="t('Description')"
           density="compact"
           rows="2"
@@ -194,7 +182,7 @@ const stageOptions = computed(() => [
       <v-col cols="12" md="5">
         <v-text-field
           v-model="taskForm.title"
-          :disabled="!canManage"
+          :disabled="!canManage || savingTask || Boolean(structureErrorMessage)"
           :label="t('Task title')"
           density="compact"
           variant="outlined"
@@ -203,7 +191,7 @@ const stageOptions = computed(() => [
       <v-col cols="12" md="4">
         <v-select
           v-model="taskForm.stageId"
-          :disabled="!canManage"
+          :disabled="!canManage || savingTask || Boolean(structureErrorMessage)"
           :items="stageOptions"
           :label="t('Stage')"
           density="compact"
@@ -213,7 +201,7 @@ const stageOptions = computed(() => [
       <v-col cols="12" md="3">
         <v-text-field
           v-model.number="taskForm.position"
-          :disabled="!canManage"
+          :disabled="!canManage || savingTask || Boolean(structureErrorMessage)"
           :label="t('Order')"
           density="compact"
           min="0"
@@ -224,8 +212,8 @@ const stageOptions = computed(() => [
       <v-col cols="12" md="4">
         <v-select
           v-model="taskForm.referenceType"
-          :disabled="!canManage"
-          :items="optionItems(taskReferenceTypeOptions)"
+          :disabled="!canManage || savingTask || Boolean(structureErrorMessage)"
+          :items="taskReferenceTypeItems"
           :label="t('Reference type')"
           density="compact"
           variant="outlined"
@@ -234,7 +222,7 @@ const stageOptions = computed(() => [
       <v-col cols="12" md="5">
         <v-text-field
           v-model="taskForm.referenceId"
-          :disabled="!canManage"
+          :disabled="!canManage || savingTask || Boolean(structureErrorMessage)"
           :label="t('Reference ID')"
           density="compact"
           variant="outlined"
@@ -243,7 +231,7 @@ const stageOptions = computed(() => [
       <v-col cols="12" md="3">
         <v-switch
           v-model="taskForm.required"
-          :disabled="!canManage"
+          :disabled="!canManage || savingTask || Boolean(structureErrorMessage)"
           :label="t('Required')"
           color="primary"
           hide-details
@@ -252,7 +240,7 @@ const stageOptions = computed(() => [
       <v-col cols="12">
         <v-textarea
           v-model="taskForm.description"
-          :disabled="!canManage"
+          :disabled="!canManage || savingTask || Boolean(structureErrorMessage)"
           :label="t('Description')"
           density="compact"
           rows="2"

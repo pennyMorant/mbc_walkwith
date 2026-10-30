@@ -3,9 +3,14 @@ import { describe, expect, it } from "bun:test";
 import {
   buildDiscipleshipAssignmentPayload,
   buildDiscipleshipProgressPayload,
+  createDiscipleshipAssignmentFilterForm,
   createDiscipleshipAssignmentForm,
+  createDiscipleshipJourneyFilterForm,
+  discipleshipCommandTargetsJourney,
   normalizeDiscipleshipPosition,
-  resetDiscipleshipAssignmentForm
+  resetDiscipleshipAssignmentForm,
+  snapshotDiscipleshipAssignmentFilters,
+  snapshotDiscipleshipJourneyFilters
 } from "../src/features/discipleship/discipleship_workspace_models";
 
 describe("discipleship workspace models", () => {
@@ -38,5 +43,31 @@ describe("discipleship workspace models", () => {
     })).toEqual({ status: "completed", note: "reviewed" });
     expect(normalizeDiscipleshipPosition(3.9)).toBe(3);
     expect(normalizeDiscipleshipPosition(Number.NaN)).toBe(0);
+  });
+
+  it("snapshots normalized query filters without mutating drafts", () => {
+    const journeys = createDiscipleshipJourneyFilterForm();
+    const assignments = createDiscipleshipAssignmentFilterForm();
+    journeys.query = "  foundations  ";
+    assignments.userId = " member_1 ";
+
+    expect(snapshotDiscipleshipJourneyFilters(journeys).query).toBe(
+      "foundations"
+    );
+    expect(snapshotDiscipleshipAssignmentFilters(assignments).userId).toBe(
+      "member_1"
+    );
+    expect(journeys.query).toBe("  foundations  ");
+    expect(assignments.userId).toBe(" member_1 ");
+  });
+
+  it("accepts command results only for the selected journey", () => {
+    expect(discipleshipCommandTargetsJourney("journey_1", "journey_1")).toBe(
+      true
+    );
+    expect(discipleshipCommandTargetsJourney("journey_2", "journey_1")).toBe(
+      false
+    );
+    expect(discipleshipCommandTargetsJourney(null, null)).toBe(true);
   });
 });

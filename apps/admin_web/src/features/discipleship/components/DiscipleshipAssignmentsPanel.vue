@@ -7,14 +7,11 @@ import type {
   DiscipleshipTask,
   DiscipleshipTaskStatus
 } from "@mbc/api-contracts";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
-import {
-  discipleshipAssignmentSourceTypeOptions,
-  discipleshipAssignmentStatusOptions
-} from "@/core/api/discipleship";
 import { useI18n } from "@/core/i18n/i18n";
 import DiscipleshipProgressDrawer from "./DiscipleshipProgressDrawer.vue";
+import DiscipleshipRecoveryAlerts from "./DiscipleshipRecoveryAlerts.vue";
 
 type AssignmentFilters = {
   status: DiscipleshipAssignmentStatus | "";
@@ -25,19 +22,29 @@ const props = defineProps<{
   assignmentFilters: AssignmentFilters;
   assignmentForm: DiscipleshipAssignmentCreateRequest;
   assignments: DiscipleshipAssignment[];
+  assignmentSourceTypeItems: unknown[];
+  assignmentStatusItems: unknown[];
   canCreateAssignment: boolean;
   canManage: boolean;
+  commandErrorMessage: string;
+  errorMessage: string;
+  fetching: boolean;
   hasSelectedJourney: boolean;
   pending: boolean;
+  progressErrorMessage: string;
+  progressErrorAssignmentId: string;
   progressSaving: boolean;
+  refreshErrorMessage: string;
   saving: boolean;
   stages: DiscipleshipStage[];
+  taskStatusItems: unknown[];
   tasks: DiscipleshipTask[];
 }>();
 
 defineEmits<{
+  apply: [];
   assign: [];
-  refresh: [];
+  retry: [];
   updateProgress: [
     input: {
       assignmentId: string;
@@ -48,7 +55,7 @@ defineEmits<{
   ];
 }>();
 
-const { optionItems, t } = useI18n();
+const { t } = useI18n();
 const progressDrawer = ref(false);
 const selectedAssignmentId = ref<string | null>(null);
 
@@ -58,6 +65,10 @@ const selectedAssignment = computed(
       (assignment) => assignment.id === selectedAssignmentId.value
     ) ?? null
 );
+
+watch(selectedAssignment, (assignment) => {
+  if (!assignment) progressDrawer.value = false;
+});
 
 function openProgress(assignment: DiscipleshipAssignment) {
   selectedAssignmentId.value = assignment.id;
@@ -90,13 +101,12 @@ function assignmentStatusColor(status: DiscipleshipAssignmentStatus) {
       <div class="d-flex flex-column flex-sm-row ga-2">
         <v-select
           v-model="assignmentFilters.status"
-          :items="optionItems(['', ...discipleshipAssignmentStatusOptions])"
+          :items="assignmentStatusItems"
           :label="t('Status')"
           density="compact"
           hide-details
           style="min-width: 180px"
           variant="outlined"
-          @update:model-value="$emit('refresh')"
         />
         <v-text-field
           v-model="assignmentFilters.userId"
@@ -105,16 +115,37 @@ function assignmentStatusColor(status: DiscipleshipAssignmentStatus) {
           hide-details
           style="min-width: 200px"
           variant="outlined"
-          @keyup.enter="$emit('refresh')"
+          @keyup.enter="$emit('apply')"
         />
-        <v-btn variant="tonal" @click="$emit('refresh')">
-          {{ t("common.refresh") }}
+        <v-btn variant="tonal" :loading="fetching" @click="$emit('apply')">
+          {{ t("common.go") }}
         </v-btn>
       </div>
     </div>
 
+    <DiscipleshipRecoveryAlerts
+      class="mt-4"
+      :error-message="commandErrorMessage"
+      :refresh-error-message="refreshErrorMessage"
+      @retry="$emit('retry')"
+    />
+
+    <v-alert
+      v-if="errorMessage"
+      class="mt-4"
+      type="error"
+      variant="tonal"
+    >
+      <div class="d-flex align-center justify-space-between ga-3">
+        <span>{{ errorMessage }}</span>
+        <v-btn size="small" variant="text" @click="$emit('retry')">
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
+
     <v-progress-linear
-      v-if="pending"
+      v-else-if="pending"
       class="mt-4"
       color="primary"
       indeterminate
@@ -188,8 +219,8 @@ function assignmentStatusColor(status: DiscipleshipAssignmentStatus) {
       <v-col cols="12" md="3">
         <v-select
           v-model="assignmentForm.sourceType"
-          :disabled="!canManage || !hasSelectedJourney"
-          :items="optionItems(discipleshipAssignmentSourceTypeOptions)"
+          :disabled="!canManage || !hasSelectedJourney || saving"
+          :items="assignmentSourceTypeItems"
           :label="t('Source type')"
           density="compact"
           variant="outlined"
@@ -198,7 +229,7 @@ function assignmentStatusColor(status: DiscipleshipAssignmentStatus) {
       <v-col cols="12" md="4">
         <v-text-field
           v-model="assignmentForm.userId"
-          :disabled="!canManage || !hasSelectedJourney"
+          :disabled="!canManage || !hasSelectedJourney || saving"
           :label="t('User ID')"
           density="compact"
           variant="outlined"
@@ -207,7 +238,7 @@ function assignmentStatusColor(status: DiscipleshipAssignmentStatus) {
       <v-col cols="12" md="5">
         <v-text-field
           v-model="assignmentForm.sourceId"
-          :disabled="!canManage || !hasSelectedJourney"
+          :disabled="!canManage || !hasSelectedJourney || saving"
           :label="t('Source ID')"
           density="compact"
           variant="outlined"
@@ -216,7 +247,7 @@ function assignmentStatusColor(status: DiscipleshipAssignmentStatus) {
       <v-col cols="12" md="4">
         <v-text-field
           v-model="assignmentForm.assigneeName"
-          :disabled="!canManage || !hasSelectedJourney"
+          :disabled="!canManage || !hasSelectedJourney || saving"
           :label="t('Assignee')"
           density="compact"
           variant="outlined"
@@ -225,7 +256,7 @@ function assignmentStatusColor(status: DiscipleshipAssignmentStatus) {
       <v-col cols="12" md="5">
         <v-text-field
           v-model="assignmentForm.assigneeAdminUserId"
-          :disabled="!canManage || !hasSelectedJourney"
+          :disabled="!canManage || !hasSelectedJourney || saving"
           :label="t('Assignee admin user ID')"
           density="compact"
           variant="outlined"
@@ -249,8 +280,14 @@ function assignmentStatusColor(status: DiscipleshipAssignmentStatus) {
       v-model="progressDrawer"
       :assignment="selectedAssignment"
       :can-manage="canManage"
+      :error-message="
+        selectedAssignmentId === progressErrorAssignmentId
+          ? progressErrorMessage
+          : ''
+      "
       :saving="progressSaving"
       :stages="stages"
+      :status-items="taskStatusItems"
       :tasks="tasks"
       @save="$emit('updateProgress', $event)"
     />

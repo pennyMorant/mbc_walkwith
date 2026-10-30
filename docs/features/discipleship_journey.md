@@ -125,6 +125,14 @@ Admin Web 不拥有完成规则；所有状态迁移通过后端 service。
 
 后台只能分配 `active` 成长路径；`draft`、`paused`、`archived` 只能维护模板或保留历史，不能创建新的 assignment。
 
+路径目录和分配筛选使用 draft/applied 两层状态，只有管理员明确应用后才改变查询。
+目录、阶段任务结构和分配记录分别区分首次加载失败与后台刷新失败；刷新失败时继续
+显示上次成功结果，并只恢复当前区域。
+
+Admin controller 在调用 API 前冻结路径、阶段、任务、分配和进度更新的目标 ID 与
+payload。异步结果和错误只能回写仍匹配的路径上下文；进度错误还必须匹配发起操作的
+assignment。展示组件只渲染状态并发出 intent，不持有 transport、权限或状态机。
+
 ## Backend Service Boundary
 
 后端负责：
@@ -192,6 +200,8 @@ Admin Web 不拥有完成规则；所有状态迁移通过后端 service。
 - Admin 手动状态变更有审计。
 - 卡住、跳过、完成和资源失效都有稳定状态。
 - 通知失败不影响路径 canonical state。
+- Admin 筛选只有明确应用后才改变查询，刷新失败保留上次成功数据。
+- Admin 写操作冻结路径和 assignment 上下文，延迟结果不能污染后来选择的工作区。
 
 ## Related Docs
 

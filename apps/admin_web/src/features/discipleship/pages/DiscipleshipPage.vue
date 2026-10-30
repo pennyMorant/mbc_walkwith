@@ -3,6 +3,7 @@ import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import { useDiscipleshipPageController } from "../composables/use_discipleship_page_controller";
 import DiscipleshipAssignmentsPanel from "../components/DiscipleshipAssignmentsPanel.vue";
+import DiscipleshipFiltersCard from "../components/DiscipleshipFiltersCard.vue";
 import DiscipleshipJourneyCatalogCard from "../components/DiscipleshipJourneyCatalogCard.vue";
 import DiscipleshipJourneyEditor from "../components/DiscipleshipJourneyEditor.vue";
 
@@ -10,30 +11,42 @@ const {
   activePanel,
   addStage,
   addTask,
+  applyAssignmentFilters,
+  applyJourneyFilters,
+  assignmentCommandError,
   assignmentFilters,
   assignmentForm,
   assignments,
+  assignmentsErrorMessage,
+  assignmentsFetching,
   assignmentsPending,
+  assignmentsRefreshErrorMessage,
+  assignmentSourceTypeItems,
+  assignmentStatusItems,
   assignJourney,
   canAddStage,
   canAddTask,
   canCreateAssignment,
   canManage,
   canSaveJourney,
-  discipleshipJourneyStatusOptions,
-  discipleshipTaskReferenceTypeOptions,
   filters,
   hasSelectedJourney,
   journeyForm,
+  journeyCommandError,
+  journeyStatusItems,
   journeys,
+  journeysFetching,
   journeysPending,
   listErrorMessage,
+  listRefreshErrorMessage,
   lastCreatedStageId,
   newJourney,
-  optionItems,
+  progressCommandError,
+  progressCommandErrorAssignmentId,
   progressSaving,
   refreshAssignments,
   refreshJourneys,
+  refreshStructure,
   saveJourney,
   savingAssignment,
   savingJourney,
@@ -44,11 +57,15 @@ const {
   stageForm,
   stages,
   structurePending,
+  structureCommandError,
+  structureErrorMessage,
+  structureRefreshErrorMessage,
   t,
   taskForm,
+  taskReferenceTypeItems,
+  taskStatusItems,
   tasks,
-  updateProgress,
-  workspaceErrorMessage
+  updateProgress
 } = useDiscipleshipPageController();
 </script>
 
@@ -67,54 +84,20 @@ const {
       </template>
     </AdminPageHeader>
 
-    <v-alert
-      v-if="workspaceErrorMessage"
-      class="mt-4"
-      type="error"
-      variant="tonal"
-    >
-      {{ workspaceErrorMessage }}
-    </v-alert>
-
-    <v-card class="mt-5" variant="outlined">
-      <v-card-text>
-        <v-row dense>
-          <v-col cols="12" md="6">
-            <v-text-field
-              v-model="filters.query"
-              :label="t('Search')"
-              density="compact"
-              hide-details
-              variant="outlined"
-              @keyup.enter="refreshJourneys"
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-select
-              v-model="filters.status"
-              :items="optionItems(['', ...discipleshipJourneyStatusOptions])"
-              :label="t('Status')"
-              density="compact"
-              hide-details
-              variant="outlined"
-              @update:model-value="refreshJourneys"
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-btn block variant="tonal" @click="refreshJourneys">
-              {{ t("common.go") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <DiscipleshipFiltersCard
+      v-model="filters"
+      :status-items="journeyStatusItems"
+      @apply="applyJourneyFilters"
+    />
 
     <v-row class="mt-2" dense>
       <v-col cols="12" lg="4">
         <DiscipleshipJourneyCatalogCard
           :error-message="listErrorMessage"
+          :fetching="journeysFetching"
           :journeys="journeys"
           :pending="journeysPending"
+          :refresh-error-message="listRefreshErrorMessage"
           :selected-journey-id="selectedJourney?.id ?? null"
           @retry="refreshJourneys"
           @select="selectJourney"
@@ -149,20 +132,25 @@ const {
               :can-add-task="canAddTask"
               :can-manage="canManage"
               :can-save-journey="canSaveJourney"
+              :journey-command-error="journeyCommandError"
               :journey-form="journeyForm"
-              :journey-status-options="discipleshipJourneyStatusOptions"
+              :journey-status-items="journeyStatusItems"
               :last-created-stage-id="lastCreatedStageId"
               :saving-journey="savingJourney"
               :saving-stage="savingStage"
               :saving-task="savingTask"
               :stage-form="stageForm"
               :stages="stages"
+              :structure-command-error="structureCommandError"
+              :structure-error-message="structureErrorMessage"
               :task-form="taskForm"
-              :task-reference-type-options="discipleshipTaskReferenceTypeOptions"
+              :structure-refresh-error-message="structureRefreshErrorMessage"
+              :task-reference-type-items="taskReferenceTypeItems"
               :tasks="tasks"
               :structure-pending="structurePending"
               @add-stage="addStage"
               @add-task="addTask"
+              @retry-structure="refreshStructure"
               @save-journey="saveJourney"
             />
 
@@ -171,16 +159,26 @@ const {
               :assignment-filters="assignmentFilters"
               :assignment-form="assignmentForm"
               :assignments="assignments"
+              :assignment-source-type-items="assignmentSourceTypeItems"
+              :assignment-status-items="assignmentStatusItems"
               :can-create-assignment="canCreateAssignment"
               :can-manage="canManage"
+              :command-error-message="assignmentCommandError"
+              :error-message="assignmentsErrorMessage"
+              :fetching="assignmentsFetching"
               :has-selected-journey="hasSelectedJourney"
               :pending="assignmentsPending"
+              :progress-error-message="progressCommandError"
+              :progress-error-assignment-id="progressCommandErrorAssignmentId"
               :progress-saving="progressSaving"
               :saving="savingAssignment"
               :stages="stages"
+              :refresh-error-message="assignmentsRefreshErrorMessage"
+              :task-status-items="taskStatusItems"
               :tasks="tasks"
+              @apply="applyAssignmentFilters"
               @assign="assignJourney"
-              @refresh="refreshAssignments"
+              @retry="refreshAssignments"
               @update-progress="updateProgress"
             />
           </v-card-text>

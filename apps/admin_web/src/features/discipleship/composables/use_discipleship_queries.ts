@@ -1,10 +1,6 @@
-import type {
-  DiscipleshipAssignmentStatus,
-  DiscipleshipJourney,
-  DiscipleshipJourneyStatus
-} from "@mbc/api-contracts";
+import type { DiscipleshipJourney } from "@mbc/api-contracts";
 import { useQuery } from "@tanstack/vue-query";
-import { computed, type Ref } from "vue";
+import { computed, reactive, ref, type Ref } from "vue";
 
 import {
   listDiscipleshipAssignments,
@@ -13,35 +9,47 @@ import {
   listDiscipleshipTasks
 } from "@/core/api/discipleship";
 
-type JourneyFilters = {
-  query: string;
-  status: DiscipleshipJourneyStatus | "";
-};
-
-type AssignmentFilters = {
-  status: DiscipleshipAssignmentStatus | "";
-  userId: string;
-};
+import {
+  createDiscipleshipAssignmentFilterForm,
+  createDiscipleshipJourneyFilterForm,
+  sameDiscipleshipAssignmentFilters,
+  sameDiscipleshipJourneyFilters,
+  snapshotDiscipleshipAssignmentFilters,
+  snapshotDiscipleshipJourneyFilters,
+  type DiscipleshipAssignmentFilterForm,
+  type DiscipleshipJourneyFilterForm
+} from "../discipleship_workspace_models";
 
 export function useDiscipleshipQueries(
-  selectedJourney: Ref<DiscipleshipJourney | null>,
-  filters: JourneyFilters,
-  assignmentFilters: AssignmentFilters
+  selectedJourney: Ref<DiscipleshipJourney | null>
 ) {
+  const filters = reactive(createDiscipleshipJourneyFilterForm());
+  const appliedFilters = ref(snapshotDiscipleshipJourneyFilters(filters));
+  const assignmentFilters = reactive(
+    createDiscipleshipAssignmentFilterForm()
+  );
+  const appliedAssignmentFilters = ref(
+    snapshotDiscipleshipAssignmentFilters(assignmentFilters)
+  );
+
   const journeysQuery = useQuery({
-    queryKey: computed(() => ["discipleship-journeys", { ...filters }]),
-    queryFn: () => listDiscipleshipJourneys({ ...filters, limit: 100 })
+    queryKey: computed(() => ["discipleship-journeys", appliedFilters.value]),
+    queryFn: ({ queryKey }) =>
+      listDiscipleshipJourneys({
+        ...(queryKey[1] as DiscipleshipJourneyFilterForm),
+        limit: 100
+      })
   });
   const assignmentsQuery = useQuery({
     queryKey: computed(() => [
       "discipleship-assignments",
       selectedJourney.value?.id,
-      { ...assignmentFilters }
+      appliedAssignmentFilters.value
     ]),
     enabled: computed(() => Boolean(selectedJourney.value)),
     queryFn: ({ queryKey }) =>
       listDiscipleshipAssignments({
-        ...(queryKey[2] as AssignmentFilters),
+        ...(queryKey[2] as DiscipleshipAssignmentFilterForm),
         journeyId: queryKey[1] as string,
         limit: 100
       })
@@ -76,23 +84,85 @@ export function useDiscipleshipQueries(
       Boolean(selectedJourney.value) &&
       (stagesQuery.isPending.value || tasksQuery.isPending.value)
   );
-  const workspaceQueryError = computed(
-    () =>
-      assignmentsQuery.error.value ||
-      stagesQuery.error.value ||
-      tasksQuery.error.value
+  const journeysInitialError = initialError(journeysQuery);
+  const journeysRefreshError = refreshError(journeysQuery);
+  const assignmentsInitialError = initialError(assignmentsQuery);
+  const assignmentsRefreshError = refreshError(assignmentsQuery);
+  const structureInitialError = computed(
+    () => initialErrorValue(stagesQuery) || initialErrorValue(tasksQuery)
+  );
+  const structureRefreshError = computed(
+    () => refreshErrorValue(stagesQuery) || refreshErrorValue(tasksQuery)
   );
 
+  function applyJourneyFilters() {
+    const snapshot = snapshotDiscipleshipJourneyFilters(filters);
+    if (sameDiscipleshipJourneyFilters(appliedFilters.value, snapshot)) {
+      return journeysQuery.refetch();
+    }
+    appliedFilters.value = snapshot;
+  }
+
+  function applyAssignmentFilters() {
+    const snapshot = snapshotDiscipleshipAssignmentFilters(assignmentFilters);
+    if (
+      sameDiscipleshipAssignmentFilters(
+        appliedAssignmentFilters.value,
+        snapshot
+      )
+    ) {
+      return assignmentsQuery.refetch();
+    }
+    appliedAssignmentFilters.value = snapshot;
+  }
+
+  function refreshStructure() {
+    return Promise.all([stagesQuery.refetch(), tasksQuery.refetch()]);
+  }
+
   return {
+    applyAssignmentFilters,
+    applyJourneyFilters,
+    assignmentFilters,
     assignments,
+    assignmentsInitialError,
     assignmentsPending,
     assignmentsQuery,
+    assignmentsRefreshError,
+    filters,
     journeys,
+    journeysInitialError,
     journeysPending,
     journeysQuery,
-    workspaceQueryError,
+    journeysRefreshError,
+    refreshStructure,
     stages,
+    stagesQuery,
+    structureInitialError,
     structurePending,
+    structureRefreshError,
+    tasksQuery,
     tasks
   };
 }
+
+function initialError(query: QueryState) {
+  return computed(() => initialErrorValue(query));
+}
+
+function refreshError(query: QueryState) {
+  return computed(() => refreshErrorValue(query));
+}
+
+function initialErrorValue(query: QueryState) {
+  return query.data.value === undefined ? query.error.value : null;
+}
+
+function refreshErrorValue(query: QueryState) {
+  return query.data.value !== undefined ? query.error.value : null;
+}
+
+type QueryState = {
+  data: { value: unknown };
+  error: { value: unknown };
+};

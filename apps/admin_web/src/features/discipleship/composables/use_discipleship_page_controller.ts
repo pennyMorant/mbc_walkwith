@@ -1,7 +1,11 @@
 import type {
-  DiscipleshipAssignmentStatus,
+  DiscipleshipAssignmentCreateRequest,
   DiscipleshipJourney,
-  DiscipleshipJourneyStatus,
+  DiscipleshipJourneyCreateRequest,
+  DiscipleshipJourneyUpdateRequest,
+  DiscipleshipStageCreateRequest,
+  DiscipleshipTaskCreateRequest,
+  DiscipleshipTaskProgressUpdateRequest,
   DiscipleshipTaskStatus
 } from "@mbc/api-contracts";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
@@ -13,15 +17,17 @@ import {
   createDiscipleshipJourney,
   createDiscipleshipStage,
   createDiscipleshipTask,
+  discipleshipAssignmentSourceTypeOptions,
+  discipleshipAssignmentStatusOptions,
   discipleshipJourneyStatusOptions,
   discipleshipTaskReferenceTypeOptions,
+  discipleshipTaskStatusOptions,
   updateDiscipleshipJourney,
   updateDiscipleshipTaskProgress
 } from "@/core/api/discipleship";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
-import { useDiscipleshipMutationError } from "./use_discipleship_mutation_error";
-import { useDiscipleshipQueries } from "./use_discipleship_queries";
+
 import {
   buildDiscipleshipAssignmentPayload,
   buildDiscipleshipJourneyPayload,
@@ -32,185 +38,59 @@ import {
   createDiscipleshipJourneyForm,
   createDiscipleshipStageForm,
   createDiscipleshipTaskForm,
+  discipleshipCommandTargetsJourney,
   resetDiscipleshipAssignmentForm,
   resetDiscipleshipWorkForms
 } from "../discipleship_workspace_models";
+import { useDiscipleshipQueries } from "./use_discipleship_queries";
+
+type JourneySaveIntent =
+  | {
+      journeyId: null;
+      payload: DiscipleshipJourneyCreateRequest;
+      type: "create";
+    }
+  | {
+      journeyId: string;
+      payload: DiscipleshipJourneyUpdateRequest;
+      type: "update";
+    };
+type StageCreateIntent = {
+  journeyId: string;
+  payload: DiscipleshipStageCreateRequest;
+};
+type TaskCreateIntent = {
+  journeyId: string;
+  payload: DiscipleshipTaskCreateRequest;
+};
+type AssignmentCreateIntent = {
+  journeyId: string;
+  payload: DiscipleshipAssignmentCreateRequest;
+};
+type ProgressUpdateIntent = {
+  assignmentId: string;
+  journeyId: string;
+  payload: DiscipleshipTaskProgressUpdateRequest;
+  taskId: string;
+};
 
 export function useDiscipleshipPageController() {
   const queryClient = useQueryClient();
   const authStore = useAdminAuthStore();
   const { optionItems, t } = useI18n();
-
   const selectedJourney = ref<DiscipleshipJourney | null>(null);
   const activePanel = ref<"journey" | "assignments">("journey");
   const lastCreatedStageId = ref("");
-  const mutationError = useDiscipleshipMutationError(selectedJourney);
-
-  const filters = reactive({
-    query: "",
-    status: "" as DiscipleshipJourneyStatus | ""
-  });
-
-  const assignmentFilters = reactive({
-    status: "" as DiscipleshipAssignmentStatus | "",
-    userId: ""
-  });
-
+  const journeyCommandError = ref("");
+  const structureCommandError = ref("");
+  const assignmentCommandError = ref("");
+  const progressCommandError = ref("");
+  const progressCommandErrorAssignmentId = ref("");
   const journeyForm = reactive(createDiscipleshipJourneyForm());
   const stageForm = reactive(createDiscipleshipStageForm());
   const taskForm = reactive(createDiscipleshipTaskForm());
   const assignmentForm = reactive(createDiscipleshipAssignmentForm());
-
-  const {
-    assignments,
-    assignmentsPending,
-    assignmentsQuery,
-    journeys,
-    journeysPending,
-    journeysQuery,
-    stages,
-    structurePending,
-    tasks,
-    workspaceQueryError
-  } = useDiscipleshipQueries(selectedJourney, filters, assignmentFilters);
-
-  const saveJourneyMutation = useMutation({
-    onMutate: mutationError.begin,
-    mutationFn: () => {
-      requireCanManage();
-      if (!canSaveJourney.value) {
-        throw new Error(t("Journey title is required."));
-      }
-      return selectedJourney.value
-        ? updateDiscipleshipJourney(
-            selectedJourney.value.id,
-            buildDiscipleshipJourneyPayload(journeyForm)
-          )
-        : createDiscipleshipJourney(
-            buildDiscipleshipJourneyPayload(journeyForm)
-          );
-    },
-    onSuccess: async (journey, _variables, context) => {
-      if (mutationError.isCurrent(context?.journeyId ?? null)) {
-        selectJourney(journey);
-      }
-      await queryClient.invalidateQueries({
-        queryKey: ["discipleship-journeys"]
-      });
-    },
-    onError: mutationError.capture
-  });
-
-  const createStageMutation = useMutation({
-    onMutate: mutationError.begin,
-    mutationFn: () => {
-      requireCanManage();
-      if (!canAddStage.value) {
-        throw new Error(t("Stage title is required."));
-      }
-      const journey = requireSelectedJourney();
-      return createDiscipleshipStage(
-        journey.id,
-        buildDiscipleshipStagePayload(stageForm)
-      );
-    },
-    onSuccess: async (stage, _variables, context) => {
-      if (mutationError.isCurrent(context?.journeyId ?? null)) {
-        lastCreatedStageId.value = stage.id;
-        taskForm.stageId = stage.id;
-        stageForm.title = "";
-        stageForm.description = "";
-        stageForm.position += 1;
-      }
-      await queryClient.invalidateQueries({
-        queryKey: ["discipleship-stages"]
-      });
-    },
-    onError: mutationError.capture
-  });
-
-  const createTaskMutation = useMutation({
-    onMutate: mutationError.begin,
-    mutationFn: () => {
-      requireCanManage();
-      if (!canAddTask.value) {
-        throw new Error(t("Task title and reference are required."));
-      }
-      const journey = requireSelectedJourney();
-      return createDiscipleshipTask(
-        journey.id,
-        buildDiscipleshipTaskPayload(taskForm)
-      );
-    },
-    onSuccess: async (_task, _variables, context) => {
-      if (mutationError.isCurrent(context?.journeyId ?? null)) {
-        taskForm.title = "";
-        taskForm.description = "";
-        taskForm.referenceId = "";
-        taskForm.position += 1;
-      }
-      await queryClient.invalidateQueries({
-        queryKey: ["discipleship-tasks"]
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ["discipleship-assignments"]
-      });
-    },
-    onError: mutationError.capture
-  });
-
-  const createAssignmentMutation = useMutation({
-    onMutate: mutationError.begin,
-    mutationFn: () => {
-      requireCanManage();
-      if (!canCreateAssignment.value) {
-        throw new Error(t("Only active journeys can be assigned."));
-      }
-      const journey = requireSelectedJourney();
-      return createDiscipleshipAssignment(
-        buildDiscipleshipAssignmentPayload(assignmentForm, journey.id)
-      );
-    },
-    onSuccess: async (_assignment, _variables, context) => {
-      if (mutationError.isCurrent(context?.journeyId ?? null)) {
-        assignmentForm.userId = "";
-        assignmentForm.sourceId = null;
-      }
-      await queryClient.invalidateQueries({
-        queryKey: ["discipleship-assignments"]
-      });
-    },
-    onError: mutationError.capture
-  });
-
-  const updateTaskProgressMutation = useMutation({
-    onMutate: mutationError.begin,
-    mutationFn: (input: {
-      assignmentId: string;
-      taskId: string;
-      status: DiscipleshipTaskStatus;
-      note: string;
-    }) => {
-      requireCanManage();
-      if (!assignments.value.some((item) => item.id === input.assignmentId)) {
-        throw new Error(t("No journey assignment selected."));
-      }
-      if (!tasks.value.some((task) => task.id === input.taskId)) {
-        throw new Error(t("Task is not part of the selected journey."));
-      }
-      return updateDiscipleshipTaskProgress(
-        input.assignmentId,
-        input.taskId,
-        buildDiscipleshipProgressPayload(input)
-      );
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["discipleship-assignments"]
-      });
-    },
-    onError: mutationError.capture
-  });
+  const queries = useDiscipleshipQueries(selectedJourney);
 
   const canManage = computed(() => authStore.can("discipleship:manage"));
   const savingJourney = computed(() => saveJourneyMutation.isPending.value);
@@ -224,28 +104,27 @@ export function useDiscipleshipPageController() {
   );
   const hasSelectedJourney = computed(() => Boolean(selectedJourney.value));
   const taskReferenceReady = computed(
-    () =>
-      taskForm.referenceType === "manual_review" ||
-      taskForm.referenceId.trim().length > 0
+    () => taskForm.referenceType === "manual_review" || taskForm.referenceId.trim().length > 0
   );
   const canSaveJourney = computed(
-    () =>
-      canManage.value &&
-      !savingJourney.value &&
-      journeyForm.title.trim().length > 0
+    () => canManage.value && !savingJourney.value && journeyForm.title.trim().length > 0
   );
   const canAddStage = computed(
     () =>
       canManage.value &&
       !savingStage.value &&
+      !savingTask.value &&
       Boolean(selectedJourney.value) &&
+      !queries.structureInitialError.value &&
       stageForm.title.trim().length > 0
   );
   const canAddTask = computed(
     () =>
       canManage.value &&
       !savingTask.value &&
+      !savingStage.value &&
       Boolean(selectedJourney.value) &&
+      !queries.structureInitialError.value &&
       taskForm.title.trim().length > 0 &&
       taskReferenceReady.value
   );
@@ -258,73 +137,201 @@ export function useDiscipleshipPageController() {
       (assignmentForm.sourceType === "member" ||
         Boolean(assignmentForm.sourceId?.trim()))
   );
-  const listErrorMessage = computed(() => {
-    const error = journeysQuery.error.value;
-    return error ? formatApiErrorMessage(error, t("common.error")) : "";
-  });
-  const workspaceErrorMessage = computed(
-    () =>
-      (workspaceQueryError.value
-        ? formatApiErrorMessage(workspaceQueryError.value, t("common.error"))
-        : "") || mutationError.message.value
+
+  const listErrorMessage = queryErrorMessage(queries.journeysInitialError, "common.error");
+  const listRefreshErrorMessage = queryErrorMessage(
+    queries.journeysRefreshError,
+    "discipleship.libraryRefreshFailed"
+  );
+  const structureErrorMessage = queryErrorMessage(queries.structureInitialError, "common.error");
+  const structureRefreshErrorMessage = queryErrorMessage(
+    queries.structureRefreshError,
+    "discipleship.structureRefreshFailed"
+  );
+  const assignmentsErrorMessage = queryErrorMessage(
+    queries.assignmentsInitialError,
+    "common.error"
+  );
+  const assignmentsRefreshErrorMessage = queryErrorMessage(
+    queries.assignmentsRefreshError,
+    "discipleship.assignmentsRefreshFailed"
   );
 
+  const saveJourneyMutation = useMutation({
+    mutationFn: (intent: JourneySaveIntent) => intent.type === "create"
+      ? createDiscipleshipJourney(intent.payload)
+      : updateDiscipleshipJourney(intent.journeyId, intent.payload),
+    onSuccess: async (journey, intent) => {
+      if (commandTargetsSelection(intent.journeyId)) selectJourney(journey);
+      await queryClient.invalidateQueries({ queryKey: ["discipleship-journeys"] });
+    },
+    onError: captureCommandError(journeyCommandError)
+  });
+
+  const createStageMutation = useMutation({
+    mutationFn: (intent: StageCreateIntent) =>
+      createDiscipleshipStage(intent.journeyId, intent.payload),
+    onSuccess: async (stage, intent) => {
+      if (commandTargetsSelection(intent.journeyId)) {
+        lastCreatedStageId.value = stage.id;
+        taskForm.stageId = stage.id;
+        stageForm.title = "";
+        stageForm.description = "";
+        stageForm.position += 1;
+      }
+      await invalidateJourneyQuery("discipleship-stages", intent.journeyId);
+    },
+    onError: captureCommandError(structureCommandError)
+  });
+
+  const createTaskMutation = useMutation({
+    mutationFn: (intent: TaskCreateIntent) =>
+      createDiscipleshipTask(intent.journeyId, intent.payload),
+    onSuccess: async (_task, intent) => {
+      if (commandTargetsSelection(intent.journeyId)) {
+        taskForm.title = "";
+        taskForm.description = "";
+        taskForm.referenceId = "";
+        taskForm.position += 1;
+      }
+      await Promise.all([
+        invalidateJourneyQuery("discipleship-tasks", intent.journeyId),
+        invalidateJourneyQuery("discipleship-assignments", intent.journeyId)
+      ]);
+    },
+    onError: captureCommandError(structureCommandError)
+  });
+
+  const createAssignmentMutation = useMutation({
+    mutationFn: (intent: AssignmentCreateIntent) =>
+      createDiscipleshipAssignment(intent.payload),
+    onSuccess: async (_assignment, intent) => {
+      if (commandTargetsSelection(intent.journeyId)) {
+        resetDiscipleshipAssignmentForm(assignmentForm, intent.journeyId);
+      }
+      await invalidateJourneyQuery(
+        "discipleship-assignments",
+        intent.journeyId
+      );
+    },
+    onError: captureCommandError(assignmentCommandError)
+  });
+
+  const updateTaskProgressMutation = useMutation({
+    mutationFn: (intent: ProgressUpdateIntent) =>
+      updateDiscipleshipTaskProgress(
+        intent.assignmentId,
+        intent.taskId,
+        intent.payload
+      ),
+    onSuccess: async (_progress, intent) => {
+      await invalidateJourneyQuery(
+        "discipleship-assignments",
+        intent.journeyId
+      );
+    },
+    onError: (error, intent) => {
+      if (commandTargetsSelection(intent.journeyId)) {
+        progressCommandError.value = formatApiErrorMessage(
+          error,
+          t("common.error")
+        );
+        progressCommandErrorAssignmentId.value = intent.assignmentId;
+      }
+    }
+  });
+
+  function queryErrorMessage(error: { value: unknown }, fallbackKey: string) {
+    return computed(() =>
+      error.value
+        ? formatApiErrorMessage(error.value, t(fallbackKey))
+        : ""
+    );
+  }
+
+  function commandTargetsSelection(journeyId: string | null) {
+    return discipleshipCommandTargetsJourney(
+      selectedJourney.value?.id ?? null,
+      journeyId
+    );
+  }
+
+  function captureCommandError(target: { value: string }) {
+    return (error: unknown, intent: { journeyId: string | null }) => {
+      if (commandTargetsSelection(intent.journeyId)) {
+        target.value = formatApiErrorMessage(error, t("common.error"));
+      }
+    };
+  }
+
+  function invalidateJourneyQuery(key: string, journeyId: string) {
+    return queryClient.invalidateQueries({ queryKey: [key, journeyId] });
+  }
+
   function selectJourney(journey: DiscipleshipJourney) {
-    mutationError.clear();
+    clearCommandErrors();
     const journeyChanged = selectedJourney.value?.id !== journey.id;
     selectedJourney.value = journey;
-    journeyForm.title = journey.title;
-    journeyForm.description = journey.description;
-    journeyForm.status = journey.status;
+    Object.assign(journeyForm, {
+      title: journey.title,
+      description: journey.description,
+      status: journey.status
+    });
     if (journeyChanged) {
       resetJourneyWorkForms();
-      resetAssignmentForm(journey.id);
+      resetDiscipleshipAssignmentForm(assignmentForm, journey.id);
     } else {
       assignmentForm.journeyId = journey.id;
     }
   }
 
   function newJourney() {
-    mutationError.clear();
+    clearCommandErrors();
     selectedJourney.value = null;
     activePanel.value = "journey";
     resetJourneyWorkForms();
-    journeyForm.title = "";
-    journeyForm.description = "";
-    journeyForm.status = "draft";
-    resetAssignmentForm("");
-  }
-
-  function refreshJourneys() {
-    void journeysQuery.refetch();
-  }
-
-  function refreshAssignments() {
-    void assignmentsQuery.refetch();
+    Object.assign(journeyForm, createDiscipleshipJourneyForm());
+    resetDiscipleshipAssignmentForm(assignmentForm, "");
   }
 
   function saveJourney() {
-    if (canSaveJourney.value) {
-      saveJourneyMutation.mutate(undefined);
-    }
+    if (!canSaveJourney.value) return;
+    journeyCommandError.value = "";
+    const journey = selectedJourney.value;
+    saveJourneyMutation.mutate(journey
+      ? {
+          type: "update",
+          journeyId: journey.id,
+          payload: buildDiscipleshipJourneyPayload(journeyForm)
+        }
+      : { type: "create", journeyId: null, payload: buildDiscipleshipJourneyPayload(journeyForm) });
   }
 
   function addStage() {
-    if (canAddStage.value) {
-      createStageMutation.mutate(undefined);
-    }
+    if (!canAddStage.value || !selectedJourney.value) return;
+    structureCommandError.value = "";
+    createStageMutation.mutate({
+      journeyId: selectedJourney.value.id,
+      payload: buildDiscipleshipStagePayload(stageForm)
+    });
   }
 
   function addTask() {
-    if (canAddTask.value) {
-      createTaskMutation.mutate(undefined);
-    }
+    if (!canAddTask.value || !selectedJourney.value) return;
+    structureCommandError.value = "";
+    createTaskMutation.mutate({
+      journeyId: selectedJourney.value.id,
+      payload: buildDiscipleshipTaskPayload(taskForm)
+    });
   }
 
   function assignJourney() {
-    if (canCreateAssignment.value) {
-      createAssignmentMutation.mutate(undefined);
-    }
+    if (!canCreateAssignment.value || !selectedJourney.value) return;
+    assignmentCommandError.value = "";
+    createAssignmentMutation.mutate({
+      journeyId: selectedJourney.value.id,
+      payload: buildDiscipleshipAssignmentPayload(assignmentForm, selectedJourney.value.id)
+    });
   }
 
   function updateProgress(input: {
@@ -333,9 +340,26 @@ export function useDiscipleshipPageController() {
     status: DiscipleshipTaskStatus;
     note: string;
   }) {
-    if (canManage.value && !progressSaving.value) {
-      updateTaskProgressMutation.mutate(input);
+    const journey = selectedJourney.value;
+    if (
+      !canManage.value ||
+      progressSaving.value ||
+      !journey ||
+      !queries.assignments.value.some(
+        (item) => item.id === input.assignmentId
+      ) ||
+      !queries.tasks.value.some((task) => task.id === input.taskId)
+    ) {
+      return;
     }
+    progressCommandError.value = "";
+    progressCommandErrorAssignmentId.value = "";
+    updateTaskProgressMutation.mutate({
+      assignmentId: input.assignmentId,
+      journeyId: journey.id,
+      taskId: input.taskId,
+      payload: buildDiscipleshipProgressPayload(input)
+    });
   }
 
   function resetJourneyWorkForms() {
@@ -343,53 +367,60 @@ export function useDiscipleshipPageController() {
     resetDiscipleshipWorkForms(stageForm, taskForm);
   }
 
-  function resetAssignmentForm(journeyId: string) {
-    resetDiscipleshipAssignmentForm(assignmentForm, journeyId);
-  }
-
-  function requireSelectedJourney() {
-    if (!selectedJourney.value) {
-      throw new Error(t("No discipleship journey selected."));
-    }
-    return selectedJourney.value;
-  }
-
-  function requireCanManage() {
-    if (!canManage.value) {
-      throw new Error(
-        t("You do not have permission to manage discipleship journeys.")
-      );
-    }
+  function clearCommandErrors() {
+    journeyCommandError.value = "";
+    structureCommandError.value = "";
+    assignmentCommandError.value = "";
+    progressCommandError.value = "";
+    progressCommandErrorAssignmentId.value = "";
   }
 
   return {
     activePanel,
     addStage,
     addTask,
-    assignmentFilters,
+    applyAssignmentFilters: queries.applyAssignmentFilters,
+    applyJourneyFilters: queries.applyJourneyFilters,
+    assignmentCommandError,
+    assignmentFilters: queries.assignmentFilters,
     assignmentForm,
-    assignments,
-    assignmentsPending,
+    assignments: queries.assignments,
+    assignmentsErrorMessage,
+    assignmentsFetching: queries.assignmentsQuery.isFetching,
+    assignmentsPending: queries.assignmentsPending,
+    assignmentsRefreshErrorMessage,
+    assignmentSourceTypeItems: computed(() =>
+      optionItems(discipleshipAssignmentSourceTypeOptions)
+    ),
+    assignmentStatusItems: computed(() =>
+      optionItems(["", ...discipleshipAssignmentStatusOptions])
+    ),
     assignJourney,
     canAddStage,
     canAddTask,
     canCreateAssignment,
     canManage,
     canSaveJourney,
-    discipleshipJourneyStatusOptions,
-    discipleshipTaskReferenceTypeOptions,
-    filters,
+    filters: queries.filters,
     hasSelectedJourney,
+    journeyCommandError,
     journeyForm,
-    journeys,
-    journeysPending,
-    listErrorMessage,
+    journeys: queries.journeys,
+    journeysFetching: queries.journeysQuery.isFetching,
+    journeysPending: queries.journeysPending,
+    journeyStatusItems: computed(() =>
+      optionItems(discipleshipJourneyStatusOptions)
+    ),
     lastCreatedStageId,
+    listErrorMessage,
+    listRefreshErrorMessage,
     newJourney,
-    optionItems,
+    progressCommandError,
+    progressCommandErrorAssignmentId,
     progressSaving,
-    refreshAssignments,
-    refreshJourneys,
+    refreshAssignments: queries.assignmentsQuery.refetch,
+    refreshJourneys: queries.journeysQuery.refetch,
+    refreshStructure: queries.refreshStructure,
     saveJourney,
     savingAssignment,
     savingJourney,
@@ -398,12 +429,20 @@ export function useDiscipleshipPageController() {
     selectedJourney,
     selectJourney,
     stageForm,
-    stages,
-    structurePending,
+    stages: queries.stages,
+    structureCommandError,
+    structureErrorMessage,
+    structurePending: queries.structurePending,
+    structureRefreshErrorMessage,
     t,
     taskForm,
-    tasks,
-    updateProgress,
-    workspaceErrorMessage
+    taskReferenceTypeItems: computed(() =>
+      optionItems(discipleshipTaskReferenceTypeOptions)
+    ),
+    taskStatusItems: computed(() =>
+      optionItems(discipleshipTaskStatusOptions)
+    ),
+    tasks: queries.tasks,
+    updateProgress
   };
 }
