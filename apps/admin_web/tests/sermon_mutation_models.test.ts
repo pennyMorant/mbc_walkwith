@@ -7,6 +7,7 @@ import {
   sameManualSermonCreateIntent,
   sameSermonUpdateIntent,
   sermonCommandIntent,
+  sermonMutationTargetsSelection,
   sermonUpdateIntent,
   type ManualSermonFormValues
 } from "../src/features/sermons/sermon_mutation_models";
@@ -57,6 +58,30 @@ describe("sermon mutation models", () => {
     ).toBeFalse();
     expect(
       isCurrentSermonIntent(selected, sermonCommandIntent("sermon-1", 2))
+    ).toBeFalse();
+  });
+
+  test("scopes mutation feedback to the selected sermon revision", () => {
+    const selected = { id: "sermon-1", revision: 3 };
+
+    expect(sermonMutationTargetsSelection(selected, "sermon-1")).toBeTrue();
+    expect(
+      sermonMutationTargetsSelection(selected, {
+        sermonId: "sermon-1",
+        revision: 3
+      })
+    ).toBeTrue();
+    expect(
+      sermonMutationTargetsSelection(selected, {
+        sermonId: "sermon-1",
+        revision: 2
+      })
+    ).toBeFalse();
+    expect(
+      sermonMutationTargetsSelection(selected, {
+        sermonId: "sermon-2",
+        revision: 3
+      })
     ).toBeFalse();
   });
 });

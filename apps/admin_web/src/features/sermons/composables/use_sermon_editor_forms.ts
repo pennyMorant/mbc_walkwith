@@ -5,7 +5,9 @@ import type {
   SermonReference,
   UpdateSermonRequest
 } from "@mbc/api-contracts";
-import { computed, reactive, ref, type Ref } from "vue";
+import { computed, reactive, type Ref } from "vue";
+
+import { useSermonFileImports } from "./use_sermon_file_imports";
 
 type Translate = (key: string) => string;
 type PermissionReader = { can(permission: string): boolean };
@@ -18,9 +20,6 @@ type UseSermonEditorFormsInput = {
 
 export function useSermonEditorForms(input: UseSermonEditorFormsInput) {
   const { selectedSermon, authStore, t } = input;
-  const selectedManualManuscriptFile = ref<File | File[] | null>(null);
-  const selectedTranscriptFile = ref<File | File[] | null>(null);
-
   const editForm = reactive({
     sourceLocale: "zh-Hans" as ContentLocale,
     title: "",
@@ -49,6 +48,22 @@ export function useSermonEditorForms(input: UseSermonEditorFormsInput) {
     transcriptText: "",
     transcriptSource: "manual",
     reviewMarkdown: ""
+  });
+
+  const {
+    importManualManuscriptFile,
+    importTranscriptFile,
+    manualManuscriptImportError,
+    manualManuscriptImportPending,
+    resetManualManuscriptImport,
+    resetTranscriptImport,
+    selectedManualManuscriptFile,
+    selectedTranscriptFile,
+    transcriptImportError,
+    transcriptImportPending
+  } = useSermonFileImports({
+    manualTarget: manualSermonForm,
+    transcriptTarget: editForm
   });
 
   const cleanedOutline = computed(() =>
@@ -125,6 +140,7 @@ export function useSermonEditorForms(input: UseSermonEditorFormsInput) {
   );
 
   function applySermonToDetail(sermon: Sermon) {
+    resetTranscriptImport();
     selectedSermon.value = sermon;
     editForm.title = sermon.title;
     editForm.sourceLocale = sermon.sourceLocale;
@@ -144,6 +160,7 @@ export function useSermonEditorForms(input: UseSermonEditorFormsInput) {
   }
 
   function resetManualSermonForm() {
+    resetManualManuscriptImport();
     manualSermonForm.title = "";
     manualSermonForm.sourceLocale = "zh-Hans";
     manualSermonForm.speaker = "";
@@ -155,25 +172,6 @@ export function useSermonEditorForms(input: UseSermonEditorFormsInput) {
     manualSermonForm.transcriptText = "";
     manualSermonForm.transcriptSource = "manual";
     manualSermonForm.reviewMarkdown = "";
-    selectedManualManuscriptFile.value = null;
-  }
-
-  async function importManualManuscriptFile(value: File | File[] | null) {
-    const file = firstInputFile(value);
-    if (!file) {
-      return;
-    }
-    manualSermonForm.transcriptText = await file.text();
-    manualSermonForm.transcriptSource = file.name;
-  }
-
-  async function importTranscriptFile(value: File | File[] | null) {
-    const file = firstInputFile(value);
-    if (!file) {
-      return;
-    }
-    editForm.transcriptText = await file.text();
-    editForm.transcriptSource = file.name;
   }
 
   function buildUpdatePayload(status?: Sermon["status"]): UpdateSermonRequest {
@@ -242,6 +240,10 @@ export function useSermonEditorForms(input: UseSermonEditorFormsInput) {
     manualSermonForm,
     selectedManualManuscriptFile,
     selectedTranscriptFile,
+    manualManuscriptImportPending,
+    manualManuscriptImportError,
+    transcriptImportPending,
+    transcriptImportError,
     reviewChecks,
     isReviewReady,
     canCreateManualSermon,
@@ -260,13 +262,6 @@ export function useSermonEditorForms(input: UseSermonEditorFormsInput) {
     removeReference,
     blankToNull
   };
-}
-
-function firstInputFile(value: File | File[] | null) {
-  if (!value) {
-    return null;
-  }
-  return Array.isArray(value) ? value[0] ?? null : value;
 }
 
 function blankToNull(value: string): string | null {

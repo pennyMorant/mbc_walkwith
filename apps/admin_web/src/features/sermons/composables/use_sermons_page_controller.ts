@@ -2,7 +2,6 @@ import type { Sermon } from "@mbc/api-contracts";
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { computed, ref } from "vue";
 
-import { formatApiErrorMessage } from "@/core/api/api_errors";
 import {
   createLocalSermonDraft,
   updateAdminSermon
@@ -21,6 +20,7 @@ import {
 } from "../sermon_mutation_models";
 import { useSermonAiDrafts } from "./use_sermon_ai_drafts";
 import { useSermonAudioState } from "./use_sermon_audio_state";
+import { useSelectedSermonErrorMessage } from "./use_sermon_command_feedback";
 import { useSermonEditorForms } from "./use_sermon_editor_forms";
 import { useSermonLibraryQuery } from "./use_sermon_library_query";
 import { useSermonPipelineState } from "./use_sermon_pipeline_state";
@@ -51,13 +51,17 @@ export function useSermonsPageController() {
     manualSermonForm,
     selectedManualManuscriptFile,
     selectedTranscriptFile,
+    manualManuscriptImportPending,
+    manualManuscriptImportError,
+    transcriptImportPending,
+    transcriptImportError,
     reviewChecks,
     isReviewReady,
     canCreateManualSermon,
     cleanedOutline,
     cleanedReferences,
     applySermonToDetail,
-    resetManualSermonForm,
+    resetManualSermonForm: resetManualSermonFields,
     importManualManuscriptFile,
     importTranscriptFile,
     buildUpdatePayload,
@@ -75,28 +79,6 @@ export function useSermonsPageController() {
     selectedSermon,
     activeDetailTab,
     applySermonToDetail
-  });
-
-  const {
-    selectedAudioFile,
-    pendingAudioFile,
-    pendingAudioValidation,
-    canUploadAudio,
-    audioPlaybackUrl,
-    uploadAudioMutation,
-    loadAudioPreviewMutation,
-    deleteAudioMutation,
-    uploadSelectedAudio,
-    loadSelectedAudioPreview,
-    deleteCurrentAudio,
-    clearAudioPreviewForOtherSermon
-  } = useSermonAudioState({
-    selectedSermon,
-    activeDetailTab,
-    authStore,
-    t,
-    applySermonResult: applyServerSermonResult,
-    resetList: refreshList
   });
 
   const {
@@ -133,7 +115,7 @@ export function useSermonsPageController() {
     },
     onSuccess: async (sermon, intent) => {
       if (sameManualSermonCreateIntent(manualSermonForm, intent)) {
-        resetManualSermonForm();
+        resetManualSermonFields();
       }
       if (
         isManualSermonCreateViewCurrent(
@@ -193,23 +175,72 @@ export function useSermonsPageController() {
     applySermonResult: applyServerSermonResult,
     refreshList
   });
-  
-  const sermonMutationErrorMessage = computed(() =>
-    formatApiErrorMessage(
-      updateMutation.error.value ||
-        uploadAudioMutation.error.value ||
-        loadAudioPreviewMutation.error.value ||
-        deleteAudioMutation.error.value ||
-        submitReviewMutation.error.value ||
-        saveAndReviewMutation.error.value ||
-        saveAndPublishMutation.error.value ||
-        returnDraftMutation.error.value ||
-        markFailedMutation.error.value ||
-        publishMutation.error.value ||
-        archiveMutation.error.value ||
-        deleteMutation.error.value,
-      t("common.error")
-    )
+
+  const sermonRecordCommandPending = computed(
+    () =>
+      updateMutation.isPending.value ||
+      submitReviewMutation.isPending.value ||
+      saveAndReviewMutation.isPending.value ||
+      saveAndPublishMutation.isPending.value ||
+      returnDraftMutation.isPending.value ||
+      markFailedMutation.isPending.value ||
+      publishMutation.isPending.value ||
+      archiveMutation.isPending.value ||
+      deleteMutation.isPending.value
+  );
+
+  const {
+    selectedAudioFile,
+    pendingAudioFile,
+    pendingAudioValidation,
+    canUploadAudio,
+    canDeleteAudio,
+    canLoadAudioPreview,
+    audioPlaybackUrl,
+    uploadAudioMutation,
+    loadAudioPreviewMutation,
+    deleteAudioMutation,
+    uploadSelectedAudio,
+    loadSelectedAudioPreview,
+    deleteCurrentAudio,
+    clearAudioPreviewForOtherSermon
+  } = useSermonAudioState({
+    selectedSermon,
+    activeDetailTab,
+    authStore,
+    t,
+    otherWritePending: sermonRecordCommandPending,
+    applySermonResult: applyServerSermonResult,
+    resetList: refreshList
+  });
+
+  const sermonWritePending = computed(
+    () =>
+      sermonRecordCommandPending.value ||
+      uploadAudioMutation.isPending.value ||
+      deleteAudioMutation.isPending.value
+  );
+
+  const sermonRecordMutations = [
+    updateMutation,
+    submitReviewMutation,
+    saveAndReviewMutation,
+    saveAndPublishMutation,
+    returnDraftMutation,
+    markFailedMutation,
+    publishMutation,
+    archiveMutation,
+    deleteMutation
+  ];
+  const sermonMutationErrorMessage = useSelectedSermonErrorMessage(
+    selectedSermon,
+    sermonRecordMutations,
+    t("common.error")
+  );
+  const sermonAudioErrorMessage = useSelectedSermonErrorMessage(
+    selectedSermon,
+    [uploadAudioMutation, loadAudioPreviewMutation, deleteAudioMutation],
+    t("common.error")
   );
   const {
     sermonPipelineSteps,
@@ -235,7 +266,7 @@ export function useSermonsPageController() {
   }
   
   function runPipelineAction(action: SermonPipelineAction) {
-    if (action.disabled) {
+    if (action.disabled || sermonWritePending.value) {
       return;
     }
     if (action.id === "open_audio") {
@@ -264,6 +295,7 @@ export function useSermonsPageController() {
   function createManualSermon() {
     if (
       !canCreateManualSermon.value ||
+      manualManuscriptImportPending.value ||
       createManualSermonMutation.isPending.value
     ) {
       return;
@@ -276,11 +308,16 @@ export function useSermonsPageController() {
     );
   }
 
+  function resetManualSermonForm() {
+    resetManualSermonFields();
+    createManualSermonMutation.reset();
+  }
+
   function saveCurrentSermon() {
     if (
       !selectedSermon.value ||
       !authStore.can("sermons:update") ||
-      updateMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -298,7 +335,7 @@ export function useSermonsPageController() {
       !selectedSermon.value ||
       !authStore.can("sermons:update") ||
       !isReviewReady.value ||
-      saveAndReviewMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -317,7 +354,7 @@ export function useSermonsPageController() {
       !authStore.can("sermons:update") ||
       !authStore.can("sermons:publish") ||
       !isReviewReady.value ||
-      saveAndPublishMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -337,7 +374,7 @@ export function useSermonsPageController() {
       selectedSermon.value.status === "published" ||
       !authStore.can("sermons:update") ||
       !isReviewReady.value ||
-      submitReviewMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -355,7 +392,7 @@ export function useSermonsPageController() {
       selectedSermon.value.status === "published" ||
       !authStore.can("sermons:publish") ||
       !isReviewReady.value ||
-      publishMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -372,7 +409,7 @@ export function useSermonsPageController() {
       !selectedSermon.value ||
       selectedSermon.value.status === "draft" ||
       !authStore.can("sermons:update") ||
-      returnDraftMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -389,7 +426,7 @@ export function useSermonsPageController() {
       !selectedSermon.value ||
       selectedSermon.value.status === "failed" ||
       !authStore.can("sermons:update") ||
-      markFailedMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -405,7 +442,7 @@ export function useSermonsPageController() {
     if (
       !selectedSermon.value ||
       !authStore.can("sermons:update") ||
-      archiveMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -421,7 +458,7 @@ export function useSermonsPageController() {
     if (
       !selectedSermon.value ||
       !authStore.can("sermons:update") ||
-      deleteMutation.isPending.value
+      sermonWritePending.value
     ) {
       return;
     }
@@ -442,6 +479,8 @@ export function useSermonsPageController() {
     audioPlaybackUrl,
     authStore,
     canCreateManualSermon,
+    canDeleteAudio,
+    canLoadAudioPreview,
     canUploadAudio,
     cleanedOutline,
     cleanedReferences,
@@ -460,6 +499,8 @@ export function useSermonsPageController() {
     loadAudioPreviewMutation,
     loadSelectedAudioPreview,
     loadMore,
+    manualManuscriptImportError,
+    manualManuscriptImportPending,
     manualSermonForm,
     markCurrentSermonFailed,
     markFailedMutation,
@@ -490,13 +531,17 @@ export function useSermonsPageController() {
     selectedManualManuscriptFile,
     selectedSermon,
     selectedTranscriptFile,
+    transcriptImportError,
+    transcriptImportPending,
     sermonAiResource,
+    sermonAudioErrorMessage,
     sermonSummaryAiInput,
     sermonOutlineAiInput,
     sermonMutationErrorMessage,
     sermonPipelineProgress,
     sermonPipelineSteps,
     sermonWorkflowRefreshing,
+    sermonWritePending,
     sermons,
     sermonsQuery,
     facetsQuery,

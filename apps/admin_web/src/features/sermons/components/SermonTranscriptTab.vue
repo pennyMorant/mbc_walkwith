@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 
 type SermonTranscriptForm = {
@@ -9,6 +10,8 @@ type SermonTranscriptForm = {
 
 defineProps<{
   editForm: SermonTranscriptForm;
+  importPending: boolean;
+  importError: unknown;
 }>();
 
 const selectedTranscriptFile = defineModel<File | File[] | null>({
@@ -31,8 +34,12 @@ const { t } = useI18n();
       density="comfortable"
       variant="outlined"
       prepend-icon="mdi-file-document-outline"
+      :loading="importPending"
       @update:model-value="emit('importTranscriptFile', $event)"
     />
+    <v-alert v-if="importError" type="error" variant="tonal" class="mb-4">
+      {{ formatApiErrorMessage(importError, t("common.error")) }}
+    </v-alert>
     <v-text-field
       v-model="editForm.transcriptSource"
       :label="t('Transcript source')"

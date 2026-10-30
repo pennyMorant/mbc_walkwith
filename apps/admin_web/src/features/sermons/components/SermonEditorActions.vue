@@ -18,6 +18,7 @@ defineProps<{
   archiveLoading: boolean;
   deleteLoading: boolean;
   updateLoading: boolean;
+  commandPending: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -52,7 +53,7 @@ const { t } = useI18n();
           color="warning"
           variant="tonal"
           :loading="saveReviewLoading"
-          :disabled="!canUpdate || !ready || saveReviewLoading"
+          :disabled="!canUpdate || !ready || commandPending"
           @click="emit('saveReview')"
         >
           {{ t("Save review") }}
@@ -61,7 +62,7 @@ const { t } = useI18n();
           color="success"
           variant="tonal"
           :loading="savePublishLoading"
-          :disabled="!canUpdate || !canPublish || !ready || savePublishLoading"
+          :disabled="!canUpdate || !canPublish || !ready || commandPending"
           @click="emit('savePublish')"
         >
           {{ t("Save publish") }}
@@ -75,7 +76,7 @@ const { t } = useI18n();
             sermon.status === 'published' ||
             !canUpdate ||
             !ready ||
-            submitReviewLoading
+            commandPending
           "
           @click="emit('submitReview')"
         >
@@ -89,7 +90,7 @@ const { t } = useI18n();
             sermon.status === 'published' ||
             !canPublish ||
             !ready ||
-            publishLoading
+            commandPending
           "
           @click="emit('publish')"
         >
@@ -99,7 +100,7 @@ const { t } = useI18n();
           color="secondary"
           variant="tonal"
           :loading="returnDraftLoading"
-          :disabled="sermon.status === 'draft' || !canUpdate || returnDraftLoading"
+          :disabled="sermon.status === 'draft' || !canUpdate || commandPending"
           @click="emit('returnDraft')"
         >
           {{ t("Draft") }}
@@ -108,7 +109,7 @@ const { t } = useI18n();
           color="error"
           variant="tonal"
           :loading="markFailedLoading"
-          :disabled="sermon.status === 'failed' || !canUpdate || markFailedLoading"
+          :disabled="sermon.status === 'failed' || !canUpdate || commandPending"
           @click="emit('markFailed')"
         >
           {{ t("Failed") }}
@@ -117,7 +118,7 @@ const { t } = useI18n();
           color="secondary"
           variant="tonal"
           :loading="archiveLoading"
-          :disabled="!canUpdate || archiveLoading"
+          :disabled="!canUpdate || commandPending"
           @click="emit('archive')"
         >
           {{ t("Archive") }}
@@ -126,7 +127,7 @@ const { t } = useI18n();
           color="error"
           variant="tonal"
           :loading="deleteLoading"
-          :disabled="!canUpdate || deleteLoading"
+          :disabled="!canUpdate || commandPending"
           @click="emit('delete')"
         >
           {{ t("Delete") }}
@@ -135,7 +136,7 @@ const { t } = useI18n();
       <v-btn
         color="primary"
         :loading="updateLoading"
-        :disabled="!canUpdate || updateLoading"
+        :disabled="!canUpdate || commandPending"
         @click="emit('save')"
       >
         {{ t("Save changes") }}

@@ -28,6 +28,8 @@ const {
   audioPlaybackUrl,
   authStore,
   canCreateManualSermon,
+  canDeleteAudio,
+  canLoadAudioPreview,
   canUploadAudio,
   cleanedOutline,
   cleanedReferences,
@@ -47,6 +49,8 @@ const {
   loadAudioPreviewMutation,
   loadSelectedAudioPreview,
   loadMore,
+  manualManuscriptImportError,
+  manualManuscriptImportPending,
   manualSermonForm,
   markCurrentSermonFailed,
   markFailedMutation,
@@ -77,13 +81,17 @@ const {
   selectedManualManuscriptFile,
   selectedSermon,
   selectedTranscriptFile,
+  transcriptImportError,
+  transcriptImportPending,
   sermonAiResource,
+  sermonAudioErrorMessage,
   sermonSummaryAiInput,
   sermonOutlineAiInput,
   sermonMutationErrorMessage,
   sermonPipelineProgress,
   sermonPipelineSteps,
   sermonWorkflowRefreshing,
+  sermonWritePending,
   sermons,
   sermonsQuery,
   topicOptions,
@@ -129,6 +137,8 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
           :can-create="canCreateManualSermon"
           :loading="createManualSermonMutation.isPending.value"
           :error="createManualSermonMutation.error.value"
+          :import-pending="manualManuscriptImportPending"
+          :import-error="manualManuscriptImportError"
           :topic-options="topicOptions"
           :topics-loading="facetsQuery.isPending.value"
           @import-manuscript-file="importManualManuscriptFile"
@@ -243,9 +253,12 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
                 :pending-audio-file="pendingAudioFile"
                 :can-update-sermons="authStore.can('sermons:update')"
                 :can-upload-audio="canUploadAudio"
+                :can-delete-audio="canDeleteAudio"
+                :can-load-audio-preview="canLoadAudioPreview"
                 :load-preview-loading="loadAudioPreviewMutation.isPending.value"
                 :delete-audio-loading="deleteAudioMutation.isPending.value"
                 :upload-audio-loading="uploadAudioMutation.isPending.value"
+                :error-message="sermonAudioErrorMessage"
                 @load-preview="loadSelectedAudioPreview"
                 @delete-audio="deleteCurrentAudio"
                 @upload-audio="uploadSelectedAudio"
@@ -290,6 +303,8 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
               <SermonTranscriptTab
                 v-model="selectedTranscriptFile"
                 :edit-form="editForm"
+                :import-pending="transcriptImportPending"
+                :import-error="transcriptImportError"
                 @import-transcript-file="importTranscriptFile"
               />
             </v-window-item>
@@ -320,6 +335,7 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
             :archive-loading="archiveMutation.isPending.value"
             :delete-loading="deleteMutation.isPending.value"
             :update-loading="updateMutation.isPending.value"
+            :command-pending="sermonWritePending"
             @save-review="saveCurrentSermonForReview"
             @save-publish="saveAndPublishCurrentSermon"
             @submit-review="submitCurrentSermonReview"

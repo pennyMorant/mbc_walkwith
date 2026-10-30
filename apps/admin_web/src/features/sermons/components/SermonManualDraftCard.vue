@@ -21,6 +21,8 @@ defineProps<{
   canCreate: boolean;
   loading: boolean;
   error: unknown;
+  importPending: boolean;
+  importError: unknown;
   topicOptions: string[];
   topicsLoading: boolean;
 }>();
@@ -105,8 +107,13 @@ const { t } = useI18n();
         density="compact"
         variant="outlined"
         prepend-icon="mdi-file-document-outline"
+        :loading="importPending"
+        :disabled="loading"
         @update:model-value="emit('importManuscriptFile', $event)"
       />
+      <v-alert v-if="importError" type="error" variant="tonal" class="mb-3">
+        {{ formatApiErrorMessage(importError, t("common.error")) }}
+      </v-alert>
       <v-textarea
         v-model="form.transcriptText"
         :label="t('Sermon manuscript')"
@@ -139,7 +146,7 @@ const { t } = useI18n();
         <v-btn
           color="primary"
           :loading="loading"
-          :disabled="!canCreate || loading"
+          :disabled="!canCreate || loading || importPending"
           @click="emit('submit')"
         >
           {{ t("Create sermon") }}

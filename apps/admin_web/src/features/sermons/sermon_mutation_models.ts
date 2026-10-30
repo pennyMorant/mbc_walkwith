@@ -123,6 +123,21 @@ export function isCurrentSermonIntent(
     selectedSermon.revision === intent.revision;
 }
 
+export function sermonMutationTargetsSelection(
+  selectedSermon: Pick<Sermon, "id" | "revision"> | null,
+  variables: unknown
+) {
+  if (!selectedSermon) return false;
+  if (typeof variables === "string") return selectedSermon.id === variables;
+  if (!variables || typeof variables !== "object") return false;
+  const candidate = variables as { sermonId?: unknown; revision?: unknown };
+  if (candidate.sermonId !== selectedSermon.id) return false;
+  return (
+    typeof candidate.revision !== "number" ||
+    candidate.revision === selectedSermon.revision
+  );
+}
+
 function samePayload(left: object | null, right: object | null) {
   return JSON.stringify(left) === JSON.stringify(right);
 }

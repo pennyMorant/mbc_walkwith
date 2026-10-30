@@ -11,9 +11,12 @@ defineProps<{
   pendingAudioFile: File | null;
   canUpdateSermons: boolean;
   canUploadAudio: boolean;
+  canDeleteAudio: boolean;
+  canLoadAudioPreview: boolean;
   loadPreviewLoading: boolean;
   deleteAudioLoading: boolean;
   uploadAudioLoading: boolean;
+  errorMessage: string;
 }>();
 
 const selectedAudioFile = defineModel<File | File[] | null>({
@@ -31,6 +34,14 @@ const { t } = useI18n();
 
 <template>
   <div>
+    <v-alert
+      v-if="errorMessage"
+      type="error"
+      variant="tonal"
+      class="mb-4"
+    >
+      {{ errorMessage }}
+    </v-alert>
     <v-card variant="outlined" class="pa-4 mb-4">
       <div
         class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4 mb-3"
@@ -86,6 +97,7 @@ const { t } = useI18n();
             color="info"
             variant="tonal"
             :loading="loadPreviewLoading"
+            :disabled="!canLoadAudioPreview"
             @click="emit('loadPreview')"
           >
             {{ t("Load preview") }}
@@ -94,7 +106,7 @@ const { t } = useI18n();
             color="error"
             variant="tonal"
             :loading="deleteAudioLoading"
-            :disabled="!canUpdateSermons"
+            :disabled="!canUpdateSermons || !canDeleteAudio"
             @click="emit('deleteAudio')"
           >
             {{ t("Delete audio") }}

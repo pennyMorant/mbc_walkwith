@@ -17,6 +17,7 @@ type UseSermonAudioStateInput = {
   activeDetailTab: Ref<string>;
   authStore: PermissionReader;
   t: Translate;
+  otherWritePending: Ref<boolean>;
   applySermonResult: (sermon: Sermon, replaceEditor?: boolean) => void;
   resetList: () => void;
 };
@@ -27,6 +28,7 @@ export function useSermonAudioState(input: UseSermonAudioStateInput) {
     activeDetailTab,
     authStore,
     t,
+    otherWritePending,
     applySermonResult,
     resetList
   } = input;
@@ -133,7 +135,23 @@ export function useSermonAudioState(input: UseSermonAudioStateInput) {
       Boolean(pendingAudioFile.value) &&
       !pendingAudioValidation.value &&
       authStore.can("sermons:update") &&
+      !otherWritePending.value &&
+      !deleteAudioMutation.isPending.value &&
       !uploadAudioMutation.isPending.value
+  );
+  const canDeleteAudio = computed(
+    () =>
+      authStore.can("sermons:update") &&
+      !otherWritePending.value &&
+      !uploadAudioMutation.isPending.value &&
+      !deleteAudioMutation.isPending.value
+  );
+  const canLoadAudioPreview = computed(
+    () =>
+      !otherWritePending.value &&
+      !uploadAudioMutation.isPending.value &&
+      !deleteAudioMutation.isPending.value &&
+      !loadAudioPreviewMutation.isPending.value
   );
 
   const publicAudioUrl = computed(() => {
@@ -198,7 +216,7 @@ export function useSermonAudioState(input: UseSermonAudioStateInput) {
     if (
       !sermon ||
       sermon.audio.status !== "ready" ||
-      loadAudioPreviewMutation.isPending.value
+      !canLoadAudioPreview.value
     ) {
       return;
     }
@@ -207,11 +225,7 @@ export function useSermonAudioState(input: UseSermonAudioStateInput) {
 
   function deleteCurrentAudio() {
     const sermon = selectedSermon.value;
-    if (
-      !sermon ||
-      !authStore.can("sermons:update") ||
-      deleteAudioMutation.isPending.value
-    ) {
+    if (!sermon || !canDeleteAudio.value) {
       return;
     }
     deleteAudioMutation.mutate({
@@ -225,6 +239,8 @@ export function useSermonAudioState(input: UseSermonAudioStateInput) {
     pendingAudioFile,
     pendingAudioValidation,
     canUploadAudio,
+    canDeleteAudio,
+    canLoadAudioPreview,
     audioPlaybackUrl,
     uploadAudioMutation,
     loadAudioPreviewMutation,
