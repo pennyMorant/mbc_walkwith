@@ -13,6 +13,7 @@ defineProps<{
   pending: boolean;
   fetching: boolean;
   errorMessage: string;
+  refreshErrorMessage: string;
   statusColor: (status: BibleVerseNoteStatus) => string;
 }>();
 defineEmits<{ open: [note: AdminBibleVerseNote]; retry: [] }>();
@@ -24,7 +25,7 @@ const { locale, t } = useI18n();
   <AdminDataState
     :pending="(pending || fetching) && notes.length === 0"
     :error-message="notes.length === 0 ? errorMessage : ''"
-    :empty="!fetching && !errorMessage && notes.length === 0"
+    :empty="!fetching && !errorMessage && !refreshErrorMessage && notes.length === 0"
     :empty-title="t('bibleNotes.empty')"
     empty-icon="mdi-note-off-outline"
     :retry-label="t('common.refresh')"
@@ -36,13 +37,13 @@ const { locale, t } = useI18n();
       color="primary"
     />
     <v-alert
-      v-if="notes.length > 0 && errorMessage"
+      v-if="refreshErrorMessage"
       type="error"
       variant="tonal"
       class="ma-4"
     >
       <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-        <span>{{ errorMessage }}</span>
+        <span>{{ refreshErrorMessage }}</span>
         <v-btn
           color="error"
           variant="tonal"

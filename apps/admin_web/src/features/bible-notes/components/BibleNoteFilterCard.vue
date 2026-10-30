@@ -1,19 +1,9 @@
 <script setup lang="ts">
-import type {
-  BibleVerseNoteAuthorType,
-  BibleVerseNoteStatus
-} from "@mbc/api-contracts";
-
 import { useI18n } from "@/core/i18n/i18n";
 
-export type BibleNoteFilters = {
-  query: string;
-  verseId: string;
-  status: BibleVerseNoteStatus | "";
-  authorType: BibleVerseNoteAuthorType | "";
-};
+import type { BibleNoteFilterForm } from "../bible_note_workspace_models";
 
-const filters = defineModel<BibleNoteFilters>({ required: true });
+const filters = defineModel<BibleNoteFilterForm>({ required: true });
 defineProps<{ fetching: boolean }>();
 defineEmits<{ apply: [] }>();
 

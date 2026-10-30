@@ -148,7 +148,11 @@ Surface rule:
   permission, or transport state; each page connects retry to its own query.
 - Bible note and sermon discussion response moderation preserve the same
   responsive and query-state rule. Their pages keep filters, moderation
-  permissions, retries, and mutation feedback separate from list errors.
+  permissions, retries, and mutation feedback separate from list errors. Bible
+  note hide/restore commands freeze the selected backend note id and moderation
+  reason; stale results cannot replace a later selection or reopen a closed
+  drawer. Background refresh failures preserve even a previously loaded empty
+  snapshot and expose a scoped retry.
 - The Life post editor delegates details, publish readiness, and notification
   fields to presentation-only components. `LifePostsPage` and its controller
   retain permission checks, translation requests, AI application, and all
