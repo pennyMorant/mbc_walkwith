@@ -18,12 +18,14 @@ type DayForm = {
 defineProps<{
   canManage: boolean;
   canUpsertDay: boolean;
+  commandErrorMessage: string;
   days: ReadingPlanDay[];
   dayForm: DayForm;
   errorMessage: string;
   hasSelectedPlan: boolean;
   loading: boolean;
   pending: boolean;
+  refreshErrorMessage: string;
   saving: boolean;
 }>();
 
@@ -37,6 +39,27 @@ const { t } = useI18n();
 
 <template>
   <div class="mt-4">
+    <v-alert
+      v-if="refreshErrorMessage"
+      type="warning"
+      variant="tonal"
+      class="mb-4"
+    >
+      <div class="d-flex align-center justify-space-between ga-3">
+        <span>{{ refreshErrorMessage }}</span>
+        <v-btn size="small" variant="text" @click="$emit('retry')">
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
+    <v-alert
+      v-if="commandErrorMessage"
+      type="error"
+      variant="tonal"
+      class="mb-4"
+    >
+      {{ commandErrorMessage }}
+    </v-alert>
     <AdminDataState
       :pending="pending"
       :error-message="errorMessage"
@@ -77,6 +100,7 @@ const { t } = useI18n();
         <v-text-field
           v-model.number="dayForm.dayNumber"
           :label="t('Day')"
+          :disabled="saving"
           type="number"
           density="compact"
           variant="outlined"
@@ -86,6 +110,7 @@ const { t } = useI18n();
         <v-text-field
           v-model="dayForm.bookId"
           :label="t('Book ID')"
+          :disabled="saving"
           density="compact"
           variant="outlined"
         />
@@ -94,6 +119,7 @@ const { t } = useI18n();
         <v-text-field
           v-model.number="dayForm.chapter"
           :label="t('Chapter')"
+          :disabled="saving"
           type="number"
           density="compact"
           variant="outlined"
@@ -103,6 +129,7 @@ const { t } = useI18n();
         <v-text-field
           v-model.number="dayForm.startVerse"
           :label="t('Start verse')"
+          :disabled="saving"
           type="number"
           density="compact"
           variant="outlined"
@@ -112,6 +139,7 @@ const { t } = useI18n();
         <v-text-field
           v-model.number="dayForm.endVerse"
           :label="t('End verse')"
+          :disabled="saving"
           type="number"
           density="compact"
           variant="outlined"
@@ -132,6 +160,7 @@ const { t } = useI18n();
         <v-text-field
           v-model="dayForm.title"
           :label="t('Day title')"
+          :disabled="saving"
           density="compact"
           variant="outlined"
         />
@@ -140,6 +169,7 @@ const { t } = useI18n();
         <v-text-field
           v-model="dayForm.referenceLabel"
           :label="t('Reference label')"
+          :disabled="saving"
           density="compact"
           variant="outlined"
         />

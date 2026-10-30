@@ -5,11 +5,6 @@ import type {
   ReadingPlanAssignmentStatus
 } from "@mbc/api-contracts";
 
-import {
-  readingPlanAssignmentSourceTypeOptions,
-  readingPlanAssignmentStatusOptions,
-  readingPlanUserTypeOptions
-} from "@/core/api/reading_plans";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 
@@ -23,22 +18,27 @@ defineProps<{
   assignmentFilters: AssignmentFilters;
   assignmentForm: ReadingPlanAssignmentCreateRequest;
   assignments: ReadingPlanAssignment[];
+  assignmentSourceTypeItems: unknown[];
+  assignmentStatusItems: unknown[];
+  assignmentUserTypeItems: unknown[];
+  commandErrorMessage: string;
   errorMessage: string;
   canCreateAssignment: boolean;
   canManage: boolean;
   hasSelectedPlan: boolean;
   loading: boolean;
   pending: boolean;
+  refreshErrorMessage: string;
   saving: boolean;
 }>();
 
 defineEmits<{
+  apply: [];
   assign: [];
-  refresh: [];
   retry: [];
 }>();
 
-const { optionItems, t } = useI18n();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -48,7 +48,7 @@ const { optionItems, t } = useI18n();
       <div class="d-flex ga-2">
         <v-select
           v-model="assignmentFilters.status"
-          :items="optionItems(['', ...readingPlanAssignmentStatusOptions])"
+          :items="assignmentStatusItems"
           :label="t('Status')"
           density="compact"
           variant="outlined"
@@ -58,12 +58,34 @@ const { optionItems, t } = useI18n();
         <v-btn
           variant="tonal"
           :loading="loading"
-          @click="$emit('refresh')"
+          @click="$emit('apply')"
         >
-          {{ t("common.refresh") }}
+          {{ t("common.go") }}
         </v-btn>
       </div>
     </div>
+
+    <v-alert
+      v-if="refreshErrorMessage"
+      type="warning"
+      variant="tonal"
+      class="mb-4"
+    >
+      <div class="d-flex align-center justify-space-between ga-3">
+        <span>{{ refreshErrorMessage }}</span>
+        <v-btn size="small" variant="text" @click="$emit('retry')">
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
+    <v-alert
+      v-if="commandErrorMessage"
+      type="error"
+      variant="tonal"
+      class="mb-4"
+    >
+      {{ commandErrorMessage }}
+    </v-alert>
 
     <AdminDataState
       :pending="pending"
@@ -99,7 +121,8 @@ const { optionItems, t } = useI18n();
         <v-select
           v-model="assignmentForm.userType"
           :label="t('User type')"
-          :items="optionItems(readingPlanUserTypeOptions)"
+          :items="assignmentUserTypeItems"
+          :disabled="saving"
           density="compact"
           variant="outlined"
         />
@@ -108,6 +131,7 @@ const { optionItems, t } = useI18n();
         <v-text-field
           v-model="assignmentForm.userId"
           :label="t('User ID')"
+          :disabled="saving"
           density="compact"
           variant="outlined"
         />
@@ -116,7 +140,8 @@ const { optionItems, t } = useI18n();
         <v-select
           v-model="assignmentForm.sourceType"
           :label="t('Source')"
-          :items="optionItems(readingPlanAssignmentSourceTypeOptions)"
+          :items="assignmentSourceTypeItems"
+          :disabled="saving"
           density="compact"
           variant="outlined"
         />

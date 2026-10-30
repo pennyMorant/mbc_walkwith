@@ -161,8 +161,12 @@ Surface rule:
   are accepted only for the active setting context; editor parsing and update
   errors remain scoped to the editor drawer.
 - Reading Plans keeps filters, plan results, and base fields in focused
-  presentation components. The page remains the owner of queries, mutations,
-  permission checks, content locks, day rules, and assignment eligibility.
+  presentation components. Its page controller owns queries, mutations,
+  permission checks, content locks, day rules, and assignment eligibility;
+  the route page only composes those projections. Plan and assignment filters
+  use explicit draft/applied snapshots, refresh failures preserve loaded data,
+  and plan/day/assignment commands carry frozen plan context so late results
+  cannot overwrite a newly selected workspace.
 - Bible Knowledge delegates entity fields and section editing to a
   presentation-only editor. The page retains CRUD, permissions, section
   normalization, verse-alias JSON parsing, and canonical request payloads.
@@ -234,7 +238,9 @@ Surface rule:
   查询和操作错误保留在当前工作区反馈。
 - Reading plan：Content/Ministry 工作区维护读经计划和每日经文引用，不编辑圣经正文。
   计划目录、日程和个人分配使用独立可重试查询状态；查询失败不显示为空结果，保存
-  与分配命令错误继续由页面单独反馈。
+  与分配命令错误由各自工作区单独反馈。目录和分配筛选必须由管理员明确应用；后台
+  刷新失败保留上次成功结果。页面 controller 冻结计划、日程和分配命令的目标计划
+  与 payload，延迟结果不能覆盖管理员后来选择的计划。
 - Sermon discussion guide：Content/Ministry 工作区维护讨论包、人工审核，并可用现有
   目标 ID 分配；后端校验目标存在。当前尚无目标选择器和本 feature 专用 AI 草稿
   action。页面只审核明确共享给小组的回应，私密回应不进入 Admin surface；页面按

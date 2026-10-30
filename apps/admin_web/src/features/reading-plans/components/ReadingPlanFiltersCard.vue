@@ -16,7 +16,7 @@ defineProps<{
   visibilityItems: unknown[];
   localeItems: Array<{ title: string; value: string }>;
 }>();
-defineEmits<{ refresh: [] }>();
+defineEmits<{ apply: [] }>();
 const { t } = useI18n();
 </script>
 
@@ -25,7 +25,7 @@ const { t } = useI18n();
     <v-card-text>
       <v-row dense>
         <v-col cols="12" md="4">
-          <v-text-field v-model="filters.query" :label="t('Search')" density="compact" variant="outlined" hide-details @keyup.enter="$emit('refresh')" />
+          <v-text-field v-model="filters.query" :label="t('Search')" density="compact" variant="outlined" hide-details @keyup.enter="$emit('apply')" />
         </v-col>
         <v-col cols="12" md="2">
           <v-select v-model="filters.status" :label="t('Status')" :items="statusItems" density="compact" variant="outlined" hide-details />
@@ -37,7 +37,7 @@ const { t } = useI18n();
           <v-select v-model="filters.locale" :label="t('Locale')" :items="[{ title: t('common.all'), value: '' }, ...localeItems]" density="compact" variant="outlined" hide-details />
         </v-col>
         <v-col cols="12" md="2">
-          <v-btn block variant="tonal" @click="$emit('refresh')">{{ t("common.go") }}</v-btn>
+          <v-btn block variant="tonal" @click="$emit('apply')">{{ t("common.go") }}</v-btn>
         </v-col>
       </v-row>
     </v-card-text>

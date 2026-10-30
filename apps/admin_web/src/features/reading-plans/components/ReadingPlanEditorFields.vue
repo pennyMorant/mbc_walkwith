@@ -22,22 +22,22 @@ const { t } = useI18n();
 <template>
   <v-row dense>
     <v-col cols="12" md="6">
-      <v-text-field v-model="form.title" :label="t('Title')" :disabled="!canManage || contentLocked" density="compact" variant="outlined" />
+      <v-text-field v-model="form.title" :label="t('Title')" :disabled="!canManage || contentLocked || saving" density="compact" variant="outlined" />
     </v-col>
     <v-col cols="12" md="3">
-      <v-select v-model="form.status" :label="t('Status')" :items="statusItems" :disabled="!canManage" density="compact" variant="outlined" />
+      <v-select v-model="form.status" :label="t('Status')" :items="statusItems" :disabled="!canManage || saving" density="compact" variant="outlined" />
     </v-col>
     <v-col cols="12" md="3">
-      <v-select v-model="form.visibility" :label="t('Visibility')" :items="visibilityItems" :disabled="!canManage || contentLocked || structureLocked" density="compact" variant="outlined" />
+      <v-select v-model="form.visibility" :label="t('Visibility')" :items="visibilityItems" :disabled="!canManage || contentLocked || structureLocked || saving" density="compact" variant="outlined" />
     </v-col>
     <v-col cols="12" md="3">
-      <v-select v-model="form.locale" :label="t('Locale')" :items="localeItems" :disabled="!canManage || contentLocked || structureLocked" density="compact" variant="outlined" />
+      <v-select v-model="form.locale" :label="t('Locale')" :items="localeItems" :disabled="!canManage || contentLocked || structureLocked || saving" density="compact" variant="outlined" />
     </v-col>
     <v-col cols="12" md="3">
-      <v-text-field v-model.number="form.durationDays" :label="t('Duration days')" :disabled="!canManage || contentLocked || structureLocked" type="number" density="compact" variant="outlined" />
+      <v-text-field v-model.number="form.durationDays" :label="t('Duration days')" :disabled="!canManage || contentLocked || structureLocked || saving" type="number" density="compact" variant="outlined" />
     </v-col>
     <v-col cols="12" md="6">
-      <v-textarea v-model="form.description" :label="t('Description')" :disabled="!canManage || contentLocked" rows="2" density="compact" variant="outlined" />
+      <v-textarea v-model="form.description" :label="t('Description')" :disabled="!canManage || contentLocked || saving" rows="2" density="compact" variant="outlined" />
     </v-col>
   </v-row>
   <v-btn v-if="canManage" color="primary" :disabled="!canSave || saving" :loading="saving" @click="$emit('save')">

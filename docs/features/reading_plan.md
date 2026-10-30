@@ -120,6 +120,17 @@ Admin Web 不编辑圣经正文。
 member assignment 必须引用真实存在的 member；external assignment 继续使用
 App installation 的受控 external user id。
 
+计划目录和个人分配筛选使用 draft/applied 两层状态，只有管理员明确应用后才改变
+查询快照。计划目录、日程和个人分配各自区分首次加载失败与后台刷新失败；已有数据
+刷新失败时继续显示上次成功结果，并提供当前区域的重试入口。
+
+Admin controller 在提交计划、日程或个人分配前冻结目标 `planId` 和 payload。异步
+结果只能更新仍指向同一计划的编辑上下文，不能因管理员切换计划而覆盖新工作区。
+三类命令错误分别归属计划编辑、日程编辑和个人分配区域；命令执行期间锁定对应输入，
+展示组件只渲染状态和发出 intent，不持有 transport、权限或业务状态机。
+结构锁使用不带展示筛选的 assignment presence 查询；个人分配列表的筛选结果不能
+作为“计划从未产生 assignment”的证据。
+
 ## Backend Service Boundary
 
 后端负责：
@@ -204,6 +215,8 @@ App installation 的受控 external user id。
 - 计划引用可作为 discipleship task reference，但当前不自动创建 Reading Plan assignment。
 - App 验证空模板目录刷新、open assignment 过滤和 self-assignment intent 到 repository 的完整链路。
 - 计划创建/更新、日程 upsert 和 Admin 个人分配有审计。
+- Admin 筛选只有明确应用后才改变查询，后台刷新失败保留上次成功数据。
+- Admin 计划、日程和分配命令冻结目标上下文，延迟结果不能覆盖后来选择的计划。
 
 ## Related Docs
 

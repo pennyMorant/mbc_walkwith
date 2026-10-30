@@ -1359,6 +1359,12 @@ Object.assign(messages.en, {
     "Manage classes, lessons, enrollments, and learning progress.",
   "Manage church reading plans, scripture references, and assignments.":
     "Manage church reading plans, Scripture references, and assignments.",
+  "readingPlans.libraryRefreshFailed":
+    "Reading plans could not be refreshed. The last loaded results remain visible.",
+  "readingPlans.daysRefreshFailed":
+    "Plan days could not be refreshed. The last loaded schedule remains visible.",
+  "readingPlans.assignmentsRefreshFailed":
+    "Assignments could not be refreshed. The last loaded results remain visible.",
   "Member": "Member",
   "members": "Members",
   "New reading plan": "New reading plan",
@@ -1513,6 +1519,12 @@ Object.assign(messages["zh-Hans"], {
     "管理课程、课次、报名名单和学习进度。",
   "Manage church reading plans, scripture references, and assignments.":
     "管理教会读经计划、经文引用和分配记录。",
+  "readingPlans.libraryRefreshFailed":
+    "读经计划刷新失败，仍保留上次加载的结果。",
+  "readingPlans.daysRefreshFailed":
+    "计划日刷新失败，仍保留上次加载的安排。",
+  "readingPlans.assignmentsRefreshFailed":
+    "分配记录刷新失败，仍保留上次加载的结果。",
   "Member": "会友",
   "members": "会友",
   "New course": "新建课程",
@@ -1815,6 +1827,12 @@ Object.assign(messages.es, messages.en, {
   "external": "Externo",
   "Manage church reading plans, scripture references, and assignments.":
     "Administra planes de lectura, referencias bíblicas y asignaciones.",
+  "readingPlans.libraryRefreshFailed":
+    "No se pudieron actualizar los planes de lectura. Se mantienen visibles los últimos resultados.",
+  "readingPlans.daysRefreshFailed":
+    "No se pudieron actualizar los días del plan. Se mantiene visible el último calendario.",
+  "readingPlans.assignmentsRefreshFailed":
+    "No se pudieron actualizar las asignaciones. Se mantienen visibles los últimos resultados.",
   "members": "Miembros",
   "New reading plan": "Nuevo plan de lectura",
   "No assignments yet.": "Aún no hay asignaciones.",
@@ -2021,6 +2039,12 @@ Object.assign(messages["zh-Hant"], messages["zh-Hans"], {
   "external": "外部訪客",
   "Manage church reading plans, scripture references, and assignments.":
     "管理教會讀經計劃、經文引用和分配記錄。",
+  "readingPlans.libraryRefreshFailed":
+    "讀經計劃重新整理失敗，仍保留上次載入的結果。",
+  "readingPlans.daysRefreshFailed":
+    "計劃日重新整理失敗，仍保留上次載入的安排。",
+  "readingPlans.assignmentsRefreshFailed":
+    "分配記錄重新整理失敗，仍保留上次載入的結果。",
   "members": "會友",
   "New reading plan": "新增讀經計劃",
   "No assignments yet.": "還沒有分配記錄。",

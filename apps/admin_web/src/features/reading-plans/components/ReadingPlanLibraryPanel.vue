@@ -6,7 +6,9 @@ import AdminDataState from "@/core/ui/AdminDataState.vue";
 
 defineProps<{
   errorMessage: string;
+  fetching: boolean;
   plans: ReadingPlan[];
+  refreshErrorMessage: string;
   selectedPlanId: string | null;
   pending: boolean;
 }>();
@@ -17,6 +19,19 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
+    <v-alert
+      v-if="refreshErrorMessage"
+      type="warning"
+      variant="tonal"
+      class="ma-4 mb-0"
+    >
+      <div class="d-flex align-center justify-space-between ga-3">
+        <span>{{ refreshErrorMessage }}</span>
+        <v-btn size="small" variant="text" @click="$emit('retry')">
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
+    </v-alert>
     <AdminDataState
       :pending="pending"
       :error-message="errorMessage"
@@ -26,6 +41,7 @@ const { t } = useI18n();
       :retry-label="t('common.refresh')"
       @retry="$emit('retry')"
     >
+      <v-progress-linear v-if="fetching" indeterminate color="primary" />
       <v-list lines="three">
         <v-list-item
           v-for="plan in plans"
