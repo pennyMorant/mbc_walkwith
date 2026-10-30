@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { MediaAsset } from "@mbc/api-contracts";
 
+import { formatAdminDate } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 
 defineProps<{
@@ -13,9 +14,7 @@ const emit = defineEmits<{
 const { locale, t } = useI18n();
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat(locale.value, {
-    dateStyle: "medium"
-  }).format(new Date(value));
+  return formatAdminDate(value, locale.value);
 }
 
 function formatSize(sizeBytes: number) {
@@ -30,7 +29,7 @@ function formatSize(sizeBytes: number) {
 </script>
 
 <template>
-  <v-table density="comfortable">
+  <v-table class="d-none d-md-block" density="comfortable">
     <thead>
       <tr>
         <th>{{ t("media.asset") }}</th>
@@ -93,6 +92,52 @@ function formatSize(sizeBytes: number) {
       </tr>
     </tbody>
   </v-table>
+  <div class="d-md-none">
+    <component
+      :is="canManage ? 'button' : 'div'"
+      v-for="asset in assets"
+      :key="asset.id"
+      class="asset-record"
+      :class="{ 'asset-record--interactive': canManage }"
+      :type="canManage ? 'button' : undefined"
+      @click="canManage && emit('edit', asset)"
+    >
+      <v-img
+        v-if="asset.url"
+        :src="asset.url"
+        :alt="asset.altText"
+        width="72"
+        height="52"
+        cover
+        class="asset-thumbnail"
+      />
+      <div v-else class="asset-thumbnail asset-placeholder mobile-thumbnail">
+        <v-icon icon="mdi-image-lock-outline" />
+      </div>
+      <div class="asset-copy text-start">
+        <div class="font-weight-medium">
+          {{ asset.altText || asset.originalFileName }}
+        </div>
+        <div class="text-caption text-medium-emphasis mt-1">
+          {{ formatSize(asset.sizeBytes) }} · {{ formatDate(asset.updatedAt) }}
+        </div>
+        <div class="d-flex flex-wrap ga-2 mt-2">
+          <v-chip size="x-small" variant="tonal">
+            {{ t(asset.visibility) }}
+          </v-chip>
+          <v-chip size="x-small" variant="tonal">
+            {{ t(asset.consentStatus) }}
+          </v-chip>
+        </div>
+      </div>
+      <v-icon
+        v-if="canManage"
+        icon="mdi-chevron-right"
+        size="small"
+        class="text-medium-emphasis"
+      />
+    </component>
+  </div>
 </template>
 
 <style scoped>
@@ -120,5 +165,32 @@ function formatSize(sizeBytes: number) {
 .asset-copy {
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.asset-record {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  padding: 14px 16px;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+}
+
+.asset-record--interactive {
+  cursor: pointer;
+}
+
+.asset-record--interactive:hover {
+  background: rgba(var(--v-theme-on-surface), 0.04);
+}
+
+.mobile-thumbnail {
+  width: 72px;
+  height: 52px;
 }
 </style>

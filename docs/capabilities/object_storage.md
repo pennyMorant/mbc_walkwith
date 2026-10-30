@@ -58,6 +58,8 @@ R2 object key；开发和自动化测试可以使用本地 driver，但生产启
 - 媒体使用位置由引用方 Feature 的 provider 从 canonical repository 实时解析；Object Storage
   和 Media surface 只消费安全 usage 投影，不维护第二份业务引用真相。
 - 清理恢复可以采用请求内 best-effort 尝试和受权限保护的人工重试；这不等于引入媒体处理 worker。
+- Admin Web 的上传、授权修改和清理重试是显式命令意图。前端可以保留命令错误供重试，但不得据此改写对象或清理任务的 canonical 状态。
+- Admin Web 刷新失败时可继续显示最近一次成功的媒体或清理投影；该缓存只用于呈现，不得成为对象存在性、授权或删除结果的事实来源。
 - 本地存储 driver 必须把 `MEDIA_UPLOAD_DIR` 解析为明确 root；相对路径基于后端
   工作目录，绝对路径保持绝对路径。
 - 本地 `storagePath` 必须使用 `local:` 前缀，并且回读/删除只能访问对应 feature

@@ -1,64 +1,51 @@
 <script setup lang="ts">
 import type { MediaCleanupStatus, MediaCleanupTask } from "@mbc/api-contracts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, ref } from "vue";
 
-import { formatApiErrorMessage } from "@/core/api/api_errors";
-import { listMediaCleanupTasks, retryMediaCleanupTask } from "@/core/api/media";
-import { useAdminAuthStore } from "@/core/auth/auth_store";
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 
-const queryKey = ["admin-media-cleanup-tasks"];
+const status = defineModel<MediaCleanupStatus | "">("status", {
+  required: true
+});
+defineProps<{
+  tasks: MediaCleanupTask[];
+  canRead: boolean;
+  canRetry: boolean;
+  pending: boolean;
+  fetching: boolean;
+  errorMessage: string;
+  refreshErrorMessage: string;
+  retryErrorMessage: string;
+  retryingTaskId: string | null;
+}>();
+const emit = defineEmits<{
+  apply: [];
+  retryQuery: [];
+  retryTask: [task: MediaCleanupTask];
+}>();
 const statuses = ["", "failed", "pending", "succeeded"] as const;
-const authStore = useAdminAuthStore();
-const queryClient = useQueryClient();
 const { locale, optionItems, t } = useI18n();
-const status = ref<MediaCleanupStatus | "">("failed");
-const retryingId = ref<string | null>(null);
-const canRead = computed(() => authStore.can("media:read"));
-const canRetry = computed(() => authStore.can("media:manage"));
-
-const cleanupQuery = useQuery({
-  queryKey: [...queryKey, status],
-  enabled: canRead,
-  queryFn: () => listMediaCleanupTasks({ status: status.value, limit: 50 })
-});
-const retryMutation = useMutation({
-  mutationFn: retryMediaCleanupTask,
-  onSuccess: () => queryClient.invalidateQueries({ queryKey })
-});
-const tasks = computed(() => cleanupQuery.data.value ?? []);
-
-async function retry(task: MediaCleanupTask) {
-  if (!canRetry.value || retryMutation.isPending.value) return;
-  retryingId.value = task.id;
-  try {
-    await retryMutation.mutateAsync(task.id);
-  } finally {
-    retryingId.value = null;
-  }
-}
 
 function statusColor(value: MediaCleanupStatus) {
   if (value === "succeeded") return "success";
   if (value === "failed") return "error";
   return "warning";
 }
-
-function formatDateTime(value: string) {
-  return new Intl.DateTimeFormat(locale.value, {
-    dateStyle: "medium",
-    timeStyle: "short"
-  }).format(new Date(value));
-}
 </script>
 
 <template>
-  <v-card v-if="canRead" class="mt-6">
-    <div class="pa-5 d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
+  <v-card v-if="canRead" class="mt-6" variant="outlined">
+    <div
+      class="pa-5 d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+    >
       <div>
-        <div class="text-subtitle-1 font-weight-bold">{{ t("media.cleanupTitle") }}</div>
-        <div class="text-body-2 text-medium-emphasis">{{ t("media.cleanupSubtitle") }}</div>
+        <div class="text-subtitle-1 font-weight-bold">
+          {{ t("media.cleanupTitle") }}
+        </div>
+        <div class="text-body-2 text-medium-emphasis">
+          {{ t("media.cleanupSubtitle") }}
+        </div>
       </div>
       <div class="d-flex align-center ga-2 cleanup-actions">
         <v-select
@@ -72,28 +59,58 @@ function formatDateTime(value: string) {
         />
         <v-chip variant="tonal">{{ tasks.length }}</v-chip>
         <v-btn
-          icon="mdi-refresh"
+          icon="mdi-filter-check-outline"
           size="small"
           variant="tonal"
+          :aria-label="t('media.applyFilters')"
+          :title="t('media.applyFilters')"
+          :loading="fetching"
+          @click="emit('apply')"
+        />
+        <v-btn
+          icon="mdi-refresh"
+          size="small"
+          variant="text"
           :aria-label="t('common.refresh')"
-          :loading="cleanupQuery.isFetching.value"
-          @click="cleanupQuery.refetch()"
+          :title="t('common.refresh')"
+          :disabled="fetching"
+          @click="emit('retryQuery')"
         />
       </div>
     </div>
     <v-divider />
-    <v-progress-linear v-if="cleanupQuery.isPending.value" indeterminate color="primary" />
-    <v-alert v-else-if="cleanupQuery.error.value" type="error" variant="tonal" class="ma-4">
-      {{ formatApiErrorMessage(cleanupQuery.error.value, t("common.error")) }}
+    <v-alert
+      v-if="retryErrorMessage"
+      type="error"
+      variant="tonal"
+      class="ma-4 mb-0"
+    >
+      {{ retryErrorMessage }}
     </v-alert>
-    <v-alert v-else-if="tasks.length === 0" type="info" variant="tonal" class="ma-4">
-      {{ t("media.cleanupEmpty") }}
+    <v-alert
+      v-if="refreshErrorMessage"
+      type="warning"
+      variant="tonal"
+      density="compact"
+      class="ma-4 mb-0"
+    >
+      <div class="d-flex align-center justify-space-between ga-3">
+        <span>{{ refreshErrorMessage }}</span>
+        <v-btn size="small" variant="text" @click="emit('retryQuery')">
+          {{ t("common.refresh") }}
+        </v-btn>
+      </div>
     </v-alert>
-    <template v-else>
-      <v-alert v-if="retryMutation.error.value" type="error" variant="tonal" class="ma-4">
-        {{ formatApiErrorMessage(retryMutation.error.value, t("common.error")) }}
-      </v-alert>
-      <v-table density="comfortable">
+    <AdminDataState
+      :pending="pending"
+      :error-message="errorMessage"
+      :empty="tasks.length === 0"
+      :empty-title="t('media.cleanupEmpty')"
+      empty-icon="mdi-delete-sweep-outline"
+      :retry-label="t('common.refresh')"
+      @retry="emit('retryQuery')"
+    >
+      <v-table class="d-none d-md-block" density="comfortable">
         <thead>
           <tr>
             <th>{{ t("media.asset") }}</th>
@@ -123,7 +140,9 @@ function formatDateTime(value: string) {
               </v-chip>
             </td>
             <td>{{ task.attempts }}</td>
-            <td class="text-no-wrap">{{ formatDateTime(task.updatedAt) }}</td>
+            <td class="text-no-wrap">
+              {{ formatAdminDateTime(task.updatedAt, locale) }}
+            </td>
             <td class="text-end">
               <v-btn
                 v-if="task.retryable"
@@ -131,9 +150,9 @@ function formatDateTime(value: string) {
                 variant="tonal"
                 size="small"
                 prepend-icon="mdi-refresh"
-                :disabled="!canRetry"
-                :loading="retryingId === task.id"
-                @click="retry(task)"
+                :disabled="!canRetry || retryingTaskId !== null"
+                :loading="retryingTaskId === task.id"
+                @click="emit('retryTask', task)"
               >
                 {{ t("Retry") }}
               </v-btn>
@@ -142,13 +161,48 @@ function formatDateTime(value: string) {
           </tr>
         </tbody>
       </v-table>
-    </template>
+
+      <div class="d-md-none">
+        <div v-for="task in tasks" :key="task.id" class="cleanup-record">
+          <div class="min-width-0">
+            <div class="text-caption font-weight-medium task-id">
+              {{ task.mediaAssetId }}
+            </div>
+            <div class="text-body-2 text-medium-emphasis mt-1">
+              {{ t(task.reason) }} · {{ task.attempts }}
+            </div>
+            <div v-if="task.lastError" class="text-caption text-error mt-1">
+              {{ task.lastError }}
+            </div>
+          </div>
+          <div class="d-flex flex-column align-end ga-2">
+            <v-chip
+              size="small"
+              :color="statusColor(task.status)"
+              variant="tonal"
+            >
+              {{ t(task.status) }}
+            </v-chip>
+            <v-btn
+              v-if="task.retryable"
+              icon="mdi-refresh"
+              size="small"
+              variant="text"
+              :aria-label="t('Retry')"
+              :disabled="!canRetry || retryingTaskId !== null"
+              :loading="retryingTaskId === task.id"
+              @click="emit('retryTask', task)"
+            />
+          </div>
+        </div>
+      </div>
+    </AdminDataState>
   </v-card>
 </template>
 
 <style scoped>
 .cleanup-actions {
-  width: min(100%, 320px);
+  width: min(100%, 400px);
 }
 
 .status-filter {
@@ -158,5 +212,13 @@ function formatDateTime(value: string) {
 .task-id {
   max-width: 360px;
   overflow-wrap: anywhere;
+}
+
+.cleanup-record {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  padding: 14px 16px;
 }
 </style>

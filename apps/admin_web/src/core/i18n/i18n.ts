@@ -2569,6 +2569,10 @@ Object.assign(messages.en, {
   "media.librarySubtitle":
     "Review metadata and revoke or restore publishing consent without breaking content references.",
   "media.libraryEmpty": "No images match these filters.",
+  "media.applyFilters": "Apply filters",
+  "media.clearFilters": "Clear filters",
+  "media.libraryRefreshFailed":
+    "The image library could not be refreshed. The last loaded results remain visible.",
   "media.editTitle": "Edit image",
   "media.upload": "Upload image",
   "media.visibility": "Visibility",
@@ -2582,6 +2586,8 @@ Object.assign(messages.en, {
   "media.usagesTitle": "Used in",
   "media.usagesSubtitle": "Canonical content that currently references this image.",
   "media.usagesEmpty": "This image is not currently referenced by supported content.",
+  "media.usagesRefreshFailed":
+    "Image usage could not be refreshed. The last loaded references remain visible.",
   "media.restrictConfirmTitle": "Revoke publishing consent?",
   "media.restrictConfirmBody":
     "This image is used in {count} content location(s). The content will remain, but the image will stop appearing publicly.",
@@ -2590,6 +2596,8 @@ Object.assign(messages.en, {
   "media.cleanupSubtitle":
     "Review and retry object deletion after a media upload could not be bound.",
   "media.cleanupEmpty": "No media cleanup tasks match this status.",
+  "media.cleanupRefreshFailed":
+    "Cleanup tasks could not be refreshed. The last loaded results remain visible.",
   "media.asset": "Media asset",
   "sermons.subtitle":
     "Create, complete, review, publish, archive, and manage church sermon resources.",
@@ -2624,6 +2632,9 @@ Object.assign(messages["zh-Hans"], {
   "media.libraryTitle": "图片库",
   "media.librarySubtitle": "维护图片资料，并在不破坏内容引用的情况下撤销或恢复发布授权。",
   "media.libraryEmpty": "当前筛选条件下没有图片。",
+  "media.applyFilters": "应用筛选",
+  "media.clearFilters": "清除筛选",
+  "media.libraryRefreshFailed": "图片库刷新失败，已保留上次成功加载的结果。",
   "media.editTitle": "编辑图片",
   "media.upload": "上传图片",
   "media.visibility": "可见性",
@@ -2637,6 +2648,7 @@ Object.assign(messages["zh-Hans"], {
   "media.usagesTitle": "使用位置",
   "media.usagesSubtitle": "当前引用这张图片的真实业务内容。",
   "media.usagesEmpty": "当前支持的内容中没有引用这张图片。",
+  "media.usagesRefreshFailed": "图片使用位置刷新失败，已保留上次成功加载的结果。",
   "media.restrictConfirmTitle": "撤销发布授权？",
   "media.restrictConfirmBody":
     "这张图片目前用于 {count} 处内容。业务内容会保留，但图片将立即停止公开显示。",
@@ -2644,6 +2656,7 @@ Object.assign(messages["zh-Hans"], {
   "media.cleanupTitle": "媒体清理",
   "media.cleanupSubtitle": "查看并重试媒体上传绑定失败后的对象删除任务。",
   "media.cleanupEmpty": "当前状态下没有媒体清理任务。",
+  "media.cleanupRefreshFailed": "媒体清理任务刷新失败，已保留上次成功加载的结果。",
   "media.asset": "媒体资源",
   "sermons.subtitle": "创建、补全、审核、发布、归档并管理教会讲道资源。",
   "sermons.librarySubtitle": "搜索和筛选后端讲道记录。",
@@ -2677,6 +2690,9 @@ Object.assign(messages["zh-Hant"], {
   "media.libraryTitle": "圖片庫",
   "media.librarySubtitle": "維護圖片資料，並在不破壞內容引用的情況下撤銷或恢復發布授權。",
   "media.libraryEmpty": "目前篩選條件下沒有圖片。",
+  "media.applyFilters": "套用篩選",
+  "media.clearFilters": "清除篩選",
+  "media.libraryRefreshFailed": "圖片庫重新整理失敗，已保留上次成功載入的結果。",
   "media.editTitle": "編輯圖片",
   "media.upload": "上傳圖片",
   "media.visibility": "可見性",
@@ -2690,6 +2706,7 @@ Object.assign(messages["zh-Hant"], {
   "media.usagesTitle": "使用位置",
   "media.usagesSubtitle": "目前引用這張圖片的真實業務內容。",
   "media.usagesEmpty": "目前支援的內容中沒有引用這張圖片。",
+  "media.usagesRefreshFailed": "圖片使用位置重新整理失敗，已保留上次成功載入的結果。",
   "media.restrictConfirmTitle": "撤銷發布授權？",
   "media.restrictConfirmBody":
     "這張圖片目前用於 {count} 處內容。業務內容會保留，但圖片將立即停止公開顯示。",
@@ -2697,6 +2714,7 @@ Object.assign(messages["zh-Hant"], {
   "media.cleanupTitle": "媒體清理",
   "media.cleanupSubtitle": "查看並重試媒體上傳綁定失敗後的物件刪除任務。",
   "media.cleanupEmpty": "目前狀態下沒有媒體清理任務。",
+  "media.cleanupRefreshFailed": "媒體清理任務重新整理失敗，已保留上次成功載入的結果。",
   "media.asset": "媒體資源",
   "sermons.subtitle": "建立、補全、審核、發布、封存並管理教會講道資源。",
   "sermons.librarySubtitle": "搜尋和篩選後端講道記錄。",
@@ -2731,6 +2749,10 @@ Object.assign(messages.es, {
   "media.librarySubtitle":
     "Revisa los metadatos y revoca o restaura el permiso sin romper las referencias.",
   "media.libraryEmpty": "No hay imágenes con estos filtros.",
+  "media.applyFilters": "Aplicar filtros",
+  "media.clearFilters": "Borrar filtros",
+  "media.libraryRefreshFailed":
+    "No se pudo actualizar la biblioteca. Se mantienen los últimos resultados cargados.",
   "media.editTitle": "Editar imagen",
   "media.upload": "Subir imagen",
   "media.visibility": "Visibilidad",
@@ -2744,6 +2766,8 @@ Object.assign(messages.es, {
   "media.usagesTitle": "Usada en",
   "media.usagesSubtitle": "Contenido canónico que hace referencia a esta imagen.",
   "media.usagesEmpty": "Esta imagen no está referenciada por contenido compatible.",
+  "media.usagesRefreshFailed":
+    "No se pudieron actualizar los usos. Se mantienen las últimas referencias cargadas.",
   "media.restrictConfirmTitle": "¿Revocar el permiso de publicación?",
   "media.restrictConfirmBody":
     "Esta imagen se usa en {count} ubicación(es). El contenido permanecerá, pero la imagen dejará de mostrarse públicamente.",
@@ -2753,6 +2777,8 @@ Object.assign(messages.es, {
     "Revisa y reintenta la eliminación de cargas que no pudieron vincularse.",
   "media.cleanupEmpty":
     "No hay tareas de limpieza multimedia con este estado.",
+  "media.cleanupRefreshFailed":
+    "No se pudieron actualizar las tareas. Se mantienen los últimos resultados cargados.",
   "media.asset": "Recurso multimedia",
   "sermons.subtitle":
     "Crea, completa, revisa, publica, archiva y administra los sermones de la iglesia.",

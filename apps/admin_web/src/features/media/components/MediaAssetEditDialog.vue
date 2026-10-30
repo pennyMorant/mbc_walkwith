@@ -17,9 +17,11 @@ const props = defineProps<{
   usages: MediaAssetUsage[];
   usagesLoading: boolean;
   usagesError: string;
+  usagesRefreshError: string;
 }>();
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
+  retryUsages: [];
   save: [input: MediaAssetUpdateRequest];
 }>();
 const { optionItems, t } = useI18n();
@@ -111,6 +113,7 @@ function save() {
           :items="optionItems(consentStatuses)"
           :label="t('media.consentStatus')"
           variant="filled"
+          :disabled="saving"
         />
         <v-text-field
           v-model="form.altText"
@@ -118,6 +121,7 @@ function save() {
           variant="filled"
           maxlength="500"
           counter
+          :disabled="saving"
         />
         <v-textarea
           v-model="form.caption"
@@ -127,24 +131,38 @@ function save() {
           counter
           rows="3"
           auto-grow
+          :disabled="saving"
         />
         <v-text-field
           v-model="form.copyrightSource"
           :label="t('media.copyrightSource')"
           variant="filled"
           maxlength="500"
+          :disabled="saving"
         />
         <div>
           <div class="text-body-2 mb-1">
             {{ t("media.focalX") }}: {{ form.focalX }}%
           </div>
-          <v-slider v-model="form.focalX" :min="0" :max="100" :step="1" />
+          <v-slider
+            v-model="form.focalX"
+            :min="0"
+            :max="100"
+            :step="1"
+            :disabled="saving"
+          />
         </div>
         <div>
           <div class="text-body-2 mb-1">
             {{ t("media.focalY") }}: {{ form.focalY }}%
           </div>
-          <v-slider v-model="form.focalY" :min="0" :max="100" :step="1" />
+          <v-slider
+            v-model="form.focalY"
+            :min="0"
+            :max="100"
+            :step="1"
+            :disabled="saving"
+          />
         </div>
         <v-divider class="my-2" />
         <div class="d-flex align-center justify-space-between ga-3">
@@ -160,12 +178,38 @@ function save() {
         </div>
         <v-progress-linear v-if="usagesLoading" indeterminate color="primary" />
         <v-alert v-else-if="usagesError" type="error" variant="tonal">
-          {{ usagesError }}
+          <div class="d-flex align-center justify-space-between ga-3">
+            <span>{{ usagesError }}</span>
+            <v-btn size="small" variant="text" @click="emit('retryUsages')">
+              {{ t("common.refresh") }}
+            </v-btn>
+          </div>
         </v-alert>
-        <v-alert v-else-if="usages.length === 0" type="info" variant="tonal">
+        <v-alert
+          v-if="usagesRefreshError"
+          type="warning"
+          variant="tonal"
+          density="compact"
+        >
+          <div class="d-flex align-center justify-space-between ga-3">
+            <span>{{ usagesRefreshError }}</span>
+            <v-btn size="small" variant="text" @click="emit('retryUsages')">
+              {{ t("common.refresh") }}
+            </v-btn>
+          </div>
+        </v-alert>
+        <v-alert
+          v-if="!usagesLoading && !usagesError && usages.length === 0"
+          type="info"
+          variant="tonal"
+        >
           {{ t("media.usagesEmpty") }}
         </v-alert>
-        <v-list v-else density="compact" class="usage-list">
+        <v-list
+          v-else-if="!usagesLoading && !usagesError"
+          density="compact"
+          class="usage-list"
+        >
           <v-list-item
             v-for="usage in usages"
             :key="`${usage.source}:${usage.sourceId}:${usage.slot}`"
