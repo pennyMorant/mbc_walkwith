@@ -1,24 +1,9 @@
 <script setup lang="ts">
-import type {
-  BibleKnowledgeEntity,
-  BibleKnowledgeEntityType,
-  BibleKnowledgeSection
-} from "@mbc/api-contracts";
+import type { BibleKnowledgeEntity } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 
-type BibleKnowledgeEditorForm = {
-  id: string;
-  type: BibleKnowledgeEntityType;
-  name: string;
-  category: string;
-  summary: string;
-  description: string;
-  sections: BibleKnowledgeSection[];
-  aliasesText: string;
-  verseAliasesText: string;
-  status: BibleKnowledgeEntity["status"];
-};
+import type { BibleKnowledgeEditorForm } from "../bible_knowledge_workspace_models";
 
 const form = defineModel<BibleKnowledgeEditorForm>({ required: true });
 defineProps<{
@@ -92,11 +77,11 @@ const { optionItems, t } = useI18n();
     <v-textarea v-model="form.verseAliasesText" :label="t('Verse aliases JSON')" rows="5" density="comfortable" variant="outlined" />
     <v-alert v-if="errorMessage" type="error" variant="tonal" class="mb-4">{{ errorMessage }}</v-alert>
     <div class="d-flex justify-space-between ga-3">
-      <v-btn v-if="selectedEntity" color="error" variant="tonal" :disabled="!canManage || deleting" :loading="deleting" @click="$emit('delete')">
+      <v-btn v-if="selectedEntity" color="error" variant="tonal" :disabled="!canManage || saving || deleting" :loading="deleting" @click="$emit('delete')">
         {{ t("Delete") }}
       </v-btn>
       <div v-else />
-      <v-btn type="submit" color="primary" :disabled="!canSave || !canManage || saving" :loading="saving">
+      <v-btn type="submit" color="primary" :disabled="!canSave || !canManage || saving || deleting" :loading="saving">
         {{ t("common.save") }}
       </v-btn>
     </div>

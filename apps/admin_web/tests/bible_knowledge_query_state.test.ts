@@ -9,6 +9,20 @@ const page = readFileSync(
   ),
   "utf8"
 );
+const query = readFileSync(
+  new URL(
+    "../src/features/bible-knowledge/composables/use_bible_knowledge_query.ts",
+    import.meta.url
+  ),
+  "utf8"
+);
+const controller = readFileSync(
+  new URL(
+    "../src/features/bible-knowledge/composables/use_bible_knowledge_page.ts",
+    import.meta.url
+  ),
+  "utf8"
+);
 const list = readFileSync(
   new URL(
     "../src/features/bible-knowledge/components/BibleKnowledgeEntityListCard.vue",
@@ -16,12 +30,18 @@ const list = readFileSync(
   ),
   "utf8"
 );
+const messages = readFileSync(
+  new URL("../src/core/i18n/i18n.ts", import.meta.url),
+  "utf8"
+);
 
 describe("Bible knowledge query state", () => {
   test("keeps draft filters separate from applied query values", () => {
-    expect(page).toContain("const appliedFilters = ref<BibleKnowledgeListFilters>");
-    expect(page).toContain("function applyFilters()");
+    expect(query).toContain("const appliedFilters = ref(");
+    expect(query).toContain("function applyFilters()");
+    expect(query).toContain("queryFn: ({ queryKey })");
     expect(page).toContain('@apply-filters="applyFilters"');
+    expect(list).not.toContain('@update:model-value="$emit(\'applyFilters\')"');
   });
 
   test("keeps list query presentation component-owned", () => {
@@ -36,15 +56,17 @@ describe("Bible knowledge query state", () => {
     expect(list).toContain(
       ':pending="(isPending || isFetching) && entities.length === 0"'
     );
-    expect(list).toContain('v-if="entities.length > 0 && errorMessage"');
-    expect(page).toContain(':error-message="entitiesErrorMessage"');
+    expect(list).toContain('v-if="refreshErrorMessage"');
+    expect(list).toContain("!refreshErrorMessage && entities.length === 0");
+    expect(query).toContain("const initialError = computed");
+    expect(query).toContain("const refreshError = computed");
+    expect(page).toContain(':refresh-error-message="refreshErrorMessage"');
   });
 
   test("targets update and delete by the selected canonical locale key", () => {
-    expect(page).toContain("locale: entity.locale");
-    expect(page).toContain("translationId: entity.translationId");
-    expect(page).not.toContain("locale: filters.locale,");
-    expect(page).not.toContain("translationId: filters.translationId\n    });");
+    expect(controller).toContain("locale: intent.key.locale");
+    expect(controller).toContain("translationId: intent.key.translationId");
+    expect(controller).toContain("commandTargetsCurrentEditor");
   });
 
   test("offers every canonical knowledge status in the directory filter", () => {
@@ -61,8 +83,14 @@ describe("Bible knowledge query state", () => {
   });
 
   test("keeps query failures separate from editor command failures", () => {
-    expect(page).toContain("entitiesErrorMessage");
-    expect(page).toContain("entityMutationErrorMessage");
-    expect(page).toContain(':error-message="entityMutationErrorMessage"');
+    expect(controller).toContain("initialErrorMessage");
+    expect(controller).toContain("commandErrorMessage");
+    expect(page).toContain(':error-message="commandErrorMessage"');
+  });
+
+  test("localizes refresh recovery copy for every supported locale", () => {
+    expect(
+      messages.match(/"bibleKnowledge\.libraryRefreshFailed"/g)
+    ).toHaveLength(4);
   });
 });

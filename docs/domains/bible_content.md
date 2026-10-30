@@ -17,6 +17,10 @@
 - App 可以本地缓存和朗读公开或授权文本。
 - 经文引用必须保留 book、chapter、verse 结构。
 - 学习辅助或 AI 解释不能把无来源内容当成教会教义。
+- 后台人物、地点和读经辅助资料按 `id + locale + translationId` 形成 canonical
+  复合身份；它们是本地经文之外的学习投影，不能覆盖或复制圣经正文。
+- 管理端筛选草稿只有在明确应用后才能成为目录查询快照。保存和删除必须冻结操作
+  发起时的复合身份，异步结果只有仍命中原编辑上下文时才能更新当前编辑器。
 
 ## State
 
@@ -26,6 +30,7 @@
 - source。
 - book/chapter/verse。
 - local package version。
+- knowledge entity id、locale、translation id、status。
 
 ## Used By
 

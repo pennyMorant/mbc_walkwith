@@ -10,15 +10,25 @@ const editorSource = readFileSync(
   new URL("../src/features/bible-knowledge/components/BibleKnowledgeEntityEditor.vue", import.meta.url),
   "utf8"
 );
+const controllerSource = readFileSync(
+  new URL("../src/features/bible-knowledge/composables/use_bible_knowledge_page.ts", import.meta.url),
+  "utf8"
+);
+const modelsSource = readFileSync(
+  new URL("../src/features/bible-knowledge/bible_knowledge_workspace_models.ts", import.meta.url),
+  "utf8"
+);
 
 describe("Bible knowledge page composition", () => {
-  it("keeps CRUD, permission, and canonical payload work page-owned", () => {
-    expect(pageSource).toContain("createBibleKnowledgeEntity");
-    expect(pageSource).toContain("updateBibleKnowledgeEntity");
-    expect(pageSource).toContain("deleteBibleKnowledgeEntity");
-    expect(pageSource).toContain("authStore.can");
-    expect(pageSource).toContain("parseVerseAliases");
-    expect(pageSource).toContain("cleanedSections");
+  it("keeps the page composition-only and moves workspace ownership to the controller", () => {
+    expect(pageSource).toContain("useBibleKnowledgePage");
+    expect(pageSource).not.toContain("createBibleKnowledgeEntity");
+    expect(pageSource).not.toContain("useMutation");
+    expect(controllerSource).toContain("createBibleKnowledgeEntity");
+    expect(controllerSource).toContain("authStore.can");
+    expect(controllerSource).toContain("drawer.value &&");
+    expect(modelsSource).toContain("bibleKnowledgeUpsertPayload");
+    expect(modelsSource).toContain("sameBibleKnowledgeEditorContext");
   });
 
   it("uses a presentation-only editor for field and section intents", () => {

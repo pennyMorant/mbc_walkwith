@@ -1,26 +1,18 @@
 <script setup lang="ts">
-import type {
-  BibleKnowledgeEntity,
-  BibleKnowledgeEntityType
-} from "@mbc/api-contracts";
+import type { BibleKnowledgeEntity } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 
-type BibleKnowledgeFilters = {
-  query: string;
-  type: BibleKnowledgeEntityType | "";
-  status: BibleKnowledgeEntity["status"] | "";
-  locale: string;
-  translationId: "web" | "cuvs" | "cuvt";
-};
+import type { BibleKnowledgeFilterForm } from "../bible_knowledge_workspace_models";
 
-const filters = defineModel<BibleKnowledgeFilters>({ required: true });
+const filters = defineModel<BibleKnowledgeFilterForm>({ required: true });
 defineProps<{
   entities: BibleKnowledgeEntity[];
   isPending: boolean;
   isFetching: boolean;
   errorMessage: string;
+  refreshErrorMessage: string;
 }>();
 defineEmits<{
   applyFilters: [];
@@ -53,7 +45,6 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="$emit('applyFilters')"
           />
         </v-col>
         <v-col cols="12" md="2">
@@ -64,7 +55,6 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="$emit('applyFilters')"
           />
         </v-col>
         <v-col cols="12" md="2">
@@ -75,7 +65,6 @@ const { optionItems, t } = useI18n();
             density="compact"
             variant="outlined"
             hide-details
-            @update:model-value="$emit('applyFilters')"
           />
         </v-col>
         <v-col cols="12" md="2">
@@ -100,7 +89,7 @@ const { optionItems, t } = useI18n();
     <AdminDataState
       :pending="(isPending || isFetching) && entities.length === 0"
       :error-message="entities.length === 0 ? errorMessage : ''"
-      :empty="!isFetching && !errorMessage && entities.length === 0"
+      :empty="!isFetching && !errorMessage && !refreshErrorMessage && entities.length === 0"
       :empty-title="t('nav.searchEmpty')"
       empty-icon="mdi-book-search-outline"
       :retry-label="t('common.refresh')"
@@ -112,13 +101,13 @@ const { optionItems, t } = useI18n();
         color="primary"
       />
       <v-alert
-        v-if="entities.length > 0 && errorMessage"
+        v-if="refreshErrorMessage"
         type="error"
         variant="tonal"
         class="ma-4"
       >
         <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-          <span>{{ errorMessage }}</span>
+          <span>{{ refreshErrorMessage }}</span>
           <v-btn
             color="error"
             prepend-icon="mdi-refresh"

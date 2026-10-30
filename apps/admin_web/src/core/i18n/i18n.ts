@@ -5024,6 +5024,23 @@ Object.assign(messages["zh-Hant"], {
   "newcomers.refreshFailed": "無法載入最新的新朋友佇列。"
 });
 
+Object.assign(messages.en, {
+  "bibleKnowledge.libraryRefreshFailed":
+    "Bible knowledge could not be refreshed. The last loaded results remain visible."
+});
+Object.assign(messages["zh-Hans"], {
+  "bibleKnowledge.libraryRefreshFailed":
+    "圣经知识目录刷新失败，已保留上次成功加载的结果。"
+});
+Object.assign(messages["zh-Hant"], {
+  "bibleKnowledge.libraryRefreshFailed":
+    "聖經知識目錄重新整理失敗，已保留上次成功載入的結果。"
+});
+Object.assign(messages.es, {
+  "bibleKnowledge.libraryRefreshFailed":
+    "No se pudo actualizar el conocimiento bíblico. Los últimos resultados cargados siguen visibles."
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });
