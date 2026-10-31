@@ -5,12 +5,12 @@ import type {
   GroupMembershipStatus,
   LifePostVisibility,
   MinistryGroup,
+  MinistryGroupUpsertRequest,
   MinistryGroupStatus
 } from "@mbc/api-contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref } from "vue";
 
-import { requireSelected } from "@/core/actions/action_guard";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import {
   createGroup,
@@ -22,7 +22,12 @@ import {
 } from "@/core/api/groups";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
-import type { GroupEditorForm } from "../group_workspace_models";
+import {
+  groupApplicationFilterSnapshot,
+  groupEditorPayload,
+  sameGroupIntent,
+  type GroupApplicationFilterForm
+} from "../group_workspace_models";
 import { useGroupActivityWorkspace } from "./use_group_activity_workspace";
 import { useGroupCatalogQuery } from "./use_group_catalog_query";
 import { useGroupMutationFeedback } from "./use_group_mutation_feedback";
@@ -39,6 +44,17 @@ export function useGroupMinistryPage() {
     successMessage,
     t
   );
+  const editorCommandErrorMessage = mutationFeedback.messageFor("group-save");
+  const applicationsCommandErrorMessage = mutationFeedback.messageFor(
+    "application-review"
+  );
+  const membershipsCommandErrorMessage = mutationFeedback.messageFor(
+    "membership-update"
+  );
+  const materialsCommandErrorMessage =
+    mutationFeedback.messageFor("material-command");
+  const attendanceCommandErrorMessage =
+    mutationFeedback.messageFor("attendance-save");
   const successVisible = computed({
     get: () => successMessage.value.length > 0,
     set: (visible: boolean) => {
@@ -58,10 +74,13 @@ export function useGroupMinistryPage() {
     clearFilters: clearGroupFilters,
     refreshList: refreshGroups
   } = useGroupCatalogQuery(queryClient);
-  const applicationFilters = reactive({
+  const applicationFilters = reactive<GroupApplicationFilterForm>({
     status: "submitted" as GroupApplicationStatus | "",
     query: ""
   });
+  const appliedApplicationFilters = ref(
+    groupApplicationFilterSnapshot(applicationFilters)
+  );
   const membershipFilters = reactive({
     status: "" as GroupMembershipStatus | "",
     query: ""
@@ -82,7 +101,7 @@ export function useGroupMinistryPage() {
     queryKey: computed(() => [
       "group-applications",
       selectedGroupId.value,
-      { ...applicationFilters, limit: 100 }
+      { ...appliedApplicationFilters.value, limit: 100 }
     ]),
     enabled: computed(() => Boolean(selectedGroupId.value)),
     queryFn: ({ queryKey }) => {
@@ -136,17 +155,18 @@ export function useGroupMinistryPage() {
     t
   });
 
-  function selectedOrThrow() {
+  function assertManage() {
     if (!canManage.value) {
       throw new Error(t("Group manage access required"));
     }
-    return requireSelected(selectedGroup.value, t("No group selected."));
   }
 
-  async function refreshCanonicalGroup(fallback?: MinistryGroup) {
-    const groupId = fallback?.id ?? selectedGroup.value?.id;
+  async function refreshCanonicalGroup(
+    groupId: string,
+    fallback?: MinistryGroup
+  ) {
     await queryClient.invalidateQueries({ queryKey: ["groups"] });
-    if (!groupId) {
+    if (selectedGroup.value?.id !== groupId) {
       return;
     }
     selectedGroup.value =
@@ -162,25 +182,24 @@ export function useGroupMinistryPage() {
   }
 
   const saveMutation = useMutation({
-    onMutate: () => mutationFeedback.begin(),
-    mutationFn: () => {
-      if (!canManage.value || !canSave.value) {
+    onMutate: (intent: GroupSaveIntent) =>
+      mutationFeedback.begin("group-save", intent.groupId),
+    mutationFn: (intent: GroupSaveIntent) => {
+      if (!canManage.value || !intent.payload.name) {
         throw new Error(t("Group manage access required"));
       }
-      const payload = buildGroupPayload(form);
-      return selectedGroup.value
-        ? updateGroup(selectedGroup.value.id, payload)
-        : createGroup(payload);
+      return intent.groupId
+        ? updateGroup(intent.groupId, intent.payload)
+        : createGroup(intent.payload);
     },
-    onSuccess: async (group, _variables, context) => {
+    onSuccess: async (group, intent, context) => {
       if (context && mutationFeedback.isCurrent(context)) {
-        editGroup(group, true);
-        mutationFeedback.succeed(
-          { ...context, groupId: group.id },
-          t("Group saved.")
-        );
-        await refreshCanonicalGroup(group);
-        return;
+        mutationFeedback.succeed(context, t("Group saved."));
+        if (sameGroupIntent(groupEditorPayload(form), intent.payload)) {
+          editGroup(group, true);
+        } else if (intent.groupId) {
+          selectedGroup.value = group;
+        }
       }
       await queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
@@ -188,43 +207,44 @@ export function useGroupMinistryPage() {
       mutationFeedback.capture(error, variables, context)
   });
   const reviewMutation = useMutation({
-    onMutate: () => mutationFeedback.begin(),
-    mutationFn: (input: {
-      applicationId: string;
-      status: "approved" | "declined";
-    }) => {
-      const group = selectedOrThrow();
-      return reviewGroupApplication(group.id, input.applicationId, {
-        status: input.status
+    onMutate: (intent: GroupApplicationReviewIntent) =>
+      mutationFeedback.begin("application-review", intent.groupId),
+    mutationFn: (intent: GroupApplicationReviewIntent) => {
+      assertManage();
+      return reviewGroupApplication(intent.groupId, intent.applicationId, {
+        status: intent.status
       });
     },
-    onSuccess: async (_application, _variables, context) => {
+    onSuccess: async (_application, intent, context) => {
       mutationFeedback.succeed(context, t("Application updated."));
       await invalidateGroupQueries("group-applications", "group-memberships");
-      await refreshCanonicalGroup();
+      await refreshCanonicalGroup(intent.groupId);
     },
     onError: (error, variables, context) =>
       mutationFeedback.capture(error, variables, context)
   });
   const membershipMutation = useMutation({
-    onMutate: () => mutationFeedback.begin(),
-    mutationFn: (input: {
-      membership: GroupMembership;
-      status: GroupMembershipStatus;
-    }) => {
-      const group = selectedOrThrow();
-      return updateGroupMembership(group.id, input.membership.userId, {
-        status: input.status
+    onMutate: (intent: GroupMembershipUpdateIntent) =>
+      mutationFeedback.begin("membership-update", intent.groupId),
+    mutationFn: (intent: GroupMembershipUpdateIntent) => {
+      assertManage();
+      return updateGroupMembership(intent.groupId, intent.userId, {
+        status: intent.status
       });
     },
-    onSuccess: async (_membership, _variables, context) => {
+    onSuccess: async (_membership, intent, context) => {
       mutationFeedback.succeed(context, t("Membership updated."));
       await invalidateGroupQueries("group-memberships");
-      await refreshCanonicalGroup();
+      await refreshCanonicalGroup(intent.groupId);
     },
     onError: (error, variables, context) =>
       mutationFeedback.capture(error, variables, context)
   });
+  const savePending = computed(() => saveMutation.isPending.value);
+  const reviewPending = computed(() => reviewMutation.isPending.value);
+  const membershipMutationPending = computed(
+    () => membershipMutation.isPending.value
+  );
   const listErrorMessage = computed(() =>
     groupsError.value
       ? formatApiErrorMessage(groupsError.value, t("common.error"))
@@ -235,14 +255,87 @@ export function useGroupMinistryPage() {
       ? formatApiErrorMessage(groupsRefreshError.value, t("common.error"))
       : ""
   );
-  const workspaceErrorMessage = computed(() =>
-    formatApiErrorMessage(
-      applicationsQuery.error.value ||
-        membershipsQuery.error.value ||
-        activity.error.value,
-      t("common.error")
-    ) || mutationFeedback.errorMessage.value
+  const applicationsErrorMessage = queryErrorMessage(applicationsQuery, false);
+  const applicationsRefreshErrorMessage = queryErrorMessage(
+    applicationsQuery,
+    true
   );
+  const membershipsErrorMessage = queryErrorMessage(membershipsQuery, false);
+  const membershipsRefreshErrorMessage = queryErrorMessage(
+    membershipsQuery,
+    true
+  );
+  const materialsErrorMessage = computed(() =>
+    formatApiErrorMessage(
+      activity.materialsInitialError.value,
+      t("common.error")
+    )
+  );
+  const materialsRefreshErrorMessage = computed(() =>
+    formatApiErrorMessage(
+      activity.materialsRefreshError.value,
+      t("common.error")
+    )
+  );
+  const attendanceErrorMessage = computed(() =>
+    formatApiErrorMessage(
+      activity.attendanceInitialError.value,
+      t("common.error")
+    )
+  );
+  const attendanceRefreshErrorMessage = computed(() =>
+    formatApiErrorMessage(
+      activity.attendanceRefreshError.value,
+      t("common.error")
+    )
+  );
+
+  function queryErrorMessage(
+    query: { data: { value: unknown }; error: { value: unknown } },
+    forRefresh: boolean
+  ) {
+    return computed(() => {
+      const hasData = query.data.value !== undefined;
+      return hasData === forRefresh
+        ? formatApiErrorMessage(query.error.value, t("common.error"))
+        : "";
+    });
+  }
+
+  function applyApplicationFilters() {
+    appliedApplicationFilters.value =
+      groupApplicationFilterSnapshot(applicationFilters);
+  }
+
+  function saveGroup() {
+    if (!canManage.value || !canSave.value || saveMutation.isPending.value) {
+      return;
+    }
+    saveMutation.mutate({
+      groupId: selectedGroup.value?.id ?? null,
+      payload: groupEditorPayload(form)
+    });
+  }
+
+  function reviewApplication(
+    applicationId: string,
+    status: "approved" | "declined"
+  ) {
+    const groupId = selectedGroup.value?.id;
+    if (!groupId || !canManage.value || reviewMutation.isPending.value) return;
+    reviewMutation.mutate({ groupId, applicationId, status });
+  }
+
+  function updateMembershipStatus(
+    membership: GroupMembership,
+    status: GroupMembershipStatus
+  ) {
+    const groupId = selectedGroup.value?.id;
+    if (!groupId || !canManage.value || membershipMutation.isPending.value) {
+      return;
+    }
+    membershipMutation.mutate({ groupId, userId: membership.userId, status });
+  }
 
   function selectGroup(group: MinistryGroup, preserveFeedback = false) {
     if (selectedGroup.value?.id !== group.id) {
@@ -284,14 +377,22 @@ export function useGroupMinistryPage() {
 
   return {
     ...activity,
+    applyApplicationFilters,
     applyGroupFilters,
     applicationFilters,
     applications,
+    applicationsCommandErrorMessage,
+    applicationsErrorMessage,
     applicationsQuery,
+    applicationsRefreshErrorMessage,
+    attendanceCommandErrorMessage,
+    attendanceErrorMessage,
+    attendanceRefreshErrorMessage,
     canManage,
     canSave,
     clearGroupFilters,
     drawer,
+    editorCommandErrorMessage,
     editGroup,
     filters,
     form,
@@ -299,42 +400,46 @@ export function useGroupMinistryPage() {
     groupsQuery,
     listErrorMessage,
     listRefreshErrorMessage,
+    materialsCommandErrorMessage,
+    materialsErrorMessage,
+    materialsRefreshErrorMessage,
     membershipFilters,
-    membershipMutation,
+    membershipMutationPending,
     filteredMemberships,
     memberships,
+    membershipsCommandErrorMessage,
+    membershipsErrorMessage,
     membershipsQuery,
+    membershipsRefreshErrorMessage,
     newGroup,
     optionItems,
-    reviewMutation,
+    reviewPending,
     refreshGroups,
-    saveMutation,
+    reviewApplication,
+    savePending,
+    saveGroup,
     selectedGroup,
     selectGroup,
     successMessage,
     successVisible,
     t,
-    workspaceErrorMessage
+    updateMembershipStatus
   };
 }
 
-function buildGroupPayload(form: GroupEditorForm) {
-  return {
-    name: form.name.trim(),
-    description: form.description.trim(),
-    meetingTime: form.meetingTime.trim(),
-    location: form.location.trim(),
-    leaderName: form.leaderName.trim(),
-    visibility: form.visibility,
-    status: form.status,
-    capacity: normalizeCapacity(form.capacity)
-  };
-}
+type GroupSaveIntent = {
+  groupId: string | null;
+  payload: MinistryGroupUpsertRequest;
+};
 
-function normalizeCapacity(value: number | null | undefined) {
-  if (value == null) {
-    return null;
-  }
-  const capacity = Math.floor(Number(value));
-  return Number.isFinite(capacity) && capacity > 0 ? capacity : null;
-}
+type GroupApplicationReviewIntent = {
+  groupId: string;
+  applicationId: string;
+  status: "approved" | "declined";
+};
+
+type GroupMembershipUpdateIntent = {
+  groupId: string;
+  userId: string;
+  status: GroupMembershipStatus;
+};

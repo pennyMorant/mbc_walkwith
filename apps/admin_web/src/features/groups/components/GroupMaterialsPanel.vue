@@ -12,6 +12,7 @@ import {
 import { useI18n } from "@/core/i18n/i18n";
 import { formatGroupDateTime } from "../group_presenters";
 import type { GroupMaterialForm } from "../group_workspace_models";
+import GroupPanelState from "./GroupPanelState.vue";
 
 const form = defineModel<GroupMaterialForm>("form", { required: true });
 const status = defineModel<GroupTaskStatus | "">("status", { required: true });
@@ -22,13 +23,17 @@ const materialType = defineModel<GroupMaterialType | "">("materialType", {
 defineProps<{
   materials: GroupMaterialAssignment[];
   pending: boolean;
+  errorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
   mutationPending: boolean;
   canManage: boolean;
   canCreate: boolean;
 }>();
 
 const emit = defineEmits<{
-  refresh: [];
+  applyFilters: [];
+  retry: [];
   create: [];
   updateStatus: [material: GroupMaterialAssignment, status: GroupTaskStatus];
 }>();
@@ -46,7 +51,13 @@ function updateStatus(
 </script>
 
 <template>
-  <div>
+  <GroupPanelState
+    :pending="pending"
+    :error-message="errorMessage"
+    :refresh-error-message="refreshErrorMessage"
+    :command-error-message="commandErrorMessage"
+    @retry="emit('retry')"
+  >
     <div class="d-flex flex-column flex-md-row ga-2 mb-3">
       <v-select
         v-model="materialType"
@@ -64,11 +75,10 @@ function updateStatus(
         variant="outlined"
         hide-details
       />
-      <v-btn variant="tonal" @click="emit('refresh')">
-        {{ t("common.refresh") }}
+      <v-btn variant="tonal" @click="emit('applyFilters')">
+        {{ t("common.go") }}
       </v-btn>
     </div>
-    <v-progress-linear v-if="pending" indeterminate color="primary" />
     <v-table density="compact">
       <thead>
         <tr>
@@ -173,5 +183,5 @@ function updateStatus(
         </v-btn>
       </v-col>
     </v-row>
-  </div>
+  </GroupPanelState>
 </template>

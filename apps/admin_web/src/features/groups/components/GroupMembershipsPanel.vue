@@ -7,6 +7,7 @@ import type {
 import { groupMembershipStatusOptions } from "@/core/api/groups";
 import { useI18n } from "@/core/i18n/i18n";
 import { formatGroupDateTime } from "../group_presenters";
+import GroupPanelState from "./GroupPanelState.vue";
 
 const status = defineModel<GroupMembershipStatus | "">("status", {
   required: true
@@ -16,12 +17,15 @@ const query = defineModel<string>("query", { required: true });
 defineProps<{
   memberships: GroupMembership[];
   pending: boolean;
+  errorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
   updatePending: boolean;
   canManage: boolean;
 }>();
 
 const emit = defineEmits<{
-  refresh: [];
+  retry: [];
   updateStatus: [membership: GroupMembership, status: GroupMembershipStatus];
 }>();
 
@@ -38,7 +42,13 @@ function updateStatus(
 </script>
 
 <template>
-  <div>
+  <GroupPanelState
+    :pending="pending"
+    :error-message="errorMessage"
+    :refresh-error-message="refreshErrorMessage"
+    :command-error-message="commandErrorMessage"
+    @retry="emit('retry')"
+  >
     <div class="d-flex flex-column flex-md-row ga-2 mb-3">
       <v-text-field
         v-model="query"
@@ -46,7 +56,6 @@ function updateStatus(
         density="compact"
         variant="outlined"
         hide-details
-        @keyup.enter="emit('refresh')"
       />
       <v-select
         v-model="status"
@@ -57,11 +66,10 @@ function updateStatus(
         hide-details
         max-width="190"
       />
-      <v-btn variant="tonal" @click="emit('refresh')">
+      <v-btn variant="tonal" @click="emit('retry')">
         {{ t("common.refresh") }}
       </v-btn>
     </div>
-    <v-progress-linear v-if="pending" indeterminate color="primary" />
     <v-table density="compact">
       <thead>
         <tr>
@@ -102,5 +110,5 @@ function updateStatus(
         </tr>
       </tbody>
     </v-table>
-  </div>
+  </GroupPanelState>
 </template>

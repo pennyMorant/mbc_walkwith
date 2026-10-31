@@ -225,6 +225,9 @@ Surface rule:
   mutation 后刷新 canonical 小组和子资源。左侧目录使用共享查询状态表达，页面
   保留筛选、重试和选择 owner；筛选草稿只有在明确应用后才成为查询快照，刷新失败
   保留已有列表和选择，子资源与 mutation 错误不会替换目录状态。
+  申请、材料和出席远程筛选也只在显式应用后请求；申请、成员、材料和出席分别拥有
+  初始错误、刷新警告、区域重试与命令错误。页面 controller 在 action 边界冻结小组
+  id、子资源 id 和 payload，迟到结果刷新 canonical cache 但不覆盖当前小组或表单。
 - Group ministry v2：Admin 已接入成员状态、材料分配和出席记录；小组长 App
   工作台、关怀提醒和小组通知仍归 group ministry feature 后续阶段。
 - Course learning：Courses 页面维护课程、课次、报名名单和学习进度；mutation 后必须

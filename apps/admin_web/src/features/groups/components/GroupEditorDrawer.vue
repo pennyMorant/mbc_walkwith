@@ -13,6 +13,7 @@ defineProps<{
   canManage: boolean;
   canSave: boolean;
   saveLoading: boolean;
+  commandErrorMessage: string;
 }>();
 
 const emit = defineEmits<{
@@ -36,6 +37,16 @@ const { optionItems, t } = useI18n();
         </div>
         <v-btn icon="mdi-close" variant="text" @click="drawer = false" />
       </div>
+
+      <v-alert
+        v-if="commandErrorMessage"
+        type="error"
+        variant="tonal"
+        density="compact"
+        class="mt-4"
+      >
+        {{ commandErrorMessage }}
+      </v-alert>
 
       <v-form class="mt-5" @submit.prevent="emit('save')">
         <v-text-field

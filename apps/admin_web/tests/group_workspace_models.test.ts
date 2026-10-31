@@ -2,7 +2,11 @@ import { describe, expect, test } from "bun:test";
 
 import {
   createGroupCatalogFilterForm,
+  groupApplicationFilterSnapshot,
+  groupAttendanceFilterSnapshot,
   groupCatalogFilterSnapshot,
+  groupEditorPayload,
+  groupMaterialFilterSnapshot,
   resetGroupCatalogFilterForm,
   resetGroupActivityForms,
   type GroupAttendanceForm,
@@ -62,5 +66,44 @@ describe("group workspace models", () => {
       status: "present",
       note: ""
     });
+  });
+
+  test("normalizes subresource filter snapshots without changing drafts", () => {
+    const applications = { status: "submitted" as const, query: "  lee  " };
+    const materials = { status: "assigned" as const, materialType: "course" as const };
+    const attendance = { status: "present" as const };
+
+    expect(groupApplicationFilterSnapshot(applications)).toEqual({
+      status: "submitted",
+      query: "lee"
+    });
+    expect(groupMaterialFilterSnapshot(materials)).toEqual(materials);
+    expect(groupAttendanceFilterSnapshot(attendance)).toEqual(attendance);
+    expect(applications.query).toBe("  lee  ");
+  });
+
+  test("freezes a normalized group save intent", () => {
+    const form = {
+      name: "  Grace Group  ",
+      description: "  Weekly fellowship  ",
+      meetingTime: " Friday ",
+      location: " Room 2 ",
+      leaderName: " Leader ",
+      visibility: "members" as const,
+      status: "active" as const,
+      capacity: 12.8
+    };
+
+    expect(groupEditorPayload(form)).toEqual({
+      name: "Grace Group",
+      description: "Weekly fellowship",
+      meetingTime: "Friday",
+      location: "Room 2",
+      leaderName: "Leader",
+      visibility: "members",
+      status: "active",
+      capacity: 12
+    });
+    expect(form.name).toBe("  Grace Group  ");
   });
 });

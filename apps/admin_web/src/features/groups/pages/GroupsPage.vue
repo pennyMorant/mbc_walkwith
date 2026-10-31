@@ -8,21 +8,31 @@ import GroupWorkspaceCard from "../components/GroupWorkspaceCard.vue";
 import { useGroupMinistryPage } from "../composables/use_group_ministry_page";
 
 const {
+  applyApplicationFilters,
+  applyAttendanceFilters,
   applyGroupFilters,
+  applyMaterialFilters,
   applicationFilters,
   applications,
+  applicationsCommandErrorMessage,
+  applicationsErrorMessage,
   applicationsQuery,
+  applicationsRefreshErrorMessage,
   attendance,
+  attendanceCommandErrorMessage,
+  attendanceErrorMessage,
   attendanceFilters,
   attendanceForm,
-  attendanceMutation,
+  attendanceMutationPending,
   attendanceQuery,
+  attendanceRefreshErrorMessage,
   canCreateMaterial,
   canManage,
   canRecordAttendance,
   canSave,
   clearGroupFilters,
   drawer,
+  editorCommandErrorMessage,
   editGroup,
   filters,
   filteredMemberships,
@@ -31,28 +41,37 @@ const {
   groupsQuery,
   listErrorMessage,
   listRefreshErrorMessage,
-  materialCreateMutation,
   materialFilters,
   materialForm,
   materialMutationPending,
   materials,
+  materialsCommandErrorMessage,
+  materialsErrorMessage,
   materialsQuery,
-  materialUpdateMutation,
+  materialsRefreshErrorMessage,
   membershipFilters,
-  membershipMutation,
+  membershipMutationPending,
   memberships,
+  membershipsCommandErrorMessage,
+  membershipsErrorMessage,
   membershipsQuery,
+  membershipsRefreshErrorMessage,
   newGroup,
   optionItems,
-  reviewMutation,
+  reviewPending,
+  reviewApplication,
   refreshGroups,
-  saveMutation,
+  savePending,
+  saveGroup,
   selectedGroup,
   selectGroup,
   successMessage,
   successVisible,
   t,
-  workspaceErrorMessage
+  updateMaterialStatus,
+  updateMembershipStatus,
+  recordAttendance,
+  createMaterial
 } = useGroupMinistryPage();
 </script>
 
@@ -73,16 +92,6 @@ const {
         </v-btn>
       </template>
     </AdminPageHeader>
-
-    <v-alert
-      v-if="workspaceErrorMessage"
-      class="mt-4"
-      type="error"
-      variant="tonal"
-      density="comfortable"
-    >
-      {{ workspaceErrorMessage }}
-    </v-alert>
 
     <AdminCatalogFilters
       v-model:query="filters.query"
@@ -128,34 +137,40 @@ const {
           :materials="materials"
           :attendance="attendance"
           :applications-pending="applicationsQuery.isPending.value"
+          :applications-error-message="applicationsErrorMessage"
+          :applications-refresh-error-message="applicationsRefreshErrorMessage"
+          :applications-command-error-message="applicationsCommandErrorMessage"
           :memberships-pending="membershipsQuery.isPending.value"
+          :memberships-error-message="membershipsErrorMessage"
+          :memberships-refresh-error-message="membershipsRefreshErrorMessage"
+          :memberships-command-error-message="membershipsCommandErrorMessage"
           :materials-pending="materialsQuery.isPending.value"
+          :materials-error-message="materialsErrorMessage"
+          :materials-refresh-error-message="materialsRefreshErrorMessage"
+          :materials-command-error-message="materialsCommandErrorMessage"
           :attendance-pending="attendanceQuery.isPending.value"
-          :review-pending="reviewMutation.isPending.value"
-          :membership-mutation-pending="membershipMutation.isPending.value"
+          :attendance-error-message="attendanceErrorMessage"
+          :attendance-refresh-error-message="attendanceRefreshErrorMessage"
+          :attendance-command-error-message="attendanceCommandErrorMessage"
+          :review-pending="reviewPending"
+          :membership-mutation-pending="membershipMutationPending"
           :material-mutation-pending="materialMutationPending"
-          :attendance-mutation-pending="attendanceMutation.isPending.value"
+          :attendance-mutation-pending="attendanceMutationPending"
           :can-manage="canManage"
           :can-create-material="canCreateMaterial"
           :can-record-attendance="canRecordAttendance"
-          @refresh-applications="applicationsQuery.refetch()"
+          @apply-application-filters="applyApplicationFilters"
+          @retry-applications="applicationsQuery.refetch()"
           @refresh-memberships="membershipsQuery.refetch()"
-          @refresh-materials="materialsQuery.refetch()"
-          @refresh-attendance="attendanceQuery.refetch()"
-          @review="
-            (applicationId, status) =>
-              reviewMutation.mutate({ applicationId, status })
-          "
-          @update-membership="
-            (membership, status) =>
-              membershipMutation.mutate({ membership, status })
-          "
-          @create-material="materialCreateMutation.mutate()"
-          @update-material="
-            (material, status) =>
-              materialUpdateMutation.mutate({ material, status })
-          "
-          @record-attendance="attendanceMutation.mutate()"
+          @apply-material-filters="applyMaterialFilters"
+          @retry-materials="materialsQuery.refetch()"
+          @apply-attendance-filters="applyAttendanceFilters"
+          @retry-attendance="attendanceQuery.refetch()"
+          @review="reviewApplication"
+          @update-membership="updateMembershipStatus"
+          @create-material="createMaterial"
+          @update-material="updateMaterialStatus"
+          @record-attendance="recordAttendance"
         />
       </v-col>
     </v-row>
@@ -166,8 +181,9 @@ const {
       :form="form"
       :can-manage="canManage"
       :can-save="canSave"
-      :save-loading="saveMutation.isPending.value"
-      @save="saveMutation.mutate()"
+      :save-loading="savePending"
+      :command-error-message="editorCommandErrorMessage"
+      @save="saveGroup"
     />
 
     <v-snackbar v-model="successVisible" color="success" timeout="2600">

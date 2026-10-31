@@ -1,8 +1,10 @@
 import type {
+  GroupApplicationStatus,
   GroupAttendanceStatus,
   GroupMaterialType,
   GroupTaskStatus,
   LifePostVisibility,
+  MinistryGroupUpsertRequest,
   MinistryGroupStatus
 } from "@mbc/api-contracts";
 
@@ -24,6 +26,20 @@ export type GroupCatalogFilterForm = {
 };
 
 export type GroupCatalogFilterSnapshot = Readonly<GroupCatalogFilterForm>;
+
+export type GroupApplicationFilterForm = {
+  status: GroupApplicationStatus | "";
+  query: string;
+};
+
+export type GroupMaterialFilterForm = {
+  status: GroupTaskStatus | "";
+  materialType: GroupMaterialType | "";
+};
+
+export type GroupAttendanceFilterForm = {
+  status: GroupAttendanceStatus | "";
+};
 
 export function createGroupCatalogFilterForm(): GroupCatalogFilterForm {
   return { query: "", status: "", visibility: "" };
@@ -52,6 +68,43 @@ export function sameGroupCatalogFilters(
 
 export function resetGroupCatalogFilterForm(form: GroupCatalogFilterForm) {
   Object.assign(form, createGroupCatalogFilterForm());
+}
+
+export function groupApplicationFilterSnapshot(
+  form: GroupApplicationFilterForm
+): Readonly<GroupApplicationFilterForm> {
+  return { status: form.status, query: form.query.trim() };
+}
+
+export function groupMaterialFilterSnapshot(
+  form: GroupMaterialFilterForm
+): Readonly<GroupMaterialFilterForm> {
+  return { status: form.status, materialType: form.materialType };
+}
+
+export function groupAttendanceFilterSnapshot(
+  form: GroupAttendanceFilterForm
+): Readonly<GroupAttendanceFilterForm> {
+  return { status: form.status };
+}
+
+export function groupEditorPayload(
+  form: GroupEditorForm
+): MinistryGroupUpsertRequest {
+  return {
+    name: form.name.trim(),
+    description: form.description.trim(),
+    meetingTime: form.meetingTime.trim(),
+    location: form.location.trim(),
+    leaderName: form.leaderName.trim(),
+    visibility: form.visibility,
+    status: form.status,
+    capacity: normalizeCapacity(form.capacity)
+  };
+}
+
+export function sameGroupIntent(first: unknown, second: unknown) {
+  return JSON.stringify(first) === JSON.stringify(second);
 }
 
 export type GroupMaterialForm = {
@@ -88,4 +141,10 @@ export function resetGroupActivityForms(
 export function currentGroupDateTimeInput(now = new Date()) {
   const local = new Date(now.getTime() - now.getTimezoneOffset() * 60_000);
   return local.toISOString().slice(0, 16);
+}
+
+function normalizeCapacity(value: number | null | undefined) {
+  if (value == null) return null;
+  const capacity = Math.floor(Number(value));
+  return Number.isFinite(capacity) && capacity > 0 ? capacity : null;
 }

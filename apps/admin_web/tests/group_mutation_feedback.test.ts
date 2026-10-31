@@ -13,24 +13,37 @@ describe("group mutation feedback", () => {
       successMessage,
       (key) => key
     );
-    const groupAContext = feedback.begin();
+    const editorError = feedback.messageFor("group-save");
+    const applicationError = feedback.messageFor("application-review");
+    const groupAContext = feedback.begin("group-save");
 
     feedback.capture(new Error("save failed"), undefined, groupAContext);
-    expect(feedback.errorMessage.value).toBe("save failed");
+    expect(editorError.value).toBe("save failed");
 
-    const newerGroupAContext = feedback.begin();
+    const applicationContext = feedback.begin("application-review");
+    feedback.capture(
+      new Error("application failed"),
+      undefined,
+      applicationContext
+    );
+    expect(editorError.value).toBe("save failed");
+    expect(applicationError.value).toBe("application failed");
+    expect(feedback.succeed(groupAContext, "older success")).toBe(false);
+    expect(editorError.value).toBe("");
+
+    const newerGroupAContext = feedback.begin("group-save");
     feedback.capture(new Error("older failure"), undefined, groupAContext);
-    expect(feedback.errorMessage.value).toBe("");
+    expect(editorError.value).toBe("");
     expect(feedback.succeed(newerGroupAContext, "newer success")).toBe(true);
 
     selectedGroup.value = group("group-b");
     feedback.reset();
     feedback.capture(new Error("late failure"), undefined, groupAContext);
-    expect(feedback.errorMessage.value).toBe("");
+    expect(editorError.value).toBe("");
     expect(feedback.succeed(groupAContext, "late success")).toBe(false);
     expect(successMessage.value).toBe("");
 
-    const groupBContext = feedback.begin();
+    const groupBContext = feedback.begin("group-save");
     expect(feedback.succeed(groupBContext, "current success")).toBe(true);
     expect(successMessage.value).toBe("current success");
   });

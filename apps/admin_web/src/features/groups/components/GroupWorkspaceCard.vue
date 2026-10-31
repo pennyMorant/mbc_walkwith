@@ -62,9 +62,21 @@ defineProps<{
   materials: GroupMaterialAssignment[];
   attendance: GroupAttendanceRecord[];
   applicationsPending: boolean;
+  applicationsErrorMessage: string;
+  applicationsRefreshErrorMessage: string;
+  applicationsCommandErrorMessage: string;
   membershipsPending: boolean;
+  membershipsErrorMessage: string;
+  membershipsRefreshErrorMessage: string;
+  membershipsCommandErrorMessage: string;
   materialsPending: boolean;
+  materialsErrorMessage: string;
+  materialsRefreshErrorMessage: string;
+  materialsCommandErrorMessage: string;
   attendancePending: boolean;
+  attendanceErrorMessage: string;
+  attendanceRefreshErrorMessage: string;
+  attendanceCommandErrorMessage: string;
   reviewPending: boolean;
   membershipMutationPending: boolean;
   materialMutationPending: boolean;
@@ -75,10 +87,13 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  refreshApplications: [];
+  applyApplicationFilters: [];
+  retryApplications: [];
   refreshMemberships: [];
-  refreshMaterials: [];
-  refreshAttendance: [];
+  applyMaterialFilters: [];
+  retryMaterials: [];
+  applyAttendanceFilters: [];
+  retryAttendance: [];
   review: [applicationId: string, status: "approved" | "declined"];
   updateMembership: [membership: GroupMembership, status: GroupMembershipStatus];
   createMaterial: [];
@@ -137,9 +152,13 @@ function forwardMaterialUpdate(
               v-model:query="applicationQuery"
               :applications="applications"
               :pending="applicationsPending"
+              :error-message="applicationsErrorMessage"
+              :refresh-error-message="applicationsRefreshErrorMessage"
+              :command-error-message="applicationsCommandErrorMessage"
               :review-pending="reviewPending"
               :can-manage="canManage"
-              @refresh="emit('refreshApplications')"
+              @apply-filters="emit('applyApplicationFilters')"
+              @retry="emit('retryApplications')"
               @review="forwardReview"
             />
           </v-window-item>
@@ -149,9 +168,12 @@ function forwardMaterialUpdate(
               v-model:query="membershipQuery"
               :memberships="memberships"
               :pending="membershipsPending"
+              :error-message="membershipsErrorMessage"
+              :refresh-error-message="membershipsRefreshErrorMessage"
+              :command-error-message="membershipsCommandErrorMessage"
               :update-pending="membershipMutationPending"
               :can-manage="canManage"
-              @refresh="emit('refreshMemberships')"
+              @retry="emit('refreshMemberships')"
               @update-status="forwardMembershipUpdate"
             />
           </v-window-item>
@@ -162,10 +184,14 @@ function forwardMaterialUpdate(
               v-model:material-type="materialType"
               :materials="materials"
               :pending="materialsPending"
+              :error-message="materialsErrorMessage"
+              :refresh-error-message="materialsRefreshErrorMessage"
+              :command-error-message="materialsCommandErrorMessage"
               :mutation-pending="materialMutationPending"
               :can-manage="canManage"
               :can-create="canCreateMaterial"
-              @refresh="emit('refreshMaterials')"
+              @apply-filters="emit('applyMaterialFilters')"
+              @retry="emit('retryMaterials')"
               @create="emit('createMaterial')"
               @update-status="forwardMaterialUpdate"
             />
@@ -177,10 +203,14 @@ function forwardMaterialUpdate(
               :attendance="attendance"
               :memberships="attendanceMemberships"
               :pending="attendancePending"
+              :error-message="attendanceErrorMessage"
+              :refresh-error-message="attendanceRefreshErrorMessage"
+              :command-error-message="attendanceCommandErrorMessage"
               :mutation-pending="attendanceMutationPending"
               :can-manage="canManage"
               :can-record="canRecordAttendance"
-              @refresh="emit('refreshAttendance')"
+              @apply-filters="emit('applyAttendanceFilters')"
+              @retry="emit('retryAttendance')"
               @record="emit('recordAttendance')"
             />
           </v-window-item>

@@ -10,6 +10,7 @@ import { groupAttendanceStatusOptions } from "@/core/api/group_activity";
 import { useI18n } from "@/core/i18n/i18n";
 import { formatGroupDate } from "../group_presenters";
 import type { GroupAttendanceForm } from "../group_workspace_models";
+import GroupPanelState from "./GroupPanelState.vue";
 
 const form = defineModel<GroupAttendanceForm>("form", { required: true });
 const status = defineModel<GroupAttendanceStatus | "">("status", {
@@ -20,13 +21,17 @@ const props = defineProps<{
   attendance: GroupAttendanceRecord[];
   memberships: GroupMembership[];
   pending: boolean;
+  errorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
   mutationPending: boolean;
   canManage: boolean;
   canRecord: boolean;
 }>();
 
 const emit = defineEmits<{
-  refresh: [];
+  applyFilters: [];
+  retry: [];
   record: [];
 }>();
 
@@ -43,7 +48,13 @@ const memberItems = computed(() =>
 </script>
 
 <template>
-  <div>
+  <GroupPanelState
+    :pending="pending"
+    :error-message="errorMessage"
+    :refresh-error-message="refreshErrorMessage"
+    :command-error-message="commandErrorMessage"
+    @retry="emit('retry')"
+  >
     <div class="d-flex flex-column flex-md-row ga-2 mb-3">
       <v-select
         v-model="status"
@@ -54,11 +65,10 @@ const memberItems = computed(() =>
         hide-details
         max-width="220"
       />
-      <v-btn variant="tonal" @click="emit('refresh')">
-        {{ t("common.refresh") }}
+      <v-btn variant="tonal" @click="emit('applyFilters')">
+        {{ t("common.go") }}
       </v-btn>
     </div>
-    <v-progress-linear v-if="pending" indeterminate color="primary" />
     <v-table density="compact">
       <thead>
         <tr>
@@ -141,5 +151,5 @@ const memberItems = computed(() =>
         </v-btn>
       </v-col>
     </v-row>
-  </div>
+  </GroupPanelState>
 </template>
