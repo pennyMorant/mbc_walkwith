@@ -4,6 +4,7 @@ import type {
   SermonProductionPipelineStatusResponse
 } from "@mbc/api-contracts";
 
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 
@@ -16,7 +17,7 @@ defineProps<{
 }>();
 defineEmits<{ retry: [] }>();
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 </script>
 
 <template>
@@ -104,7 +105,8 @@ const { t } = useI18n();
           </v-list-item>
         </v-list>
         <div class="text-caption text-medium-emphasis mt-2">
-          {{ t("dashboard.lastUpdated") }} {{ status.updatedAt }}.
+          {{ t("dashboard.lastUpdated") }}
+          {{ formatAdminDateTime(status.updatedAt, locale) }}.
         </div>
       </template>
     </AdminDataState>

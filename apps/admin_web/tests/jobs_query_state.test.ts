@@ -13,6 +13,13 @@ const controller = readFileSync(
   ),
   "utf8"
 );
+const queueQuery = readFileSync(
+  new URL(
+    "../src/features/jobs/composables/use_job_queue_query.ts",
+    import.meta.url
+  ),
+  "utf8"
+);
 const componentFiles = [
   "JobPipelineReadinessCard.vue",
   "JobStatsWorkspace.vue",
@@ -32,13 +39,14 @@ describe("jobs query states", () => {
     expect(source).not.toContain("auth_store");
   });
 
-  test("keeps pipeline, stats, and queue retries independently page-owned", () => {
+  test("keeps pipeline, stats, and queue retries independently composed", () => {
     expect(page).toContain('@retry="refreshPipelineStatus"');
     expect(page).toContain('@retry="refreshStats"');
     expect(page).toContain('@retry="refreshJobs"');
     expect(controller).toContain("function refreshPipelineStatus()");
     expect(controller).toContain("function refreshStats()");
-    expect(controller).toContain("function refreshJobs()");
+    expect(queueQuery).toContain("function refreshJobs()");
+    expect(controller).toContain("refreshJobs\n  } = useJobQueueQuery");
   });
 
   test("does not render failed stats queries as zero-valued diagnostics", () => {
@@ -48,15 +56,34 @@ describe("jobs query states", () => {
   });
 
   test("separates draft filters from applied query filters", () => {
-    expect(controller).toContain("const appliedFilters = ref<JobListFilters>");
-    expect(controller).toContain("function applyJobFilters()");
-    expect(controller).toContain("loadedPages.value = []");
+    expect(queueQuery).toContain("const appliedFilters = ref<JobListFilters>");
+    expect(queueQuery).toContain("function applyJobFilters()");
     expect(page).toContain('@filters-changed="applyJobFilters"');
+  });
+
+  test("lets the infinite query own cursor pages without query side effects", () => {
+    expect(queueQuery).toContain("useInfiniteQuery");
+    expect(queueQuery).toContain("initialPageParam: null");
+    expect(queueQuery).toContain("getNextPageParam:");
+    expect(queueQuery).toContain("jobsQuery.fetchNextPage()");
+    expect(queueQuery).not.toContain("loadedPages");
+    expect(queueQuery).not.toContain(".push(page)");
   });
 
   test("keeps command failures separate from query failures", () => {
     expect(controller).toContain("selectedJobActionErrorMessage");
     expect(page).toContain('v-if="selectedJobActionErrorMessage"');
     expect(page).toContain(":error-message=\"jobsErrorMessage\"");
+  });
+
+  test("freezes job command intents and scopes late results to their target", () => {
+    expect(controller).toContain("mutationFn: (intent: { jobId: string })");
+    expect(controller).toContain("cancelMutation.mutate({ jobId: job.id })");
+    expect(controller).toContain("jobId: job.id,");
+    expect(controller).toContain("applyCommandResult(intent.jobId, job)");
+    expect(controller).toContain("selectedJob.value?.id === jobId");
+    expect(controller).not.toContain("onSuccess: async (job) =>");
+    expect(page).not.toContain("cancelMutation");
+    expect(page).not.toContain("markSucceededMutation");
   });
 });

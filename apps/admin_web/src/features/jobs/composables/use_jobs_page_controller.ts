@@ -1,6 +1,6 @@
 import type { Job, JobStatus, JobType } from "@mbc/api-contracts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
+import { computed, ref } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { requireSelected } from "@/core/actions/action_guard";
@@ -8,35 +8,30 @@ import {
   cancelJob,
   getJobStats,
   getSermonProductionPipelineStatus,
-  listJobs,
-  updateJobStatus,
-  type JobListFilters
+  updateJobStatus
 } from "@/core/api/jobs";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
+
+import { useJobQueueQuery } from "./use_job_queue_query";
 
 export function useJobsPageController() {
   const queryClient = useQueryClient();
   const authStore = useAdminAuthStore();
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const selectedJob = ref<Job | null>(null);
   const drawer = ref(false);
 
-  const filters = reactive({
-    status: "" as JobStatus | "",
-    type: "" as JobType | "",
-    resourceType: "",
-    resourceId: ""
-  });
-  const appliedFilters = ref<JobListFilters>({
-    status: "",
-    type: "",
-    resourceType: "",
-    resourceId: "",
-    cursor: null,
-    limit: 50
-  });
-  const loadedPages = ref<Array<{ items: Job[]; nextCursor: string | null }>>([]);
+  const {
+    filters,
+    jobs,
+    jobsQuery,
+    nextCursor,
+    applyJobFilters,
+    loadMore,
+    refreshJobs
+  } = useJobQueueQuery(queryClient);
 
   const jobTypes: JobType[] = [
     "transcript_import",
@@ -52,25 +47,6 @@ export function useJobsPageController() {
     "canceled"
   ];
 
-  const jobsQuery = useQuery({
-    queryKey: ["admin-jobs", appliedFilters],
-    queryFn: async () => {
-      const requestFilters = { ...appliedFilters.value };
-      const page = await listJobs(requestFilters);
-      if (
-        JSON.stringify(requestFilters) !== JSON.stringify(appliedFilters.value)
-      ) {
-        return page;
-      }
-      if (requestFilters.cursor) {
-        loadedPages.value.push(page);
-      } else {
-        loadedPages.value = [page];
-      }
-      return page;
-    }
-  });
-
   const statsQuery = useQuery({
     queryKey: ["admin-job-stats"],
     queryFn: getJobStats
@@ -82,37 +58,28 @@ export function useJobsPageController() {
   });
 
   const cancelMutation = useMutation({
-    mutationFn: () => {
-      const job = requireSelected(selectedJob.value, t("No job selected."));
-      if (!canCancelSelected.value) {
-        throw new Error(t("Job cannot be cancelled"));
-      }
-      return cancelJob(job.id);
-    },
-    onSuccess: async (job) => {
-      openJob(job);
+    mutationFn: (intent: { jobId: string }) => cancelJob(intent.jobId),
+    onSuccess: (job, intent) => {
+      applyCommandResult(intent.jobId, job);
       refreshAll();
     }
   });
 
   const markSucceededMutation = useMutation({
-    mutationFn: () => {
-      const job = requireSelected(selectedJob.value, t("No job selected."));
-      if (!canMarkSucceeded.value) {
-        throw new Error(t("Job cannot be marked succeeded"));
-      }
-      return updateJobStatus(job.id, {
+    mutationFn: (intent: {
+      jobId: string;
+      result: Record<string, unknown>;
+    }) =>
+      updateJobStatus(intent.jobId, {
         status: "succeeded",
-        result: job.result ?? {}
-      });
-    },
-    onSuccess: async (job) => {
-      openJob(job);
+        result: intent.result
+      }),
+    onSuccess: (job, intent) => {
+      applyCommandResult(intent.jobId, job);
       refreshAll();
     }
   });
 
-  const jobs = computed(() => loadedPages.value.flatMap((page) => page.items));
   const canManage = computed(() => authStore.can("jobs:manage"));
   const canCancelSelected = computed(
     () =>
@@ -127,14 +94,38 @@ export function useJobsPageController() {
       canManage.value &&
       Boolean(selectedJob.value && selectedJob.value.status === "failed")
   );
-  const nextCursor = computed(
-    () => loadedPages.value[loadedPages.value.length - 1]?.nextCursor ?? null
+  const isCancelPending = computed(
+    () =>
+      cancelMutation.isPending.value &&
+      cancelMutation.variables.value?.jobId === selectedJob.value?.id
   );
+  const isMarkSucceededPending = computed(
+    () =>
+      markSucceededMutation.isPending.value &&
+      markSucceededMutation.variables.value?.jobId === selectedJob.value?.id
+  );
+  const isJobCommandPending = computed(
+    () =>
+      cancelMutation.isPending.value || markSucceededMutation.isPending.value
+  );
+  const selectedCommandError = computed(() => {
+    const selectedId = selectedJob.value?.id;
+    if (
+      selectedId &&
+      cancelMutation.variables.value?.jobId === selectedId
+    ) {
+      return cancelMutation.error.value;
+    }
+    if (
+      selectedId &&
+      markSucceededMutation.variables.value?.jobId === selectedId
+    ) {
+      return markSucceededMutation.error.value;
+    }
+    return null;
+  });
   const selectedJobActionErrorMessage = computed(() =>
-    formatApiErrorMessage(
-      cancelMutation.error.value || markSucceededMutation.error.value,
-      t("common.error")
-    )
+    formatApiErrorMessage(selectedCommandError.value, t("common.error"))
   );
   const jobsErrorMessage = computed(() =>
     formatApiErrorMessage(jobsQuery.error.value, t("common.error"))
@@ -152,24 +143,6 @@ export function useJobsPageController() {
       pipelineStatusQuery.isFetching.value
   );
 
-  function refreshJobs() {
-    appliedFilters.value = { ...appliedFilters.value, cursor: null };
-    void queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
-  }
-
-  function applyJobFilters() {
-    loadedPages.value = [];
-    appliedFilters.value = {
-      status: filters.status,
-      type: filters.type,
-      resourceType: filters.resourceType,
-      resourceId: filters.resourceId,
-      cursor: null,
-      limit: 50
-    };
-    void queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
-  }
-
   function refreshStats() {
     void queryClient.invalidateQueries({ queryKey: ["admin-job-stats"] });
   }
@@ -184,15 +157,6 @@ export function useJobsPageController() {
     refreshJobs();
     refreshStats();
     refreshPipelineStatus();
-  }
-
-  function loadMore() {
-    if (nextCursor.value && !jobsQuery.isFetching.value) {
-      appliedFilters.value = {
-        ...appliedFilters.value,
-        cursor: nextCursor.value
-      };
-    }
   }
 
   function openJob(job: Job) {
@@ -211,13 +175,15 @@ export function useJobsPageController() {
   }
 
   function jobAgeLabel(job: Job) {
+    const startedAt = formatJobDateTime(job.startedAt);
+    const finishedAt = formatJobDateTime(job.finishedAt || job.updatedAt);
     if (job.status === "running") {
-      return `${t("jobs.started")} ${job.startedAt || "-"}`;
+      return `${t("jobs.started")} ${startedAt}`;
     }
     if (job.status === "failed") {
-      return `${t("jobs.batchResult.failed")} ${job.finishedAt || job.updatedAt}`;
+      return `${t("jobs.batchResult.failed")} ${finishedAt}`;
     }
-    return `${t("jobs.finished")} ${job.finishedAt || job.updatedAt}`;
+    return `${t("jobs.finished")} ${finishedAt}`;
   }
 
   function pipelineStatusColor(status: "ready" | "warning" | "blocked") {
@@ -229,17 +195,36 @@ export function useJobsPageController() {
   }
 
   function cancelSelectedJob() {
-    if (!canCancelSelected.value || cancelMutation.isPending.value) {
+    if (!canCancelSelected.value || isJobCommandPending.value) {
       return;
     }
-    cancelMutation.mutate();
+    const job = requireSelected(selectedJob.value, t("No job selected."));
+    cancelMutation.reset();
+    markSucceededMutation.reset();
+    cancelMutation.mutate({ jobId: job.id });
   }
 
   function markSelectedJobSucceeded() {
-    if (!canMarkSucceeded.value || markSucceededMutation.isPending.value) {
+    if (!canMarkSucceeded.value || isJobCommandPending.value) {
       return;
     }
-    markSucceededMutation.mutate();
+    const job = requireSelected(selectedJob.value, t("No job selected."));
+    cancelMutation.reset();
+    markSucceededMutation.reset();
+    markSucceededMutation.mutate({
+      jobId: job.id,
+      result: { ...(job.result ?? {}) }
+    });
+  }
+
+  function applyCommandResult(jobId: string, job: Job) {
+    if (selectedJob.value?.id === jobId) {
+      selectedJob.value = job;
+    }
+  }
+
+  function formatJobDateTime(value: string | null) {
+    return value ? formatAdminDateTime(value, locale.value) : "-";
   }
 
   return {
@@ -247,16 +232,17 @@ export function useJobsPageController() {
     canCancelSelected,
     canManage,
     canMarkSucceeded,
-    cancelMutation,
     drawer,
     filters,
+    isCancelPending,
+    isJobCommandPending,
+    isMarkSucceededPending,
     isRefreshing,
     jobStatuses,
     jobs,
     jobsErrorMessage,
     jobsQuery,
     jobTypes,
-    markSucceededMutation,
     nextCursor,
     pipelineStatusErrorMessage,
     pipelineStatusQuery,
@@ -267,6 +253,7 @@ export function useJobsPageController() {
     t,
     applyJobFilters,
     cancelSelectedJob,
+    formatJobDateTime,
     jobAgeLabel,
     loadMore,
     markSelectedJobSucceeded,

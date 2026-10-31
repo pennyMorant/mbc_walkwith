@@ -12,16 +12,17 @@ const {
   canCancelSelected,
   canManage,
   canMarkSucceeded,
-  cancelMutation,
   drawer,
   filters,
+  isCancelPending,
+  isJobCommandPending,
+  isMarkSucceededPending,
   isRefreshing,
   jobStatuses,
   jobs,
   jobsErrorMessage,
   jobsQuery,
   jobTypes,
-  markSucceededMutation,
   nextCursor,
   pipelineStatusErrorMessage,
   pipelineStatusQuery,
@@ -32,6 +33,7 @@ const {
   t,
   applyJobFilters,
   cancelSelectedJob,
+  formatJobDateTime,
   jobAgeLabel,
   loadMore,
   markSelectedJobSucceeded,
@@ -123,9 +125,18 @@ const {
 
         <div class="text-subtitle-2 font-weight-bold mt-5">{{ t("Timing") }}</div>
         <v-list density="compact">
-          <v-list-item :title="t('Available')" :subtitle="selectedJob.availableAt" />
-          <v-list-item :title="t('Started')" :subtitle="selectedJob.startedAt || '-'" />
-          <v-list-item :title="t('Finished')" :subtitle="selectedJob.finishedAt || '-'" />
+          <v-list-item
+            :title="t('Available')"
+            :subtitle="formatJobDateTime(selectedJob.availableAt)"
+          />
+          <v-list-item
+            :title="t('Started')"
+            :subtitle="formatJobDateTime(selectedJob.startedAt)"
+          />
+          <v-list-item
+            :title="t('Finished')"
+            :subtitle="formatJobDateTime(selectedJob.finishedAt)"
+          />
         </v-list>
 
         <div class="text-subtitle-2 font-weight-bold mt-5">{{ t("Payload") }}</div>
@@ -150,9 +161,9 @@ const {
             color="success"
             variant="tonal"
             :disabled="
-              !canMarkSucceeded || markSucceededMutation.isPending.value
+              !canMarkSucceeded || isJobCommandPending
             "
-            :loading="markSucceededMutation.isPending.value"
+            :loading="isMarkSucceededPending"
             @click="markSelectedJobSucceeded"
           >
             {{ t("Mark succeeded") }}
@@ -160,8 +171,8 @@ const {
           <v-btn
             color="error"
             variant="tonal"
-            :disabled="!canCancelSelected || cancelMutation.isPending.value"
-            :loading="cancelMutation.isPending.value"
+            :disabled="!canCancelSelected || isJobCommandPending"
+            :loading="isCancelPending"
             @click="cancelSelectedJob"
           >
             {{ t("Cancel") }}
