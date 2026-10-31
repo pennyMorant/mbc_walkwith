@@ -12,18 +12,25 @@ import { useServingPage } from "../composables/use_serving_page";
 const workspaceTab = ref("availability");
 const {
   activeMembers,
+  applyAssignmentFilters,
+  applyAvailabilityFilters,
+  applyCheckInFilters,
   assignmentDirectory,
   assignmentDirectoryQuery,
   assignmentFilters,
   assignmentForm,
   assignments,
+  assignmentsCommandErrorMessage,
   assignmentsErrorMessage,
   assignmentsQuery,
+  assignmentsRefreshErrorMessage,
   availability,
+  availabilityCommandErrorMessage,
   availabilityErrorMessage,
   availabilityFilters,
   availabilityForm,
   availabilityQuery,
+  availabilityRefreshErrorMessage,
   canCreateAssignment,
   canCreateAvailability,
   canCreateRole,
@@ -35,9 +42,10 @@ const {
   checkInNeedsReason,
   checkInDirectoryQuery,
   checkIns,
+  checkInsCommandErrorMessage,
   checkInsErrorMessage,
   checkInsQuery,
-  commandErrorMessage,
+  checkInsRefreshErrorMessage,
   createAssignment,
   createAssignmentMutation,
   createAvailability,
@@ -59,7 +67,9 @@ const {
   saveCheckIn,
   successMessage,
   successVisible,
+  setupCommandErrorMessage,
   setupErrorMessage,
+  setupRefreshErrorMessage,
   t,
   teamForm,
   teams,
@@ -91,16 +101,6 @@ const {
       </template>
     </AdminPageHeader>
 
-    <v-alert
-      v-if="commandErrorMessage"
-      class="mt-4"
-      type="error"
-      variant="tonal"
-      density="comfortable"
-    >
-      {{ commandErrorMessage }}
-    </v-alert>
-
     <v-row class="mt-4" dense>
       <v-col cols="12" lg="4">
         <ServingSetupCard
@@ -109,6 +109,8 @@ const {
           :teams="teams"
           :roles="roles"
           :error-message="setupErrorMessage"
+          :refresh-error-message="setupRefreshErrorMessage"
+          :command-error-message="setupCommandErrorMessage"
           :loading="teamsQuery.isPending.value || rolesQuery.isPending.value"
           :can-manage="canManage"
           :can-create-team="canCreateTeam"
@@ -135,6 +137,8 @@ const {
           :teams="teams"
           :roles="roles"
           :error-message="assignmentsErrorMessage"
+          :refresh-error-message="assignmentsRefreshErrorMessage"
+          :command-error-message="assignmentsCommandErrorMessage"
           :loading="
             assignmentsQuery.isPending.value ||
             membersQuery.isPending.value ||
@@ -146,7 +150,7 @@ const {
           :create-pending="createAssignmentMutation.isPending.value"
           :update-pending="updateAssignmentMutation.isPending.value"
           @create="createAssignment"
-          @refresh="assignmentsQuery.refetch()"
+          @refresh="applyAssignmentFilters"
           @retry="refreshAssignments"
           @update-status="updateAssignmentStatus"
         />
@@ -169,6 +173,8 @@ const {
               :members="members"
               :selectable-members="activeMembers"
               :error-message="availabilityErrorMessage"
+              :refresh-error-message="availabilityRefreshErrorMessage"
+              :command-error-message="availabilityCommandErrorMessage"
               :loading="
                 availabilityQuery.isPending.value || membersQuery.isPending.value
               "
@@ -176,7 +182,7 @@ const {
               :can-create="canCreateAvailability"
               :create-pending="createAvailabilityMutation.isPending.value"
               @create="createAvailability"
-              @refresh="availabilityQuery.refetch()"
+              @refresh="applyAvailabilityFilters"
               @retry="refreshAvailability"
             />
           </v-window-item>
@@ -188,6 +194,8 @@ const {
               :assignments="assignmentDirectory"
               :members="members"
               :error-message="checkInsErrorMessage"
+              :refresh-error-message="checkInsRefreshErrorMessage"
+              :command-error-message="checkInsCommandErrorMessage"
               :loading="
                 checkInsQuery.isPending.value ||
                 assignmentDirectoryQuery.isPending.value ||
@@ -199,7 +207,7 @@ const {
               :needs-reason="checkInNeedsReason"
               :save-pending="updateCheckInMutation.isPending.value"
               @save="saveCheckIn"
-              @refresh="checkInsQuery.refetch()"
+              @refresh="applyCheckInFilters"
               @retry="refreshCheckIns"
             />
           </v-window-item>

@@ -9,6 +9,7 @@ import { computed } from "vue";
 import type { ServingCheckInFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import ServingFeedbackAlerts from "./ServingFeedbackAlerts.vue";
 import {
   formatServingDateTime,
   servingAssignmentLabel,
@@ -25,6 +26,8 @@ const props = defineProps<{
   assignments: ServingAssignment[];
   members: ServingMemberOption[];
   errorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
   loading: boolean;
   canManage: boolean;
   canSave: boolean;
@@ -53,6 +56,11 @@ function assignmentById(assignmentId: string) {
 
 <template>
   <div>
+    <ServingFeedbackAlerts
+      :refresh-error-message="refreshErrorMessage"
+      :command-error-message="commandErrorMessage"
+      @retry="emit('retry')"
+    />
     <AdminDataState
       :pending="loading"
       :error-message="errorMessage"

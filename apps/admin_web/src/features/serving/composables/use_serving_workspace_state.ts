@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/vue-query";
-import { computed, reactive, watch } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
 import {
   listServingAssignments,
@@ -41,6 +41,19 @@ export function useServingWorkspaceState() {
     assignmentId: "",
     userId: ""
   });
+  const appliedAssignmentFilters = ref<ServingAssignmentFilters>({
+    status: "",
+    query: ""
+  });
+  const appliedAvailabilityFilters = ref<ServingAvailabilityFilters>({
+    status: "",
+    userId: ""
+  });
+  const appliedCheckInFilters = ref<ServingCheckInFilters>({
+    status: "",
+    assignmentId: "",
+    userId: ""
+  });
 
   const membersQuery = useQuery({
     queryKey: ["serving-members"],
@@ -62,19 +75,25 @@ export function useServingWorkspaceState() {
     queryKey: computed(() => [
       "serving-assignments",
       "workspace",
-      { ...assignmentFilters }
+      appliedAssignmentFilters.value
     ]),
-    queryFn: () =>
-      listServingAssignments({ ...assignmentFilters, limit: 100 })
+    queryFn: ({ queryKey }) =>
+      listServingAssignments({
+        ...(queryKey[2] as ServingAssignmentFilters),
+        limit: 100
+      })
   });
   const availabilityQuery = useQuery({
     queryKey: computed(() => [
       "serving-availability",
       "workspace",
-      { ...availabilityFilters }
+      appliedAvailabilityFilters.value
     ]),
-    queryFn: () =>
-      listServingAvailability({ ...availabilityFilters, limit: 100 })
+    queryFn: ({ queryKey }) =>
+      listServingAvailability({
+        ...(queryKey[2] as ServingAvailabilityFilters),
+        limit: 100
+      })
   });
   const checkInDirectoryQuery = useQuery({
     queryKey: ["serving-check-ins", "directory"],
@@ -84,9 +103,13 @@ export function useServingWorkspaceState() {
     queryKey: computed(() => [
       "serving-check-ins",
       "workspace",
-      { ...checkInFilters }
+      appliedCheckInFilters.value
     ]),
-    queryFn: () => listServingCheckIns({ ...checkInFilters, limit: 100 })
+    queryFn: ({ queryKey }) =>
+      listServingCheckIns({
+        ...(queryKey[2] as ServingCheckInFilters),
+        limit: 100
+      })
   });
 
   const members = computed(() => membersQuery.data.value ?? []);
@@ -169,8 +192,26 @@ export function useServingWorkspaceState() {
     }
   );
 
+  function applyAssignmentFilters() {
+    appliedAssignmentFilters.value = {
+      ...assignmentFilters,
+      query: assignmentFilters.query?.trim() ?? ""
+    };
+  }
+
+  function applyAvailabilityFilters() {
+    appliedAvailabilityFilters.value = { ...availabilityFilters };
+  }
+
+  function applyCheckInFilters() {
+    appliedCheckInFilters.value = { ...checkInFilters };
+  }
+
   return {
     activeMembers,
+    applyAssignmentFilters,
+    applyAvailabilityFilters,
+    applyCheckInFilters,
     assignmentDirectory,
     assignmentDirectoryQuery,
     assignmentFilters,

@@ -8,6 +8,7 @@ import { computed } from "vue";
 import type { ServingAvailabilityFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import ServingFeedbackAlerts from "./ServingFeedbackAlerts.vue";
 import {
   formatServingDateTime,
   servingMemberLabel,
@@ -24,6 +25,8 @@ const props = defineProps<{
   members: ServingMemberOption[];
   selectableMembers: ServingMemberOption[];
   errorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
   loading: boolean;
   canManage: boolean;
   canCreate: boolean;
@@ -48,6 +51,11 @@ const filterMemberItems = computed(() =>
 
 <template>
   <div>
+    <ServingFeedbackAlerts
+      :refresh-error-message="refreshErrorMessage"
+      :command-error-message="commandErrorMessage"
+      @retry="emit('retry')"
+    />
     <AdminDataState
       :pending="loading"
       :error-message="errorMessage"

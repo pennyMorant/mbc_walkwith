@@ -11,6 +11,7 @@ import { computed } from "vue";
 import type { ServingAssignmentFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import ServingFeedbackAlerts from "./ServingFeedbackAlerts.vue";
 import {
   formatServingDateTime,
   servingMemberLabel
@@ -27,6 +28,8 @@ const props = defineProps<{
   teams: ServingTeam[];
   roles: ServingRole[];
   errorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
   loading: boolean;
   canManage: boolean;
   canCreate: boolean;
@@ -63,6 +66,12 @@ const memberItems = computed(() =>
 <template>
   <v-card variant="outlined">
     <v-card-title>{{ t("Assignments") }}</v-card-title>
+    <ServingFeedbackAlerts
+      :refresh-error-message="refreshErrorMessage"
+      :command-error-message="commandErrorMessage"
+      inset
+      @retry="emit('retry')"
+    />
     <AdminDataState
       :pending="loading"
       :error-message="errorMessage"

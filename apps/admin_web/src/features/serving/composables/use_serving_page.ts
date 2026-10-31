@@ -49,6 +49,19 @@ export function useServingPage() {
   const canManage = computed(() => authStore.can("serving:manage"));
   const successMessage = ref("");
   const mutationFeedback = useServingMutationFeedback(successMessage, t);
+  const setupCommandErrorMessage = mutationFeedback.messageFor(
+    "team-create",
+    "team-update",
+    "role-create",
+    "role-update"
+  );
+  const assignmentsCommandErrorMessage = mutationFeedback.messageFor(
+    "assignment-create",
+    "assignment-update"
+  );
+  const availabilityCommandErrorMessage =
+    mutationFeedback.messageFor("availability-create");
+  const checkInsCommandErrorMessage = mutationFeedback.messageFor("check-in");
   const successVisible = computed({
     get: () => successMessage.value.length > 0,
     set: (visible: boolean) => {
@@ -92,9 +105,9 @@ export function useServingPage() {
   });
   const updateTeamMutation = useMutation({
     onMutate: () => mutationFeedback.begin("team-update"),
-    mutationFn: (input: { team: ServingTeam; status: ServingStatus }) => {
+    mutationFn: (input: { teamId: string; status: ServingStatus }) => {
       assertManage();
-      return updateServingTeam(input.team.id, { status: input.status });
+      return updateServingTeam(input.teamId, { status: input.status });
     },
     onSuccess: async (_team, _input, context) => {
       mutationFeedback.succeed(context, t("Team updated."));
@@ -127,9 +140,9 @@ export function useServingPage() {
   });
   const updateRoleMutation = useMutation({
     onMutate: () => mutationFeedback.begin("role-update"),
-    mutationFn: (input: { role: ServingRole; status: ServingStatus }) => {
+    mutationFn: (input: { roleId: string; status: ServingStatus }) => {
       assertManage();
-      return updateServingRole(input.role.id, { status: input.status });
+      return updateServingRole(input.roleId, { status: input.status });
     },
     onSuccess: async (_role, _input, context) => {
       mutationFeedback.succeed(context, t("Role updated."));
@@ -162,11 +175,11 @@ export function useServingPage() {
   const updateAssignmentMutation = useMutation({
     onMutate: () => mutationFeedback.begin("assignment-update"),
     mutationFn: (input: {
-      assignment: ServingAssignment;
+      assignmentId: string;
       status: ServingAssignmentStatus;
     }) => {
       assertManage();
-      return updateServingAssignment(input.assignment.id, {
+      return updateServingAssignment(input.assignmentId, {
         status: input.status
       });
     },
@@ -218,40 +231,61 @@ export function useServingPage() {
     onError: mutationFeedback.capture
   });
 
+  const setupQueries = [workspace.teamsQuery, workspace.rolesQuery];
+  const assignmentQueries = [
+    workspace.assignmentsQuery,
+    workspace.membersQuery,
+    workspace.teamsQuery,
+    workspace.rolesQuery
+  ];
+  const availabilityQueries = [
+    workspace.availabilityQuery,
+    workspace.membersQuery
+  ];
+  const checkInQueries = [
+    workspace.checkInsQuery,
+    workspace.assignmentDirectoryQuery,
+    workspace.checkInDirectoryQuery,
+    workspace.membersQuery
+  ];
   const setupErrorMessage = computed(() =>
-    formatQueryError([
-      workspace.teamsQuery.error.value,
-      workspace.rolesQuery.error.value
-    ])
+    formatQueryError(setupQueries, false)
+  );
+  const setupRefreshErrorMessage = computed(() =>
+    formatQueryError(setupQueries, true)
   );
   const assignmentsErrorMessage = computed(() =>
-    formatQueryError([
-      workspace.assignmentsQuery.error.value,
-      workspace.membersQuery.error.value,
-      workspace.teamsQuery.error.value,
-      workspace.rolesQuery.error.value
-    ])
+    formatQueryError(assignmentQueries, false)
+  );
+  const assignmentsRefreshErrorMessage = computed(() =>
+    formatQueryError(assignmentQueries, true)
   );
   const availabilityErrorMessage = computed(() =>
-    formatQueryError([
-      workspace.availabilityQuery.error.value,
-      workspace.membersQuery.error.value
-    ])
+    formatQueryError(availabilityQueries, false)
+  );
+  const availabilityRefreshErrorMessage = computed(() =>
+    formatQueryError(availabilityQueries, true)
   );
   const checkInsErrorMessage = computed(() =>
-    formatQueryError([
-      workspace.checkInsQuery.error.value,
-      workspace.assignmentDirectoryQuery.error.value,
-      workspace.checkInDirectoryQuery.error.value,
-      workspace.membersQuery.error.value
-    ])
+    formatQueryError(checkInQueries, false)
   );
-  const commandErrorMessage = computed(
-    () => mutationFeedback.errorMessage.value
+  const checkInsRefreshErrorMessage = computed(() =>
+    formatQueryError(checkInQueries, true)
   );
 
-  function formatQueryError(errors: unknown[]) {
-    return formatApiErrorMessage(firstError(errors), t("common.error"));
+  function formatQueryError(
+    queries: Array<{
+      data: { value: unknown };
+      error: { value: unknown };
+    }>,
+    forRefresh: boolean
+  ) {
+    const error = queries.find(
+      (query) =>
+        query.error.value != null &&
+        (query.data.value !== undefined) === forRefresh
+    )?.error.value;
+    return formatApiErrorMessage(error ?? null, t("common.error"));
   }
 
   function mutateWhen(allowed: boolean, action: () => void) {
@@ -259,12 +293,12 @@ export function useServingPage() {
   }
   function updateTeamStatus(team: ServingTeam, status: ServingStatus) {
     mutateWhen(!updateTeamMutation.isPending.value, () =>
-      updateTeamMutation.mutate({ team, status })
+      updateTeamMutation.mutate({ teamId: team.id, status })
     );
   }
   function updateRoleStatus(role: ServingRole, status: ServingStatus) {
     mutateWhen(!updateRoleMutation.isPending.value, () =>
-      updateRoleMutation.mutate({ role, status })
+      updateRoleMutation.mutate({ roleId: role.id, status })
     );
   }
   function updateAssignmentStatus(
@@ -272,7 +306,7 @@ export function useServingPage() {
     status: ServingAssignmentStatus
   ) {
     mutateWhen(!updateAssignmentMutation.isPending.value, () =>
-      updateAssignmentMutation.mutate({ assignment, status })
+      updateAssignmentMutation.mutate({ assignmentId: assignment.id, status })
     );
   }
   async function refreshAll() {
@@ -318,11 +352,16 @@ export function useServingPage() {
 
   return {
     ...workspace,
+    assignmentsCommandErrorMessage,
     assignmentsErrorMessage,
+    assignmentsRefreshErrorMessage,
+    availabilityCommandErrorMessage,
     availabilityErrorMessage,
+    availabilityRefreshErrorMessage,
     canManage,
+    checkInsCommandErrorMessage,
     checkInsErrorMessage,
-    commandErrorMessage,
+    checkInsRefreshErrorMessage,
     createAssignment: () =>
       mutateWhen(workspace.canCreateAssignment.value, () => {
         const payload = assignmentPayload(workspace.assignmentForm);
@@ -357,7 +396,9 @@ export function useServingPage() {
       ),
     successMessage,
     successVisible,
+    setupCommandErrorMessage,
     setupErrorMessage,
+    setupRefreshErrorMessage,
     t,
     updateAssignmentMutation,
     updateAssignmentStatus,
@@ -367,8 +408,4 @@ export function useServingPage() {
     updateTeamMutation,
     updateTeamStatus
   };
-}
-
-function firstError(errors: unknown[]): unknown {
-  return errors.find((error) => error != null) ?? null;
 }

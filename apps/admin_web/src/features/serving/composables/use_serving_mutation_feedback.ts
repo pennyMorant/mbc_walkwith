@@ -1,4 +1,4 @@
-import { ref, type Ref } from "vue";
+import { computed, reactive, type Ref } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 
@@ -22,7 +22,16 @@ export function useServingMutationFeedback(
   successMessage: Ref<string>,
   t: (key: string) => string
 ) {
-  const errorMessage = ref("");
+  const errorMessages = reactive<Record<ServingMutationScope, string>>({
+    "team-create": "",
+    "team-update": "",
+    "role-create": "",
+    "role-update": "",
+    "assignment-create": "",
+    "assignment-update": "",
+    "availability-create": "",
+    "check-in": ""
+  });
   const scopeOperationIds = new Map<ServingMutationScope, number>();
   let feedbackId = 0;
 
@@ -30,7 +39,7 @@ export function useServingMutationFeedback(
     const scopeOperationId = (scopeOperationIds.get(scope) ?? 0) + 1;
     scopeOperationIds.set(scope, scopeOperationId);
     feedbackId += 1;
-    errorMessage.value = "";
+    errorMessages[scope] = "";
     successMessage.value = "";
     return { feedbackId, scope, scopeOperationId };
   }
@@ -51,8 +60,11 @@ export function useServingMutationFeedback(
     _variables: unknown,
     context: ServingMutationContext | undefined
   ) {
-    if (ownsFeedback(context)) {
-      errorMessage.value = formatApiErrorMessage(error, t("common.error"));
+    if (context && isCurrent(context)) {
+      errorMessages[context.scope] = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
     }
   }
 
@@ -60,13 +72,25 @@ export function useServingMutationFeedback(
     context: ServingMutationContext | undefined,
     message: string
   ) {
+    if (!context || !isCurrent(context)) {
+      return false;
+    }
+    errorMessages[context.scope] = "";
     if (!ownsFeedback(context)) {
       return false;
     }
-    errorMessage.value = "";
     successMessage.value = message;
     return true;
   }
 
-  return { begin, capture, errorMessage, isCurrent, succeed };
+  function messageFor(...scopes: ServingMutationScope[]) {
+    return computed(() => {
+      for (const scope of scopes) {
+        if (errorMessages[scope]) return errorMessages[scope];
+      }
+      return "";
+    });
+  }
+
+  return { begin, capture, isCurrent, messageFor, succeed };
 }
