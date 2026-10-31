@@ -14,9 +14,11 @@ const props = defineProps<{
   providers: AiProviderConfig[];
   selectedProviderId: string;
   canManage: boolean;
+  commandBusy: boolean;
   savePending: boolean;
   testPending: boolean;
   testResult: AiProviderTestResult | null;
+  errorMessage: string;
 }>();
 
 defineEmits<{
@@ -171,6 +173,14 @@ const canSave = computed(
             <template v-if="testResult.model"> / {{ testResult.model }}</template>
             <template v-if="testResult.errorCode"> ({{ testResult.errorCode }})</template>
           </v-alert>
+          <v-alert
+            v-if="errorMessage"
+            class="mt-2"
+            type="error"
+            variant="tonal"
+          >
+            {{ errorMessage }}
+          </v-alert>
         </v-card-text>
 
         <v-card-actions class="ai-provider-editor__actions px-4 pb-4">
@@ -178,7 +188,7 @@ const canSave = computed(
             color="primary"
             prepend-icon="mdi-content-save-outline"
             :loading="savePending"
-            :disabled="!canManage || !canSave"
+            :disabled="!canManage || !canSave || commandBusy"
             @click="$emit('save')"
           >
             {{ t("common.save") }}
@@ -187,7 +197,7 @@ const canSave = computed(
             variant="tonal"
             prepend-icon="mdi-access-point-check"
             :loading="testPending"
-            :disabled="!canManage || !selectedProviderId"
+            :disabled="!canManage || !selectedProviderId || commandBusy"
             @click="$emit('test')"
           >
             {{ t("ai.testConnection") }}

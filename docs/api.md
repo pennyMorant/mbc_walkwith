@@ -2483,8 +2483,10 @@ PUT  /v1/admin/ai/budget
 ```
 
 Provider keys are write-only. Management responses expose only whether a key is
-configured and its last four characters. AI management records input, output,
-and total Token usage; it does not calculate or expose monetary cost.
+configured and its last four characters. Provider updates preserve the existing
+key when `apiKey` is omitted; clients must not send an empty string to represent
+an unchanged credential. AI management records input, output, and total Token
+usage; it does not calculate or expose monetary cost.
 
 ## 12.1 Content Localization
 

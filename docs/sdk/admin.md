@@ -61,6 +61,11 @@ This document covers admin Web API helper structure and admin-facing SDK rules.
     typed structured editors. Other settings retain the advanced JSON editor;
     both paths save through the same Settings API and backend contract.
 - AI management: `apps/admin_web/src/core/api/ai.ts`
+  - Provider updates omit a blank API key so the backend preserves the existing
+    encrypted credential; management responses expose only configuration state
+    and the final four characters.
+  - Provider, policy, and Token-limit forms submit immutable command snapshots;
+    overview refreshes must not replace unsaved editor state.
 - Content localization: `apps/admin_web/src/core/api/content_localizations.ts`
   - Hand-written translations and auto-translation use the same typed client boundary.
   - Clients must send the source `revision` and must refresh after a conflict.

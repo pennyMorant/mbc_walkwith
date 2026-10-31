@@ -43,6 +43,55 @@ describe("AI routes", () => {
     await harness.close();
   });
 
+  it("returns only the provider key suffix and preserves it when omitted", async () => {
+    const harness = await buildTestApp({
+      aiProvider: "openai_compatible",
+      aiApiKey: "test-secret-7890",
+      aiBaseUrl: "https://relay.example.com/v1",
+      aiModel: "test-model"
+    });
+    const { app } = harness;
+    const { accessToken } = await login(app);
+    const headers = { authorization: `Bearer ${accessToken}` };
+
+    const managementResponse = await app.inject({
+      method: "GET",
+      url: "/v1/admin/ai/management",
+      headers
+    });
+    const management = expectResponseData(
+      managementResponse,
+      aiManagementOverviewSchema,
+      "AI provider key suffix"
+    );
+    const provider = management.providers[0];
+    expect(provider).toMatchObject({
+      id: "environment",
+      apiKeyConfigured: true,
+      apiKeySuffix: "7890"
+    });
+    expect(JSON.stringify(management)).not.toContain("test-secret-7890");
+
+    const saveResponse = await app.inject({
+      method: "PUT",
+      url: "/v1/admin/ai/providers/environment",
+      headers,
+      payload: {
+        label: "Environment updated",
+        type: "openai_compatible",
+        enabled: true,
+        baseUrl: "https://relay.example.com/v1",
+        defaultModel: "test-model"
+      }
+    });
+    expect(saveResponse.statusCode).toBe(200);
+    expect(saveResponse.json().data).toMatchObject({
+      apiKeyConfigured: true,
+      apiKeySuffix: "7890"
+    });
+    await harness.close();
+  });
+
   it("returns a structured provider-disabled error for admin drafts", async () => {
     const harness = await buildTestApp();
     const { app } = harness;

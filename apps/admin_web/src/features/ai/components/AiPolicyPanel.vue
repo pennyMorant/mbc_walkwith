@@ -7,7 +7,9 @@ const policies = defineModel<AiModelPolicy[]>("policies", { required: true });
 const props = defineProps<{
   providers: AiProviderConfig[];
   canManage: boolean;
+  commandBusy: boolean;
   savingCapability: string | null;
+  errorMessage: string;
 }>();
 
 defineEmits<{ save: [policy: AiModelPolicy] }>();
@@ -37,6 +39,9 @@ function capabilityLabel(capability: AiModelPolicy["capability"]) {
     </div>
 
     <v-row v-if="policies.length > 0" class="mt-1">
+      <v-col v-if="errorMessage" cols="12">
+        <v-alert type="error" variant="tonal">{{ errorMessage }}</v-alert>
+      </v-col>
       <v-col
         v-for="policy in policies"
         :key="policy.capability"
@@ -58,7 +63,7 @@ function capabilityLabel(capability: AiModelPolicy["capability"]) {
               variant="tonal"
               color="primary"
               :aria-label="t('common.save')"
-              :disabled="!canManage"
+              :disabled="!canManage || commandBusy"
               :loading="savingCapability === policy.capability"
               @click="$emit('save', policy)"
             />

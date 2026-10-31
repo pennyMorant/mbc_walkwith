@@ -5,6 +5,13 @@ const page = readFileSync(
   new URL("../src/features/ai/pages/AiManagementPage.vue", import.meta.url),
   "utf8"
 );
+const controller = readFileSync(
+  new URL(
+    "../src/features/ai/composables/use_ai_management_controller.ts",
+    import.meta.url
+  ),
+  "utf8"
+);
 const usagePanel = readFileSync(
   new URL("../src/features/ai/components/AiUsagePanel.vue", import.meta.url),
   "utf8"
@@ -29,8 +36,8 @@ const messages = readFileSync(
 describe("AI management workspace", () => {
   test("uses shared metrics and stable tab identifiers", () => {
     expect(page).toContain("AdminDataState");
-    expect(page).toContain('@retry="managementQuery.refetch()"');
-    expect(page).toContain(":error-message=\"queryErrorMessage\"");
+    expect(page).toContain('@retry="refreshManagement"');
+    expect(page).toContain(":error-message=\"initialQueryErrorMessage\"");
     expect(page).toContain("<AdminMetricGrid :items=\"overviewMetrics\"");
     expect(page).toContain('value="providers"');
     expect(page).toContain('value="policies"');
@@ -39,9 +46,11 @@ describe("AI management workspace", () => {
   });
 
   test("keeps management query errors separate from command errors", () => {
-    expect(page).toContain("managementQuery.error.value");
-    expect(page).toContain('v-if="errorMessage"');
-    expect(page).toContain("providerMutation.error.value");
+    expect(controller).toContain("managementQuery.error.value");
+    expect(page).toContain('v-if="refreshErrorMessage"');
+    expect(page).toContain(":error-message=\"providerErrorMessage\"");
+    expect(page).toContain(":error-message=\"policyErrorMessage\"");
+    expect(page).toContain(":error-message=\"budgetErrorMessage\"");
   });
 
   test("keeps usage presentation responsive and outside transport ownership", () => {
@@ -52,21 +61,36 @@ describe("AI management workspace", () => {
     expect(usagePanel).not.toContain("auth_store");
   });
 
-  test("keeps provider commands page-owned and tests only persisted providers", () => {
+  test("keeps provider commands controller-owned and tests only persisted providers", () => {
     expect(page).toContain("<AiProviderWorkspace");
-    expect(page).toContain("providerTestMutation.reset()");
-    expect(page).toContain("selectedProviderId.value = provider.id");
-    expect(page).toContain("providerTestTargetId.value === selectedProviderId.value");
+    expect(controller).toContain("providerSaveIntent(providerForm");
+    expect(controller).toContain("intent.editorSession === providerEditorSession.value");
+    expect(controller).toContain("providerFormMatchesIntent(providerForm, intent)");
+    expect(controller).toContain("selectedProviderId.value = provider.id");
     expect(page).toContain('@test="testSelectedProvider"');
     expect(providerWorkspace).toContain('!canManage || !selectedProviderId');
     expect(providerWorkspace).not.toContain("@/core/api");
     expect(providerWorkspace).not.toContain("auth_store");
   });
 
+  test("preserves edited forms during overview refreshes", () => {
+    expect(controller).toContain("providersHydrated");
+    expect(controller).toContain("policiesHydrated");
+    expect(controller).toContain("budgetHydrated");
+    expect(controller).toContain("policyMatchesIntent(current, intent)");
+    expect(controller).toContain("budgetMatchesIntent(budgetForm, intent)");
+    expect(controller).toContain("isManagementCommandBusy.value");
+    expect(page).toContain(':command-busy="isManagementCommandBusy"');
+    expect(page).toContain("managementQuery.data.value");
+    expect(page).toContain("refreshErrorMessage");
+  });
+
   test("uses responsive policy and token limit panels without transport ownership", () => {
     expect(page).toContain("<AiPolicyPanel");
     expect(page).toContain("<AiBudgetPanel");
     expect(page).not.toContain("<v-table");
+    expect(page).not.toContain("@/core/api");
+    expect(page).not.toContain("auth_store");
     expect(policyPanel).toContain("ai.capability.${capability}");
     expect(policyPanel).not.toContain("@/core/api");
     expect(budgetPanel).not.toContain("@/core/api");

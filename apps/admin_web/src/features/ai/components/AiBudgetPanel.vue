@@ -4,7 +4,12 @@ import type { AiBudgetPolicy } from "@mbc/api-contracts";
 import { useI18n } from "@/core/i18n/i18n";
 
 const budget = defineModel<AiBudgetPolicy>({ required: true });
-defineProps<{ canManage: boolean; pending: boolean }>();
+defineProps<{
+  canManage: boolean;
+  commandBusy: boolean;
+  pending: boolean;
+  errorMessage: string;
+}>();
 defineEmits<{ save: [] }>();
 
 const { t } = useI18n();
@@ -25,6 +30,14 @@ const { t } = useI18n();
     </div>
 
     <v-card-text>
+      <v-alert
+        v-if="errorMessage"
+        type="error"
+        variant="tonal"
+        class="mb-4"
+      >
+        {{ errorMessage }}
+      </v-alert>
       <v-row>
         <v-col cols="12" md="6">
           <v-text-field
@@ -56,7 +69,7 @@ const { t } = useI18n();
         color="primary"
         prepend-icon="mdi-content-save-outline"
         :loading="pending"
-        :disabled="!canManage"
+        :disabled="!canManage || commandBusy"
         @click="$emit('save')"
       >
         {{ t("common.save") }}

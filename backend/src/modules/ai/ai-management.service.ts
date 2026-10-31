@@ -272,7 +272,9 @@ function publicProvider(provider: StoredProvider, secret: string): AiProviderCon
     enabled: provider.enabled,
     baseUrl: provider.baseUrl,
     apiKeyConfigured: Boolean(provider.encryptedApiKey),
-    apiKeySuffix: provider.encryptedApiKey ? `••••${decrypt(provider.encryptedApiKey, secret).slice(-4)}` : null,
+    apiKeySuffix: provider.encryptedApiKey
+      ? decrypt(provider.encryptedApiKey, secret).slice(-4)
+      : null,
     defaultModel: provider.defaultModel,
     updatedAt: provider.updatedAt
   };
