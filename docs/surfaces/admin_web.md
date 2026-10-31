@@ -106,6 +106,10 @@ Surface rule:
 - Repeated summary metrics use the shared responsive metric grid. Features must
   supply already calculated and localized labels, values, icons, and semantic
   tones; the shared component does not query data or derive business meaning.
+- Dashboard keeps the last analytics snapshot visible when a transport refresh
+  fails and owns the retry intent. A stale snapshot exposes both its last
+  successful generation time and latest refresh attempt; presentation components
+  do not infer metrics, permissions, or navigation targets.
 - Admin Web UI supports English, Spanish, Simplified Chinese, and Traditional
   Chinese. First load follows the browser/system locale; a manual locale choice
   is persisted in local storage.

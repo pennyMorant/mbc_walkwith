@@ -14,6 +14,7 @@ import DashboardActionQueue from "../components/DashboardActionQueue.vue";
 import DashboardMetricGrid from "../components/DashboardMetricGrid.vue";
 import DashboardQuickActions, { type DashboardQuickAction } from "../components/DashboardQuickActions.vue";
 import DashboardRecentContent from "../components/DashboardRecentContent.vue";
+import DashboardSnapshotNotice from "../components/DashboardSnapshotNotice.vue";
 import DashboardSystemHealth from "../components/DashboardSystemHealth.vue";
 
 const router = useRouter();
@@ -29,7 +30,12 @@ const quickActionDefinitions: Array<DashboardQuickAction & { permission: AdminPe
 ];
 const quickActions = computed(() => quickActionDefinitions.filter((action) => authStore.can(action.permission)));
 const initialErrorMessage = computed(() =>
-  dashboardQuery.error.value && !dashboardQuery.data.value
+  dashboardQuery.error.value && dashboardQuery.data.value === undefined
+    ? formatApiErrorMessage(dashboardQuery.error.value, t("common.error"))
+    : ""
+);
+const refreshErrorMessage = computed(() =>
+  dashboardQuery.error.value && dashboardQuery.data.value !== undefined
     ? formatApiErrorMessage(dashboardQuery.error.value, t("common.error"))
     : ""
 );
@@ -55,12 +61,12 @@ async function open(path: string) { await router.push(path); }
         @retry="dashboardQuery.refetch()"
       >
         <template v-if="dashboardQuery.data.value">
-          <v-alert v-if="dashboardQuery.error.value" type="error" variant="tonal">
-            {{ formatApiErrorMessage(dashboardQuery.error.value, t("common.error")) }}
-          </v-alert>
-          <v-alert v-if="dashboardQuery.data.value.snapshot.status === 'stale'" type="warning" variant="tonal" class="mt-4">
-            {{ t("dashboard.snapshotStale") }}
-          </v-alert>
+          <DashboardSnapshotNotice
+            :snapshot="dashboardQuery.data.value.snapshot"
+            :refresh-error-message="refreshErrorMessage"
+            :fetching="dashboardQuery.isFetching.value"
+            @retry="dashboardQuery.refetch()"
+          />
 
           <DashboardActionQueue class="mt-8" :items="dashboardQuery.data.value.actionItems" @open="open" />
           <DashboardMetricGrid class="mt-7" :metrics="dashboardQuery.data.value.metrics" />

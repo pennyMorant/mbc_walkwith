@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  formatDashboardCount,
   formatDashboardMetricValue,
   formatDashboardTimestamp
 } from "../src/features/dashboard/dashboard_presenters";
@@ -39,7 +40,9 @@ describe("dashboard presenters", () => {
 
   test("formats snapshot timestamps for the active locale", () => {
     expect(
-      formatDashboardTimestamp("2026-07-13T12:00:00.000Z", "en-US")
+      formatDashboardTimestamp("2026-07-13T12:00:00.000Z", "en")
     ).toContain("2026");
+    expect(formatDashboardTimestamp("invalid", "en")).toBe("invalid");
+    expect(formatDashboardCount(1234, "en-US")).toBe("1,234");
   });
 });

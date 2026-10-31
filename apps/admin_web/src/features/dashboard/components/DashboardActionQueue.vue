@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { DashboardActionItem } from "@mbc/api-contracts";
 import { useI18n } from "@/core/i18n/i18n";
+import { formatDashboardCount } from "../dashboard_presenters";
 
 defineProps<{ items: DashboardActionItem[] }>();
 defineEmits<{ open: [path: string] }>();
-const { t } = useI18n();
+const { locale, t } = useI18n();
 </script>
 
 <template>
@@ -25,7 +26,9 @@ const { t } = useI18n();
           <strong>{{ t(item.labelKey) }}</strong>
           <span>{{ t(item.summaryKey) }}</span>
         </div>
-        <strong class="dashboard-queue__count">{{ item.count }}</strong>
+        <strong class="dashboard-queue__count">
+          {{ formatDashboardCount(item.count, locale) }}
+        </strong>
         <v-icon icon="mdi-chevron-right" size="20" />
       </button>
     </div>

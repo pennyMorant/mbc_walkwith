@@ -2967,6 +2967,7 @@ Object.assign(messages.en, {
   "dashboard.snapshotStaleLabel": "Last known metrics",
   "dashboard.snapshotStale":
     "Some source data could not be refreshed. The last successful dashboard snapshot is shown.",
+  "dashboard.lastSuccessful": "Last successful snapshot",
   "dashboard.lastAttempted": "Last refresh attempt"
 });
 
@@ -2983,6 +2984,7 @@ Object.assign(messages["zh-Hans"], {
   "dashboard.snapshotFresh": "实时指标",
   "dashboard.snapshotStaleLabel": "上次有效指标",
   "dashboard.snapshotStale": "部分数据暂时无法刷新，当前显示上一次成功生成的看板快照。",
+  "dashboard.lastSuccessful": "上次成功快照",
   "dashboard.lastAttempted": "最近刷新尝试"
 });
 
@@ -3000,6 +3002,7 @@ Object.assign(messages.es, {
   "dashboard.snapshotStaleLabel": "Últimas métricas disponibles",
   "dashboard.snapshotStale":
     "No se pudieron actualizar algunos datos. Se muestra la última instantánea correcta.",
+  "dashboard.lastSuccessful": "Última instantánea correcta",
   "dashboard.lastAttempted": "Último intento de actualización"
 });
 
@@ -3016,6 +3019,7 @@ Object.assign(messages["zh-Hant"], {
   "dashboard.snapshotFresh": "即時指標",
   "dashboard.snapshotStaleLabel": "上次有效指標",
   "dashboard.snapshotStale": "部分資料暫時無法更新，目前顯示上一次成功產生的看板快照。",
+  "dashboard.lastSuccessful": "上次成功快照",
   "dashboard.lastAttempted": "最近更新嘗試"
 });
 
