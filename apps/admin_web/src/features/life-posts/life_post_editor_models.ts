@@ -51,6 +51,21 @@ export function createLifePostEditorForm() {
 
 export type LifePostEditorForm = ReturnType<typeof createLifePostEditorForm>;
 
+export type LifePostCommandContext = {
+  editorSessionId: number;
+  postId: string | null;
+};
+
+export function isLifePostCommandCurrent(
+  intent: LifePostCommandContext,
+  editorSessionId: number,
+  postId: string | null
+) {
+  return (
+    intent.editorSessionId === editorSessionId && intent.postId === postId
+  );
+}
+
 export function buildLifePostPreview(
   form: LifePostEditorForm,
   selectedPost: LifePost | null,

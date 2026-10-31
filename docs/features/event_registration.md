@@ -109,6 +109,11 @@ App 只缓存后端返回的 canonical 报名摘要。会员专属状态按会�
 只有 `life_posts:update` 才能读取或操作报名名单；仅有 `life_posts:read` 的账号不得发起
 包含姓名、邮箱、备注和签到事实的名单请求。
 
+报名创建、编辑、状态调整、签到码和导出在点击时冻结活动 ID 与命令 payload，页面不能把
+可变 dialog 直接交给异步 mutation。响应只可关闭或修改仍指向同一活动的 workspace；切换
+活动后的旧响应只能刷新 canonical query。名单首次加载错误、保留旧数据时的刷新错误和命令
+错误必须独立呈现，命令错误不得替换名单或显示为可重试的查询失败。
+
 ## Backend Service Boundary
 
 Event service 负责：

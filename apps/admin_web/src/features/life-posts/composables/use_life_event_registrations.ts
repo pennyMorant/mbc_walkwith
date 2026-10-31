@@ -1,18 +1,9 @@
-import type { EventRegistration, EventRegistrationStatus, LifePost } from "@mbc/api-contracts";
-import { useMutation, useQuery } from "@tanstack/vue-query";
+import type { EventRegistration, LifePost } from "@mbc/api-contracts";
+import { useQuery } from "@tanstack/vue-query";
 import { computed, ref, watch, type Ref } from "vue";
 
-import { requireSelected } from "@/core/actions/action_guard";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
-import {
-  createEventCheckInCode,
-  createEventRegistration,
-  exportEventRegistrations,
-  listEventRegistrations,
-  updateEventRegistration,
-  updateEventRegistrationStatus
-} from "@/core/api/life_posts";
-import { downloadTextFile } from "@/core/files/download_text_file";
+import { listEventRegistrations } from "@/core/api/life_posts";
 import {
   eventRegistrationPageCount,
   eventRegistrationPageSize
@@ -21,6 +12,7 @@ import {
   createLifeEventRegistrationWorkspace,
   resetRegistrationCreateForm
 } from "../life_event_registration_workspace";
+import { useLifeEventRegistrationCommands } from "./use_life_event_registration_commands";
 
 type Translate = (key: string) => string;
 type QueryClientLike = {
@@ -56,7 +48,8 @@ export function useLifeEventRegistrations(
     registrationCreateDialog,
     checkInCodeDialog
   } = createLifeEventRegistrationWorkspace();
-  const registrationMutationErrorMessage = ref("");
+  const selectedPostId = computed(() => selectedPost.value?.id ?? null);
+  const workspaceSessionId = ref(0);
 
   const registrationListQuery = computed(() => ({
     ...appliedRegistrationFilters.value,
@@ -66,14 +59,19 @@ export function useLifeEventRegistrations(
   const registrationsQuery = useQuery({
     queryKey: computed(() => [
       "life-post-registrations",
-      selectedPost.value?.id,
+      selectedPostId.value,
       registrationListQuery.value
     ]),
     enabled: computed(
       () => canManage.value && Boolean(selectedPost.value?.registrationEnabled)
     ),
-    queryFn: () => {
-      if (!selectedPost.value) {
+    queryFn: ({ queryKey }) => {
+      const [, postId, query] = queryKey as [
+        string,
+        string | null,
+        typeof registrationListQuery.value
+      ];
+      if (!postId) {
         return Promise.resolve({
           items: [] as EventRegistration[],
           total: 0,
@@ -81,120 +79,8 @@ export function useLifeEventRegistrations(
           offset: 0
         });
       }
-      return listEventRegistrations(
-        selectedPost.value.id,
-        registrationListQuery.value
-      );
+      return listEventRegistrations(postId, query);
     }
-  });
-
-  const exportRegistrationsMutation = useMutation({
-    onMutate: clearRegistrationMutationError,
-    mutationFn: () => {
-      const post = requireSelected(
-        selectedPost.value,
-        t("No life post selected.")
-      );
-      return exportEventRegistrations(post.id);
-    },
-    onSuccess: (result) => {
-      downloadTextFile({
-        content: result.csv,
-        filename: result.filename,
-        contentType: result.contentType
-      });
-      showToast(t("Event registrations exported."));
-    },
-    onError: captureRegistrationMutationError
-  });
-
-  const createRegistrationMutation = useMutation({
-    onMutate: clearRegistrationMutationError,
-    mutationFn: () => {
-      const post = requireSelected(
-        selectedPost.value,
-        t("No life post selected.")
-      );
-      return createEventRegistration(post.id, {
-        attendeeName: registrationCreateDialog.attendeeName,
-        attendeeEmail: nullableTrimmed(registrationCreateDialog.attendeeEmail),
-        partySize: registrationCreateDialog.partySize,
-        note: registrationCreateDialog.note
-      });
-    },
-    onSuccess: async () => {
-      registrationCreateDialog.show = false;
-      resetRegistrationCreateForm(registrationCreateDialog);
-      await refreshRegistrationData();
-      showToast(t("Registration added."));
-    },
-    onError: captureRegistrationMutationError
-  });
-
-  const createCheckInCodeMutation = useMutation({
-    onMutate: clearRegistrationMutationError,
-    mutationFn: (request: { rotate?: boolean } = {}) => {
-      const post = requireSelected(
-        selectedPost.value,
-        t("No life post selected.")
-      );
-      return createEventCheckInCode(post.id, {
-        rotate: request.rotate ?? false
-      });
-    },
-    onSuccess: (code) => {
-      checkInCodeDialog.code = code;
-      checkInCodeDialog.show = true;
-      showToast(t("Check-in QR is ready."));
-    },
-    onError: captureRegistrationMutationError
-  });
-
-  const updateRegistrationStatusMutation = useMutation({
-    onMutate: clearRegistrationMutationError,
-    mutationFn: (request: {
-      registrationId: string;
-      status: EventRegistrationStatus;
-    }) => {
-      const post = requireSelected(
-        selectedPost.value,
-        t("No life post selected.")
-      );
-      return updateEventRegistrationStatus(
-        post.id,
-        request.registrationId,
-        request.status
-      );
-    },
-    onSuccess: async () => {
-      await refreshRegistrationData();
-      showToast(t("Registration status updated."));
-    },
-    onError: captureRegistrationMutationError
-  });
-
-  const updateRegistrationMutation = useMutation({
-    onMutate: clearRegistrationMutationError,
-    mutationFn: () => {
-      const post = requireSelected(
-        selectedPost.value,
-        t("No life post selected.")
-      );
-      return updateEventRegistration(
-        post.id,
-        registrationEditDialog.registrationId,
-        {
-          partySize: registrationEditDialog.partySize,
-          note: registrationEditDialog.note
-        }
-      );
-    },
-    onSuccess: async () => {
-      registrationEditDialog.show = false;
-      await refreshRegistrationData();
-      showToast(t("Registration updated."));
-    },
-    onError: captureRegistrationMutationError
   });
 
   const registrations = computed(
@@ -206,11 +92,27 @@ export function useLifeEventRegistrations(
   const registrationPageCount = computed(() =>
     eventRegistrationPageCount(registrationTotal.value)
   );
-  const registrationErrorMessage = computed(() => {
-    const queryError = registrationsQuery.error.value;
-    return queryError
-      ? formatApiErrorMessage(queryError, t("common.error"))
-      : registrationMutationErrorMessage.value;
+  const registrationInitialErrorMessage = computed(() =>
+    registrationsQuery.data.value === undefined
+      ? formatApiErrorMessage(registrationsQuery.error.value, t("common.error"))
+      : ""
+  );
+  const registrationRefreshErrorMessage = computed(() =>
+    registrationsQuery.data.value !== undefined
+      ? formatApiErrorMessage(registrationsQuery.error.value, t("common.error"))
+      : ""
+  );
+  const commands = useLifeEventRegistrationCommands({
+    selectedPost,
+    canManage,
+    registrationEditDialog,
+    registrationCreateDialog,
+    checkInCodeDialog,
+    t,
+    showToast,
+    nullableTrimmed,
+    workspaceSessionId,
+    refreshRegistrationData
   });
 
   watch(registrationTotal, () => {
@@ -260,6 +162,7 @@ export function useLifeEventRegistrations(
   }
 
   function resetRegistrationWorkspace() {
+    workspaceSessionId.value += 1;
     registrationFilters.status = "";
     registrationFilters.query = "";
     appliedRegistrationFilters.value = { status: "", query: "" };
@@ -268,31 +171,15 @@ export function useLifeEventRegistrations(
     registrationCreateDialog.show = false;
     checkInCodeDialog.show = false;
     checkInCodeDialog.code = null;
-    registrationMutationErrorMessage.value = "";
-    exportRegistrationsMutation.reset();
-    createRegistrationMutation.reset();
-    createCheckInCodeMutation.reset();
-    updateRegistrationStatusMutation.reset();
-    updateRegistrationMutation.reset();
+    commands.reset();
   }
 
-  async function refreshRegistrationData() {
+  async function refreshRegistrationData(postId: string) {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ["life-post-registrations"] }),
       queryClient.invalidateQueries({ queryKey: ["life-posts"] })
     ]);
-    input.syncSelectedPostFromList();
-  }
-
-  function clearRegistrationMutationError() {
-    registrationMutationErrorMessage.value = "";
-  }
-
-  function captureRegistrationMutationError(error: unknown) {
-    registrationMutationErrorMessage.value = formatApiErrorMessage(
-      error,
-      t("common.error")
-    );
+    if (selectedPostId.value === postId) input.syncSelectedPostFromList();
   }
 
   return {
@@ -300,17 +187,25 @@ export function useLifeEventRegistrations(
     registrationPage,
     registrationPageCount,
     registrationTotal,
-    registrationErrorMessage,
+    registrationInitialErrorMessage,
+    registrationRefreshErrorMessage,
+    registrationCommandErrorMessage: commands.commandErrorMessage,
     registrationEditDialog,
     registrationCreateDialog,
     checkInCodeDialog,
     registrationsQuery,
     registrations,
-    exportRegistrationsMutation,
-    createRegistrationMutation,
-    createCheckInCodeMutation,
-    updateRegistrationStatusMutation,
-    updateRegistrationMutation,
+    exportPending: commands.exportPending,
+    createPending: commands.createPending,
+    checkInCodePending: commands.checkInCodePending,
+    updateStatusPending: commands.updateStatusPending,
+    commandPending: commands.commandPending,
+    updatePending: commands.updatePending,
+    exportRegistrations: commands.exportRegistrations,
+    createRegistration: commands.createRegistration,
+    createCheckInCode: commands.createCheckInCode,
+    updateRegistrationStatus: commands.updateRegistrationStatus,
+    updateRegistration: commands.updateRegistration,
     applyRegistrationFilters,
     setRegistrationPage,
     openRegistrationEditor,

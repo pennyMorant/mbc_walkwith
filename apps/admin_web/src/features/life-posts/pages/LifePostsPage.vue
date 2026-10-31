@@ -38,19 +38,33 @@ async function translateNotificationTarget(locale: ContentLocale) {
   const title = form.notificationTitle.trim() || form.title.trim();
   const body = form.notificationBody.trim() || form.body.trim();
   if (!title && !body) return;
+  const postId = selectedPost.value.id;
+  const targetAtStart = { ...form.notificationTranslations[locale] };
   translatingNotificationLocale.value = locale;
   try {
-    const translated = await translateLifePostNotification(selectedPost.value.id, {
+    const translated = await translateLifePostNotification(postId, {
       targetLocale: locale,
       ...(title ? { title } : {}),
       ...(body ? { body } : {})
     });
+    const currentTarget = form.notificationTranslations[locale];
+    if (
+      selectedPost.value?.id !== postId ||
+      (form.notificationTitle.trim() || form.title.trim()) !== title ||
+      (form.notificationBody.trim() || form.body.trim()) !== body ||
+      currentTarget.title !== targetAtStart.title ||
+      currentTarget.body !== targetAtStart.body
+    ) {
+      return;
+    }
     form.notificationTranslations[locale] = {
       title: translated.title ?? "",
       body: translated.body ?? ""
     };
   } catch (error) {
-    showToast(formatApiErrorMessage(error, t("common.error")), "error");
+    if (selectedPost.value?.id === postId) {
+      showToast(formatApiErrorMessage(error, t("common.error")), "error");
+    }
   } finally {
     translatingNotificationLocale.value = null;
   }
@@ -75,7 +89,9 @@ const {
   registrationPage,
   registrationPageCount,
   registrationTotal,
-  registrationErrorMessage,
+  registrationInitialErrorMessage,
+  registrationRefreshErrorMessage,
+  registrationCommandErrorMessage,
   registrationEditDialog,
   registrationCreateDialog,
   checkInCodeDialog,
@@ -89,11 +105,12 @@ const {
   archiveMutation,
   unpublishMutation,
   deleteMutation,
-  exportRegistrationsMutation,
-  createRegistrationMutation,
-  createCheckInCodeMutation,
-  updateRegistrationStatusMutation,
-  updateRegistrationMutation,
+  exportPending,
+  createPending,
+  checkInCodePending,
+  updateStatusPending,
+  updatePending,
+  registrationCommandPending,
   posts,
   registrations,
   canSave,
@@ -104,6 +121,7 @@ const {
   uploadImageMutation,
   imageUploadErrorMessage,
   lifePostMutationErrorMessage,
+  lifePostCommandPending,
   showToast,
   lifePostAiInput,
   notificationAiInput,
@@ -127,6 +145,11 @@ const {
   applyRegistrationFilters,
   setRegistrationPage,
   closeCheckInCodeDialog,
+  exportRegistrations,
+  createRegistration,
+  createCheckInCode,
+  updateRegistrationStatus,
+  updateRegistration,
   statusColor,
   visibilityColor,
   iconLabel,
@@ -216,29 +239,32 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
           :total="registrationTotal"
           :pending="registrationsQuery.isPending.value"
           :fetching="registrationsQuery.isFetching.value"
-          :error-message="registrationErrorMessage"
+          :initial-error-message="registrationInitialErrorMessage"
+          :refresh-error-message="registrationRefreshErrorMessage"
+          :command-error-message="registrationCommandErrorMessage"
           :edit-dialog="registrationEditDialog"
           :create-dialog="registrationCreateDialog"
           :check-in-code-dialog="checkInCodeDialog"
-          :export-loading="exportRegistrationsMutation.isPending.value"
-          :update-status-loading="updateRegistrationStatusMutation.isPending.value"
-          :update-loading="updateRegistrationMutation.isPending.value"
-          :create-loading="createRegistrationMutation.isPending.value"
-          :check-in-code-loading="createCheckInCodeMutation.isPending.value"
+          :export-loading="exportPending"
+          :update-status-loading="updateStatusPending"
+          :update-loading="updatePending"
+          :create-loading="createPending"
+          :check-in-code-loading="checkInCodePending"
+          :command-pending="registrationCommandPending"
           :format-date-time="formatDateTime"
           @add-registration="openRegistrationCreator"
-          @create-check-in-code="createCheckInCodeMutation.mutate({ rotate: false })"
-          @rotate-check-in-code="createCheckInCodeMutation.mutate({ rotate: true })"
-          @export-csv="exportRegistrationsMutation.mutate()"
+          @create-check-in-code="createCheckInCode(false)"
+          @rotate-check-in-code="createCheckInCode(true)"
+          @export-csv="exportRegistrations"
           @apply-filters="applyRegistrationFilters"
           @retry="registrationsQuery.refetch()"
           @update-page="setRegistrationPage"
           @edit-registration="openRegistrationEditor"
-          @update-status="updateRegistrationStatusMutation.mutate"
+          @update-status="updateRegistrationStatus"
           @close-edit="registrationEditDialog.show = false"
-          @save-edit="updateRegistrationMutation.mutate()"
+          @save-edit="updateRegistration"
           @close-create="registrationCreateDialog.show = false"
-          @save-create="createRegistrationMutation.mutate()"
+          @save-create="createRegistration"
           @close-check-in-code="closeCheckInCodeDialog"
         />
         <v-form
@@ -315,6 +341,7 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
             :save-loading="
               createMutation.isPending.value || updateMutation.isPending.value
             "
+            :command-pending="lifePostCommandPending"
             @submit-review="submitCurrentLifePostReview"
             @return-draft="returnLifePostToDraft"
             @publish="publishCurrentLifePost"

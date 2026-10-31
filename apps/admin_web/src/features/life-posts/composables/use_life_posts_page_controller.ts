@@ -3,9 +3,8 @@ import {
   type LifePost
 } from "@mbc/api-contracts";
 import { useQueryClient } from "@tanstack/vue-query";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 
-import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import {
@@ -31,6 +30,7 @@ export function useLifePostsPageController() {
   const authStore = useAdminAuthStore();
   const { optionItems, t } = useI18n();
   const selectedPost = ref<LifePost | null>(null);
+  const editorSessionId = ref(0);
   const drawer = ref(false);
   const snackbar = reactive({
     show: false,
@@ -63,17 +63,25 @@ export function useLifePostsPageController() {
     registrationPage,
     registrationPageCount,
     registrationTotal,
-    registrationErrorMessage,
+    registrationInitialErrorMessage,
+    registrationRefreshErrorMessage,
+    registrationCommandErrorMessage,
     registrationEditDialog,
     registrationCreateDialog,
     checkInCodeDialog,
     registrationsQuery,
     registrations,
-    exportRegistrationsMutation,
-    createRegistrationMutation,
-    createCheckInCodeMutation,
-    updateRegistrationStatusMutation,
-    updateRegistrationMutation,
+    exportPending,
+    createPending,
+    checkInCodePending,
+    updateStatusPending,
+    updatePending,
+    commandPending: registrationCommandPending,
+    exportRegistrations,
+    createRegistration,
+    createCheckInCode,
+    updateRegistrationStatus,
+    updateRegistration,
     applyRegistrationFilters,
     setRegistrationPage,
     openRegistrationEditor,
@@ -144,6 +152,9 @@ export function useLifePostsPageController() {
     archiveMutation,
     unpublishMutation,
     deleteMutation,
+    commandErrorMessage: lifePostMutationErrorMessage,
+    commandPending: lifePostCommandPending,
+    resetCommandFeedback,
     saveLifePost,
     submitCurrentLifePostReview,
     returnLifePostToDraft,
@@ -162,12 +173,15 @@ export function useLifePostsPageController() {
     t,
     openPost,
     afterDelete: () => {
+      editorSessionId.value += 1;
+      resetCommandFeedback();
       selectedPost.value = null;
       drawer.value = false;
       resetRegistrationWorkspace();
       resetForm();
     },
-    showToast
+    showToast,
+    editorSessionId
   });
 
   const { confirmDialog, requestArchive, requestDelete, confirmPendingAction } =
@@ -177,22 +191,9 @@ export function useLifePostsPageController() {
       deletePost: deleteCurrentLifePost
     });
   
-  const lifePostMutationErrorMessage = computed(() =>
-    formatApiErrorMessage(
-      createMutation.error.value ||
-        updateMutation.error.value ||
-        submitReviewMutation.error.value ||
-        returnDraftMutation.error.value ||
-        publishMutation.error.value ||
-        unpublishMutation.error.value ||
-        archiveMutation.error.value ||
-        uploadImageMutation.error.value ||
-        deleteMutation.error.value,
-      t("common.error")
-    )
-  );
-  
   function openPost(post: LifePost) {
+    editorSessionId.value += 1;
+    resetCommandFeedback();
     resetRegistrationWorkspace();
     selectedPost.value = post;
     form.sourceLocale = post.sourceLocale;
@@ -223,6 +224,8 @@ export function useLifePostsPageController() {
   }
   
   function newPost() {
+    editorSessionId.value += 1;
+    resetCommandFeedback();
     resetRegistrationWorkspace();
     selectedPost.value = null;
     resetForm();
@@ -232,6 +235,14 @@ export function useLifePostsPageController() {
   function resetForm() {
     Object.assign(form, createLifePostEditorForm());
   }
+
+  watch(drawer, (isOpen, wasOpen) => {
+    if (!isOpen && wasOpen) {
+      editorSessionId.value += 1;
+      resetCommandFeedback();
+      resetRegistrationWorkspace();
+    }
+  });
   
   const statusColor = lifePostStatusColor;
   const visibilityColor = lifePostVisibilityColor;
@@ -280,7 +291,9 @@ export function useLifePostsPageController() {
     registrationPage,
     registrationPageCount,
     registrationTotal,
-    registrationErrorMessage,
+    registrationInitialErrorMessage,
+    registrationRefreshErrorMessage,
+    registrationCommandErrorMessage,
     registrationEditDialog,
     registrationCreateDialog,
     checkInCodeDialog,
@@ -294,11 +307,12 @@ export function useLifePostsPageController() {
     archiveMutation,
     unpublishMutation,
     deleteMutation,
-    exportRegistrationsMutation,
-    createRegistrationMutation,
-    createCheckInCodeMutation,
-    updateRegistrationStatusMutation,
-    updateRegistrationMutation,
+    exportPending,
+    createPending,
+    checkInCodePending,
+    updateStatusPending,
+    updatePending,
+    registrationCommandPending,
     posts,
     registrations,
     canSave,
@@ -309,6 +323,7 @@ export function useLifePostsPageController() {
     uploadImageMutation,
     imageUploadErrorMessage,
     lifePostMutationErrorMessage,
+    lifePostCommandPending,
     showToast,
     lifePostAiInput,
     notificationAiInput,
@@ -334,6 +349,11 @@ export function useLifePostsPageController() {
     applyRegistrationFilters,
     setRegistrationPage,
     closeCheckInCodeDialog,
+    exportRegistrations,
+    createRegistration,
+    createCheckInCode,
+    updateRegistrationStatus,
+    updateRegistration,
     statusColor,
     visibilityColor,
     iconLabel,

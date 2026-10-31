@@ -17,6 +17,7 @@ defineProps<{
   archiveLoading: boolean;
   deleteLoading: boolean;
   saveLoading: boolean;
+  commandPending: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -50,6 +51,7 @@ const { t } = useI18n();
           variant="tonal"
           :disabled="
             !canUpdate ||
+            commandPending ||
             post.status === 'needs_review' ||
             (post.status === 'published' && !canPublish)
           "
@@ -64,6 +66,7 @@ const { t } = useI18n();
           variant="tonal"
           :disabled="
             !canUpdate ||
+            commandPending ||
             post.status === 'draft' ||
             (post.status === 'published' && !canPublish)
           "
@@ -78,6 +81,7 @@ const { t } = useI18n();
           variant="tonal"
           :disabled="
             !canPublish ||
+            commandPending ||
             post.status === 'published' ||
             !publishReady
           "
@@ -90,7 +94,7 @@ const { t } = useI18n();
           v-if="post"
           color="secondary"
           variant="tonal"
-          :disabled="!canPublish || post.status !== 'published'"
+          :disabled="commandPending || !canPublish || post.status !== 'published'"
           :loading="unpublishLoading"
           @click="emit('unpublish')"
         >
@@ -102,6 +106,7 @@ const { t } = useI18n();
           variant="tonal"
           :disabled="
             !canUpdate ||
+            commandPending ||
             post.status === 'archived' ||
             (post.status === 'published' && !canPublish)
           "
@@ -115,7 +120,9 @@ const { t } = useI18n();
           color="error"
           variant="tonal"
           :disabled="
-            !canUpdate || (post.status === 'published' && !canPublish)
+            commandPending ||
+            !canUpdate ||
+            (post.status === 'published' && !canPublish)
           "
           :loading="deleteLoading"
           @click="emit('delete')"
@@ -128,6 +135,7 @@ const { t } = useI18n();
         color="primary"
         :disabled="
           !canSave ||
+          commandPending ||
           !canUpdate ||
           (post?.status === 'published' && !canPublish)
         "

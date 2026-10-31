@@ -5,6 +5,7 @@ import {
   buildLifePostPreview,
   buildLifePostPublishRequest,
   createLifePostEditorForm,
+  isLifePostCommandCurrent,
   isLifePostCtaUrlValid,
   isLifePostScheduleValid
 } from "../src/features/life-posts/life_post_editor_models";
@@ -145,5 +146,13 @@ describe("life post editor models", () => {
 
     form.ctaLabel = "Register";
     expect(isLifePostCtaUrlValid(form)).toBe(true);
+  });
+
+  test("accepts command results only for the active editor session and post", () => {
+    const intent = { editorSessionId: 4, postId: "post-1" };
+
+    expect(isLifePostCommandCurrent(intent, 4, "post-1")).toBe(true);
+    expect(isLifePostCommandCurrent(intent, 5, "post-1")).toBe(false);
+    expect(isLifePostCommandCurrent(intent, 4, "post-2")).toBe(false);
   });
 });

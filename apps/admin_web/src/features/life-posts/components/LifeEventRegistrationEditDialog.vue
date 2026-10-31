@@ -46,6 +46,7 @@ const canSave = computed(
           :max="maxPartySize"
           density="comfortable"
           variant="outlined"
+          :disabled="loading"
         />
         <v-textarea
           v-model="dialog.note"
@@ -55,16 +56,17 @@ const canSave = computed(
           counter
           density="comfortable"
           variant="outlined"
+          :disabled="loading"
         />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn variant="text" @click="emit('close')">
+        <v-btn variant="text" :disabled="loading" @click="emit('close')">
           {{ t("Cancel") }}
         </v-btn>
         <v-btn
           color="primary"
-          :disabled="!canSave"
+          :disabled="loading || !canSave"
           :loading="loading"
           @click="emit('save')"
         >

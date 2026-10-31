@@ -30,6 +30,30 @@ export type CheckInCodeDialog = {
   code: EventCheckInCode | null;
 };
 
+export type RegistrationCreateIntent = {
+  postId: string;
+  payload: {
+    attendeeName: string;
+    attendeeEmail: string | null;
+    partySize: number;
+    note: string;
+  };
+};
+
+export type RegistrationCommandContext = {
+  postId: string;
+  workspaceSessionId: number;
+};
+
+export type RegistrationUpdateIntent = {
+  postId: string;
+  registrationId: string;
+  payload: {
+    partySize: number;
+    note: string;
+  };
+};
+
 export function createLifeEventRegistrationWorkspace() {
   const registrationFilters = reactive<RegistrationFilters>({
     status: "",
@@ -75,4 +99,45 @@ export function resetRegistrationCreateForm(
   dialog.attendeeEmail = "";
   dialog.partySize = 1;
   dialog.note = "";
+}
+
+export function buildRegistrationCreateIntent(
+  postId: string,
+  dialog: RegistrationCreateDialog,
+  nullableTrimmed: (value: string) => string | null
+): RegistrationCreateIntent {
+  return {
+    postId,
+    payload: {
+      attendeeName: dialog.attendeeName.trim(),
+      attendeeEmail: nullableTrimmed(dialog.attendeeEmail),
+      partySize: dialog.partySize,
+      note: dialog.note.trim()
+    }
+  };
+}
+
+export function buildRegistrationUpdateIntent(
+  postId: string,
+  dialog: RegistrationEditDialog
+): RegistrationUpdateIntent {
+  return {
+    postId,
+    registrationId: dialog.registrationId,
+    payload: {
+      partySize: dialog.partySize,
+      note: dialog.note.trim()
+    }
+  };
+}
+
+export function isRegistrationCommandCurrent(
+  intent: RegistrationCommandContext,
+  workspaceSessionId: number,
+  postId: string | null
+) {
+  return (
+    intent.workspaceSessionId === workspaceSessionId &&
+    intent.postId === postId
+  );
 }

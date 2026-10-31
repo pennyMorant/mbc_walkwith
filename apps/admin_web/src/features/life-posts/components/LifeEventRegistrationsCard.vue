@@ -27,7 +27,9 @@ defineProps<{
   total: number;
   pending: boolean;
   fetching: boolean;
-  errorMessage: string;
+  initialErrorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
   editDialog: RegistrationEditDialog;
   createDialog: RegistrationCreateDialog;
   checkInCodeDialog: CheckInCodeDialog;
@@ -36,6 +38,7 @@ defineProps<{
   updateLoading: boolean;
   createLoading: boolean;
   checkInCodeLoading: boolean;
+  commandPending: boolean;
   formatDateTime: (value: string | null | undefined) => string;
 }>();
 
@@ -86,6 +89,7 @@ const { optionItems, t } = useI18n();
                 size="small"
                 color="primary"
                 variant="tonal"
+                :disabled="commandPending"
                 @click="emit('addRegistration')"
               />
             </template>
@@ -99,6 +103,7 @@ const { optionItems, t } = useI18n();
                 size="small"
                 color="primary"
                 variant="tonal"
+                :disabled="commandPending"
                 :loading="checkInCodeLoading"
                 @click="emit('createCheckInCode')"
               />
@@ -112,6 +117,7 @@ const { optionItems, t } = useI18n();
                 :aria-label="t('Export CSV')"
                 size="small"
                 variant="tonal"
+                :disabled="commandPending"
                 :loading="exportLoading"
                 @click="emit('exportCsv')"
               />
@@ -150,9 +156,15 @@ const { optionItems, t } = useI18n();
       color="primary"
       class="mt-3"
     />
-    <v-alert v-if="errorMessage" type="error" variant="tonal" class="mt-3">
+    <v-alert v-if="refreshErrorMessage" type="warning" variant="tonal" class="mt-3">
+      {{ refreshErrorMessage }}
+    </v-alert>
+    <v-alert v-if="commandErrorMessage" type="error" variant="tonal" class="mt-3">
+      {{ commandErrorMessage }}
+    </v-alert>
+    <v-alert v-if="initialErrorMessage" type="error" variant="tonal" class="mt-3">
       <div class="d-flex align-center justify-space-between ga-3">
-        <span>{{ errorMessage }}</span>
+        <span>{{ initialErrorMessage }}</span>
         <v-btn size="small" variant="text" @click="emit('retry')">
           {{ t("common.retry") }}
         </v-btn>
@@ -162,13 +174,13 @@ const { optionItems, t } = useI18n();
     <LifeEventRegistrationList
       v-else-if="registrations.length > 0"
       :registrations="registrations"
-      :update-status-loading="updateStatusLoading"
+      :update-status-loading="commandPending || updateStatusLoading"
       :format-date-time="formatDateTime"
       @edit="emit('editRegistration', $event)"
       @update-status="emit('updateStatus', $event)"
     />
     <v-sheet
-      v-else-if="!errorMessage"
+      v-else-if="!initialErrorMessage"
       class="text-center text-body-2 text-medium-emphasis py-8 mt-3"
       color="transparent"
     >

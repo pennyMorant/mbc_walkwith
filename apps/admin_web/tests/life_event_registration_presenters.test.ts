@@ -6,7 +6,10 @@ import {
   eventRegistrationStatusColor
 } from "../src/features/life-posts/life_event_registration_presenters";
 import {
+  buildRegistrationCreateIntent,
+  buildRegistrationUpdateIntent,
   createLifeEventRegistrationWorkspace,
+  isRegistrationCommandCurrent,
   resetRegistrationCreateForm
 } from "../src/features/life-posts/life_event_registration_workspace";
 
@@ -49,5 +52,54 @@ describe("event registration admin presenters", () => {
       partySize: 1,
       note: ""
     });
+  });
+
+  test("freezes create and edit intents before async commands start", () => {
+    const workspace = createLifeEventRegistrationWorkspace();
+    workspace.registrationCreateDialog.attendeeName = "  Guest  ";
+    workspace.registrationCreateDialog.attendeeEmail = " guest@example.com ";
+    workspace.registrationCreateDialog.partySize = 3;
+    workspace.registrationCreateDialog.note = "  Needs a ride  ";
+    workspace.registrationEditDialog.registrationId = "registration-1";
+    workspace.registrationEditDialog.partySize = 2;
+    workspace.registrationEditDialog.note = "  Updated note  ";
+
+    const createIntent = buildRegistrationCreateIntent(
+      "post-1",
+      workspace.registrationCreateDialog,
+      (value) => value.trim() || null
+    );
+    const updateIntent = buildRegistrationUpdateIntent(
+      "post-1",
+      workspace.registrationEditDialog
+    );
+    workspace.registrationCreateDialog.attendeeName = "Changed later";
+    workspace.registrationEditDialog.note = "Changed later";
+
+    expect(createIntent).toEqual({
+      postId: "post-1",
+      payload: {
+        attendeeName: "Guest",
+        attendeeEmail: "guest@example.com",
+        partySize: 3,
+        note: "Needs a ride"
+      }
+    });
+    expect(updateIntent).toEqual({
+      postId: "post-1",
+      registrationId: "registration-1",
+      payload: { partySize: 2, note: "Updated note" }
+    });
+  });
+
+  test("rejects command results from a closed or replaced registration workspace", () => {
+    const intent = {
+      postId: "post-1",
+      workspaceSessionId: 3
+    };
+
+    expect(isRegistrationCommandCurrent(intent, 3, "post-1")).toBe(true);
+    expect(isRegistrationCommandCurrent(intent, 4, "post-1")).toBe(false);
+    expect(isRegistrationCommandCurrent(intent, 3, "post-2")).toBe(false);
   });
 });
