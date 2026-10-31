@@ -1,5 +1,5 @@
 import type { Course } from "@mbc/api-contracts";
-import { ref, type Ref } from "vue";
+import { computed, reactive, type Ref } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 
@@ -20,12 +20,17 @@ export function useCourseMutationFeedback(
   selectedCourse: Ref<Course | null>,
   t: (key: string) => string
 ) {
-  const errorMessage = ref("");
+  const errorMessages = reactive<Record<CourseMutationScope, string>>({
+    course: "",
+    "lesson-create": "",
+    "lesson-status": "",
+    enrollment: ""
+  });
   const operationIds = new Map<CourseMutationScope, number>();
   let generation = 0;
 
   function begin(scope: CourseMutationScope): CourseMutationContext {
-    errorMessage.value = "";
+    errorMessages[scope] = "";
     const operationId = (operationIds.get(scope) ?? 0) + 1;
     operationIds.set(scope, operationId);
     return {
@@ -49,15 +54,29 @@ export function useCourseMutationFeedback(
     _variables: unknown,
     context: CourseMutationContext | undefined
   ) {
-    if (isCurrent(context)) {
-      errorMessage.value = formatApiErrorMessage(error, t("common.error"));
+    if (context && isCurrent(context)) {
+      errorMessages[context.scope] = formatApiErrorMessage(
+        error,
+        t("common.error")
+      );
     }
   }
 
   function reset() {
     generation += 1;
-    errorMessage.value = "";
+    for (const scope of Object.keys(errorMessages) as CourseMutationScope[]) {
+      errorMessages[scope] = "";
+    }
   }
 
-  return { begin, capture, errorMessage, isCurrent, reset };
+  function messageFor(...scopes: CourseMutationScope[]) {
+    return computed(() => {
+      for (const scope of scopes) {
+        if (errorMessages[scope]) return errorMessages[scope];
+      }
+      return "";
+    });
+  }
+
+  return { begin, capture, isCurrent, messageFor, reset };
 }

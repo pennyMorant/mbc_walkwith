@@ -230,7 +230,9 @@ Surface rule:
 - Course learning：Courses 页面维护课程、课次、报名名单和学习进度；mutation 后必须
   刷新 canonical 课程及子资源。左侧课程目录使用共享 loading、empty、error 和 retry
   表达，页面保留查询 owner；筛选草稿与已应用快照分离，刷新失败保留已有列表和选择。
-  资料和逐课次出勤后续接入。
+  已有课程从右侧工作区进入编辑；课程、课次、报名命令错误按区域表达。报名筛选显式
+  应用，课程保存和课次创建使用冻结 intent；迟到结果刷新缓存但不能覆盖请求期间新增
+  的表单输入。资料和逐课次出勤后续接入。
 - Serving schedule：Serving 页面通过 canonical member picker 维护团队、岗位和排班，
   并在同一工作区查看、筛选和写入可用时间与到岗状态；页面不提交成员姓名/邮箱
   快照，也不自己决定冲突和签到时间。

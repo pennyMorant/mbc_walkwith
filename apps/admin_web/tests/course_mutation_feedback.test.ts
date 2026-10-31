@@ -8,24 +8,30 @@ describe("course mutation feedback", () => {
   test("ignores late failures and results from another course", () => {
     const selectedCourse = ref<Course | null>(course("course-a"));
     const feedback = useCourseMutationFeedback(selectedCourse, (key) => key);
+    const lessonError = feedback.messageFor("lesson-create", "lesson-status");
+    const enrollmentError = feedback.messageFor("enrollment");
     const first = feedback.begin("lesson-create");
 
     feedback.capture(new Error("first failure"), undefined, first);
-    expect(feedback.errorMessage.value).toBe("first failure");
+    expect(lessonError.value).toBe("first failure");
 
     const newer = feedback.begin("lesson-create");
     feedback.capture(new Error("late failure"), undefined, first);
-    expect(feedback.errorMessage.value).toBe("");
+    expect(lessonError.value).toBe("");
     expect(feedback.isCurrent(newer)).toBe(true);
 
     const enrollment = feedback.begin("enrollment");
+    feedback.capture(new Error("enrollment failure"), undefined, enrollment);
     expect(feedback.isCurrent(newer)).toBe(true);
     expect(feedback.isCurrent(enrollment)).toBe(true);
+    expect(enrollmentError.value).toBe("enrollment failure");
+    expect(lessonError.value).toBe("");
 
     selectedCourse.value = course("course-b");
     feedback.reset();
     feedback.capture(new Error("wrong course"), undefined, newer);
-    expect(feedback.errorMessage.value).toBe("");
+    expect(lessonError.value).toBe("");
+    expect(enrollmentError.value).toBe("");
     expect(feedback.isCurrent(newer)).toBe(false);
   });
 });

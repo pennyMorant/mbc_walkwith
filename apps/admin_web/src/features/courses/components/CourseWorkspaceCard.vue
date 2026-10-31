@@ -31,10 +31,18 @@ defineProps<{
   lessonPending: boolean;
   lessonStatusPending: boolean;
   enrollmentPending: boolean;
+  lessonsErrorMessage: string;
+  lessonsRefreshErrorMessage: string;
+  enrollmentsErrorMessage: string;
+  enrollmentsRefreshErrorMessage: string;
+  lessonMutationErrorMessage: string;
+  enrollmentMutationErrorMessage: string;
 }>();
 
 defineEmits<{
   createLesson: [];
+  edit: [];
+  retryLessons: [];
   updateLessonStatus: [lesson: CourseLesson, status: CourseLessonStatus];
   refreshEnrollments: [];
   advanceProgress: [enrollment: CourseEnrollment];
@@ -49,7 +57,17 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
-    <v-card-title>{{ course?.title || t("Course") }}</v-card-title>
+    <v-card-title class="d-flex align-center justify-space-between ga-3">
+      <span>{{ course?.title || t("Course") }}</span>
+      <v-btn
+        v-if="course && canManage"
+        icon="mdi-pencil-outline"
+        variant="text"
+        size="small"
+        :aria-label="t('Edit course')"
+        @click="$emit('edit')"
+      />
+    </v-card-title>
     <v-card-subtitle v-if="course">
       {{ course.scheduleText || t("common.notSet") }} ·
       {{ course.location || t("common.notSet") }}
@@ -66,7 +84,11 @@ const { t } = useI18n();
         :lessons-pending="lessonsPending"
         :lesson-pending="lessonPending"
         :lesson-status-pending="lessonStatusPending"
+        :error-message="lessonsErrorMessage"
+        :refresh-error-message="lessonsRefreshErrorMessage"
+        :command-error-message="lessonMutationErrorMessage"
         @create-lesson="$emit('createLesson')"
+        @retry="$emit('retryLessons')"
         @update-lesson-status="
           (lesson, status) => $emit('updateLessonStatus', lesson, status)
         "
@@ -80,6 +102,9 @@ const { t } = useI18n();
         :can-manage="canManage"
         :pending="enrollmentsPending"
         :mutation-pending="enrollmentPending"
+        :error-message="enrollmentsErrorMessage"
+        :refresh-error-message="enrollmentsRefreshErrorMessage"
+        :command-error-message="enrollmentMutationErrorMessage"
         @refresh="$emit('refreshEnrollments')"
         @advance-progress="(enrollment) => $emit('advanceProgress', enrollment)"
         @update-status="

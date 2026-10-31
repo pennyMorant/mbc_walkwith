@@ -9,26 +9,34 @@ import { useCoursePageController } from "../composables/use_course_page_controll
 
 const {
   advanceProgress,
+  applyEnrollmentFilters,
   applyCourseFilters,
   canCreateLesson,
   canManage,
   canSave,
   clearCourseFilters,
   courseStatusOptions,
+  courseMutationErrorMessage,
   courses,
   coursesQuery,
   createLesson,
   drawer,
   enrollmentFilters,
+  enrollmentMutationErrorMessage,
   enrollmentMutation,
   enrollments,
+  enrollmentsErrorMessage,
   enrollmentsQuery,
+  enrollmentsRefreshErrorMessage,
   filters,
   form,
   lessonForm,
+  lessonMutationErrorMessage,
   lessonMutation,
   lessons,
+  lessonsErrorMessage,
   lessonsQuery,
+  lessonsRefreshErrorMessage,
   lessonStatusMutation,
   listErrorMessage,
   listRefreshErrorMessage,
@@ -41,8 +49,7 @@ const {
   selectCourse,
   t,
   updateEnrollmentStatus,
-  updateLessonStatus,
-  workspaceErrorMessage
+  updateLessonStatus
 } = useCoursePageController();
 </script>
 
@@ -63,16 +70,6 @@ const {
         </v-btn>
       </template>
     </AdminPageHeader>
-
-    <v-alert
-      v-if="workspaceErrorMessage"
-      class="mt-4"
-      type="error"
-      variant="tonal"
-      density="comfortable"
-    >
-      {{ workspaceErrorMessage }}
-    </v-alert>
 
     <AdminCatalogFilters
       v-model:query="filters.query"
@@ -113,9 +110,17 @@ const {
           :lesson-pending="lessonMutation.isPending.value"
           :lesson-status-pending="lessonStatusMutation.isPending.value"
           :enrollment-pending="enrollmentMutation.isPending.value"
+          :lessons-error-message="lessonsErrorMessage"
+          :lessons-refresh-error-message="lessonsRefreshErrorMessage"
+          :enrollments-error-message="enrollmentsErrorMessage"
+          :enrollments-refresh-error-message="enrollmentsRefreshErrorMessage"
+          :lesson-mutation-error-message="lessonMutationErrorMessage"
+          :enrollment-mutation-error-message="enrollmentMutationErrorMessage"
           @create-lesson="createLesson"
+          @edit="drawer = true"
+          @retry-lessons="lessonsQuery.refetch()"
           @update-lesson-status="updateLessonStatus"
-          @refresh-enrollments="enrollmentsQuery.refetch()"
+          @refresh-enrollments="applyEnrollmentFilters"
           @advance-progress="advanceProgress"
           @update-enrollment-status="updateEnrollmentStatus"
         />
@@ -129,6 +134,7 @@ const {
       :can-manage="canManage"
       :can-save="canSave"
       :saving="saveMutation.isPending.value"
+      :error-message="courseMutationErrorMessage"
       @save="saveCourse"
     />
   </div>

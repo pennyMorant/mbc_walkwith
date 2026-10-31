@@ -20,6 +20,9 @@ defineProps<{
   canManage: boolean;
   pending: boolean;
   mutationPending: boolean;
+  errorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
 }>();
 defineEmits<{
   refresh: [];
@@ -85,13 +88,36 @@ function canCancel(enrollment: CourseEnrollment) {
         {{ t("common.refresh") }}
       </v-btn>
     </div>
+    <v-alert
+      v-if="errorMessage || refreshErrorMessage"
+      :type="errorMessage ? 'error' : 'warning'"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+    >
+      <div class="d-flex align-center justify-space-between ga-3">
+        <span>{{ errorMessage || refreshErrorMessage }}</span>
+        <v-btn size="small" variant="tonal" @click="$emit('refresh')">
+          {{ t("Retry") }}
+        </v-btn>
+      </div>
+    </v-alert>
+    <v-alert
+      v-if="commandErrorMessage"
+      type="error"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+    >
+      {{ commandErrorMessage }}
+    </v-alert>
     <v-progress-linear
       v-if="pending"
       indeterminate
       color="primary"
       class="mb-2"
     />
-    <v-table density="compact">
+    <v-table v-if="!errorMessage" density="compact">
       <thead>
         <tr>
           <th>{{ t("Member") }}</th>

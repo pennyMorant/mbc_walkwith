@@ -24,9 +24,13 @@ defineProps<{
   lessonsPending: boolean;
   lessonPending: boolean;
   lessonStatusPending: boolean;
+  errorMessage: string;
+  refreshErrorMessage: string;
+  commandErrorMessage: string;
 }>();
 defineEmits<{
   createLesson: [];
+  retry: [];
   updateLessonStatus: [lesson: CourseLesson, status: CourseLessonStatus];
 }>();
 
@@ -36,13 +40,36 @@ const { locale, optionItems, t } = useI18n();
 <template>
   <v-card-text>
     <div class="text-subtitle-2 mb-2">{{ t("Lessons") }}</div>
+    <v-alert
+      v-if="errorMessage || refreshErrorMessage"
+      :type="errorMessage ? 'error' : 'warning'"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+    >
+      <div class="d-flex align-center justify-space-between ga-3">
+        <span>{{ errorMessage || refreshErrorMessage }}</span>
+        <v-btn size="small" variant="tonal" @click="$emit('retry')">
+          {{ t("Retry") }}
+        </v-btn>
+      </div>
+    </v-alert>
+    <v-alert
+      v-if="commandErrorMessage"
+      type="error"
+      variant="tonal"
+      density="compact"
+      class="mb-3"
+    >
+      {{ commandErrorMessage }}
+    </v-alert>
     <v-progress-linear
       v-if="lessonsPending"
       indeterminate
       color="primary"
       class="mb-2"
     />
-    <v-list density="compact" class="border rounded">
+    <v-list v-if="!errorMessage" density="compact" class="border rounded">
       <v-list-item v-if="!lessonsPending && lessons.length === 0">
         <v-list-item-title class="text-medium-emphasis">
           {{ t("No lessons yet.") }}

@@ -19,6 +19,7 @@ defineProps<{
   canManage: boolean;
   canSave: boolean;
   saving: boolean;
+  errorMessage: string;
 }>();
 
 defineEmits<{
@@ -43,6 +44,14 @@ const statusOptions: CourseStatus[] = courseStatusOptions;
     </v-toolbar>
     <v-divider />
     <div class="pa-4">
+      <v-alert
+        v-if="errorMessage"
+        type="error"
+        variant="tonal"
+        class="mb-4"
+      >
+        {{ errorMessage }}
+      </v-alert>
       <v-text-field
         v-model="form.title"
         :label="t('Title')"

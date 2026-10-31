@@ -1,5 +1,6 @@
 import type {
   CourseStatus,
+  CourseLessonUpsertRequest,
   CourseLessonStatus,
   CourseUpsertRequest,
   LifePostVisibility
@@ -12,6 +13,11 @@ export type CourseCatalogFilterForm = {
 };
 
 export type CourseCatalogFilterSnapshot = Readonly<CourseCatalogFilterForm>;
+
+export type CourseSaveIntent = {
+  courseId: string | null;
+  payload: CourseUpsertRequest;
+};
 
 export function createCourseCatalogFilterForm(): CourseCatalogFilterForm {
   return { query: "", status: "", visibility: "" };
@@ -78,6 +84,52 @@ export function buildCoursePayload(
     status: form.status,
     capacity: normalizeCapacity(form.capacity)
   };
+}
+
+export function courseSaveIntent(
+  courseId: string | null,
+  form: CourseUpsertRequest
+): CourseSaveIntent {
+  return { courseId, payload: buildCoursePayload(form) };
+}
+
+export function sameCourseSaveIntent(
+  selectedCourseId: string | null,
+  form: CourseUpsertRequest,
+  intent: CourseSaveIntent
+) {
+  return (
+    selectedCourseId === intent.courseId &&
+    JSON.stringify(buildCoursePayload(form)) === JSON.stringify(intent.payload)
+  );
+}
+
+export function buildCourseLessonPayload(
+  form: ReturnType<typeof emptyLessonForm>
+): CourseLessonUpsertRequest {
+  return {
+    title: form.title.trim(),
+    description: form.description.trim(),
+    startsAt: dateTimeInputToIso(form.startsAt),
+    status: form.status,
+    position: Math.max(0, Number(form.position) || 0)
+  };
+}
+
+export function sameCourseLessonPayload(
+  form: ReturnType<typeof emptyLessonForm>,
+  payload: CourseLessonUpsertRequest
+) {
+  return (
+    JSON.stringify(buildCourseLessonPayload(form)) === JSON.stringify(payload)
+  );
+}
+
+export function courseResourceTargetsSelection(
+  selectedCourseId: string | null,
+  resourceCourseId: string
+) {
+  return selectedCourseId === resourceCourseId;
 }
 
 export function normalizeCapacity(value: number | null | undefined) {
