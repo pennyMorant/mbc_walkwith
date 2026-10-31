@@ -1,21 +1,16 @@
 <script setup lang="ts">
 import type {
+  MemberCreateRequest,
   MemberListItem,
   MemberProfile,
-  MemberStatus
+  MemberStatus,
+  MemberUpdateRequest
 } from "@mbc/api-contracts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref, watch } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
-import { requireSelected } from "@/core/actions/action_guard";
-import {
-  createMember,
-  getMember,
-  listMembers,
-  updateMember,
-  type MemberListFilters
-} from "@/core/api/members";
+import { createMember, getMember, updateMember } from "@/core/api/members";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
@@ -23,14 +18,20 @@ import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 
 import MemberEditorDrawer from "../components/MemberEditorDrawer.vue";
 import MemberResults from "../components/MemberResults.vue";
+import { useMemberListQuery } from "../composables/use_member_list_query";
 import {
   createMemberEditorForm,
+  isValidOptionalYear,
   loadMemberEditorForm,
-  memberFilterSnapshot,
   memberPayloadFromForm,
-  resetMemberEditorForm,
-  type MemberFilterDraft
+  resetMemberEditorForm
 } from "../member_workspace_models";
+
+type MemberSaveIntent = {
+  contextVersion: number;
+  memberId: string | null;
+  payload: MemberCreateRequest & MemberUpdateRequest;
+};
 
 const queryClient = useQueryClient();
 const authStore = useAdminAuthStore();
@@ -46,84 +47,63 @@ const commandErrorMessage = ref("");
 let detailRequestVersion = 0;
 let editorContextVersion = 0;
 
-const filters = reactive<MemberFilterDraft>({
-  query: "",
-  status: "",
-  fellowshipGroupId: ""
-});
-const appliedFilters = ref<MemberListFilters>(memberFilterSnapshot(filters));
-
 const form = reactive(createMemberEditorForm());
+const {
+  filters,
+  members,
+  membersQuery,
+  initialError,
+  refreshError,
+  applyFilters,
+  refreshList
+} = useMemberListQuery(queryClient);
 
-const membersQuery = useQuery({
-  queryKey: ["members", appliedFilters],
-  queryFn: () => listMembers(appliedFilters.value)
-});
-
-const createMutation = useMutation({
-  onMutate: () => {
-    commandErrorMessage.value = "";
-    return { editorContextVersion };
-  },
-  mutationFn: () => {
-    if (!canManage.value || !canSave.value) {
-      throw new Error(t("Member manage access required"));
+const saveMutation = useMutation({
+  mutationFn: (intent: MemberSaveIntent) =>
+    intent.memberId
+      ? updateMember(intent.memberId, intent.payload)
+      : createMember(intent.payload),
+  onMutate: (intent) => {
+    if (intent.contextVersion === editorContextVersion) {
+      commandErrorMessage.value = "";
     }
-    return createMember(memberPayloadFromForm(form));
   },
-  onSuccess: async (member, _variables, context) => {
-    if (context?.editorContextVersion === editorContextVersion) {
+  onSuccess: async (member, intent) => {
+    if (intent.contextVersion === editorContextVersion) {
       applyMember(member);
     }
     await queryClient.invalidateQueries({ queryKey: ["members"] });
   },
-  onError: (error, _variables, context) => {
-    captureCommandError(error, context?.editorContextVersion);
+  onError: (error, intent) => {
+    captureCommandError(error, intent.contextVersion);
   }
 });
 
-const updateMutation = useMutation({
-  onMutate: () => {
-    commandErrorMessage.value = "";
-    return { editorContextVersion };
-  },
-  mutationFn: () => {
-    const member = requireSelected(
-      selectedMember.value,
-      t("No member selected.")
-    );
-    if (!canManage.value || !canSave.value) {
-      throw new Error(t("Member manage access required"));
-    }
-    return updateMember(member.id, memberPayloadFromForm(form));
-  },
-  onSuccess: async (member, _variables, context) => {
-    if (context?.editorContextVersion === editorContextVersion) {
-      applyMember(member);
-    }
-    await queryClient.invalidateQueries({ queryKey: ["members"] });
-  },
-  onError: (error, _variables, context) => {
-    captureCommandError(error, context?.editorContextVersion);
-  }
-});
-
-const members = computed(() => membersQuery.data.value ?? []);
 const canManage = computed(() => authStore.can("users:manage"));
 const canSave = computed(
   () =>
     form.email.trim().length > 0 &&
     form.displayName.trim().length > 0 &&
-    form.roles.length > 0
+    form.roles.length > 0 &&
+    isValidOptionalYear(form.faithStartYear) &&
+    isValidOptionalYear(form.baptizedYear)
+);
+const listErrorMessage = computed(() =>
+  initialError.value
+    ? formatApiErrorMessage(initialError.value, t("common.error"))
+    : ""
+);
+const refreshErrorMessage = computed(() =>
+  refreshError.value
+    ? formatApiErrorMessage(refreshError.value, t("members.refreshFailed"))
+    : ""
 );
 const detailErrorMessage = computed(() =>
   detailError.value
     ? formatApiErrorMessage(detailError.value, t("common.error"))
     : ""
 );
-const saving = computed(
-  () => createMutation.isPending.value || updateMutation.isPending.value
-);
+const saving = computed(() => saveMutation.isPending.value);
 
 const deepLink = useAdminResourceDeepLink(getMember, (member) => {
   beginEditorContext();
@@ -192,8 +172,7 @@ function newMember() {
 function beginEditorContext() {
   editorContextVersion += 1;
   commandErrorMessage.value = "";
-  createMutation.reset();
-  updateMutation.reset();
+  saveMutation.reset();
 }
 
 function captureCommandError(error: unknown, contextVersion?: number) {
@@ -202,31 +181,22 @@ function captureCommandError(error: unknown, contextVersion?: number) {
   }
 }
 
-function applyFilters() {
-  const nextFilters = memberFilterSnapshot(filters);
-  if (JSON.stringify(nextFilters) === JSON.stringify(appliedFilters.value)) {
-    void membersQuery.refetch();
-    return;
-  }
-  appliedFilters.value = nextFilters;
-}
-
 function saveMember() {
   if (
     !canManage.value ||
     !canSave.value ||
-    createMutation.isPending.value ||
-    updateMutation.isPending.value
+    saveMutation.isPending.value
   ) {
     return;
   }
-  if (selectedMember.value) {
-    updateMutation.mutate();
+  if (!selectedMember.value && !isCreating.value) {
     return;
   }
-  if (isCreating.value) {
-    createMutation.mutate();
-  }
+  saveMutation.mutate({
+    contextVersion: editorContextVersion,
+    memberId: selectedMember.value?.id ?? null,
+    payload: memberPayloadFromForm(form)
+  });
 }
 
 function statusColor(status: MemberStatus) {
@@ -261,7 +231,7 @@ watch(drawer, (open) => {
           variant="tonal"
           prepend-icon="mdi-refresh"
           :loading="membersQuery.isFetching.value"
-          @click="membersQuery.refetch()"
+          @click="refreshList"
         >
           {{ t("common.refresh") }}
         </v-btn>
@@ -315,10 +285,11 @@ watch(drawer, (open) => {
       <MemberResults
         :members="members"
         :pending="membersQuery.isPending.value"
-        :error-message="membersQuery.error.value ? formatApiErrorMessage(membersQuery.error.value, t('common.error')) : ''"
+        :error-message="listErrorMessage"
+        :refresh-error-message="refreshErrorMessage"
         :status-color="statusColor"
         @open="openMember"
-        @retry="membersQuery.refetch()"
+        @retry="refreshList"
       />
     </v-card>
 

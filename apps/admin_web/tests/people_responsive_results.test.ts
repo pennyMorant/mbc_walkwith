@@ -29,12 +29,18 @@ describe("people workspace responsive results", () => {
     expect(source).not.toContain("auth_store");
   });
 
-  test.each([
-    ["members", "../src/features/members/pages/MembersPage.vue", "membersQuery"],
-    ["care", "../src/features/care/pages/CarePage.vue", "requestsQuery"]
-  ])("keeps %s retry ownership in its page", async (_, path, query) => {
-    const page = await Bun.file(new URL(path, import.meta.url)).text();
-    expect(page).toContain(`@retry="${query}.refetch()"`);
+  test("keeps member retry ownership in its page", async () => {
+    const page = await Bun.file(
+      new URL("../src/features/members/pages/MembersPage.vue", import.meta.url)
+    ).text();
+    expect(page).toContain('@retry="refreshList"');
+  });
+
+  test("keeps care retry ownership in its page", async () => {
+    const page = await Bun.file(
+      new URL("../src/features/care/pages/CarePage.vue", import.meta.url)
+    ).text();
+    expect(page).toContain('@retry="requestsQuery.refetch()"');
   });
 
   test("keeps newcomer list retry ownership in its page", async () => {
@@ -57,8 +63,15 @@ describe("people workspace responsive results", () => {
     expect(messages).toContain("已安排跟進");
   });
 
+  test("localizes member profile validation and refresh recovery in every locale", () => {
+    expect(messages.match(/members\.yearInvalid/g)).toHaveLength(4);
+    expect(messages.match(/members\.refreshFailed/g)).toHaveLength(4);
+    expect(messages).toContain("紧急联系人姓名");
+    expect(messages).toContain("Teléfono del contacto de emergencia");
+  });
+
   test("keeps member filter and detail recovery page-owned", async () => {
-    const [page, editor] = await Promise.all([
+    const [page, editor, listQuery] = await Promise.all([
       Bun.file(
         new URL("../src/features/members/pages/MembersPage.vue", import.meta.url)
       ).text(),
@@ -67,11 +80,19 @@ describe("people workspace responsive results", () => {
           "../src/features/members/components/MemberEditorDrawer.vue",
           import.meta.url
         )
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/members/composables/use_member_list_query.ts",
+          import.meta.url
+        )
       ).text()
     ]);
 
-    expect(page).toContain("appliedFilters");
-    expect(page).toContain("memberFilterSnapshot(filters)");
+    expect(listQuery).toContain("appliedFilters");
+    expect(listQuery).toContain("memberFilterSnapshot(filters)");
+    expect(listQuery).toContain("initialError");
+    expect(listQuery).toContain("refreshError");
     expect(page).toContain("detailRequestVersion");
     expect(page).toContain("editorContextVersion");
     expect(page).toContain("captureCommandError");
@@ -80,6 +101,36 @@ describe("people workspace responsive results", () => {
     expect(editor).not.toContain("@/core/api");
     expect(editor).not.toContain("auth_store");
     expect(editor).toContain(":disabled=\"editorDisabled\"");
+  });
+
+  test("keeps complete member profile fields in focused presentation components", async () => {
+    const [page, profileFields, notificationFields] = await Promise.all([
+      Bun.file(
+        new URL("../src/features/members/pages/MembersPage.vue", import.meta.url)
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/members/components/MemberProfileFields.vue",
+          import.meta.url
+        )
+      ).text(),
+      Bun.file(
+        new URL(
+          "../src/features/members/components/MemberNotificationFields.vue",
+          import.meta.url
+        )
+      ).text()
+    ]);
+
+    expect(page).toContain("payload: memberPayloadFromForm(form)");
+    expect(page).toContain("intent.memberId");
+    expect(page).toContain(":refresh-error-message=\"refreshErrorMessage\"");
+    expect(profileFields).toContain('v-model="form.address"');
+    expect(profileFields).toContain('v-model="form.faithStartYear"');
+    expect(profileFields).toContain('v-model="form.emergencyContactPhone"');
+    expect(notificationFields).toContain('v-model="form.weeklyBulletin"');
+    expect(profileFields).not.toContain("@/core/api");
+    expect(notificationFields).not.toContain("@/core/api");
   });
 
   test("keeps care filter, command, and recovery ownership in its page", async () => {

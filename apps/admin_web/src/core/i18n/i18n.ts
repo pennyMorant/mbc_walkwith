@@ -5053,6 +5053,61 @@ Object.assign(messages.es, {
     "No se pudieron actualizar las notas bíblicas. Los últimos resultados cargados siguen visibles."
 });
 
+Object.assign(messages.en, {
+  "Address": "Address",
+  "Baptized year": "Baptized year",
+  "Emergency contact name": "Emergency contact name",
+  "Emergency contact phone": "Emergency contact phone",
+  "Faith start year": "Faith start year",
+  "Joined church at": "Joined church date",
+  "members.basicDetails": "Member details",
+  "members.churchJourney": "Church journey",
+  "members.emergencyContact": "Emergency contact",
+  "members.yearInvalid": "Enter a four-digit year from 1900 to 2100.",
+  "members.refreshFailed":
+    "Members could not be refreshed. The last loaded results remain visible."
+});
+Object.assign(messages.es, {
+  "Address": "Dirección",
+  "Baptized year": "Año de bautismo",
+  "Emergency contact name": "Nombre del contacto de emergencia",
+  "Emergency contact phone": "Teléfono del contacto de emergencia",
+  "Faith start year": "Año de inicio en la fe",
+  "Joined church at": "Fecha de ingreso a la iglesia",
+  "members.basicDetails": "Datos del miembro",
+  "members.churchJourney": "Camino en la iglesia",
+  "members.emergencyContact": "Contacto de emergencia",
+  "members.yearInvalid": "Ingrese un año de cuatro dígitos entre 1900 y 2100.",
+  "members.refreshFailed":
+    "No se pudieron actualizar los miembros. Los últimos resultados cargados siguen visibles."
+});
+Object.assign(messages["zh-Hans"], {
+  "Address": "地址",
+  "Baptized year": "受洗年份",
+  "Emergency contact name": "紧急联系人姓名",
+  "Emergency contact phone": "紧急联系人电话",
+  "Faith start year": "信主年份",
+  "Joined church at": "加入教会日期",
+  "members.basicDetails": "会友资料",
+  "members.churchJourney": "信仰历程",
+  "members.emergencyContact": "紧急联系人",
+  "members.yearInvalid": "请输入 1900 至 2100 之间的四位年份。",
+  "members.refreshFailed": "会友列表刷新失败，已保留上次成功加载的结果。"
+});
+Object.assign(messages["zh-Hant"], {
+  "Address": "地址",
+  "Baptized year": "受洗年份",
+  "Emergency contact name": "緊急聯絡人姓名",
+  "Emergency contact phone": "緊急聯絡人電話",
+  "Faith start year": "信主年份",
+  "Joined church at": "加入教會日期",
+  "members.basicDetails": "會友資料",
+  "members.churchJourney": "信仰歷程",
+  "members.emergencyContact": "緊急聯絡人",
+  "members.yearInvalid": "請輸入 1900 至 2100 之間的四位年份。",
+  "members.refreshFailed": "會友列表重新整理失敗，已保留上次成功載入的結果。"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });

@@ -129,6 +129,10 @@ Surface rule:
   Member filters keep draft input separate from the applied query snapshot;
   member detail failures remain retryable in the drawer, and late responses from
   a previously selected or closed member cannot replace the current editor.
+  The detail editor covers the canonical contact, church-journey, emergency-contact,
+  identity, locale, group, and notification fields exposed by the member contract.
+  Save commands freeze the target member and normalized profile payload when the
+  administrator submits, while refresh failures preserve the last loaded directory.
 - System workspaces apply the same rule to notification deliveries, admin users,
   and audit logs. Operational commands and sensitive detail remain page-owned;
   responsive result components only present records and emit detail intents.

@@ -18,6 +18,12 @@ export type MemberEditorForm = {
   email: string;
   displayName: string;
   phone: string;
+  address: string;
+  faithStartYear: string;
+  baptizedYear: string;
+  joinedChurchAt: string;
+  emergencyContactName: string;
+  emergencyContactPhone: string;
   status: MemberStatus;
   roles: MemberRole[];
   appLocale: "en" | "es" | "zh-Hans" | "zh-Hant";
@@ -33,6 +39,12 @@ export function createMemberEditorForm(): MemberEditorForm {
     email: "",
     displayName: "",
     phone: "",
+    address: "",
+    faithStartYear: "",
+    baptizedYear: "",
+    joinedChurchAt: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
     status: "active",
     roles: ["member"],
     appLocale: "en",
@@ -56,6 +68,12 @@ export function loadMemberEditorForm(
     email: member.email,
     displayName: member.displayName,
     phone: member.phone ?? "",
+    address: member.address ?? "",
+    faithStartYear: member.faithStartYear?.toString() ?? "",
+    baptizedYear: member.baptizedYear?.toString() ?? "",
+    joinedChurchAt: member.joinedChurchAt ?? "",
+    emergencyContactName: member.emergencyContactName ?? "",
+    emergencyContactPhone: member.emergencyContactPhone ?? "",
     status: member.status,
     roles: member.roles.length > 0 ? [...member.roles] : ["member"],
     appLocale: member.appLocale,
@@ -74,6 +92,12 @@ export function memberPayloadFromForm(
     email: form.email.trim(),
     displayName: form.displayName.trim(),
     phone: form.phone.trim() || null,
+    address: form.address.trim() || null,
+    faithStartYear: nullableYear(form.faithStartYear),
+    baptizedYear: nullableYear(form.baptizedYear),
+    joinedChurchAt: form.joinedChurchAt || null,
+    emergencyContactName: form.emergencyContactName.trim() || null,
+    emergencyContactPhone: form.emergencyContactPhone.trim() || null,
     status: form.status,
     roles: [...form.roles],
     appLocale: form.appLocale,
@@ -96,4 +120,40 @@ export function memberFilterSnapshot(
     fellowshipGroupId: draft.fellowshipGroupId.trim(),
     limit: 50
   };
+}
+
+export function createMemberFilterDraft(): MemberFilterDraft {
+  return {
+    query: "",
+    status: "",
+    fellowshipGroupId: ""
+  };
+}
+
+export function sameMemberFilters(
+  left: MemberListFilters,
+  right: MemberListFilters
+) {
+  return (
+    left.query === right.query &&
+    left.status === right.status &&
+    left.fellowshipGroupId === right.fellowshipGroupId &&
+    left.limit === right.limit
+  );
+}
+
+export function isValidOptionalYear(value: string) {
+  if (!value.trim()) {
+    return true;
+  }
+  return (
+    /^\d{4}$/.test(value.trim()) &&
+    Number(value) >= 1900 &&
+    Number(value) <= 2100
+  );
+}
+
+function nullableYear(value: string): number | null {
+  const clean = value.trim();
+  return clean ? Number(clean) : null;
 }

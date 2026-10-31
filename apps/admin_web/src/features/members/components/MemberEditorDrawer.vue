@@ -6,6 +6,8 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import type { MemberEditorForm } from "../member_workspace_models";
+import MemberNotificationFields from "./MemberNotificationFields.vue";
+import MemberProfileFields from "./MemberProfileFields.vue";
 
 const drawer = defineModel<boolean>({ required: true });
 const props = defineProps<{
@@ -26,7 +28,7 @@ const emit = defineEmits<{
   save: [];
 }>();
 
-const { optionItems, t } = useI18n();
+const { t } = useI18n();
 const editorDisabled = computed(() => !props.canManage || props.saving);
 </script>
 
@@ -78,113 +80,8 @@ const editorDisabled = computed(() => !props.canManage || props.saving);
         class="mt-5"
         @submit.prevent="emit('save')"
       >
-        <v-text-field
-          v-model="form.email"
-          :label="t('Email')"
-          type="email"
-          autocomplete="off"
-          density="comfortable"
-          variant="outlined"
-          :disabled="editorDisabled"
-        />
-        <v-text-field
-          v-model="form.displayName"
-          :label="t('Display name')"
-          density="comfortable"
-          variant="outlined"
-          :disabled="editorDisabled"
-        />
-        <v-text-field
-          v-model="form.phone"
-          :label="t('Phone')"
-          density="comfortable"
-          variant="outlined"
-          :disabled="editorDisabled"
-        />
-        <v-row dense>
-          <v-col cols="12" md="6">
-            <v-select
-              v-model="form.status"
-              :label="t('Status')"
-              :items="optionItems(['active', 'pending', 'inactive', 'blocked'])"
-              density="comfortable"
-              variant="outlined"
-              :disabled="editorDisabled"
-            />
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-select
-              v-model="form.roles"
-              :label="t('Roles')"
-              :items="optionItems(['member', 'leader', 'pastor'])"
-              multiple
-              chips
-              closable-chips
-              density="comfortable"
-              variant="outlined"
-              :disabled="editorDisabled"
-            />
-          </v-col>
-        </v-row>
-        <v-row dense>
-          <v-col cols="12" md="6">
-            <v-select
-              v-model="form.appLocale"
-              :label="t('App locale')"
-              :items="optionItems(['en', 'es', 'zh-Hans', 'zh-Hant'])"
-              density="comfortable"
-              variant="outlined"
-              :disabled="editorDisabled"
-            />
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-text-field
-              v-model="form.fellowshipGroupId"
-              :label="t('Fellowship group')"
-              density="comfortable"
-              variant="outlined"
-              :disabled="editorDisabled"
-            />
-          </v-col>
-        </v-row>
-
-        <div class="text-subtitle-2 font-weight-bold mb-2">
-          {{ t("Notifications") }}
-        </div>
-        <v-row dense class="mb-2">
-          <v-col cols="12" sm="6">
-            <v-checkbox
-              v-model="form.weeklyBulletin"
-              :label="t('Weekly bulletin')"
-              density="compact"
-              hide-details
-              :disabled="editorDisabled"
-            />
-            <v-checkbox
-              v-model="form.sermonPublished"
-              :label="t('Sermon published')"
-              density="compact"
-              hide-details
-              :disabled="editorDisabled"
-            />
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-checkbox
-              v-model="form.lifePostPublished"
-              :label="t('Life post published')"
-              density="compact"
-              hide-details
-              :disabled="editorDisabled"
-            />
-            <v-checkbox
-              v-model="form.prayerUpdates"
-              :label="t('Prayer updates')"
-              density="compact"
-              hide-details
-              :disabled="editorDisabled"
-            />
-          </v-col>
-        </v-row>
+        <MemberProfileFields :form="form" :disabled="editorDisabled" />
+        <MemberNotificationFields :form="form" :disabled="editorDisabled" />
 
         <v-alert
           v-if="commandErrorMessage"
