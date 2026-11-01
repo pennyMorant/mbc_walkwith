@@ -56,6 +56,8 @@ class NotificationInboxState {
 }
 
 class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
+  int _sessionSerial = 0;
+
   PushNotificationInboxRepository get _localRepository =>
       ref.read(pushNotificationInboxRepositoryProvider);
 
@@ -69,6 +71,7 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
     );
     ref.listen(memberSessionProvider, (previous, next) {
       next.whenData((session) {
+        final sessionSerial = ++_sessionSerial;
         unawaited(
           Future<void>.microtask(() async {
             if (session == null) {
@@ -77,7 +80,13 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
               );
               return;
             }
-            await refresh();
+            state = const NotificationInboxState(
+              items: [],
+              unreadCount: 0,
+              isSyncing: true,
+              isRemote: true,
+            );
+            await _syncRemote(session, sessionSerial);
           }),
         );
       });
@@ -90,15 +99,17 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
       return;
     }
     state = state.copyWith(isSyncing: true, clearError: true);
+    final sessionSerial = _sessionSerial;
     try {
       final session = await _currentSession();
+      if (!_isCurrentSession(sessionSerial)) return;
       if (session == null) {
         state = NotificationInboxState.local(_localRepository.listItems());
         return;
       }
-      await _syncRemote(session);
+      await _syncRemote(session, sessionSerial);
     } catch (error) {
-      _handleFailure(error);
+      if (_isCurrentSession(sessionSerial)) _handleFailure(error);
     }
   }
 
@@ -107,10 +118,13 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
       return;
     }
     state = state.copyWith(isSyncing: true, clearError: true);
+    final sessionSerial = _sessionSerial;
     try {
       final session = await _currentSession();
+      if (!_isCurrentSession(sessionSerial)) return;
       if (session == null || !state.isRemote) {
         await _localRepository.markRead(itemId);
+        if (!_isCurrentSession(sessionSerial)) return;
         state = NotificationInboxState.local(_localRepository.listItems());
         return;
       }
@@ -118,8 +132,9 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
         session: session,
         notificationId: itemId,
       );
+      if (!_isCurrentSession(sessionSerial)) return;
       if (updated == null) {
-        await _syncRemote(session);
+        await _syncRemote(session, sessionSerial);
         return;
       }
       state = state.copyWith(
@@ -131,7 +146,7 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
         clearError: true,
       );
     } catch (error) {
-      _handleFailure(error);
+      if (_isCurrentSession(sessionSerial)) _handleFailure(error);
     }
   }
 
@@ -140,14 +155,18 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
       return;
     }
     state = state.copyWith(isSyncing: true, clearError: true);
+    final sessionSerial = _sessionSerial;
     try {
       final session = await _currentSession();
+      if (!_isCurrentSession(sessionSerial)) return;
       if (session == null || !state.isRemote) {
         await _localRepository.markAllRead();
+        if (!_isCurrentSession(sessionSerial)) return;
         state = NotificationInboxState.local(_localRepository.listItems());
         return;
       }
       await _remoteRepository.markAllInboxRead(session: session);
+      if (!_isCurrentSession(sessionSerial)) return;
       final now = DateTime.now().toUtc();
       state = state.copyWith(
         items: state.items
@@ -159,7 +178,7 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
         clearError: true,
       );
     } catch (error) {
-      _handleFailure(error);
+      if (_isCurrentSession(sessionSerial)) _handleFailure(error);
     }
   }
 
@@ -168,14 +187,18 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
       return;
     }
     state = state.copyWith(isSyncing: true, clearError: true);
+    final sessionSerial = _sessionSerial;
     try {
       final session = await _currentSession();
+      if (!_isCurrentSession(sessionSerial)) return;
       if (session == null) {
         await _localRepository.clear();
+        if (!_isCurrentSession(sessionSerial)) return;
         state = NotificationInboxState.local(_localRepository.listItems());
         return;
       }
       await _remoteRepository.archiveAllInbox(session: session);
+      if (!_isCurrentSession(sessionSerial)) return;
       try {
         await _localRepository.clear();
       } catch (_) {
@@ -188,17 +211,19 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
         isRemote: true,
       );
     } catch (error) {
-      _handleFailure(error);
+      if (_isCurrentSession(sessionSerial)) _handleFailure(error);
     }
   }
 
   Future<MemberSession?> _currentSession() =>
       ref.read(memberSessionProvider.future);
 
-  Future<void> _syncRemote(MemberSession session) async {
+  Future<void> _syncRemote(MemberSession session, int sessionSerial) async {
+    if (!_isCurrentSession(sessionSerial)) return;
     state = state.copyWith(isSyncing: true, clearError: true);
     try {
       final result = await _remoteRepository.listInbox(session: session);
+      if (!_isCurrentSession(sessionSerial)) return;
       state = NotificationInboxState(
         items: result.items,
         unreadCount: result.unreadCount,
@@ -206,6 +231,7 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
         isRemote: true,
       );
     } catch (error) {
+      if (!_isCurrentSession(sessionSerial)) return;
       if (state.isRemote) {
         _preserveRemoteFailure(error);
       } else {
@@ -213,6 +239,10 @@ class NotificationInboxNotifier extends Notifier<NotificationInboxState> {
             .copyWith(lastError: error);
       }
     }
+  }
+
+  bool _isCurrentSession(int sessionSerial) {
+    return sessionSerial == _sessionSerial;
   }
 
   void _preserveRemoteFailure(Object error) {

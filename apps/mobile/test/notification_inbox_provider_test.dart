@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mbc_walkwith/core/api/api_client.dart';
@@ -26,7 +28,9 @@ void main() {
     addTearDown(container.dispose);
     final notifier = container.read(notificationInboxProvider.notifier);
 
-    await notifier.refresh();
+    await _waitFor(
+      () => container.read(notificationInboxProvider).items.isNotEmpty,
+    );
     expect(container.read(notificationInboxProvider).isRemote, isTrue);
     expect(
       container.read(notificationInboxProvider).items.single.id,
@@ -63,7 +67,9 @@ void main() {
     addTearDown(container.dispose);
     final notifier = container.read(notificationInboxProvider.notifier);
 
-    await notifier.refresh();
+    await _waitFor(
+      () => container.read(notificationInboxProvider).items.isNotEmpty,
+    );
     await notifier.clear();
 
     final state = container.read(notificationInboxProvider);
@@ -73,6 +79,60 @@ void main() {
     expect(state.unreadCount, 0);
     expect(state.lastError, isNull);
   });
+
+  test(
+    'does not expose the previous member inbox after account switch',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final preferences = await SharedPreferences.getInstance();
+      final remote = _PendingPushNotificationRepository();
+      var currentSession = _memberSession;
+      final container = ProviderContainer.test(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(preferences),
+          memberSessionProvider.overrideWith((ref) async => currentSession),
+          pushNotificationRepositoryProvider.overrideWithValue(remote),
+        ],
+      );
+      addTearDown(container.dispose);
+      container.read(notificationInboxProvider.notifier);
+      await _waitFor(() => remote.pending.containsKey('member-1'));
+
+      currentSession = _secondMemberSession;
+      container.invalidate(memberSessionProvider);
+      await container.read(memberSessionProvider.future);
+      await _waitFor(() => remote.pending.containsKey('member-2'));
+
+      remote.complete('member-1', itemId: 'member-1-notification');
+      await Future<void>.delayed(Duration.zero);
+      expect(
+        container.read(notificationInboxProvider).items,
+        isNot(
+          contains(
+            predicate<PushNotificationInboxItem>(
+              (item) => item.id == 'member-1-notification',
+            ),
+          ),
+        ),
+      );
+
+      remote.complete('member-2', itemId: 'member-2-notification');
+      await _waitFor(
+        () => container.read(notificationInboxProvider).items.isNotEmpty,
+      );
+      final state = container.read(notificationInboxProvider);
+      expect(state.items.single.id, 'member-2-notification');
+      expect(state.isRemote, isTrue);
+    },
+  );
+}
+
+Future<void> _waitFor(bool Function() predicate) async {
+  for (var attempt = 0; attempt < 20; attempt += 1) {
+    if (predicate()) return;
+    await Future<void>.delayed(Duration.zero);
+  }
+  fail('Condition was not reached.');
 }
 
 class _FakePushNotificationRepository extends PushNotificationRepository {
@@ -112,6 +172,43 @@ class _FakePushNotificationRepository extends PushNotificationRepository {
   }
 }
 
+class _PendingPushNotificationRepository extends PushNotificationRepository {
+  _PendingPushNotificationRepository()
+    : super(apiClient: ApiClient(config: _testAppConfig));
+
+  final Map<String, Completer<MemberNotificationInboxResult>> pending = {};
+
+  @override
+  Future<MemberNotificationInboxResult> listInbox({
+    required MemberSession session,
+    int limit = 50,
+  }) {
+    final completer = Completer<MemberNotificationInboxResult>();
+    pending[session.member.id] = completer;
+    return completer.future;
+  }
+
+  void complete(String memberId, {required String itemId}) {
+    pending
+        .remove(memberId)!
+        .complete(
+          MemberNotificationInboxResult(
+            items: [
+              PushNotificationInboxItem(
+                id: itemId,
+                type: 'church_update',
+                title: 'Update',
+                body: 'Member-specific update',
+                receivedAt: DateTime.utc(2026, 7, 14, 12),
+                data: const {},
+              ),
+            ],
+            unreadCount: 1,
+          ),
+        );
+  }
+}
+
 final _remoteItem = PushNotificationInboxItem(
   id: 'remote-1',
   type: 'sermon_published',
@@ -127,6 +224,19 @@ const _memberSession = MemberSession(
     id: 'member-1',
     email: 'member@example.com',
     displayName: 'Member',
+    roles: ['member'],
+    appLocale: 'en',
+    fellowshipGroupId: null,
+    notificationSettings: MemberNotificationSettings.defaults,
+  ),
+);
+
+const _secondMemberSession = MemberSession(
+  accessToken: 'member-token-2',
+  member: MemberProfile(
+    id: 'member-2',
+    email: 'member2@example.com',
+    displayName: 'Second Member',
     roles: ['member'],
     appLocale: 'en',
     fellowshipGroupId: null,

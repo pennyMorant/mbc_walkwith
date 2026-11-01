@@ -180,6 +180,9 @@ Rules:
 - App session restoration clears secure state after terminal auth or member
   status failures. Cached identity is allowed only during transient network or
   provider failures.
+- Member notification projections are invalidated on every session change;
+  in-flight responses from a previous account cannot populate the current App
+  inbox.
 
 ## 9. Authentication
 

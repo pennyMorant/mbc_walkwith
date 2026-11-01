@@ -223,6 +223,9 @@ notification source of truth.
 ## Known Limits
 
 - Guest devices receive only public push and do not have a backend inbox.
+- The mobile inbox is partitioned by the active member session. Signing out or
+  switching accounts clears the previous remote projection immediately and
+  ignores any response that completes for the previous session.
 - `member_specific` audience is present in the contract but is not used by the
   current sermon, Life, weekly bulletin, or prayer triggers.
 - The App notification center keeps local foreground/opened FCM messages as a

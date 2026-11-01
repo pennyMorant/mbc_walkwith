@@ -77,6 +77,10 @@ This document covers system notification permission, device token registration, 
   looping over the currently loaded page. A failed remote mutation preserves
   the current remote inbox projection and surfaces an error; it must not switch
   an already-synced member inbox to unrelated local fallback items.
+- Every member-session change invalidates in-flight inbox reads and mutations.
+  The App clears the previous remote projection before synchronizing the new
+  member, and stale responses from a signed-out or replaced account must never
+  update the current notification state.
 - Backend notification inbox source of truth is split between
   `notification_messages` and `member_notification_items`. Mobile sync should
   consume the member inbox API and keep local FCM-opened messages only as a
