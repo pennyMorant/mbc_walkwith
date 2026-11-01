@@ -415,7 +415,15 @@ describe("serving schedule v2 routes", () => {
       auditLogListResponseSchema,
       "serving check-in audit"
     );
-    expect(audit.items[0]?.afterJson).toMatchObject({
+    const correctionAudit = audit.items.find(
+      (item) =>
+        item.resourceId === checkIn.id &&
+        typeof item.afterJson === "object" &&
+        item.afterJson !== null &&
+        "status" in item.afterJson &&
+        item.afterJson.status === "missed"
+    );
+    expect(correctionAudit?.afterJson).toMatchObject({
       assignmentId: assignment.id,
       userId: member.memberId,
       status: "missed",
