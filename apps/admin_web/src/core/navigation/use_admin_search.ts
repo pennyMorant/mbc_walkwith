@@ -5,6 +5,11 @@ import { computed, onBeforeUnmount, ref, watch, type Ref } from "vue";
 import { searchAdmin } from "@/core/api/admin_search";
 
 import type { AdminNavigationItem } from "./admin_navigation";
+import {
+  ADMIN_SEARCH_MIN_LENGTH,
+  isCurrentAdminSearchSnapshot,
+  normalizeAdminSearchText
+} from "./admin_search_state";
 
 export type AdminSearchOption = {
   title: string;
@@ -30,23 +35,43 @@ export function useAdminSearch(
   const debouncedSearchText = ref("");
   let searchTimer: ReturnType<typeof setTimeout> | null = null;
 
+  function cancelPendingSearch() {
+    if (!searchTimer) return;
+    clearTimeout(searchTimer);
+    searchTimer = null;
+  }
+
   watch(searchText, (value) => {
-    if (searchTimer) clearTimeout(searchTimer);
+    cancelPendingSearch();
+    const normalizedValue = normalizeAdminSearchText(value);
+    if (normalizedValue.length < ADMIN_SEARCH_MIN_LENGTH) {
+      debouncedSearchText.value = normalizedValue;
+      return;
+    }
     searchTimer = setTimeout(() => {
-      debouncedSearchText.value = value.trim();
+      debouncedSearchText.value = normalizedValue;
+      searchTimer = null;
     }, 250);
   });
 
-  onBeforeUnmount(() => {
-    if (searchTimer) clearTimeout(searchTimer);
-  });
+  onBeforeUnmount(cancelPendingSearch);
 
   const query = useQuery({
-    queryKey: computed(() => ["admin-search", debouncedSearchText.value]),
-    queryFn: () => searchAdmin(debouncedSearchText.value),
-    enabled: computed(() => debouncedSearchText.value.length >= 2),
+    queryKey: computed(
+      () => ["admin-search", debouncedSearchText.value] as const
+    ),
+    queryFn: ({ queryKey }) => searchAdmin(queryKey[1]),
+    enabled: computed(
+      () => debouncedSearchText.value.length >= ADMIN_SEARCH_MIN_LENGTH
+    ),
     staleTime: 30_000
   });
+  const currentSnapshot = computed(() =>
+    isCurrentAdminSearchSnapshot(
+      searchText.value,
+      debouncedSearchText.value
+    )
+  );
 
   const options = computed<AdminSearchOption[]>(() => {
     const normalizedSearch = searchText.value.trim().toLocaleLowerCase();
@@ -60,7 +85,10 @@ export function useAdminSearch(
         value: `navigation:${item.value}`,
         props: { prependIcon: item.icon }
       }));
-    const resourceOptions = (query.data.value?.items ?? []).map((item) => ({
+    const resourceItems = currentSnapshot.value
+      ? query.data.value?.items ?? []
+      : [];
+    const resourceOptions = resourceItems.map((item) => ({
       title: item.title,
       path: item.path,
       value: `${item.resourceType}:${item.id}`,
@@ -77,14 +105,18 @@ export function useAdminSearch(
   });
 
   function clear() {
+    cancelPendingSearch();
     selectedOption.value = null;
     searchText.value = "";
+    debouncedSearchText.value = "";
   }
 
   return {
     clear,
-    error: query.error,
-    isFetching: query.isFetching,
+    error: computed(() => (currentSnapshot.value ? query.error.value : null)),
+    isFetching: computed(
+      () => currentSnapshot.value && query.isFetching.value
+    ),
     options,
     searchText,
     selectedOption

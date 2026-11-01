@@ -118,7 +118,10 @@ Surface rule:
   navigation registry and the role-filtered `/v1/admin/search` projection, so hidden
   routes or unauthorized resources cannot reappear through search. Desktop keeps
   search in the app bar; compact layouts reuse the same component and query inside
-  the navigation drawer instead of maintaining a second mobile search flow.
+  the navigation drawer instead of maintaining a second mobile search flow. Remote
+  results, loading, and errors belong to the applied debounced query snapshot and
+  remain hidden while the current input differs; clearing search invalidates that
+  visible remote projection immediately.
 - Feature detail and editor drawers use the shared responsive drawer shell. Each
   feature may choose its desktop width, while the shell caps the surface at the
   mobile viewport width and retains Vuetify's temporary-drawer behavior.
