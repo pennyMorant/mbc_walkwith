@@ -19,16 +19,16 @@ const app = createApp(App);
 const authStore = useAdminAuthStore(pinia);
 const queryClient = new QueryClient();
 const updateQueryCacheSession = createAdminQueryCacheGuard(
-  authStore.accessToken,
+  authStore.$state,
   () => queryClient.clear()
 );
 let storedSessionSyncTimer: ReturnType<typeof setTimeout> | null = null;
 
 authStore.$subscribe(
   (_mutation, state) => {
-    updateQueryCacheSession(state.accessToken);
+    updateQueryCacheSession(state);
   },
-  { detached: true }
+  { detached: true, flush: "sync" }
 );
 
 window.addEventListener(adminSessionClearedEventName, () => {

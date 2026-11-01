@@ -194,8 +194,10 @@ Surface rule:
   Mobile projections never widen content visibility or duplicate moderation state;
   they invoke the same page-owned detail or hide command used by desktop views.
 - Admin authentication changes clear the shared query cache before another session
-  can render role-scoped results. Concurrent expired requests share one Core-owned
-  refresh operation so refresh-token rotation cannot incorrectly end the session.
+  or permission scope can render role-scoped results. The cache identity includes
+  token, administrator id, and normalized permissions. Concurrent expired requests
+  share one Core-owned refresh operation so refresh-token rotation cannot incorrectly
+  end the session.
   Successful refreshes atomically synchronize the validated token, user, and
   permissions snapshot into the canonical auth store before the shell continues;
   partial or malformed persisted sessions are discarded as a whole. Refreshes and

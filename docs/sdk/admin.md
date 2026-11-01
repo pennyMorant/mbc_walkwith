@@ -35,6 +35,9 @@ This document covers admin Web API helper structure and admin-facing SDK rules.
   subscription. Auth storage changes from another browser tab follow the same
   Core-owned synchronization path. Pages and Feature API helpers must not own
   refresh or cross-tab listeners.
+- Query cache scope includes the access token, authenticated user id, and normalized
+  permission set. A role or permission change clears cached projections even when
+  the backend keeps the current access token valid.
 - Feature pages must never parse response envelopes or own contract fallback
   logic.
 - List/filter input types should derive from `packages/api_contracts` query

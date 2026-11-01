@@ -3,16 +3,43 @@ import { describe, expect, it, mock } from "bun:test";
 import { createAdminQueryCacheGuard } from "../src/core/query/admin_query_cache";
 
 describe("admin query cache guard", () => {
-  it("clears cached role projections whenever the access token changes", () => {
+  const ownerSession = {
+    accessToken: "owner-token",
+    user: { id: "admin-1" },
+    permissions: ["dashboard:read", "users:read"] as const
+  };
+
+  it("keeps cache for the same authenticated scope", () => {
     const clear = mock(() => undefined);
-    const updateToken = createAdminQueryCacheGuard("owner-token", clear);
+    const updateSession = createAdminQueryCacheGuard(ownerSession, clear);
 
-    updateToken("owner-token");
+    updateSession({ ...ownerSession });
+    updateSession({
+      ...ownerSession,
+      permissions: ["users:read", "dashboard:read", "users:read"]
+    });
     expect(clear).not.toHaveBeenCalled();
+  });
 
-    updateToken(null);
-    updateToken("viewer-token");
+  it("clears cache when token, identity, or permissions change", () => {
+    const clear = mock(() => undefined);
+    const updateSession = createAdminQueryCacheGuard(ownerSession, clear);
 
-    expect(clear).toHaveBeenCalledTimes(2);
+    updateSession({
+      ...ownerSession,
+      permissions: ["dashboard:read"]
+    });
+    updateSession({
+      ...ownerSession,
+      user: { id: "admin-2" },
+      permissions: ["dashboard:read"]
+    });
+    updateSession({
+      accessToken: null,
+      user: null,
+      permissions: []
+    });
+
+    expect(clear).toHaveBeenCalledTimes(3);
   });
 });
