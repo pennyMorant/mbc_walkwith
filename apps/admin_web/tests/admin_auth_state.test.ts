@@ -4,7 +4,8 @@ import { readStoredAdminAuthState } from "../src/core/auth/admin_auth_state";
 import {
   adminAccessTokenStorageKey,
   adminPermissionsStorageKey,
-  adminUserStorageKey
+  adminUserStorageKey,
+  isAdminSessionStorageKey
 } from "../src/core/auth/auth_storage";
 
 function sessionStorage(values: Record<string, string>) {
@@ -81,6 +82,14 @@ describe("admin auth state", () => {
     }
   });
 
+  test("recognizes only changes that can alter the admin session", () => {
+    expect(isAdminSessionStorageKey(adminAccessTokenStorageKey)).toBe(true);
+    expect(isAdminSessionStorageKey(adminUserStorageKey)).toBe(true);
+    expect(isAdminSessionStorageKey(adminPermissionsStorageKey)).toBe(true);
+    expect(isAdminSessionStorageKey(null)).toBe(true);
+    expect(isAdminSessionStorageKey("unrelated-preference")).toBe(false);
+  });
+
   test("connects successful refreshes to the canonical store and cache guard", async () => {
     const [refresh, main, store] = await Promise.all([
       Bun.file(
@@ -95,6 +104,9 @@ describe("admin auth state", () => {
     expect(refresh).toContain("notifyAdminSessionRefreshed()");
     expect(main).toContain("adminSessionRefreshedEventName");
     expect(main).toContain("authStore.syncStoredSession()");
+    expect(main).toContain('window.addEventListener("storage"');
+    expect(main).toContain("isAdminSessionStorageKey(event.key)");
+    expect(main).toContain("force: true");
     expect(store).toContain("this.$patch(readStoredAdminAuthState(localStorage))");
   });
 });

@@ -4,6 +4,16 @@ export const adminPermissionsStorageKey = "mbc_admin_permissions";
 export const adminSessionClearedEventName = "mbc-admin-session-cleared";
 export const adminSessionRefreshedEventName = "mbc-admin-session-refreshed";
 
+const adminSessionStorageKeys = new Set([
+  adminAccessTokenStorageKey,
+  adminUserStorageKey,
+  adminPermissionsStorageKey
+]);
+
+export function isAdminSessionStorageKey(key: string | null) {
+  return key === null || adminSessionStorageKeys.has(key);
+}
+
 export function clearStoredAdminSession() {
   localStorage.removeItem(adminAccessTokenStorageKey);
   localStorage.removeItem(adminUserStorageKey);

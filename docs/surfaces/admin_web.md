@@ -198,7 +198,9 @@ Surface rule:
   refresh operation so refresh-token rotation cannot incorrectly end the session.
   Successful refreshes atomically synchronize the validated token, user, and
   permissions snapshot into the canonical auth store before the shell continues;
-  partial or malformed persisted sessions are discarded as a whole.
+  partial or malformed persisted sessions are discarded as a whole. Refreshes and
+  cross-tab session changes re-run the current route through the canonical guard,
+  so revoked permissions cannot leave an unauthorized workspace mounted.
   Search and recent-content links identify a record
   with `?open=<resourceId>`; the destination Feature owns detail loading and errors.
   Clearing or replacing that query invalidates the previous detail request, and

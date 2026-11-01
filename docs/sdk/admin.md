@@ -32,7 +32,9 @@ This document covers admin Web API helper structure and admin-facing SDK rules.
   After that operation settles, a later `401` may start a new refresh attempt.
 - A successful refresh updates one validated local session snapshot, notifies the
   canonical Pinia auth store, and clears role-scoped query cache through the store
-  subscription. Pages and Feature API helpers must not own refresh listeners.
+  subscription. Auth storage changes from another browser tab follow the same
+  Core-owned synchronization path. Pages and Feature API helpers must not own
+  refresh or cross-tab listeners.
 - Feature pages must never parse response envelopes or own contract fallback
   logic.
 - List/filter input types should derive from `packages/api_contracts` query

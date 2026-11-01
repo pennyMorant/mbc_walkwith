@@ -5,7 +5,8 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import {
   adminSessionClearedEventName,
-  adminSessionRefreshedEventName
+  adminSessionRefreshedEventName,
+  isAdminSessionStorageKey
 } from "./core/auth/auth_storage";
 import { useAdminAuthStore } from "./core/auth/auth_store";
 import { createAdminQueryCacheGuard } from "./core/query/admin_query_cache";
@@ -21,6 +22,7 @@ const updateQueryCacheSession = createAdminQueryCacheGuard(
   authStore.accessToken,
   () => queryClient.clear()
 );
+let storedSessionSyncTimer: ReturnType<typeof setTimeout> | null = null;
 
 authStore.$subscribe(
   (_mutation, state) => {
@@ -32,14 +34,41 @@ authStore.$subscribe(
 window.addEventListener(adminSessionClearedEventName, () => {
   queryClient.clear();
   authStore.clearSession();
-  if (router.currentRoute.value.meta.requiresAuth) {
-    void router.replace("/login");
-  }
+  reconcileAdminSessionRoute();
 });
 
 window.addEventListener(adminSessionRefreshedEventName, () => {
-  authStore.syncStoredSession();
+  syncAdminSessionFromStorage();
 });
+
+window.addEventListener("storage", (event) => {
+  if (
+    !isAdminSessionStorageKey(event.key) ||
+    (event.storageArea && event.storageArea !== localStorage)
+  ) {
+    return;
+  }
+  if (storedSessionSyncTimer) clearTimeout(storedSessionSyncTimer);
+  storedSessionSyncTimer = setTimeout(() => {
+    storedSessionSyncTimer = null;
+    syncAdminSessionFromStorage();
+  }, 0);
+});
+
+function syncAdminSessionFromStorage() {
+  authStore.syncStoredSession();
+  reconcileAdminSessionRoute();
+}
+
+function reconcileAdminSessionRoute() {
+  const currentRoute = router.currentRoute.value;
+  void router.replace({
+    path: currentRoute.path,
+    query: currentRoute.query,
+    hash: currentRoute.hash,
+    force: true
+  });
+}
 
 app
   .use(pinia)
