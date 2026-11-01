@@ -1731,8 +1731,9 @@ Auth: member required.
 
 Response items use the member discipleship assignment projection. It excludes
 internal source links, admin assignee IDs, and progress notes. The backend includes
-`taskTotalCount` and `completedTaskCount` so clients do not derive journey task
-totals from progress rows.
+`journeyTitle` so the App can distinguish assignments without exposing an ID as
+display text. It also includes `taskTotalCount` and `completedTaskCount` so
+clients do not derive journey task totals from progress rows.
 
 ### 9.5.2 Admin Journey Management
 

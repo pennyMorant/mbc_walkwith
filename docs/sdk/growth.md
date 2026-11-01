@@ -67,6 +67,7 @@ Admin orchestration：
 
 Assignment payloads include backend-owned progress summary fields:
 
+- `journeyTitle`: member projection display title resolved by the backend.
 - `taskTotalCount`: task count for the assignment's journey.
 - `completedTaskCount`: completed progress count for the assignment.
 
@@ -105,7 +106,8 @@ Mobile App repository and surface：
 - A journey assignment does not grant membership, group access, course access, or serving permissions.
 - Assignment task totals and completed counts are backend-owned summary fields.
 - Member reads use `memberDiscipleshipAssignmentSchema`; internal source links,
-  admin assignee IDs, and progress notes remain Admin-only.
+  admin assignee IDs, and progress notes remain Admin-only. The member projection
+  requires `journeyTitle`; App surfaces must not display `journeyId` as a title.
 - `completedAt` is backend-owned and defaults to `null` when a task is moved
   away from `completed`.
 - Task progress audit payloads store `hasNote`, not the raw note body.

@@ -21,6 +21,7 @@ class DiscipleshipAssignmentDto {
   const DiscipleshipAssignmentDto({
     required this.id,
     required this.journeyId,
+    required this.journeyTitle,
     required this.assigneeName,
     required this.status,
     required this.startedAt,
@@ -45,6 +46,7 @@ class DiscipleshipAssignmentDto {
     return DiscipleshipAssignmentDto(
       id: id,
       journeyId: _requiredString(json, 'journeyId'),
+      journeyTitle: _requiredString(json, 'journeyTitle'),
       assigneeName: _requiredString(json, 'assigneeName', allowEmpty: true),
       status: _requiredEnum(json, 'status', _assignmentStatuses),
       startedAt: _nullableDateTime(json, 'startedAt'),
@@ -59,6 +61,7 @@ class DiscipleshipAssignmentDto {
 
   final String id;
   final String journeyId;
+  final String journeyTitle;
   final String assigneeName;
   final String status;
   final DateTime? startedAt;
@@ -72,6 +75,7 @@ class DiscipleshipAssignmentDto {
   DiscipleshipAssignment toDomain() => DiscipleshipAssignment(
     id: id,
     journeyId: journeyId,
+    journeyTitle: journeyTitle,
     assigneeName: assigneeName,
     status: status,
     startedAt: startedAt,

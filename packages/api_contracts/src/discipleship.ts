@@ -111,6 +111,7 @@ export const memberDiscipleshipAssignmentSchema = discipleshipAssignmentSchema
     progress: true
   })
   .extend({
+    journeyTitle: z.string().trim().min(1),
     progress: z.array(memberDiscipleshipTaskProgressSchema).default([])
   });
 

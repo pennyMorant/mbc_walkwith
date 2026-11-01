@@ -46,6 +46,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
+    expect(find.text('Foundations Path'), findsOneWidget);
     expect(find.text('Unknown status'), findsOneWidget);
     expect(find.text('requires_review'), findsNothing);
   });
@@ -102,6 +103,7 @@ const _unknownCourse = CourseLearning(
 final _unknownDiscipleshipAssignment = DiscipleshipAssignment(
   id: 'discipleship_unknown_status',
   journeyId: 'foundations_path',
+  journeyTitle: 'Foundations Path',
   assigneeName: 'Pastoral Team',
   status: 'requires_review',
   startedAt: null,

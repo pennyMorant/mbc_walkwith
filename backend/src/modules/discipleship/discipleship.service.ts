@@ -87,7 +87,22 @@ export class DiscipleshipService {
 
   async listMemberAssignments(userId: string) {
     const assignments = await this.repository.listAssignmentsForUser(userId);
-    return assignments.map(toMemberDiscipleshipAssignment);
+    const journeyTitles = new Map(
+      await Promise.all(
+        [...new Set(assignments.map((assignment) => assignment.journeyId))].map(
+          async (journeyId) => {
+            const journey = await this.requireJourney(journeyId);
+            return [journeyId, journey.title] as const;
+          }
+        )
+      )
+    );
+    return assignments.map((assignment) =>
+      toMemberDiscipleshipAssignment(
+        assignment,
+        journeyTitles.get(assignment.journeyId)!
+      )
+    );
   }
 
   async createAssignment(input: DiscipleshipAssignmentCreateRequest) {
@@ -145,11 +160,13 @@ export class DiscipleshipService {
 }
 
 function toMemberDiscipleshipAssignment(
-  assignment: DiscipleshipAssignment
+  assignment: DiscipleshipAssignment,
+  journeyTitle: string
 ): MemberDiscipleshipAssignment {
   return {
     id: assignment.id,
     journeyId: assignment.journeyId,
+    journeyTitle,
     assigneeName: assignment.assigneeName,
     status: assignment.status,
     startedAt: assignment.startedAt,

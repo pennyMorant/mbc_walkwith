@@ -17,6 +17,7 @@ void main() {
 
     expect(assignments, hasLength(1));
     expect(assignments.single.journeyId, 'journey_1');
+    expect(assignments.single.journeyTitle, 'New Believer Path');
     expect(assignments.single.taskTotalCount, 2);
     expect(assignments.single.completedTaskCount, 1);
     expect(dio.requests.single.path, '/me/discipleship');
@@ -97,6 +98,7 @@ class _RecordedDiscipleshipRequest {
 const _assignmentJson = {
   'id': 'assignment_1',
   'journeyId': 'journey_1',
+  'journeyTitle': 'New Believer Path',
   'assigneeName': 'Pastoral Team',
   'status': 'in_progress',
   'startedAt': '2026-06-01T00:00:00.000Z',

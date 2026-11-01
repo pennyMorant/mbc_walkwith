@@ -357,6 +357,7 @@ describe("discipleship journey routes", () => {
       "member discipleship list"
     );
     expect(memberList.items.map((item) => item.id)).toContain(assignment.id);
+    expect(memberList.items[0]?.journeyTitle).toBe("New Believer Path");
     const memberPayload = JSON.stringify(memberListResponse.json());
     expect(memberPayload).not.toContain("assigneeAdminUserId");
     expect(memberPayload).not.toContain("sourceType");

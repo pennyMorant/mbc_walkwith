@@ -59,6 +59,7 @@ class MockDiscipleshipRepository implements DiscipleshipRepository {
       DiscipleshipAssignment(
         id: 'mock_discipleship_assignment',
         journeyId: 'mock_foundations',
+        journeyTitle: 'Foundations of Faith',
         assigneeName: 'Pastoral Team',
         status: 'in_progress',
         startedAt: now.subtract(const Duration(days: 7)),

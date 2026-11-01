@@ -2,6 +2,7 @@ class DiscipleshipAssignment {
   const DiscipleshipAssignment({
     required this.id,
     required this.journeyId,
+    required this.journeyTitle,
     required this.assigneeName,
     required this.status,
     required this.startedAt,
@@ -15,6 +16,7 @@ class DiscipleshipAssignment {
 
   final String id;
   final String journeyId;
+  final String journeyTitle;
   final String assigneeName;
   final String status;
   final DateTime? startedAt;

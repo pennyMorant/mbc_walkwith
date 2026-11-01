@@ -35,8 +35,9 @@ App 和 Admin Web 展示的任务总数与已完成数以后端 assignment summa
 - `completedTaskCount` 来自该 assignment 的 canonical task progress。
 - App 不使用本地 `progress.length` 推断总任务数。
 
-成员读取使用独立 member projection，不返回 user/source 关联、负责人后台 ID
-或 progress note。Admin assignment contract 仍保留这些牧养字段。
+成员读取使用独立 member projection，额外返回路径标题供 App 区分多个 assignment，
+但不返回 user/source 关联、负责人后台 ID 或 progress note。Admin assignment
+contract 仍保留这些牧养字段；App 不以 `journeyId` 充当用户可见标题。
 
 被引用内容的 source of truth 仍归原 feature：
 
