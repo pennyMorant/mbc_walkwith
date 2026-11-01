@@ -53,6 +53,9 @@ This document covers local Bible reading, search, TTS, reader assist, and backen
 - App note requests should send member `Authorization` when available and always include the core `X-External-User-Id` for low-sensitivity guest ownership.
 - Public verse notes can be authored by signed-in members or by a device-owned
   external user id.
+- The verse-note query projection depends on both the current member session
+  and installation external id. A sign-in, sign-out, or account switch must
+  reload note ownership instead of retaining another identity's `isMine` state.
 - Public verse note response envelopes and DTO fields are parsed strictly.
   Missing or mistyped fields, unknown author types, invalid dates, malformed
   lists, and references that do not match `verseId` must fail instead of being

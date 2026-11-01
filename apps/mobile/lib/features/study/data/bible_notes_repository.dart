@@ -15,6 +15,8 @@ final bibleNotesRepositoryProvider = Provider<BibleNotesRepository>((ref) {
 
 final bibleVerseNotesProvider = FutureProvider.autoDispose
     .family<List<BibleVerseNote>, String>((ref, verseId) {
+      ref.watch(externalUserIdProvider);
+      ref.watch(memberSessionProvider);
       return ref.watch(bibleNotesRepositoryProvider).listByVerse(verseId);
     });
 
