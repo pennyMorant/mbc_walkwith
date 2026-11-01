@@ -52,4 +52,15 @@ describe("admin authentication UI", () => {
       expect(i18n.match(new RegExp(`"${key}"`, "g"))?.length).toBe(4);
     }
   });
+
+  test("serializes rotating access-token refreshes in the core API client", async () => {
+    const client = await Bun.file(
+      new URL("../src/core/api/client.ts", import.meta.url)
+    ).text();
+
+    expect(client).toContain("createSingleFlightSessionRefresh");
+    expect(client).toContain("await this.refreshSession()");
+    expect(client).toContain("performAdminSessionRefresh");
+    expect(client).not.toContain("tryRefreshSession");
+  });
 });

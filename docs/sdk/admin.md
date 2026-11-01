@@ -26,6 +26,10 @@ This document covers admin Web API helper structure and admin-facing SDK rules.
   `deletedResponseSchema`.
 - Admin auth refresh is parsed in `ApiClient` with
   `adminRefreshTokenResponseSchema` before updating local storage.
+- Concurrent authenticated requests that receive `401` share one in-flight
+  refresh operation. This is required because the Backend rotates the refresh
+  token; parallel refresh calls must not replay and revoke the same token family.
+  After that operation settles, a later `401` may start a new refresh attempt.
 - Feature pages must never parse response envelopes or own contract fallback
   logic.
 - List/filter input types should derive from `packages/api_contracts` query

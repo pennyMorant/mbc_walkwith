@@ -191,7 +191,9 @@ Surface rule:
   Mobile projections never widen content visibility or duplicate moderation state;
   they invoke the same page-owned detail or hide command used by desktop views.
 - Admin authentication changes clear the shared query cache before another session
-  can render role-scoped results. Search and recent-content links identify a record
+  can render role-scoped results. Concurrent expired requests share one Core-owned
+  refresh operation so refresh-token rotation cannot incorrectly end the session.
+  Search and recent-content links identify a record
   with `?open=<resourceId>`; the destination Feature owns detail loading and errors.
 - Admin login keeps local email validation, password visibility, pending state, and
   safe internal redirects in the auth surface. Password changes use the dedicated

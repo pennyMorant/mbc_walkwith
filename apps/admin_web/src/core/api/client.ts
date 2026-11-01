@@ -1,15 +1,10 @@
-import {
-  adminRefreshTokenResponseSchema,
-  type ApiEnvelope
-} from "@mbc/api-contracts";
+import type { ApiEnvelope } from "@mbc/api-contracts";
 
+import { adminAccessTokenStorageKey } from "../auth/auth_storage";
 import {
-  adminAccessTokenStorageKey,
-  adminPermissionsStorageKey,
-  adminUserStorageKey,
-  clearStoredAdminSession,
-  notifyAdminSessionCleared
-} from "../auth/auth_storage";
+  createSingleFlightSessionRefresh,
+  performAdminSessionRefresh
+} from "../auth/admin_session_refresh";
 import { appConfig } from "../config/env";
 import { ApiRequestError, type StructuredApiErrorBody } from "./api_errors";
 
@@ -31,6 +26,10 @@ type DataSchema<T> = {
 };
 
 export class ApiClient {
+  private readonly refreshSession = createSingleFlightSessionRefresh(() =>
+    performAdminSessionRefresh(this.baseUrl)
+  );
+
   constructor(private readonly baseUrl = appConfig.apiBaseUrl) {}
 
   async get<T>(path: string): Promise<ApiEnvelope<T>> {
@@ -237,7 +236,7 @@ export class ApiClient {
       path !== "/admin/auth/login" &&
       path !== "/admin/auth/refresh"
     ) {
-      const refreshed = await this.tryRefreshSession();
+      const refreshed = await this.refreshSession();
       if (refreshed) {
         headers.authorization = `Bearer ${refreshed}`;
         response = await fetch(`${this.baseUrl}${path}`, init);
@@ -287,34 +286,6 @@ export class ApiClient {
     }
   }
 
-  private async tryRefreshSession(): Promise<string | null> {
-    const response = await fetch(`${this.baseUrl}/admin/auth/refresh`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/json",
-        "x-client-platform": "admin"
-      },
-      body: JSON.stringify({})
-    });
-
-    if (!response.ok) {
-      clearStoredAdminSession();
-      notifyAdminSessionCleared();
-      return null;
-    }
-
-    const json = (await response.json()) as ApiEnvelope<unknown>;
-    const session = adminRefreshTokenResponseSchema.parse(json.data);
-    localStorage.setItem(adminAccessTokenStorageKey, session.accessToken);
-    localStorage.setItem(adminUserStorageKey, JSON.stringify(session.user));
-    localStorage.setItem(
-      adminPermissionsStorageKey,
-      JSON.stringify(session.permissions)
-    );
-    return session.accessToken;
-  }
 }
 
 export const apiClient = new ApiClient();
