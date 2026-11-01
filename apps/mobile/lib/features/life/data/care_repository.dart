@@ -46,7 +46,7 @@ class ApiCareRepository implements CareRepository {
       '/me/care-requests?limit=20',
       session.accessToken,
     );
-    return _requestsFromEnvelope(response);
+    return readCareRequestItems(response);
   }
 
   @override
@@ -61,13 +61,9 @@ class ApiCareRepository implements CareRepository {
       {'title': title, 'body': body, 'privacyLevel': privacyLevel},
       session.accessToken,
     );
-    final data = response['data'];
-    return CareRequestDto.fromJson(
-      data is Map<String, Object?> ? data : const {},
-    ).toDomain();
+    return readCareRequest(response);
   }
 }
-
 class MockCareRepository implements CareRepository {
   final List<CareRequest> _requests = [
     CareRequest(
@@ -117,20 +113,4 @@ class MockCareRepository implements CareRepository {
     _requests.insert(0, request);
     return request;
   }
-}
-
-List<CareRequest> _requestsFromEnvelope(Map<String, Object?> response) {
-  final data = response['data'];
-  if (data is! Map<String, Object?>) {
-    return const [];
-  }
-  final items = data['items'];
-  if (items is! List<Object?>) {
-    return const [];
-  }
-  return items
-      .whereType<Map<String, Object?>>()
-      .map(CareRequestDto.fromJson)
-      .map((request) => request.toDomain())
-      .toList(growable: false);
 }

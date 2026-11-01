@@ -75,6 +75,10 @@ Rules:
   it to another signed-in member.
 - DTO/envelope contract failures never use offline fallback. A malformed 200
   response must remain visible as a data-contract failure.
+- Member care response parsing follows the same strict boundary: malformed
+  envelopes or item shapes, unsupported status/privacy values, invalid ISO
+  timestamps, and timestamps that move backward fail visibly. The App never
+  invents fallback care timestamps or silently drops malformed requests.
 
 ## Life Publishing SDK
 

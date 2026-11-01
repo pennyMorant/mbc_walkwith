@@ -64,6 +64,54 @@ void main() {
     );
   });
 
+  test('rejects malformed care response envelopes and items', () {
+    expect(
+      () => readCareRequestItems(const {}),
+      throwsA(isA<FormatException>()),
+    );
+    expect(
+      () => readCareRequestItems({
+        'data': {
+          'items': ['not-an-object'],
+        },
+      }),
+      throwsA(isA<FormatException>()),
+    );
+  });
+
+  test('rejects unsupported care state and malformed timestamps', () {
+    final valid = <String, Object?>{
+      'id': 'care-1',
+      'userId': 'member-1',
+      'memberDisplayName': 'Grace Member',
+      'memberEmail': 'grace@example.com',
+      'title': 'Pastoral care',
+      'body': 'Please call me this week.',
+      'status': 'submitted',
+      'privacyLevel': 'pastoral_only',
+      'assigneeName': '',
+      'nextFollowUpAt': null,
+      'createdAt': '2026-06-20T18:00:00.000Z',
+      'updatedAt': '2026-06-21T18:00:00.000Z',
+    };
+
+    expect(
+      () => CareRequestDto.fromJson({...valid, 'status': 'unknown'}),
+      throwsA(isA<FormatException>()),
+    );
+    expect(
+      () => CareRequestDto.fromJson({...valid, 'createdAt': 'not-a-date'}),
+      throwsA(isA<FormatException>()),
+    );
+    expect(
+      () => CareRequestDto.fromJson({
+        ...valid,
+        'updatedAt': '2026-06-19T18:00:00.000Z',
+      }),
+      throwsA(isA<FormatException>()),
+    );
+  });
+
   test('surfaces remote life failures instead of using local data', () async {
     final repository = RemoteLifeRepository(
       remoteDataSource: _FailingLifeRemoteDataSource(),
