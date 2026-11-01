@@ -195,6 +195,8 @@ Surface rule:
   refresh operation so refresh-token rotation cannot incorrectly end the session.
   Search and recent-content links identify a record
   with `?open=<resourceId>`; the destination Feature owns detail loading and errors.
+  Clearing or replacing that query invalidates the previous detail request, and
+  an unmounted page cannot apply a late resource result.
 - Admin login keeps local email validation, password visibility, pending state, and
   safe internal redirects in the auth surface. Password changes use the dedicated
   auth dialog, require matching confirmation, clear transient state whenever it is

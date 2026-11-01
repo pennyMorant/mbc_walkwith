@@ -1,4 +1,4 @@
-import { ref, watch } from "vue";
+import { onScopeDispose, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 export function useAdminResourceDeepLink<T>(
@@ -13,12 +13,15 @@ export function useAdminResourceDeepLink<T>(
   watch(
     () => route.query.open,
     async (value) => {
-      if (typeof value !== "string" || !value.trim()) return;
       const sequence = ++requestSequence;
       error.value = null;
+      if (typeof value !== "string" || !value.trim()) {
+        pending.value = false;
+        return;
+      }
       pending.value = true;
       try {
-        const resource = await load(value);
+        const resource = await load(value.trim());
         if (sequence === requestSequence) open(resource);
       } catch (loadError) {
         if (sequence === requestSequence) error.value = loadError;
@@ -28,6 +31,10 @@ export function useAdminResourceDeepLink<T>(
     },
     { immediate: true }
   );
+
+  onScopeDispose(() => {
+    requestSequence += 1;
+  });
 
   return { error, pending };
 }
