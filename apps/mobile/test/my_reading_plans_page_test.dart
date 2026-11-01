@@ -256,6 +256,72 @@ void main() {
     expect(find.text('Newly published plan'), findsOneWidget);
   });
 
+  testWidgets('ignores an old history page after the base page refreshes', (
+    tester,
+  ) async {
+    final repository = _PendingHistoryReadingPlanRepository();
+    var historyReads = 0;
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          memberSessionProvider.overrideWith((ref) async => null),
+          externalUserIdProvider.overrideWith((ref) async => 'ext-test'),
+          readingPlanRepositoryProvider.overrideWithValue(repository),
+          activeReadingPlanAssignmentsProvider.overrideWith(
+            (ref) async => const [],
+          ),
+          readingPlanHistoryProvider.overrideWith((ref) async {
+            historyReads += 1;
+            return ReadingPlanAssignmentPage(
+              items: [
+                _assignment(
+                  id: historyReads == 1 ? 'old-base' : 'new-base',
+                  title: historyReads == 1 ? 'Old base' : 'New base',
+                  status: 'completed',
+                ),
+              ],
+              nextCursor: historyReads == 1 ? 'old-cursor' : null,
+            );
+          }),
+        ],
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          home: const MyReadingPlansPage(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('History'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Load more'));
+    await tester.pump();
+    expect(repository.pendingHistoryPage, isNotNull);
+
+    await tester.drag(find.byType(ListView), const Offset(0, 300));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('New base'), findsOneWidget);
+
+    repository.completeHistoryPage(
+      ReadingPlanAssignmentPage(
+        items: [
+          _assignment(
+            id: 'stale-page',
+            title: 'Stale page',
+            status: 'completed',
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('New base'), findsOneWidget);
+    expect(find.text('Stale page'), findsNothing);
+  });
+
   testWidgets('starts a discovered plan through the repository', (
     tester,
   ) async {
@@ -375,5 +441,26 @@ class _RecordingReadingPlanRepository extends MockReadingPlanRepository {
   ) async {
     assignedPlanIds.add(planId);
     return _assignment(title: 'Available plan', planId: planId);
+  }
+}
+
+class _PendingHistoryReadingPlanRepository extends MockReadingPlanRepository {
+  Completer<ReadingPlanAssignmentPage>? pendingHistoryPage;
+
+  @override
+  Future<ReadingPlanAssignmentPage> listMyAssignments(
+    ReadingPlanIdentity identity, {
+    String? scope,
+    int? limit,
+    String? cursor,
+  }) {
+    final completer = Completer<ReadingPlanAssignmentPage>();
+    pendingHistoryPage = completer;
+    return completer.future;
+  }
+
+  void completeHistoryPage(ReadingPlanAssignmentPage page) {
+    pendingHistoryPage!.complete(page);
+    pendingHistoryPage = null;
   }
 }

@@ -30,6 +30,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
   List<ReadingPlanAssignment> _additionalHistory = const [];
   bool _isLoadingMoreHistory = false;
   bool _historyLoadMoreFailed = false;
+  int _historyRequestSerial = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,12 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
                 ],
                 selected: {_view},
                 onSelectionChanged: (selection) {
-                  setState(() => _view = selection.first);
+                  final nextView = selection.first;
+                  if (nextView == _view) return;
+                  setState(() {
+                    _invalidateHistoryRequest();
+                    _view = nextView;
+                  });
                 },
               ),
             ),
@@ -279,6 +285,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
       page.nextCursor ?? '',
     ].join('|');
     if (_historyBaseKey == key) return;
+    _invalidateHistoryRequest();
     _historyBaseKey = key;
     _historyNextCursor = page.nextCursor;
     _additionalHistory = const [];
@@ -288,6 +295,8 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
   Future<void> _loadMoreHistory() async {
     final cursor = _historyNextCursor;
     if (cursor == null || _isLoadingMoreHistory) return;
+    final requestSerial = ++_historyRequestSerial;
+    final baseKey = _historyBaseKey;
     setState(() {
       _isLoadingMoreHistory = true;
       _historyLoadMoreFailed = false;
@@ -302,7 +311,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
             limit: _historyPageSize,
             cursor: cursor,
           );
-      if (!mounted) return;
+      if (!_isCurrentHistoryRequest(requestSerial, baseKey)) return;
       final existingIds = {
         ...?ref
             .read(readingPlanHistoryProvider)
@@ -319,18 +328,35 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
         _historyNextCursor = page.nextCursor;
       });
     } catch (_) {
-      if (mounted) setState(() => _historyLoadMoreFailed = true);
+      if (_isCurrentHistoryRequest(requestSerial, baseKey)) {
+        setState(() => _historyLoadMoreFailed = true);
+      }
     } finally {
-      if (mounted) setState(() => _isLoadingMoreHistory = false);
+      if (_isCurrentHistoryRequest(requestSerial, baseKey)) {
+        setState(() => _isLoadingMoreHistory = false);
+      }
     }
   }
 
   void _resetHistoryPagination() {
+    _invalidateHistoryRequest();
     _historyBaseKey = null;
     _historyNextCursor = null;
     _additionalHistory = const [];
     _historyLoadMoreFailed = false;
     _isLoadingMoreHistory = false;
+  }
+
+  void _invalidateHistoryRequest() {
+    _historyRequestSerial += 1;
+    _isLoadingMoreHistory = false;
+  }
+
+  bool _isCurrentHistoryRequest(int requestSerial, String? baseKey) {
+    return mounted &&
+        _view == _ReadingPlanView.history &&
+        requestSerial == _historyRequestSerial &&
+        baseKey == _historyBaseKey;
   }
 
   void _goBack(BuildContext context) {
