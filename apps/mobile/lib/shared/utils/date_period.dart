@@ -58,12 +58,12 @@ class DatePeriod {
   }
 
   bool touches(DateTime? itemStart, DateTime? itemEnd) {
-    final startValue = itemStart;
-    if (startValue == null) {
-      return false;
-    }
-    final endValue = itemEnd ?? startValue;
-    return endValue.isAfter(queryFrom) && startValue.isBefore(queryTo);
+    return dateRangeTouches(
+      startsAt: itemStart,
+      endsAt: itemEnd,
+      from: queryFrom,
+      to: queryTo,
+    );
   }
 
   @override
@@ -78,6 +78,27 @@ class DatePeriod {
 
   @override
   int get hashCode => Object.hash(mode, start, end);
+}
+
+bool dateRangeTouches({
+  required DateTime? startsAt,
+  required DateTime? endsAt,
+  required DateTime? from,
+  required DateTime? to,
+}) {
+  if (from == null && to == null) {
+    return true;
+  }
+  final start = startsAt;
+  if (start == null) {
+    return false;
+  }
+  if (endsAt == null) {
+    return (from == null || !start.isBefore(from)) &&
+        (to == null || start.isBefore(to));
+  }
+  return (from == null || endsAt.isAfter(from)) &&
+      (to == null || start.isBefore(to));
 }
 
 DateTime _startOfWeek(DateTime date) {

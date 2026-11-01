@@ -52,6 +52,10 @@ The Life hero is a current-natural-week projection owned by the backend. The
 App sends current week boundaries to the latest-bulletin endpoint and shows an
 empty hero when that range has no bulletin. The `This week` tab keeps those
 fixed boundaries; month selection is available only for category tabs.
+Week and month filters use half-open ranges `[from, to)`. Content without an
+`endsAt` value is a point event, so an item exactly at `from` is included while
+an item exactly at `to` belongs to the next period. Backend Postgres/in-memory
+queries and App offline/mock filtering must preserve the same semantics.
 
 Published presentation data is not discarded by the App: the weekly hero may
 show the admin-managed cover image, detail renders non-empty `meta` as

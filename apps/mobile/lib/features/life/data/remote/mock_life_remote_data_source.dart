@@ -1,3 +1,4 @@
+import '../../../../shared/utils/date_period.dart';
 import '../../domain/life_post.dart';
 import '../../domain/life_post_list_request.dart';
 import '../dto/life_post_dto.dart';
@@ -186,7 +187,12 @@ bool _matchesRequest(LifePost post, LifePostListRequest request) {
   if (type != null && type.isNotEmpty && post.type != type) {
     return false;
   }
-  return _touchesRange(post.startsAt ?? post.updatedAt, post.endsAt, request);
+  return dateRangeTouches(
+    startsAt: post.startsAt ?? post.updatedAt,
+    endsAt: post.endsAt,
+    from: request.from,
+    to: request.to,
+  );
 }
 
 bool _isVisibleForAccessToken(LifePost post, String? accessToken) {
@@ -197,28 +203,6 @@ bool _isVisibleForAccessToken(LifePost post, String? accessToken) {
     return true;
   }
   return accessToken != null && post.visibility == 'members';
-}
-
-bool _touchesRange(
-  DateTime? startsAt,
-  DateTime? endsAt,
-  LifePostListRequest request,
-) {
-  if (request.from == null && request.to == null) {
-    return true;
-  }
-  final start = startsAt;
-  if (start == null) {
-    return false;
-  }
-  final end = endsAt ?? start;
-  if (request.from != null && !end.isAfter(request.from!)) {
-    return false;
-  }
-  if (request.to != null && !start.isBefore(request.to!)) {
-    return false;
-  }
-  return true;
 }
 
 class _MockRegistration {

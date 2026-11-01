@@ -3,6 +3,46 @@ import { describe, expect, it } from "vitest";
 import { InMemoryLifePostRepository } from "../src/modules/life/in-memory-life-post.repository.js";
 
 describe("life post ordering", () => {
+  it("includes a point event at the range start", async () => {
+    const repository = new InMemoryLifePostRepository();
+    const post = await repository.create({
+      type: "announcement",
+      title: "Month boundary",
+      body: "Visible at the first instant of the selected month.",
+      meta: "",
+      iconName: "event",
+      startsAt: "2099-08-01T00:00:00.000Z",
+      endsAt: null,
+      visibility: "private",
+      imageUrl: null,
+      sort: 0,
+      ctaLabel: null,
+      ctaUrl: null,
+      registrationEnabled: false,
+      registrationCapacity: null,
+      registrationDeadline: null,
+      registrationAllowCancellation: true,
+      registrationMaxPartySize: 1,
+      status: "draft"
+    });
+
+    const included = await repository.list({
+      limit: 20,
+      offset: 0,
+      from: "2099-08-01T00:00:00.000Z",
+      to: "2099-09-01T00:00:00.000Z"
+    });
+    const excluded = await repository.list({
+      limit: 20,
+      offset: 0,
+      from: "2099-07-01T00:00:00.000Z",
+      to: "2099-08-01T00:00:00.000Z"
+    });
+
+    expect(included.map((item) => item.id)).toContain(post.id);
+    expect(excluded.map((item) => item.id)).not.toContain(post.id);
+  });
+
   it("selects the nearest upcoming posts before applying the limit", async () => {
     const repository = new InMemoryLifePostRepository();
     const created = [];

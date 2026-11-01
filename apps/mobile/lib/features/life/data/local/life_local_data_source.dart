@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../../../core/database/app_database.dart';
+import '../../../../shared/utils/date_period.dart';
 import '../../domain/life_post_list_request.dart';
 import '../dto/life_post_dto.dart';
 
@@ -137,31 +138,10 @@ bool _matchesRequest(LifePostDto post, LifePostListRequest request) {
     return false;
   }
 
-  return _touchesRange(
-    _dateFromString(post.startsAt) ?? _dateFromString(post.updatedAt),
-    _dateFromString(post.endsAt),
-    request,
+  return dateRangeTouches(
+    startsAt: _dateFromString(post.startsAt) ?? _dateFromString(post.updatedAt),
+    endsAt: _dateFromString(post.endsAt),
+    from: request.from,
+    to: request.to,
   );
-}
-
-bool _touchesRange(
-  DateTime? startsAt,
-  DateTime? endsAt,
-  LifePostListRequest request,
-) {
-  if (request.from == null && request.to == null) {
-    return true;
-  }
-  final start = startsAt;
-  if (start == null) {
-    return false;
-  }
-  final end = endsAt ?? start;
-  if (request.from != null && !end.isAfter(request.from!)) {
-    return false;
-  }
-  if (request.to != null && !start.isBefore(request.to!)) {
-    return false;
-  }
-  return true;
 }

@@ -424,9 +424,12 @@ function postTouchesRange(
   if (!postStart) {
     return false;
   }
-  const postEnd = dateValue(post.endsAt) ?? postStart;
-  if (from && postEnd <= new Date(from)) {
-    return false;
+  const postEnd = dateValue(post.endsAt);
+  if (from) {
+    const rangeStart = new Date(from);
+    if (postEnd ? postEnd <= rangeStart : postStart < rangeStart) {
+      return false;
+    }
   }
   if (to && postStart >= new Date(to)) {
     return false;

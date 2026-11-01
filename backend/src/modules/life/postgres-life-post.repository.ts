@@ -9,7 +9,21 @@ import type {
   LifePostUpdateRequest,
   LifePostUpsertRequest
 } from "@mbc/api-contracts";
-import { and, asc, count, desc, eq, gt, ilike, inArray, lt, or, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gt,
+  gte,
+  ilike,
+  inArray,
+  isNull,
+  lt,
+  or,
+  sql
+} from "drizzle-orm";
 
 import type { AppDb } from "../../shared/db/client.js";
 import {
@@ -53,9 +67,15 @@ export class PostgresLifePostRepository implements LifePostRepository {
       query.status ? eq(publicPosts.status, query.status) : undefined,
       query.type ? eq(publicPosts.type, query.type) : undefined,
       query.from
-        ? gt(
-            sql`coalesce(${publicPosts.endsAt}, ${publicPosts.startsAt}, ${publicPosts.updatedAt})`,
-            new Date(query.from)
+        ? or(
+            gt(publicPosts.endsAt, new Date(query.from)),
+            and(
+              isNull(publicPosts.endsAt),
+              gte(
+                sql`coalesce(${publicPosts.startsAt}, ${publicPosts.updatedAt})`,
+                new Date(query.from)
+              )
+            )
           )
         : undefined,
       query.to
