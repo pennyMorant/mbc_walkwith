@@ -184,8 +184,8 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
     );
   }
 
-  void _syncControllers(MemberProfile member) {
-    if (_loadedMemberId == member.id) {
+  void _syncControllers(MemberProfile member, {bool force = false}) {
+    if (!force && _loadedMemberId == member.id) {
       return;
     }
     _loadedMemberId = member.id;
@@ -212,7 +212,7 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
       _error = null;
     });
     try {
-      await ref
+      final updatedSession = await ref
           .read(memberSessionRepositoryProvider)
           .updateProfile(
             session,
@@ -225,6 +225,7 @@ class _MemberProfilePageState extends ConsumerState<MemberProfilePage> {
             emergencyContactName: _emergencyNameController.text,
             emergencyContactPhone: _emergencyPhoneController.text,
           );
+      _syncControllers(updatedSession.member, force: true);
       ref.invalidate(memberSessionProvider);
       if (!mounted) {
         return;
