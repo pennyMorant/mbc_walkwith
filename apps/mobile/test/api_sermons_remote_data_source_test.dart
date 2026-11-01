@@ -102,6 +102,57 @@ void main() {
     await expectLater(source.fetchSermons(), throwsA(isA<FormatException>()));
   });
 
+  test(
+    'rejects missing canonical sermon fields and invalid audio state',
+    () async {
+      final missingDate = Map<String, Object?>.from(_sermonJson)
+        ..remove('sermonDate');
+      final invalidAudio = {
+        ..._sermonJson,
+        'audio': {
+          ..._sermonJson['audio']! as Map<String, Object?>,
+          'status': 'queued',
+        },
+      };
+
+      await expectLater(
+        _sourceFor({
+          'data': {
+            'items': [missingDate],
+          },
+        }).fetchSermons(),
+        throwsA(isA<FormatException>()),
+      );
+      await expectLater(
+        _sourceFor({
+          'data': {
+            'items': [invalidAudio],
+          },
+        }).fetchSermons(),
+        throwsA(isA<FormatException>()),
+      );
+    },
+  );
+
+  test('rejects impossible sermon dates and duplicate topics', () async {
+    final impossibleDate = {..._sermonJson, 'sermonDate': '2026-02-31'};
+    final duplicateTopics = {
+      ..._sermonJson,
+      'topics': <Object?>['Discipleship', 'discipleship'],
+    };
+
+    for (final sermon in [impossibleDate, duplicateTopics]) {
+      await expectLater(
+        _sourceFor({
+          'data': {
+            'items': [sermon],
+          },
+        }).fetchSermons(),
+        throwsA(isA<FormatException>()),
+      );
+    }
+  });
+
   test('rejects malformed sermon discovery facets', () async {
     final source = _sourceFor({
       'data': {
@@ -158,6 +209,7 @@ const _config = AppConfig(
 
 const _sermonJson = <String, Object?>{
   'id': 'sermon-1',
+  'sourceLocale': 'en',
   'title': 'Abide in Christ',
   'speaker': 'Pastor',
   'sermonDate': '2026-07-12',
@@ -166,10 +218,19 @@ const _sermonJson = <String, Object?>{
   'primaryReference': 'John 15:5',
   'durationSeconds': 1800,
   'summary': 'A sermon about abiding in Christ.',
+  'status': 'published',
+  'publishedAt': '2026-07-12T18:00:00.000Z',
+  'createdAt': '2026-07-12T18:00:00.000Z',
+  'updatedAt': '2026-07-12T18:00:00.000Z',
+  'thumbnailUrl': null,
   'outline': <Object?>[],
   'references': <Object?>[],
   'audio': <String, Object?>{
     'status': 'ready',
     'url': '/v1/sermons/sermon-1/audio',
+    'fileName': 'sermon-1.mp3',
+    'mimeType': 'audio/mpeg',
+    'sizeBytes': 1024,
+    'uploadedAt': '2026-07-12T18:00:00.000Z',
   },
 };

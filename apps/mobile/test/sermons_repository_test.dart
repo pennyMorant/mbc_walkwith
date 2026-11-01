@@ -360,6 +360,7 @@ void main() {
 
   test('maps ready sermon audio and artwork from backend relative URLs', () {
     final sermon = SermonDto.fromJson({
+      ..._publicSermonMetadata,
       'id': 'church-recorded-sermon',
       'title': 'Church Recorded Sermon',
       'speaker': 'Pastor Audio',
@@ -401,6 +402,7 @@ void main() {
 
   test('ignores sermon audio unless backend marks it ready', () {
     final sermon = SermonDto.fromJson({
+      ..._publicSermonMetadata,
       'id': 'draft-sermon',
       'title': 'Draft Sermon',
       'speaker': 'Pastor Draft',
@@ -412,36 +414,54 @@ void main() {
       'summary': 'A draft sermon.',
       'outline': const [],
       'references': const [],
-      'audio': {'status': 'missing', 'url': '/v1/sermons/draft-sermon/audio'},
+      'audio': {
+        'status': 'missing',
+        'url': '/v1/sermons/draft-sermon/audio',
+        'fileName': null,
+        'mimeType': null,
+        'sizeBytes': 0,
+        'uploadedAt': null,
+      },
     }, apiBaseUrl: 'http://localhost:3020/v1').toDomain();
 
     expect(sermon.hasAudio, isFalse);
     expect(sermon.audioUrl, isNull);
   });
 
-  test(
-    'uses local processing duration metadata when top-level duration is zero',
-    () {
-      final sermon = SermonDto.fromJson({
-        'id': 'metadata-duration-sermon',
-        'title': 'Metadata Duration Sermon',
-        'speaker': 'Pastor Duration',
-        'sermonDate': '2026-06-07',
-        'series': 'Local Package',
-        'topics': const ['Hope'],
-        'primaryReference': 'John 15:5',
-        'durationSeconds': 0,
-        'summary': 'A sermon imported from a local processing package.',
-        'outline': const [],
-        'references': const [],
-        'processingMetadata': {'durationSeconds': 1991},
-        'audio': {
-          'status': 'ready',
-          'url': '/v1/sermons/metadata-duration-sermon/audio',
-        },
-      }, apiBaseUrl: 'http://localhost:3020/v1').toDomain();
+  test('uses only canonical top-level sermon duration', () {
+    final sermon = SermonDto.fromJson({
+      ..._publicSermonMetadata,
+      'id': 'metadata-duration-sermon',
+      'title': 'Metadata Duration Sermon',
+      'speaker': 'Pastor Duration',
+      'sermonDate': '2026-06-07',
+      'series': 'Local Package',
+      'topics': const ['Hope'],
+      'primaryReference': 'John 15:5',
+      'durationSeconds': 0,
+      'summary': 'A sermon imported from a local processing package.',
+      'outline': const [],
+      'references': const [],
+      'processingMetadata': {'durationSeconds': 1991},
+      'audio': {
+        'status': 'ready',
+        'url': '/v1/sermons/metadata-duration-sermon/audio',
+        'fileName': 'metadata-duration-sermon.mp3',
+        'mimeType': 'audio/mpeg',
+        'sizeBytes': 1024,
+        'uploadedAt': '2026-07-12T18:00:00.000Z',
+      },
+    }, apiBaseUrl: 'http://localhost:3020/v1').toDomain();
 
-      expect(sermon.duration, const Duration(seconds: 1991));
-    },
-  );
+    expect(sermon.duration, Duration.zero);
+  });
 }
+
+const _publicSermonMetadata = <String, Object?>{
+  'sourceLocale': 'en',
+  'status': 'published',
+  'publishedAt': '2026-07-12T18:00:00.000Z',
+  'createdAt': '2026-07-12T18:00:00.000Z',
+  'updatedAt': '2026-07-12T18:00:00.000Z',
+  'thumbnailUrl': null,
+};

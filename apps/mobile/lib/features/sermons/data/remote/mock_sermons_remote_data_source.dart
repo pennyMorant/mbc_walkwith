@@ -99,9 +99,10 @@ bool _sermonInRange(Sermon sermon, SermonListRequest request) {
 SermonDto _toDto(Sermon sermon) {
   return SermonDto.fromJson({
     'id': sermon.id,
+    'sourceLocale': 'en',
     'title': sermon.title,
     'speaker': sermon.speaker,
-    'date': sermon.date,
+    'sermonDate': sermon.date,
     'series': sermon.series,
     'topics': sermon.topics,
     'primaryReference': sermon.primaryReference,
@@ -109,6 +110,19 @@ SermonDto _toDto(Sermon sermon) {
     'summary': sermon.summary,
     'outline': sermon.outline.map(_outlineToJson).toList(),
     'references': sermon.references.map(_referenceToJson).toList(),
+    'status': 'published',
+    'publishedAt': '${sermon.date}T00:00:00.000Z',
+    'createdAt': '${sermon.date}T00:00:00.000Z',
+    'updatedAt': '${sermon.date}T00:00:00.000Z',
+    'thumbnailUrl': null,
+    'audio': const {
+      'url': null,
+      'fileName': null,
+      'mimeType': null,
+      'sizeBytes': 0,
+      'status': 'missing',
+      'uploadedAt': null,
+    },
     'transcript': sermon.transcript == null
         ? null
         : {

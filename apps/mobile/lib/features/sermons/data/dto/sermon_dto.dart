@@ -1,5 +1,16 @@
 import '../../domain/sermon.dart';
 
+const _sermonStatuses = {
+  'draft',
+  'processing',
+  'needs_review',
+  'published',
+  'archived',
+  'failed',
+};
+const _sermonAudioStatuses = {'missing', 'ready', 'failed'};
+const _contentLocales = {'en', 'es', 'zh-Hans', 'zh-Hant'};
+
 class SermonDto {
   const SermonDto({
     required this.id,
@@ -34,26 +45,30 @@ class SermonDto {
   final String? thumbnailUrl;
 
   factory SermonDto.fromJson(Map<String, Object?> json, {String? apiBaseUrl}) {
+    _validatePublicSermonMetadata(json);
     return SermonDto(
-      id: json['id'] as String,
-      title: json['title'] as String? ?? '',
-      speaker: json['speaker'] as String? ?? '',
-      date: (json['date'] ?? json['sermonDate']) as String? ?? '',
-      series: json['series'] as String? ?? '',
+      id: _readString(json, 'id', allowEmpty: false),
+      title: _readString(json, 'title'),
+      speaker: _readString(json, 'speaker'),
+      date: _readDate(json, 'sermonDate'),
+      series: _readNullableString(json, 'series') ?? '',
       topics: _stringListFromJson(json['topics']),
-      primaryReference: json['primaryReference'] as String? ?? '',
-      durationSeconds: _durationSecondsFromJson(json),
-      summary: json['summary'] as String? ?? '',
-      outline: ((json['outline'] as List<Object?>?) ?? const [])
-          .cast<Map<String, Object?>>()
-          .map(SermonOutlineItemDto.fromJson)
-          .toList(),
-      references: ((json['references'] as List<Object?>?) ?? const [])
-          .cast<Map<String, Object?>>()
-          .map(SermonReferenceDto.fromJson)
-          .toList(),
+      primaryReference: _readNullableString(json, 'primaryReference') ?? '',
+      durationSeconds: _readNonNegativeInt(json, 'durationSeconds'),
+      summary: _readNullableString(json, 'summary') ?? '',
+      outline: _readObjectList(
+        json,
+        'outline',
+      ).map(SermonOutlineItemDto.fromJson).toList(),
+      references: _readObjectList(
+        json,
+        'references',
+      ).map(SermonReferenceDto.fromJson).toList(),
       transcript: SermonTranscriptDto.fromJsonOrNull(json['transcript']),
-      audioUrl: _audioUrlFromJson(json['audio'], apiBaseUrl: apiBaseUrl),
+      audioUrl: _audioUrlFromJson(
+        _readAudio(json['audio']),
+        apiBaseUrl: apiBaseUrl,
+      ),
       thumbnailUrl: _absoluteUrlFromJson(
         json['thumbnailUrl'],
         apiBaseUrl: apiBaseUrl,
@@ -82,10 +97,20 @@ class SermonDto {
 }
 
 List<String> _stringListFromJson(Object? value) {
-  if (value is! List<Object?> || value.any((item) => item is! String)) {
+  if (value is! List<Object?> ||
+      value.length > 12 ||
+      value.any(
+        (item) =>
+            item is! String || item.trim().isEmpty || item.trim().length > 80,
+      )) {
     throw const FormatException('Sermon topics are malformed.');
   }
-  return value.cast<String>();
+  final topics = value.cast<String>();
+  final normalized = topics.map((topic) => topic.toLowerCase()).toSet();
+  if (normalized.length != topics.length) {
+    throw const FormatException('Sermon topics must be unique.');
+  }
+  return topics;
 }
 
 class SermonTranscriptDto {
@@ -96,17 +121,18 @@ class SermonTranscriptDto {
   final String? updatedAt;
 
   static SermonTranscriptDto? fromJsonOrNull(Object? value) {
+    if (value == null) return null;
     if (value is! Map<String, Object?>) {
-      return null;
+      throw const FormatException('Sermon transcript must be an object.');
     }
-    final text = value['text'] as String? ?? '';
+    final text = _readString(value, 'text');
     if (text.trim().isEmpty) {
       return null;
     }
     return SermonTranscriptDto(
       text: text,
-      source: value['source'] as String?,
-      updatedAt: value['updatedAt'] as String?,
+      source: _readNullableString(value, 'source'),
+      updatedAt: _readNullableString(value, 'updatedAt'),
     );
   }
 
@@ -128,9 +154,9 @@ class SermonOutlineItemDto {
 
   factory SermonOutlineItemDto.fromJson(Map<String, Object?> json) {
     return SermonOutlineItemDto(
-      title: json['title'] as String? ?? '',
-      startSeconds: _intFromJson(json['startSeconds']),
-      summary: json['summary'] as String? ?? '',
+      title: _readString(json, 'title', allowEmpty: false),
+      startSeconds: _readNonNegativeInt(json, 'startSeconds'),
+      summary: _readString(json, 'summary'),
     );
   }
 
@@ -158,10 +184,10 @@ class SermonReferenceDto {
 
   factory SermonReferenceDto.fromJson(Map<String, Object?> json) {
     return SermonReferenceDto(
-      reference: json['reference'] as String? ?? '',
-      verseId: json['verseId'] as String? ?? '',
-      note: json['note'] as String? ?? '',
-      startSeconds: _intFromJsonOrNull(json['startSeconds']),
+      reference: _readString(json, 'reference', allowEmpty: false),
+      verseId: _readString(json, 'verseId', allowEmpty: false),
+      note: _readString(json, 'note'),
+      startSeconds: _readNullableNonNegativeInt(json, 'startSeconds'),
     );
   }
 
@@ -170,48 +196,115 @@ class SermonReferenceDto {
   }
 }
 
-int _intFromJson(Object? value) {
-  return _intFromJsonOrNull(value) ?? 0;
-}
-
-int _durationSecondsFromJson(Map<String, Object?> json) {
-  final durationSeconds = _intFromJson(json['durationSeconds']);
-  if (durationSeconds > 0) {
-    return durationSeconds;
-  }
-
-  final processingMetadata = json['processingMetadata'];
-  if (processingMetadata is Map<String, Object?>) {
-    return _intFromJsonOrNull(processingMetadata['durationSeconds']) ??
-        _intFromJsonOrNull(processingMetadata['audioDurationSeconds']) ??
-        durationSeconds;
-  }
-
-  return durationSeconds;
-}
-
-int? _intFromJsonOrNull(Object? value) {
-  if (value is int) {
-    return value;
-  }
-  if (value is num) {
-    return value.round();
-  }
-  if (value is String) {
-    return int.tryParse(value);
-  }
-  return null;
-}
-
-String? _audioUrlFromJson(Object? value, {String? apiBaseUrl}) {
-  if (value is! Map<String, Object?>) {
-    return null;
-  }
+String? _audioUrlFromJson(Map<String, Object?> value, {String? apiBaseUrl}) {
   if (value['status'] != 'ready') {
     return null;
   }
-  final url = value['url'] as String?;
+  final url = _readNullableString(value, 'url');
   return _absoluteUrlFromJson(url, apiBaseUrl: apiBaseUrl);
+}
+
+void _validatePublicSermonMetadata(Map<String, Object?> json) {
+  _readEnum(json, 'sourceLocale', _contentLocales);
+  _readEnum(json, 'status', _sermonStatuses);
+  _readNullableString(json, 'publishedAt');
+  _readNullableString(json, 'thumbnailUrl');
+  final createdAt = _readDateTime(json, 'createdAt');
+  final updatedAt = _readDateTime(json, 'updatedAt');
+  if (updatedAt.isBefore(createdAt)) {
+    throw const FormatException('Sermon updatedAt must not precede createdAt.');
+  }
+}
+
+Map<String, Object?> _readAudio(Object? value) {
+  if (value is! Map<String, Object?>) {
+    throw const FormatException('Sermon audio must be an object.');
+  }
+  _readEnum(value, 'status', _sermonAudioStatuses);
+  _readNullableString(value, 'url');
+  _readNullableString(value, 'fileName');
+  _readNullableString(value, 'mimeType');
+  _readNonNegativeInt(value, 'sizeBytes');
+  _readNullableString(value, 'uploadedAt');
+  return value;
+}
+
+List<Map<String, Object?>> _readObjectList(
+  Map<String, Object?> json,
+  String key,
+) {
+  final value = json[key];
+  if (value is! List<Object?> ||
+      value.any((item) => item is! Map<String, Object?>)) {
+    throw FormatException('Sermon $key must be an object list.');
+  }
+  return value.cast<Map<String, Object?>>();
+}
+
+String _readString(
+  Map<String, Object?> json,
+  String key, {
+  bool allowEmpty = true,
+}) {
+  final value = json[key];
+  if (value is! String || (!allowEmpty && value.trim().isEmpty)) {
+    throw FormatException('Sermon $key must be a string.');
+  }
+  return value;
+}
+
+String? _readNullableString(Map<String, Object?> json, String key) {
+  final value = json[key];
+  if (value == null) return null;
+  if (value is! String) {
+    throw FormatException('Sermon $key must be null or a string.');
+  }
+  return value;
+}
+
+String _readEnum(Map<String, Object?> json, String key, Set<String> values) {
+  final value = _readString(json, key, allowEmpty: false);
+  if (!values.contains(value)) {
+    throw FormatException('Sermon $key is unsupported.');
+  }
+  return value;
+}
+
+int _readNonNegativeInt(Map<String, Object?> json, String key) {
+  final value = json[key];
+  if (value is! int || value < 0) {
+    throw FormatException('Sermon $key must be a non-negative integer.');
+  }
+  return value;
+}
+
+int? _readNullableNonNegativeInt(Map<String, Object?> json, String key) {
+  final value = json[key];
+  if (value == null) return null;
+  return _readNonNegativeInt(json, key);
+}
+
+String _readDate(Map<String, Object?> json, String key) {
+  final value = _readString(json, key, allowEmpty: false);
+  final match = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$').firstMatch(value);
+  final parsed = DateTime.tryParse(value);
+  if (match == null ||
+      parsed == null ||
+      parsed.year != int.parse(match.group(1)!) ||
+      parsed.month != int.parse(match.group(2)!) ||
+      parsed.day != int.parse(match.group(3)!)) {
+    throw FormatException('Sermon $key must be an ISO date.');
+  }
+  return value;
+}
+
+DateTime _readDateTime(Map<String, Object?> json, String key) {
+  final value = _readString(json, key, allowEmpty: false);
+  final parsed = DateTime.tryParse(value);
+  if (parsed == null) {
+    throw FormatException('Sermon $key must be an ISO date-time.');
+  }
+  return parsed;
 }
 
 String? _absoluteUrlFromJson(Object? value, {String? apiBaseUrl}) {

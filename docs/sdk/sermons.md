@@ -56,6 +56,11 @@ This document covers sermon listing, details, audio playback, transcripts, progr
 - Cached sermon fallback is limited to transport/backend `ApiError` failures.
   DTO or envelope `FormatException` failures must remain visible so contract
   drift cannot be hidden by stale local data.
+- Public sermon DTO parsing requires the current `publicSermonSchema` fields,
+  closed locale/status/audio enums, canonical `sermonDate`, non-negative
+  duration and offsets, typed nested lists, and ordered ISO timestamps. The App
+  does not accept the removed `date` alias or derive duration from processing
+  metadata that is not part of the public projection.
 - Progress is saved locally with an update timestamp and synchronized through
   `GET/POST /sermons/:sermonId/progress`. The App sends both the valid member
   token when available and its installation `X-External-User-Id`; the backend
