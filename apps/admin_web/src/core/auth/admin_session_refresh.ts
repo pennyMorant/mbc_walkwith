@@ -8,7 +8,8 @@ import {
   adminPermissionsStorageKey,
   adminUserStorageKey,
   clearStoredAdminSession,
-  notifyAdminSessionCleared
+  notifyAdminSessionCleared,
+  notifyAdminSessionRefreshed
 } from "./auth_storage";
 
 type RefreshSession = () => Promise<string | null>;
@@ -56,5 +57,6 @@ export async function performAdminSessionRefresh(
     adminPermissionsStorageKey,
     JSON.stringify(session.permissions)
   );
+  notifyAdminSessionRefreshed();
   return session.accessToken;
 }

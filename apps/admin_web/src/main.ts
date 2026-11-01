@@ -3,7 +3,10 @@ import { createPinia } from "pinia";
 import { createApp } from "vue";
 
 import App from "./App.vue";
-import { adminSessionClearedEventName } from "./core/auth/auth_storage";
+import {
+  adminSessionClearedEventName,
+  adminSessionRefreshedEventName
+} from "./core/auth/auth_storage";
 import { useAdminAuthStore } from "./core/auth/auth_store";
 import { createAdminQueryCacheGuard } from "./core/query/admin_query_cache";
 import { vuetify } from "./plugins/vuetify";
@@ -32,6 +35,10 @@ window.addEventListener(adminSessionClearedEventName, () => {
   if (router.currentRoute.value.meta.requiresAuth) {
     void router.replace("/login");
   }
+});
+
+window.addEventListener(adminSessionRefreshedEventName, () => {
+  authStore.syncStoredSession();
 });
 
 app

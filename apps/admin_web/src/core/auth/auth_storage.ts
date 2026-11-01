@@ -2,6 +2,7 @@ export const adminAccessTokenStorageKey = "mbc_admin_access_token";
 export const adminUserStorageKey = "mbc_admin_user";
 export const adminPermissionsStorageKey = "mbc_admin_permissions";
 export const adminSessionClearedEventName = "mbc-admin-session-cleared";
+export const adminSessionRefreshedEventName = "mbc-admin-session-refreshed";
 
 export function clearStoredAdminSession() {
   localStorage.removeItem(adminAccessTokenStorageKey);
@@ -11,4 +12,8 @@ export function clearStoredAdminSession() {
 
 export function notifyAdminSessionCleared() {
   window.dispatchEvent(new Event(adminSessionClearedEventName));
+}
+
+export function notifyAdminSessionRefreshed() {
+  window.dispatchEvent(new Event(adminSessionRefreshedEventName));
 }

@@ -1,11 +1,14 @@
 import type {
   AdminLoginResponse,
   AdminPermission,
-  AdminSession,
-  AdminUser
+  AdminSession
 } from "@mbc/api-contracts";
 import { defineStore } from "pinia";
 
+import {
+  type AdminAuthState,
+  readStoredAdminAuthState
+} from "./admin_auth_state";
 import {
   adminAccessTokenStorageKey,
   adminPermissionsStorageKey,
@@ -13,18 +16,8 @@ import {
   clearStoredAdminSession
 } from "./auth_storage";
 
-type AuthState = {
-  accessToken: string | null;
-  user: AdminUser | null;
-  permissions: AdminPermission[];
-};
-
 export const useAdminAuthStore = defineStore("admin-auth", {
-  state: (): AuthState => ({
-    accessToken: localStorage.getItem(adminAccessTokenStorageKey),
-    user: readStoredUser(),
-    permissions: readStoredPermissions()
-  }),
+  state: (): AdminAuthState => readStoredAdminAuthState(localStorage),
   getters: {
     isAuthenticated: (state) => Boolean(state.accessToken && state.user),
     can: (state) => {
@@ -53,6 +46,9 @@ export const useAdminAuthStore = defineStore("admin-auth", {
         JSON.stringify(session.permissions)
       );
     },
+    syncStoredSession() {
+      this.$patch(readStoredAdminAuthState(localStorage));
+    },
     clearSession() {
       this.accessToken = null;
       this.user = null;
@@ -61,31 +57,3 @@ export const useAdminAuthStore = defineStore("admin-auth", {
     }
   }
 });
-
-function readStoredUser(): AdminUser | null {
-  const raw = localStorage.getItem(adminUserStorageKey);
-  if (!raw) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(raw) as AdminUser;
-  } catch {
-    clearStoredAdminSession();
-    return null;
-  }
-}
-
-function readStoredPermissions(): AdminPermission[] {
-  const raw = localStorage.getItem(adminPermissionsStorageKey);
-  if (!raw) {
-    return [];
-  }
-
-  try {
-    return JSON.parse(raw) as AdminPermission[];
-  } catch {
-    clearStoredAdminSession();
-    return [];
-  }
-}

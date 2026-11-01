@@ -30,6 +30,9 @@ This document covers admin Web API helper structure and admin-facing SDK rules.
   refresh operation. This is required because the Backend rotates the refresh
   token; parallel refresh calls must not replay and revoke the same token family.
   After that operation settles, a later `401` may start a new refresh attempt.
+- A successful refresh updates one validated local session snapshot, notifies the
+  canonical Pinia auth store, and clears role-scoped query cache through the store
+  subscription. Pages and Feature API helpers must not own refresh listeners.
 - Feature pages must never parse response envelopes or own contract fallback
   logic.
 - List/filter input types should derive from `packages/api_contracts` query
