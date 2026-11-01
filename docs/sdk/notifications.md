@@ -73,6 +73,10 @@ This document covers system notification permission, device token registration, 
   session exists. It keeps local-device storage for foreground messages and
   messages opened from FCM as a guest/offline/error fallback, and uses push
   `route` or data keys for deep linking.
+- Member inbox API envelopes, item fields, string metadata, ISO timestamps,
+  unread counts, and mutation counts are parsed strictly. A malformed success
+  response remains a contract failure; only local device cache decoding may
+  skip an individually corrupted entry.
 - Signed-in clear-all uses the backend atomic archive-all endpoint rather than
   looping over the currently loaded page. A failed remote mutation preserves
   the current remote inbox projection and surfaces an error; it must not switch

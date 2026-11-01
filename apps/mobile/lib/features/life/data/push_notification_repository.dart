@@ -53,15 +53,13 @@ class PushNotificationRepository {
       '/member/notifications?limit=$limit',
       session.accessToken,
     );
-    final data = response['data'] as Map<String, Object?>? ?? const {};
-    final items = ((data['items'] as List<Object?>?) ?? const [])
-        .whereType<Map<String, Object?>>()
+    final data = _readData(response);
+    final items = _readObjectList(data, 'items')
         .map(PushNotificationInboxItem.fromMemberNotificationJson)
-        .where((item) => item.id.isNotEmpty)
         .toList(growable: false);
     return MemberNotificationInboxResult(
       items: items,
-      unreadCount: data['unreadCount'] as int? ?? 0,
+      unreadCount: _readNonNegativeInt(data, 'unreadCount'),
     );
   }
 
@@ -84,8 +82,7 @@ class PushNotificationRepository {
       const {},
       session.accessToken,
     );
-    final data = response['data'] as Map<String, Object?>? ?? const {};
-    return data['updatedCount'] as int? ?? 0;
+    return _readNonNegativeInt(_readData(response), 'updatedCount');
   }
 
   Future<PushNotificationInboxItem?> archiveInboxItem({
@@ -107,18 +104,50 @@ class PushNotificationRepository {
       const {},
       session.accessToken,
     );
-    final data = response['data'] as Map<String, Object?>? ?? const {};
-    return data['updatedCount'] as int? ?? 0;
+    return _readNonNegativeInt(_readData(response), 'updatedCount');
   }
 
   PushNotificationInboxItem? _itemFromEnvelope(Map<String, Object?> response) {
-    final data = response['data'] as Map<String, Object?>? ?? const {};
+    final data = _readData(response);
     final item = data['item'];
+    if (item == null) return null;
     if (item is Map<String, Object?>) {
       return PushNotificationInboxItem.fromMemberNotificationJson(item);
     }
-    return null;
+    throw const FormatException(
+      'Member notification item must be null or an object.',
+    );
   }
+}
+
+Map<String, Object?> _readData(Map<String, Object?> response) {
+  final data = response['data'];
+  if (data is! Map<String, Object?>) {
+    throw const FormatException(
+      'Member notification response data must be an object.',
+    );
+  }
+  return data;
+}
+
+List<Map<String, Object?>> _readObjectList(
+  Map<String, Object?> data,
+  String key,
+) {
+  final value = data[key];
+  if (value is! List<Object?> ||
+      value.any((item) => item is! Map<String, Object?>)) {
+    throw FormatException('$key must be a member notification object list.');
+  }
+  return value.cast<Map<String, Object?>>();
+}
+
+int _readNonNegativeInt(Map<String, Object?> data, String key) {
+  final value = data[key];
+  if (value is! int || value < 0) {
+    throw FormatException('$key must be a non-negative integer.');
+  }
+  return value;
 }
 
 class MemberNotificationInboxResult {

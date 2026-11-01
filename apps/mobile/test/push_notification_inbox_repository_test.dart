@@ -52,6 +52,7 @@ void main() {
   test('maps backend member notification JSON to inbox items', () {
     final item = PushNotificationInboxItem.fromMemberNotificationJson(const {
       'id': 'notification-item-1',
+      'messageId': 'notification-message-1',
       'type': 'life_post_published',
       'title': 'Members meal',
       'body': 'Dinner details for church members.',
@@ -62,6 +63,7 @@ void main() {
         'targetId': 'life-post-1',
       },
       'readAt': null,
+      'archivedAt': null,
       'createdAt': '2026-06-24T16:00:00.000Z',
     });
 
@@ -138,10 +140,32 @@ void main() {
     expect(dio.requests.single.path, '/app/devices/push-token');
     expect(dio.requests.single.authorization, isNull);
   });
+
+  test(
+    'rejects malformed member inbox responses instead of returning empty',
+    () async {
+      final dio = _NotificationDio(
+        listResponse: const {
+          'data': {
+            'items': ['not-an-item'],
+            'unreadCount': -1,
+          },
+        },
+      );
+      final repository = PushNotificationRepository(
+        apiClient: ApiClient(config: _testAppConfig, dio: dio.instance),
+      );
+
+      await expectLater(
+        repository.listInbox(session: _memberSession),
+        throwsA(isA<FormatException>()),
+      );
+    },
+  );
 }
 
 class _NotificationDio {
-  _NotificationDio() {
+  _NotificationDio({this.listResponse}) {
     instance.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
@@ -165,9 +189,11 @@ class _NotificationDio {
 
   final Dio instance = Dio(BaseOptions(baseUrl: _testAppConfig.apiBaseUrl));
   final List<_RecordedRequest> requests = [];
+  final Map<String, Object?>? listResponse;
 
   Map<String, Object?> _responseFor(String path) {
     if (path == '/member/notifications?limit=50') {
+      if (listResponse case final response?) return response;
       return const {
         'data': {
           'items': [_notificationItemJson],

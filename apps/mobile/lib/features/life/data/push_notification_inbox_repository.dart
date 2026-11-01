@@ -138,17 +138,19 @@ class PushNotificationInboxItem {
   factory PushNotificationInboxItem.fromMemberNotificationJson(
     Map<String, Object?> json,
   ) {
+    _readMemberString(json, 'messageId', allowEmpty: false);
+    final createdAt = _readMemberDateTime(json, 'createdAt');
+    final readAt = _readMemberNullableDateTime(json, 'readAt');
+    _readMemberNullableDateTime(json, 'archivedAt');
     return PushNotificationInboxItem(
-      id: json['id'] as String? ?? '',
-      type: json['type'] as String? ?? 'church_update',
-      title: json['title'] as String? ?? '',
-      body: json['body'] as String? ?? '',
-      route: json['route'] as String?,
-      receivedAt:
-          DateTime.tryParse(json['createdAt'] as String? ?? '') ??
-          DateTime.fromMillisecondsSinceEpoch(0, isUtc: true),
-      readAt: DateTime.tryParse(json['readAt'] as String? ?? ''),
-      data: _stringMap(json['data']),
+      id: _readMemberString(json, 'id', allowEmpty: false),
+      type: _readMemberString(json, 'type', allowEmpty: false),
+      title: _readMemberString(json, 'title'),
+      body: _readMemberString(json, 'body'),
+      route: _readMemberNullableString(json, 'route'),
+      receivedAt: createdAt,
+      readAt: readAt,
+      data: _readMemberStringMap(json, 'data'),
     );
   }
 
@@ -225,6 +227,55 @@ Map<String, String> _stringMap(Object? value) {
     );
   }
   return const {};
+}
+
+String _readMemberString(
+  Map<String, Object?> json,
+  String key, {
+  bool allowEmpty = true,
+}) {
+  final value = json[key];
+  if (value is! String || (!allowEmpty && value.trim().isEmpty)) {
+    throw FormatException('Member notification $key must be a string.');
+  }
+  return value;
+}
+
+String? _readMemberNullableString(Map<String, Object?> json, String key) {
+  final value = json[key];
+  if (value == null) return null;
+  if (value is! String) {
+    throw FormatException('Member notification $key must be null or a string.');
+  }
+  return value;
+}
+
+DateTime _readMemberDateTime(Map<String, Object?> json, String key) {
+  final value = _readMemberString(json, key, allowEmpty: false);
+  final parsed = DateTime.tryParse(value);
+  if (parsed == null) {
+    throw FormatException('Member notification $key must be an ISO date-time.');
+  }
+  return parsed;
+}
+
+DateTime? _readMemberNullableDateTime(Map<String, Object?> json, String key) {
+  if (json[key] == null) return null;
+  return _readMemberDateTime(json, key);
+}
+
+Map<String, String> _readMemberStringMap(
+  Map<String, Object?> json,
+  String key,
+) {
+  final value = json[key];
+  if (value is! Map<String, Object?> ||
+      value.values.any((item) => item is! String)) {
+    throw FormatException(
+      'Member notification $key must contain string values.',
+    );
+  }
+  return value.cast<String, String>();
 }
 
 String? routeFromPushData(Map<String, String> data) {
