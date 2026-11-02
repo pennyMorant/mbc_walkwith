@@ -91,48 +91,65 @@ class _AssignmentTile extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final textScale = MediaQuery.textScalerOf(context).scale(1);
+            final stackHeader = constraints.maxWidth < 300 || textScale > 1.15;
+            final title = Text(
+              assignment.journeyTitle,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
+            );
+            final status = AppChip(
+              icon: Icons.route_outlined,
+              label: _statusLabel(l10n, assignment.status),
+              selected: assignment.status == 'completed',
+            );
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    assignment.journeyTitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium
-                        ?.copyWith(fontWeight: FontWeight.w800),
+                if (stackHeader) ...[
+                  title,
+                  const SizedBox(height: 8),
+                  Align(alignment: Alignment.centerLeft, child: status),
+                ] else
+                  Row(
+                    children: [
+                      Expanded(child: title),
+                      const SizedBox(width: 10),
+                      status,
+                    ],
                   ),
-                ),
-                const SizedBox(width: 10),
-                AppChip(
-                  icon: Icons.route_outlined,
-                  label: _statusLabel(l10n, assignment.status),
-                  selected: assignment.status == 'completed',
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    AppChip(
+                      icon: Icons.done_all_outlined,
+                      label: l10n.mineDiscipleshipProgressChip(
+                        assignment.completedTaskCount,
+                        totalCount,
+                      ),
+                    ),
+                    if (assignment.assigneeName.trim().isNotEmpty)
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: constraints.maxWidth,
+                        ),
+                        child: AppChip(
+                          icon: Icons.support_agent_outlined,
+                          label: assignment.assigneeName,
+                        ),
+                      ),
+                  ],
                 ),
               ],
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                AppChip(
-                  icon: Icons.done_all_outlined,
-                  label: l10n.mineDiscipleshipProgressChip(
-                    assignment.completedTaskCount,
-                    totalCount,
-                  ),
-                ),
-                if (assignment.assigneeName.trim().isNotEmpty)
-                  AppChip(
-                    icon: Icons.support_agent_outlined,
-                    label: assignment.assigneeName,
-                  ),
-              ],
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
