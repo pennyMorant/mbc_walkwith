@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
-import '../../data/bible_notes_repository.dart';
-import '../../domain/bible_note.dart';
 import '../../domain/bible_verse.dart';
 import '../../domain/study_annotation.dart';
 import 'verse_annotation_sheet_frame.dart';
-import 'verse_church_notes_tab.dart';
+import 'verse_church_notes_pane.dart';
 import 'verse_my_note_tab.dart';
 
-class VerseAnnotationSheet extends ConsumerStatefulWidget {
+class VerseAnnotationSheet extends StatefulWidget {
   const VerseAnnotationSheet({
     super.key,
     required this.verse,
@@ -35,23 +32,16 @@ class VerseAnnotationSheet extends ConsumerStatefulWidget {
   final VoidCallback? onOpenLexicon;
 
   @override
-  ConsumerState<VerseAnnotationSheet> createState() =>
-      _VerseAnnotationSheetState();
+  State<VerseAnnotationSheet> createState() => _VerseAnnotationSheetState();
 }
 
-class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
+class _VerseAnnotationSheetState extends State<VerseAnnotationSheet> {
   late final TextEditingController _noteController;
-  late final TextEditingController _churchNoteController;
-  final _externalNameController = TextEditingController();
   late bool _isBookmarked;
   String? _highlightColor;
-  String? _editingChurchNoteId;
-  bool _churchNoteSeeded = false;
   bool _savingAnnotation = false;
   bool _savingPrivateNote = false;
-  bool _savingChurchNote = false;
   String? _privateNoteError;
-  String? _churchNoteError;
 
   @override
   void initState() {
@@ -61,14 +51,11 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
     _noteController = TextEditingController(
       text: widget.annotation?.noteText ?? '',
     );
-    _churchNoteController = TextEditingController();
   }
 
   @override
   void dispose() {
     _noteController.dispose();
-    _churchNoteController.dispose();
-    _externalNameController.dispose();
     super.dispose();
   }
 
@@ -88,15 +75,10 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
         onHighlightChanged: _setHighlight,
         onNoteSaved: _savePrivateNote,
       ),
-      churchNotesTab: ChurchVerseNotesTab(
+      churchNotesTab: VerseChurchNotesPane(
         verse: widget.verse,
-        noteController: _churchNoteController,
-        externalNameController: _externalNameController,
-        saving: _savingChurchNote,
-        errorMessage: _churchNoteError,
-        onSeedMine: _seedChurchNote,
-        onPublish: _saveChurchNote,
-        onDelete: _deleteChurchNote,
+        bookId: widget.bookId,
+        chapter: widget.chapter,
       ),
     );
   }
@@ -177,85 +159,6 @@ class _VerseAnnotationSheetState extends ConsumerState<VerseAnnotationSheet> {
       if (mounted) {
         setState(() {
           _savingPrivateNote = false;
-        });
-      }
-    }
-  }
-
-  void _seedChurchNote(BibleVerseNote? note) {
-    if (_churchNoteSeeded || note == null) {
-      return;
-    }
-    _churchNoteSeeded = true;
-    _editingChurchNoteId = note.id;
-    _churchNoteController.text = note.content;
-  }
-
-  Future<void> _saveChurchNote() async {
-    final content = _churchNoteController.text.trim();
-    if (content.isEmpty) {
-      setState(() {
-        _churchNoteError = AppLocalizations.of(context)!.verseNotesEmptyError;
-      });
-      return;
-    }
-    setState(() {
-      _savingChurchNote = true;
-      _churchNoteError = null;
-    });
-    try {
-      final repository = ref.read(bibleNotesRepositoryProvider);
-      final noteId = _editingChurchNoteId;
-      final saved = noteId == null
-          ? await repository.create(
-              verseId: widget.verse.id,
-              bookId: widget.bookId,
-              chapter: widget.chapter,
-              verse: widget.verse.number,
-              content: content,
-              externalDisplayName: _externalNameController.text,
-            )
-          : await repository.update(noteId: noteId, content: content);
-      _editingChurchNoteId = saved.id;
-      ref.invalidate(bibleVerseNotesProvider(widget.verse.id));
-    } catch (_) {
-      if (mounted) {
-        setState(() {
-          _churchNoteError = AppLocalizations.of(context)!
-              .verseNotesActionError;
-        });
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _savingChurchNote = false;
-        });
-      }
-    }
-  }
-
-  Future<void> _deleteChurchNote(String noteId) async {
-    setState(() {
-      _savingChurchNote = true;
-      _churchNoteError = null;
-    });
-    try {
-      await ref.read(bibleNotesRepositoryProvider).delete(noteId);
-      _editingChurchNoteId = null;
-      _churchNoteController.clear();
-      _churchNoteSeeded = true;
-      ref.invalidate(bibleVerseNotesProvider(widget.verse.id));
-    } catch (_) {
-      if (mounted) {
-        setState(() {
-          _churchNoteError = AppLocalizations.of(context)!
-              .verseNotesActionError;
-        });
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _savingChurchNote = false;
         });
       }
     }

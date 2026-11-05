@@ -278,9 +278,12 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Update'));
+    final updateButton = find.widgetWithText(FilledButton, 'Update');
+    await tester.tap(updateButton);
+    await tester.tap(updateButton);
     await tester.pump();
 
+    expect(repository.updateCount, 1);
     final fields = tester.widgetList<TextField>(find.byType(TextField));
     expect(fields, isNotEmpty);
     expect(fields.every((field) => field.enabled == false), isTrue);
@@ -385,12 +388,14 @@ class _StaleDeleteBibleNotesRepository implements BibleNotesRepository {
 class _PendingUpdateBibleNotesRepository
     extends _StaleDeleteBibleNotesRepository {
   final pendingUpdate = Completer<BibleVerseNote>();
+  int updateCount = 0;
 
   @override
   Future<BibleVerseNote> update({
     required String noteId,
     required String content,
   }) {
+    updateCount += 1;
     return pendingUpdate.future;
   }
 }

@@ -26,45 +26,65 @@ class SharedVerseNoteCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.person_outline,
-                  size: 18,
-                  color: colorScheme.primary,
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        note.authorDisplayName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.labelLarge
-                            ?.copyWith(fontWeight: FontWeight.w800),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        formatDateOnly(context, note.createdAt),
-                        style: Theme.of(context).textTheme.bodySmall
-                            ?.copyWith(color: colorScheme.onSurfaceVariant),
-                      ),
-                    ],
-                  ),
-                ),
-                if (note.isMine)
-                  AppChip(
-                    label: l10n.verseNotesMineLabel,
-                    selected: true,
-                    icon: Icons.edit_note,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 9,
-                      vertical: 5,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final textScale = MediaQuery.textScalerOf(context).scale(1);
+                final stackMineLabel =
+                    note.isMine &&
+                    (constraints.maxWidth < 280 || textScale > 1.15);
+                final author = Row(
+                  children: [
+                    Icon(
+                      Icons.person_outline,
+                      size: 18,
+                      color: colorScheme.primary,
                     ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            note.authorDisplayName,
+                            maxLines: stackMineLabel ? 2 : 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.labelLarge
+                                ?.copyWith(fontWeight: FontWeight.w800),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            formatDateOnly(context, note.createdAt),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: colorScheme.onSurfaceVariant),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+                final mineLabel = AppChip(
+                  label: l10n.verseNotesMineLabel,
+                  selected: true,
+                  icon: Icons.edit_note,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 9,
+                    vertical: 5,
                   ),
-              ],
+                );
+
+                if (stackMineLabel) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [author, const SizedBox(height: 8), mineLabel],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: author),
+                    if (note.isMine) ...[const SizedBox(width: 8), mineLabel],
+                  ],
+                );
+              },
             ),
             const SizedBox(height: 10),
             Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_theme.dart';
@@ -12,7 +13,7 @@ class VerseChurchNoteEditor extends StatelessWidget {
     required this.mine,
     required this.noteController,
     required this.externalNameController,
-    required this.saving,
+    required this.pendingAction,
     required this.errorMessage,
     required this.onPublish,
     required this.onDelete,
@@ -21,7 +22,7 @@ class VerseChurchNoteEditor extends StatelessWidget {
   final BibleVerseNote? mine;
   final TextEditingController noteController;
   final TextEditingController externalNameController;
-  final bool saving;
+  final VerseChurchNotePendingAction? pendingAction;
   final String? errorMessage;
   final Future<void> Function() onPublish;
   final Future<void> Function(String noteId) onDelete;
@@ -30,6 +31,7 @@ class VerseChurchNoteEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
+    final saving = pendingAction != null;
 
     return Material(
       color: colorScheme.tintedCardColor,
@@ -77,28 +79,29 @@ class VerseChurchNoteEditor extends StatelessWidget {
               ),
             ],
             const SizedBox(height: 12),
-            Row(
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 if (mine != null)
-                  TextButton.icon(
+                  AppButton(
+                    label: l10n.verseNotesDeleteAction,
+                    icon: Icons.delete_outline,
+                    variant: AppButtonVariant.text,
+                    loading:
+                        pendingAction == VerseChurchNotePendingAction.delete,
                     onPressed: saving ? null : () => onDelete(mine!.id),
-                    icon: const Icon(Icons.delete_outline),
-                    label: Text(l10n.verseNotesDeleteAction),
                   ),
-                const Spacer(),
-                FilledButton.icon(
+                AppButton(
+                  label: mine == null
+                      ? l10n.verseNotesPublishAction
+                      : l10n.verseNotesUpdateAction,
+                  icon: Icons.send_outlined,
+                  variant: AppButtonVariant.filled,
+                  loading:
+                      pendingAction == VerseChurchNotePendingAction.publish,
                   onPressed: saving ? null : onPublish,
-                  icon: saving
-                      ? const SizedBox.square(
-                          dimension: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.send_outlined),
-                  label: Text(
-                    mine == null
-                        ? l10n.verseNotesPublishAction
-                        : l10n.verseNotesUpdateAction,
-                  ),
                 ),
               ],
             ),
@@ -108,3 +111,5 @@ class VerseChurchNoteEditor extends StatelessWidget {
     );
   }
 }
+
+enum VerseChurchNotePendingAction { publish, delete }
