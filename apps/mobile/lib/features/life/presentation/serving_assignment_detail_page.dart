@@ -89,7 +89,12 @@ class _ServingAssignmentDetailPageState
         children: [
           ServingAssignmentCard(
             assignment: assignment,
-            isSubmitting: _pendingAction != null,
+            pendingAction: switch (_pendingAction) {
+              'confirm' => ServingAssignmentCardPendingAction.confirm,
+              'leave' => ServingAssignmentCardPendingAction.requestLeave,
+              null => null,
+              _ => ServingAssignmentCardPendingAction.external,
+            },
             onConfirm: () => _updateAssignment(assignment, confirm: true),
             onLeave: () => _updateAssignment(assignment, confirm: false),
           ),

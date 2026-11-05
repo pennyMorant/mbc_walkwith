@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/serving_assignment.dart';
 import '../serving_presenters.dart';
+
+enum ServingAssignmentCardPendingAction { confirm, requestLeave, external }
 
 class ServingAssignmentCard extends StatelessWidget {
   const ServingAssignmentCard({
     super.key,
     required this.assignment,
-    required this.isSubmitting,
     required this.onConfirm,
     required this.onLeave,
     this.onOpen,
+    this.pendingAction,
   });
 
   final ServingAssignment assignment;
-  final bool isSubmitting;
   final VoidCallback onConfirm;
   final VoidCallback onLeave;
   final VoidCallback? onOpen;
+  final ServingAssignmentCardPendingAction? pendingAction;
 
   @override
   Widget build(BuildContext context) {
@@ -31,70 +34,106 @@ class ServingAssignmentCard extends StatelessWidget {
         onTap: onOpen,
         child: Padding(
           padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final textScale = MediaQuery.textScalerOf(context).scale(1);
+              final stackHeader =
+                  constraints.maxWidth < 300 || textScale > 1.15;
+              final title = Text(
+                assignment.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              );
+              final status = AppChip(
+                label: servingAssignmentStatusLabel(l10n, assignment.status),
+                selected: true,
+              );
+              final openIndicator = onOpen == null
+                  ? null
+                  : const Icon(Icons.chevron_right);
+              final isSubmitting = pendingAction != null;
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      assignment.title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
+                  if (stackHeader) ...[
+                    title,
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Flexible(child: status),
+                        if (openIndicator != null) ...[
+                          const SizedBox(width: 4),
+                          openIndicator,
+                        ],
+                      ],
+                    ),
+                  ] else
+                    Row(
+                      children: [
+                        Expanded(child: title),
+                        const SizedBox(width: 10),
+                        status,
+                        if (openIndicator != null) ...[
+                          const SizedBox(width: 4),
+                          openIndicator,
+                        ],
+                      ],
+                    ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${assignment.teamName} · ${assignment.roleName}',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 8,
+                    children: [
+                      _Meta(icon: Icons.schedule, label: _timeLabel(context)),
+                      _Meta(
+                        icon: Icons.place_outlined,
+                        label: assignment.location,
                       ),
-                    ),
+                    ],
                   ),
-                  AppChip(
-                    label: servingAssignmentStatusLabel(
-                      l10n,
-                      assignment.status,
-                    ),
-                    selected: true,
-                  ),
-                  if (onOpen != null) ...[
-                    const SizedBox(width: 4),
-                    const Icon(Icons.chevron_right),
-                  ],
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text('${assignment.teamName} · ${assignment.roleName}'),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 10,
-                runSpacing: 8,
-                children: [
-                  _Meta(icon: Icons.schedule, label: _timeLabel(context)),
-                  _Meta(icon: Icons.place_outlined, label: assignment.location),
-                ],
-              ),
-              const SizedBox(height: 14),
-              Wrap(
-                alignment: WrapAlignment.end,
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  TextButton(
-                    onPressed: assignment.canRequestLeave && !isSubmitting
-                        ? onLeave
-                        : null,
-                    child: Text(l10n.servingLeaveAction),
-                  ),
-                  FilledButton.icon(
-                    onPressed: assignment.canConfirm && !isSubmitting
-                        ? onConfirm
-                        : null,
-                    icon: isSubmitting
-                        ? const SizedBox.square(
-                            dimension: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.check_circle_outline),
-                    label: Text(l10n.servingConfirmAction),
+                  const SizedBox(height: 14),
+                  Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      AppButton(
+                        label: l10n.servingLeaveAction,
+                        onPressed: assignment.canRequestLeave && !isSubmitting
+                            ? onLeave
+                            : null,
+                        variant: AppButtonVariant.text,
+                        loading:
+                            pendingAction ==
+                            ServingAssignmentCardPendingAction.requestLeave,
+                      ),
+                      AppButton(
+                        label: l10n.servingConfirmAction,
+                        icon: Icons.check_circle_outline,
+                        onPressed: assignment.canConfirm && !isSubmitting
+                            ? onConfirm
+                            : null,
+                        variant: AppButtonVariant.filled,
+                        loading:
+                            pendingAction ==
+                            ServingAssignmentCardPendingAction.confirm,
+                      ),
+                    ],
                   ),
                 ],
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),

@@ -19,7 +19,6 @@ void main() {
             CareRequestCard(request: _unknownCareRequest),
             ServingAssignmentCard(
               assignment: _unknownServingAssignment,
-              isSubmitting: false,
               onConfirm: () {},
               onLeave: () {},
             ),
@@ -41,7 +40,6 @@ void main() {
       _localizedApp(
         child: ServingAssignmentCard(
           assignment: _scheduledServingAssignment,
-          isSubmitting: false,
           onConfirm: () {},
           onLeave: () {},
         ),

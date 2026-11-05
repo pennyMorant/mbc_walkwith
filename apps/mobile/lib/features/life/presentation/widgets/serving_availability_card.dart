@@ -18,39 +18,50 @@ class ServingAvailabilityCard extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final textScale = MediaQuery.textScalerOf(context).scale(1);
+            final stackHeader = constraints.maxWidth < 300 || textScale > 1.15;
+            final title = Text(
+              formatDateOnly(context, record.startsAt.toLocal()),
+              style: Theme.of(context).textTheme.titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w800),
+            );
+            final status = AppChip(
+              label: servingAvailabilityStatusLabel(l10n, record.status),
+              selected: record.status == 'preferred',
+              variant: AppChipVariant.filled,
+            );
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    formatDateOnly(context, record.startsAt.toLocal()),
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                if (stackHeader) ...[
+                  title,
+                  const SizedBox(height: 8),
+                  Align(alignment: Alignment.centerLeft, child: status),
+                ] else
+                  Row(
+                    children: [
+                      Expanded(child: title),
+                      const SizedBox(width: 10),
+                      status,
+                    ],
                   ),
+                const SizedBox(height: 8),
+                Text(
+                  '${formatDateTime(context, record.startsAt.toLocal())} - '
+                  '${formatDateTime(context, record.endsAt.toLocal())}',
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: colorScheme.onSurfaceVariant),
                 ),
-                AppChip(
-                  label: servingAvailabilityStatusLabel(l10n, record.status),
-                  selected: record.status == 'preferred',
-                  variant: AppChipVariant.filled,
-                ),
+                if (record.note.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Text(record.note),
+                ],
               ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '${formatDateTime(context, record.startsAt.toLocal())} - '
-              '${formatDateTime(context, record.endsAt.toLocal())}',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            if (record.note.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              Text(record.note),
-            ],
-          ],
+            );
+          },
         ),
       ),
     );

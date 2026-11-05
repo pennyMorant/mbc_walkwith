@@ -28,7 +28,8 @@ class ServingAssignmentSection extends ConsumerStatefulWidget {
 
 class _ServingAssignmentSectionState
     extends ConsumerState<ServingAssignmentSection> {
-  String? _submittingAssignmentId;
+  ({String assignmentId, ServingAssignmentCardPendingAction action})?
+  _submittingAssignment;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +67,10 @@ class _ServingAssignmentSectionState
           for (final assignment in assignments) ...[
             ServingAssignmentCard(
               assignment: assignment,
-              isSubmitting: _submittingAssignmentId == assignment.id,
+              pendingAction:
+                  _submittingAssignment?.assignmentId == assignment.id
+                  ? _submittingAssignment?.action
+                  : null,
               onConfirm: () => _submit(assignment, confirm: true),
               onLeave: () => _submit(assignment, confirm: false),
               onOpen: widget.onOpen == null
@@ -84,10 +88,17 @@ class _ServingAssignmentSectionState
     ServingAssignment assignment, {
     required bool confirm,
   }) async {
-    if (_submittingAssignmentId != null) {
+    if (_submittingAssignment != null) {
       return;
     }
-    setState(() => _submittingAssignmentId = assignment.id);
+    setState(
+      () => _submittingAssignment = (
+        assignmentId: assignment.id,
+        action: confirm
+            ? ServingAssignmentCardPendingAction.confirm
+            : ServingAssignmentCardPendingAction.requestLeave,
+      ),
+    );
     try {
       final repository = ref.read(servingRepositoryProvider);
       if (confirm) {
@@ -124,7 +135,7 @@ class _ServingAssignmentSectionState
       );
     } finally {
       if (mounted) {
-        setState(() => _submittingAssignmentId = null);
+        setState(() => _submittingAssignment = null);
       }
     }
   }
