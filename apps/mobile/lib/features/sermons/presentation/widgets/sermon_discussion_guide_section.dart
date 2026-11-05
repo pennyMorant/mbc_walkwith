@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/app_button.dart';
-import '../../../../shared/widgets/app_chip.dart';
 import '../../data/sermon_discussion_guide_repository.dart';
 import '../../domain/sermon_discussion_guide.dart';
 import 'sermon_discussion_guide_parts.dart';
@@ -23,7 +22,7 @@ class SermonDiscussionGuideSection extends ConsumerWidget {
       loading: () => const SizedBox.shrink(),
       error: (error, stackTrace) => Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-        child: _GuideLoadError(
+        child: SermonDiscussionGuideLoadError(
           onRetry: () =>
               ref.invalidate(sermonDiscussionGuideProvider(sermonId)),
         ),
@@ -37,43 +36,6 @@ class SermonDiscussionGuideSection extends ConsumerWidget {
           child: _GuideCard(guide: guide),
         );
       },
-    );
-  }
-}
-
-class _GuideLoadError extends StatelessWidget {
-  const _GuideLoadError({required this.onRetry});
-
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final colorScheme = Theme.of(context).colorScheme;
-    return Card(
-      color: colorScheme.errorContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(Icons.error_outline, color: colorScheme.onErrorContainer),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                l10n.sermonDiscussionLoadError,
-                style: TextStyle(color: colorScheme.onErrorContainer),
-              ),
-            ),
-            const SizedBox(width: 8),
-            AppButton(
-              label: l10n.retryAction,
-              icon: Icons.refresh,
-              variant: AppButtonVariant.tonal,
-              onPressed: onRetry,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -94,24 +56,10 @@ class _GuideCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    guide.title.isEmpty
-                        ? l10n.sermonDiscussionTitle
-                        : guide.title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: colorScheme.onSecondaryContainer,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                AppChip(
-                  label: l10n.sermonDiscussionPrivateLabel,
-                  selected: true,
-                ),
-              ],
+            SermonDiscussionGuideHeader(
+              title: guide.title.isEmpty
+                  ? l10n.sermonDiscussionTitle
+                  : guide.title,
             ),
             if (guide.summary.trim().isNotEmpty) ...[
               const SizedBox(height: 8),

@@ -10,6 +10,9 @@ import 'package:mbc_walkwith/features/sermons/presentation/widgets/sermon_discus
 import 'package:mbc_walkwith/features/sermons/presentation/widgets/sermon_discussion_response_sheet.dart';
 import 'package:mbc_walkwith/features/member_auth/data/member_session_repository.dart';
 import 'package:mbc_walkwith/l10n/app_localizations.dart';
+import 'package:mbc_walkwith/shared/widgets/app_button.dart';
+import 'package:mbc_walkwith/shared/widgets/app_chip.dart';
+import 'package:mbc_walkwith/theme/app_theme.dart';
 
 void main() {
   testWidgets('shows a retryable guide error on a narrow screen', (
@@ -26,8 +29,15 @@ void main() {
           sermonDiscussionGuideRepositoryProvider.overrideWithValue(repository),
         ],
         child: MaterialApp(
+          locale: const Locale('es'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(1.3)),
+            child: child!,
+          ),
           home: const Scaffold(
             body: SingleChildScrollView(
               child: SermonDiscussionGuideSection(sermonId: 'sermon-1'),
@@ -38,15 +48,63 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Could not load the discussion guide.'), findsOneWidget);
-    expect(find.text('Retry'), findsOneWidget);
+    final message = find.text('No se pudo cargar la guía de discusión.');
+    final retry = find.byType(AppButton);
+    expect(message, findsOneWidget);
+    expect(retry, findsOneWidget);
+    expect(
+      tester.getTopLeft(retry).dy,
+      greaterThan(tester.getBottomLeft(message).dy),
+    );
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.text('Retry'));
+    await tester.tap(find.text('Reintentar'));
     await tester.pumpAndSettle();
 
     expect(repository.loadCount, 2);
-    expect(find.text('Could not load the discussion guide.'), findsNothing);
+    expect(message, findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('stacks guide title and privacy label for larger text', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(320, 760));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          sermonDiscussionGuideRepositoryProvider.overrideWithValue(
+            _StaticDiscussionGuideRepository(_guide),
+          ),
+        ],
+        child: MaterialApp(
+          locale: const Locale('es'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(null, Brightness.light),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(1.3)),
+            child: child!,
+          ),
+          home: const Scaffold(
+            body: SingleChildScrollView(
+              child: SermonDiscussionGuideSection(sermonId: 'sermon-1'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final title = find.text(_guide.title);
+    final privacy = find.byType(AppChip).first;
+    expect(
+      tester.getTopLeft(privacy).dy,
+      greaterThan(tester.getBottomLeft(title).dy),
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -173,5 +231,27 @@ class _PendingDiscussionGuideRepository
   @override
   Future<SermonDiscussionGuide?> getGuideForSermon(String sermonId) async {
     return null;
+  }
+}
+
+class _StaticDiscussionGuideRepository
+    implements SermonDiscussionGuideRepository {
+  const _StaticDiscussionGuideRepository(this.guide);
+
+  final SermonDiscussionGuide guide;
+
+  @override
+  Future<SermonDiscussionResponse> createResponse({
+    required String guideId,
+    required SermonDiscussionIdentity identity,
+    required String content,
+    String? questionId,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<SermonDiscussionGuide?> getGuideForSermon(String sermonId) async {
+    return guide;
   }
 }
