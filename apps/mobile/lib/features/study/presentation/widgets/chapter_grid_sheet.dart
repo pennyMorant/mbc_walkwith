@@ -49,24 +49,37 @@ class ChapterGridSheet extends StatelessWidget {
                 ),
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    bookName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                AppChip(
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final textScale = MediaQuery.textScalerOf(context).scale(1);
+                final stackHeader =
+                    constraints.maxWidth < 300 || textScale > 1.15;
+                final title = Text(
+                  bookName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w800),
+                );
+                final chapterCount = AppChip(
                   label: l10n.bibleChapterCountLabel(book.chapterCount),
                   selected: true,
-                ),
-              ],
+                );
+
+                if (stackHeader) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [title, const SizedBox(height: 8), chapterCount],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: title),
+                    const SizedBox(width: 12),
+                    chapterCount,
+                  ],
+                );
+              },
             ),
             const SizedBox(height: 20),
             Expanded(

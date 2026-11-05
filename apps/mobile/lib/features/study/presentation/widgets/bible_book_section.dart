@@ -52,20 +52,40 @@ class BibleBookSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w800),
-                          ),
-                        ),
-                        AppChip(
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final textScale = MediaQuery.textScalerOf(context)
+                            .scale(1);
+                        final stackHeader =
+                            constraints.maxWidth < 280 || textScale > 1.15;
+                        final sectionTitle = Text(
+                          title,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w800),
+                        );
+                        final bookCount = AppChip(
                           label: l10n.bibleBookCountLabel(books.length),
                           selected: true,
-                        ),
-                      ],
+                        );
+
+                        if (stackHeader) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              sectionTitle,
+                              const SizedBox(height: 8),
+                              bookCount,
+                            ],
+                          );
+                        }
+                        return Row(
+                          children: [
+                            Expanded(child: sectionTitle),
+                            const SizedBox(width: 10),
+                            bookCount,
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
                     Wrap(
