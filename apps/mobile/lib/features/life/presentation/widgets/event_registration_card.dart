@@ -6,12 +6,13 @@ import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/life_post.dart';
 import 'event_registration_action_buttons.dart';
+import 'event_registration_pending_action.dart';
 
 class EventRegistrationCard extends StatelessWidget {
   const EventRegistrationCard({
     super.key,
     required this.post,
-    required this.isSubmitting,
+    required this.pendingAction,
     required this.isSignedIn,
     required this.onSignIn,
     required this.onRegister,
@@ -24,7 +25,7 @@ class EventRegistrationCard extends StatelessWidget {
   });
 
   final LifePost post;
-  final bool isSubmitting;
+  final EventRegistrationPendingAction? pendingAction;
   final bool isSignedIn;
   final VoidCallback onSignIn;
   final VoidCallback? onRegister;
@@ -39,6 +40,7 @@ class EventRegistrationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
+    final isSubmitting = pendingAction != null;
     final summary =
         post.registrationSummary ??
         EventRegistrationSummary(
@@ -153,6 +155,7 @@ class EventRegistrationCard extends StatelessWidget {
                     canUpdateRegistration)) ...[
               const SizedBox(height: 14),
               DropdownButtonFormField<int>(
+                isExpanded: true,
                 initialValue: partySize
                     .clamp(1, selectableMaxPartySize)
                     .toInt(),
@@ -193,7 +196,7 @@ class EventRegistrationCard extends StatelessWidget {
                 isSignedIn: isSignedIn,
                 isRegistered: isRegistered,
                 isCheckedIn: isCheckedIn,
-                isSubmitting: isSubmitting,
+                pendingAction: pendingAction,
                 canUpdateRegistration: canUpdateRegistration,
                 allowCancellation: post.registrationAllowCancellation,
                 registrationClosed: isClosed,

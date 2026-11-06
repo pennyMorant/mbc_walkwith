@@ -15,6 +15,7 @@ import 'event_registration_error_message.dart';
 import 'life_post_action.dart';
 import 'life_post_read_controller.dart';
 import 'widgets/event_registration_card.dart';
+import 'widgets/event_registration_pending_action.dart';
 import 'widgets/life_error_view.dart';
 import 'widgets/life_loading_view.dart';
 import 'widgets/life_post_image.dart';
@@ -75,7 +76,7 @@ class LifePostDetailContent extends ConsumerStatefulWidget {
 
 class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
   final _registrationNoteController = TextEditingController();
-  bool _isSubmittingRegistration = false;
+  EventRegistrationPendingAction? _pendingRegistrationAction;
   int _registrationPartySize = 1;
   String? _pendingReadKey;
   String? _lastMarkedReadKey;
@@ -184,7 +185,7 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
               child: EventRegistrationCard(
                 post: post,
-                isSubmitting: _isSubmittingRegistration,
+                pendingAction: _pendingRegistrationAction,
                 isSignedIn: memberSession != null,
                 onSignIn: () =>
                     context.pushNamed(AppRouteNames.memberLoginEmail),
@@ -232,6 +233,7 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
 
   Future<void> _registerForEvent(MemberSession session) async {
     await _runRegistrationAction(
+      pendingAction: EventRegistrationPendingAction.register,
       successMessage: AppLocalizations.of(context)!.eventRegistrationSuccess,
       action: () => ref
           .read(lifeRepositoryProvider)
@@ -246,6 +248,7 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
 
   Future<void> _updateEventRegistration(MemberSession session) async {
     await _runRegistrationAction(
+      pendingAction: EventRegistrationPendingAction.update,
       successMessage: AppLocalizations.of(context)!
           .eventRegistrationUpdateSuccess,
       action: () => ref
@@ -261,6 +264,7 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
 
   Future<void> _cancelEventRegistration(MemberSession session) async {
     await _runRegistrationAction(
+      pendingAction: EventRegistrationPendingAction.cancel,
       successMessage: AppLocalizations.of(context)!
           .eventRegistrationCancelSuccess,
       action: () => ref
@@ -274,14 +278,15 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
   }
 
   Future<void> _runRegistrationAction({
+    required EventRegistrationPendingAction pendingAction,
     required String successMessage,
     required Future<LifePost> Function() action,
   }) async {
-    if (_isSubmittingRegistration) {
+    if (_pendingRegistrationAction != null) {
       return;
     }
 
-    setState(() => _isSubmittingRegistration = true);
+    setState(() => _pendingRegistrationAction = pendingAction);
     try {
       await action();
       _registrationNoteController.clear();
@@ -303,7 +308,7 @@ class _LifePostDetailContentState extends ConsumerState<LifePostDetailContent> {
           .showSnackBar(SnackBar(content: Text(message)));
     } finally {
       if (mounted) {
-        setState(() => _isSubmittingRegistration = false);
+        setState(() => _pendingRegistrationAction = null);
       }
     }
   }
