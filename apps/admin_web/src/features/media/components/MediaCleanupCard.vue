@@ -4,6 +4,7 @@ import type { MediaCleanupStatus, MediaCleanupTask } from "@mbc/api-contracts";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
 
 const status = defineModel<MediaCleanupStatus | "">("status", {
   required: true
@@ -87,20 +88,12 @@ function statusColor(value: MediaCleanupStatus) {
     >
       {{ retryErrorMessage }}
     </v-alert>
-    <v-alert
-      v-if="refreshErrorMessage"
-      type="warning"
-      variant="tonal"
-      density="compact"
+    <AdminRefreshAlert
       class="ma-4 mb-0"
-    >
-      <div class="d-flex align-center justify-space-between ga-3">
-        <span>{{ refreshErrorMessage }}</span>
-        <v-btn size="small" variant="text" @click="emit('retryQuery')">
-          {{ t("common.refresh") }}
-        </v-btn>
-      </div>
-    </v-alert>
+      :message="refreshErrorMessage"
+      :retry-label="t('common.refresh')"
+      @retry="emit('retryQuery')"
+    />
     <AdminDataState
       :pending="pending"
       :error-message="errorMessage"

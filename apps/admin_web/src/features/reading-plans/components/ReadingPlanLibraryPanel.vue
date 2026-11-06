@@ -3,6 +3,7 @@ import type { ReadingPlan } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
 
 defineProps<{
   errorMessage: string;
@@ -19,19 +20,12 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
-    <v-alert
-      v-if="refreshErrorMessage"
-      type="warning"
-      variant="tonal"
+    <AdminRefreshAlert
       class="ma-4 mb-0"
-    >
-      <div class="d-flex align-center justify-space-between ga-3">
-        <span>{{ refreshErrorMessage }}</span>
-        <v-btn size="small" variant="text" @click="$emit('retry')">
-          {{ t("common.refresh") }}
-        </v-btn>
-      </div>
-    </v-alert>
+      :message="refreshErrorMessage"
+      :retry-label="t('common.refresh')"
+      @retry="$emit('retry')"
+    />
     <AdminDataState
       :pending="pending"
       :error-message="errorMessage"

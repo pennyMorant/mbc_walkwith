@@ -40,7 +40,7 @@ describe("prayer query and command state", () => {
     expect(page).toContain(':error-message="listErrorMessage"');
     expect(page).toContain(':refresh-error-message="listRefreshErrorMessage"');
     expect(table).toContain("AdminDataState");
-    expect(table).toContain('v-if="refreshErrorMessage"');
+    expect(table).toContain("AdminRefreshAlert");
   });
 
   test("keeps responsive list presentation transport-free", async () => {

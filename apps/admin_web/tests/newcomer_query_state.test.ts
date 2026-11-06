@@ -39,7 +39,7 @@ describe("newcomer query state", () => {
 
     expect(query).toContain("data.value === undefined");
     expect(query).toContain("data.value !== undefined");
-    expect(results).toContain('v-if="refreshErrorMessage"');
+    expect(results).toContain("AdminRefreshAlert");
     expect(page).toContain(':refresh-error-message="listRefreshErrorMessage"');
   });
 

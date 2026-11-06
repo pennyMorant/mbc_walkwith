@@ -251,6 +251,10 @@ Admin Web responsive result lists use `AdminMobileRecord` for the small-screen
 interactive row, truncation, trailing status area, and navigation affordance.
 Feature components provide record content and retain command ownership.
 
+Use `AdminRefreshAlert` when background refresh fails but canonical content
+remains visible. The shared component owns warning presentation and responsive
+retry layout; Feature controllers retain query and retry ownership.
+
 Shared component rules:
 
 - Generic components go under `shared/widgets/`.
