@@ -2,6 +2,8 @@
 import type { PublicLandingMissionSection } from "@mbc/api-contracts";
 import { motion } from "motion-v";
 
+import LandingSectionHeading from "@/components/LandingSectionHeading.vue";
+
 defineProps<{
   mission: PublicLandingMissionSection;
 }>();
@@ -9,11 +11,11 @@ defineProps<{
 
 <template>
   <section id="mission" class="section mission-section">
-    <div class="section-heading">
-      <p class="eyebrow">{{ mission.eyebrow }}</p>
-      <h2>{{ mission.title }}</h2>
-      <p>{{ mission.body }}</p>
-    </div>
+    <LandingSectionHeading
+      :eyebrow="mission.eyebrow"
+      :title="mission.title"
+      :body="mission.body"
+    />
 
     <div class="mission-grid">
       <motion.article

@@ -3,6 +3,7 @@ import type { PublicLandingEntranceSection } from "@mbc/api-contracts";
 import { motion } from "motion-v";
 
 import { actionRel, actionTarget } from "@/core/actions";
+import LandingSectionHeading from "@/components/LandingSectionHeading.vue";
 
 defineProps<{
   entrance: PublicLandingEntranceSection;
@@ -11,11 +12,12 @@ defineProps<{
 
 <template>
   <section id="new" class="section entrance-section">
-    <div class="section-heading narrow">
-      <p class="eyebrow">{{ entrance.eyebrow }}</p>
-      <h2>{{ entrance.title }}</h2>
-      <p>{{ entrance.body }}</p>
-    </div>
+    <LandingSectionHeading
+      :eyebrow="entrance.eyebrow"
+      :title="entrance.title"
+      :body="entrance.body"
+      narrow
+    />
 
     <div class="entrance-grid">
       <motion.a

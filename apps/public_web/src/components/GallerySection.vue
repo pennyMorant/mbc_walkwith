@@ -4,6 +4,7 @@ import { motion } from "motion-v";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 import LandingMediaImage from "@/components/LandingMediaImage.vue";
+import LandingSectionHeading from "@/components/LandingSectionHeading.vue";
 import { stepGalleryIndex } from "@/core/gallery_navigation";
 import { usePublicLocale } from "@/core/locale";
 
@@ -57,11 +58,12 @@ onBeforeUnmount(() => window.removeEventListener("keydown", handleKeydown));
 
 <template>
   <section v-if="gallery.items.length" id="gallery" class="section gallery-section">
-    <div class="gallery-heading">
-      <p class="eyebrow">{{ gallery.eyebrow }}</p>
-      <h2>{{ gallery.title }}</h2>
-      <p>{{ gallery.body }}</p>
-    </div>
+    <LandingSectionHeading
+      :eyebrow="gallery.eyebrow"
+      :title="gallery.title"
+      :body="gallery.body"
+      variant="gallery"
+    />
     <div class="gallery-grid">
       <motion.button
         v-for="(item, index) in gallery.items"

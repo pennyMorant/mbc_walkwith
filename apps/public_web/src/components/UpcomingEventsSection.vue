@@ -7,6 +7,7 @@ import type {
 import { motion } from "motion-v";
 
 import LandingMediaImage from "@/components/LandingMediaImage.vue";
+import LandingSectionHeading from "@/components/LandingSectionHeading.vue";
 
 const props = defineProps<{
   events: PublicLandingEventsSection;
@@ -36,11 +37,11 @@ function eventDate(event: PublicLandingEvent) {
 
 <template>
   <section v-if="events.items.length" id="events" class="section events-section">
-    <div class="section-heading">
-      <p class="eyebrow">{{ events.eyebrow }}</p>
-      <h2>{{ events.title }}</h2>
-      <p>{{ events.body }}</p>
-    </div>
+    <LandingSectionHeading
+      :eyebrow="events.eyebrow"
+      :title="events.title"
+      :body="events.body"
+    />
 
     <div class="events-grid">
       <motion.article

@@ -3,6 +3,7 @@ import type { PublicLandingPeopleSection } from "@mbc/api-contracts";
 import { motion } from "motion-v";
 
 import LandingMediaImage from "@/components/LandingMediaImage.vue";
+import LandingSectionHeading from "@/components/LandingSectionHeading.vue";
 
 defineProps<{
   people: PublicLandingPeopleSection;
@@ -11,11 +12,11 @@ defineProps<{
 
 <template>
   <section v-if="people.items.length" id="people" class="section people-section">
-    <div class="section-heading">
-      <p class="eyebrow">{{ people.eyebrow }}</p>
-      <h2>{{ people.title }}</h2>
-      <p>{{ people.body }}</p>
-    </div>
+    <LandingSectionHeading
+      :eyebrow="people.eyebrow"
+      :title="people.title"
+      :body="people.body"
+    />
 
     <div class="people-grid">
       <motion.article

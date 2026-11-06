@@ -2,6 +2,8 @@
 import type { PublicLandingScheduleSection } from "@mbc/api-contracts";
 import { motion } from "motion-v";
 
+import LandingSectionHeading from "@/components/LandingSectionHeading.vue";
+
 defineProps<{
   schedule: PublicLandingScheduleSection;
 }>();
@@ -9,11 +11,12 @@ defineProps<{
 
 <template>
   <section v-if="schedule.items.length" id="schedule" class="section schedule-section">
-    <div class="section-heading narrow">
-      <p class="eyebrow">{{ schedule.eyebrow }}</p>
-      <h2>{{ schedule.title }}</h2>
-      <p>{{ schedule.body }}</p>
-    </div>
+    <LandingSectionHeading
+      :eyebrow="schedule.eyebrow"
+      :title="schedule.title"
+      :body="schedule.body"
+      narrow
+    />
 
     <div class="schedule-grid">
       <motion.article

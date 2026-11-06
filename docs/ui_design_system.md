@@ -259,6 +259,10 @@ Use `AdminRefreshAlert` when background refresh fails but canonical content
 remains visible. The shared component owns warning presentation and responsive
 retry layout; Feature controllers retain query and retry ownership.
 
+Public Web standard content sections use `LandingSectionHeading` for eyebrow,
+heading hierarchy, optional body copy, and the existing section/gallery style
+variants. Hero and compound content layouts keep their own heading structure.
+
 Shared component rules:
 
 - Generic components go under `shared/widgets/`.
