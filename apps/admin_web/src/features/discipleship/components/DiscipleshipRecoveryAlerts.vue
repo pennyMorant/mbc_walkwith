@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "@/core/i18n/i18n";
+import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
 
 defineProps<{
   errorMessage?: string;
@@ -11,19 +12,12 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <v-alert
-    v-if="refreshErrorMessage"
+  <AdminRefreshAlert
     class="mb-4"
-    type="warning"
-    variant="tonal"
-  >
-    <div class="d-flex align-center justify-space-between ga-3">
-      <span>{{ refreshErrorMessage }}</span>
-      <v-btn size="small" variant="text" @click="$emit('retry')">
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
-  </v-alert>
+    :message="refreshErrorMessage"
+    :retry-label="t('common.refresh')"
+    @retry="$emit('retry')"
+  />
   <v-alert
     v-if="errorMessage"
     class="mb-4"

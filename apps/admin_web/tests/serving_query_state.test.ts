@@ -69,7 +69,7 @@ describe("serving workspace query states", () => {
       expect(controller).toContain(`${region}CommandErrorMessage`);
       expect(controller).toContain(`${region}RefreshErrorMessage`);
     }
-    expect(feedbackAlerts).toContain('v-if="refreshErrorMessage"');
+    expect(feedbackAlerts).toContain("AdminRefreshAlert");
     expect(feedbackAlerts).toContain('v-if="commandErrorMessage"');
     expect(feedbackAlerts).toContain("emit('retry')");
     expect(page).toContain(':error-message="setupErrorMessage"');

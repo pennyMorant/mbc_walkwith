@@ -14,7 +14,10 @@ const consumers = await Promise.all(
     "reading-plans/components/ReadingPlanLibraryPanel.vue",
     "reading-plans/components/ReadingPlanDaysPanel.vue",
     "reading-plans/components/ReadingPlanAssignmentsPanel.vue",
-    "discipleship/components/DiscipleshipJourneyCatalogCard.vue"
+    "discipleship/components/DiscipleshipJourneyCatalogCard.vue",
+    "discipleship/components/DiscipleshipRecoveryAlerts.vue",
+    "groups/components/GroupPanelState.vue",
+    "serving/components/ServingFeedbackAlerts.vue"
   ].map((path) =>
     Bun.file(new URL(`../src/features/${path}`, import.meta.url)).text()
   )

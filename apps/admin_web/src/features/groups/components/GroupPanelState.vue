@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
 
 defineProps<{
   pending: boolean;
@@ -21,20 +22,12 @@ const { t } = useI18n();
     :retry-label="t('common.retry')"
     @retry="$emit('retry')"
   >
-    <v-alert
-      v-if="refreshErrorMessage"
-      type="warning"
-      variant="tonal"
-      density="compact"
+    <AdminRefreshAlert
       class="mb-3"
-    >
-      <div class="d-flex align-center ga-3">
-        <span class="flex-grow-1">{{ refreshErrorMessage }}</span>
-        <v-btn size="small" variant="text" @click="$emit('retry')">
-          {{ t("common.retry") }}
-        </v-btn>
-      </div>
-    </v-alert>
+      :message="refreshErrorMessage"
+      :retry-label="t('common.retry')"
+      @retry="$emit('retry')"
+    />
     <v-alert
       v-if="commandErrorMessage"
       type="error"

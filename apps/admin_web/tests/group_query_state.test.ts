@@ -21,7 +21,7 @@ describe("group workspace query and command state", () => {
 
   test("keeps query recovery and command feedback region-owned", () => {
     expect(panelState).toContain("AdminDataState");
-    expect(panelState).toContain('v-if="refreshErrorMessage"');
+    expect(panelState).toContain("AdminRefreshAlert");
     expect(panelState).toContain('v-if="commandErrorMessage"');
     for (const region of [
       "applications",
