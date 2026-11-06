@@ -133,15 +133,13 @@ class _ServingAvailabilitySheetState
             ),
           ],
           const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(
-              label: l10n.servingAvailabilitySaveAction,
-              icon: Icons.save_outlined,
-              variant: AppButtonVariant.filled,
-              loading: _isSubmitting,
-              onPressed: _submit,
-            ),
+          AppButton(
+            label: l10n.servingAvailabilitySaveAction,
+            icon: Icons.save_outlined,
+            variant: AppButtonVariant.filled,
+            loading: _isSubmitting,
+            expanded: true,
+            onPressed: _submit,
           ),
         ],
       ),

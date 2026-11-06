@@ -96,15 +96,13 @@ class _MemberLoginPasswordPageState
             ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(
-              label: l10n.memberSignInAction,
-              variant: AppButtonVariant.filled,
-              minHeight: 52,
-              loading: _isLoading,
-              onPressed: _isLoading ? null : () => _login(email),
-            ),
+          AppButton(
+            label: l10n.memberSignInAction,
+            variant: AppButtonVariant.filled,
+            minHeight: 52,
+            loading: _isLoading,
+            expanded: true,
+            onPressed: _isLoading ? null : () => _login(email),
           ),
         ],
       ),

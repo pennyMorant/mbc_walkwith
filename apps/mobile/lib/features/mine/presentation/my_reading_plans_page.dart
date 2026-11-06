@@ -129,17 +129,15 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
                       if (_isLoadingMoreHistory)
                         const Center(child: CircularProgressIndicator())
                       else
-                        SizedBox(
-                          width: double.infinity,
-                          child: AppButton(
-                            label: _historyLoadMoreFailed
-                                ? l10n.retryAction
-                                : l10n.readingPlanLoadMoreAction,
-                            icon: _historyLoadMoreFailed
-                                ? Icons.refresh_rounded
-                                : Icons.expand_more_rounded,
-                            onPressed: _loadMoreHistory,
-                          ),
+                        AppButton(
+                          label: _historyLoadMoreFailed
+                              ? l10n.retryAction
+                              : l10n.readingPlanLoadMoreAction,
+                          icon: _historyLoadMoreFailed
+                              ? Icons.refresh_rounded
+                              : Icons.expand_more_rounded,
+                          expanded: true,
+                          onPressed: _loadMoreHistory,
                         ),
                     ],
                   ],

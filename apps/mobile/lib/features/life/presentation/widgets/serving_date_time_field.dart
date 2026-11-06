@@ -25,14 +25,12 @@ class ServingDateTimeField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ServingFieldLabel(text: label),
-        SizedBox(
-          width: double.infinity,
-          child: AppButton(
-            label: formatDateTime(context, value),
-            icon: icon,
-            shape: AppButtonShape.rounded,
-            onPressed: enabled ? onPressed : null,
-          ),
+        AppButton(
+          label: formatDateTime(context, value),
+          icon: icon,
+          shape: AppButtonShape.rounded,
+          expanded: true,
+          onPressed: enabled ? onPressed : null,
         ),
       ],
     );
@@ -50,9 +48,8 @@ class ServingFieldLabel extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(
         text,
-        style: Theme.of(
-          context,
-        ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+        style: Theme.of(context).textTheme.labelLarge
+            ?.copyWith(fontWeight: FontWeight.w700),
       ),
     );
   }

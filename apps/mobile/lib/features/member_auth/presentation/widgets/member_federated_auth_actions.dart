@@ -135,16 +135,14 @@ class _FederatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: AppButton(
-        label: label,
-        icon: icon,
-        variant: AppButtonVariant.tonal,
-        minHeight: 52,
-        loading: loading,
-        onPressed: enabled ? onPressed : null,
-      ),
+    return AppButton(
+      label: label,
+      icon: icon,
+      variant: AppButtonVariant.tonal,
+      minHeight: 52,
+      loading: loading,
+      expanded: true,
+      onPressed: enabled ? onPressed : null,
     );
   }
 }

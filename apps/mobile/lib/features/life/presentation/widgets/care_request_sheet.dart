@@ -121,15 +121,13 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
             ),
           ],
           const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(
-              label: l10n.careSubmitAction,
-              icon: Icons.send_outlined,
-              variant: AppButtonVariant.filled,
-              loading: _isSubmitting,
-              onPressed: session == null ? null : _submit,
-            ),
+          AppButton(
+            label: l10n.careSubmitAction,
+            icon: Icons.send_outlined,
+            variant: AppButtonVariant.filled,
+            loading: _isSubmitting,
+            expanded: true,
+            onPressed: session == null ? null : _submit,
           ),
         ],
       ),

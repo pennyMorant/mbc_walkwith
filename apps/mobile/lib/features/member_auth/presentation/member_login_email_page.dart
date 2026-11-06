@@ -60,14 +60,12 @@ class _MemberLoginEmailPageState extends ConsumerState<MemberLoginEmailPage> {
           MemberAuthInlineError(message: _error!),
         ],
         const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: AppButton(
-            label: l10n.memberNextAction,
-            variant: AppButtonVariant.filled,
-            minHeight: 52,
-            onPressed: _continueToPassword,
-          ),
+        AppButton(
+          label: l10n.memberNextAction,
+          variant: AppButtonVariant.filled,
+          minHeight: 52,
+          expanded: true,
+          onPressed: _continueToPassword,
         ),
         if (settings.memberRegistrationOpen) ...[
           const SizedBox(height: 8),

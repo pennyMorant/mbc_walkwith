@@ -94,21 +94,19 @@ class _MemberPasswordRecoveryPageState
           MemberAuthInlineError(message: _error!),
         ],
         const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: AppButton(
-            label: request == null
-                ? l10n.memberNextAction
-                : l10n.memberPasswordResetAction,
-            variant: AppButtonVariant.filled,
-            minHeight: 52,
-            loading: _loading,
-            onPressed: _loading
-                ? null
-                : request == null
-                ? _requestCode
-                : () => _confirm(request),
-          ),
+        AppButton(
+          label: request == null
+              ? l10n.memberNextAction
+              : l10n.memberPasswordResetAction,
+          variant: AppButtonVariant.filled,
+          minHeight: 52,
+          loading: _loading,
+          expanded: true,
+          onPressed: _loading
+              ? null
+              : request == null
+              ? _requestCode
+              : () => _confirm(request),
         ),
       ],
     );

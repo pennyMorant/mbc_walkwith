@@ -234,6 +234,10 @@ AppListCard
 AppBottomSheetScaffold
 ```
 
+`AppButton` owns shared button variants, shape, loading, selected state, and
+minimum touch height. Use `expanded: true` when an action must fill its available
+width instead of wrapping the button in a page-local `SizedBox`.
+
 `AppBottomSheetScaffold` is the canonical keyboard-safe, scrollable frame for
 form-style modal sheets. Feature widgets own their fields, validation, business
 state, and submission; they should not duplicate SafeArea, keyboard inset, or

@@ -132,14 +132,12 @@ class _HistoryContent extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(top: 12),
-              child: SizedBox(
-                width: double.infinity,
-                child: AppButton(
-                  label: l10n.readingPlanRestartAction,
-                  icon: Icons.replay_rounded,
-                  variant: AppButtonVariant.filled,
-                  onPressed: onRestart,
-                ),
+              child: AppButton(
+                label: l10n.readingPlanRestartAction,
+                icon: Icons.replay_rounded,
+                variant: AppButtonVariant.filled,
+                expanded: true,
+                onPressed: onRestart,
               ),
             ),
           ),

@@ -72,15 +72,13 @@ class _MemberEmailVerificationPageState
           MemberAuthInlineError(message: _error!),
         ],
         const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: AppButton(
-            label: l10n.memberVerifyEmailAction,
-            variant: AppButtonVariant.filled,
-            minHeight: 52,
-            loading: _loading,
-            onPressed: _loading ? null : () => _verify(request),
-          ),
+        AppButton(
+          label: l10n.memberVerifyEmailAction,
+          variant: AppButtonVariant.filled,
+          minHeight: 52,
+          loading: _loading,
+          expanded: true,
+          onPressed: _loading ? null : () => _verify(request),
         ),
       ],
     );

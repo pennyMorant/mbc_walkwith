@@ -35,6 +35,19 @@ void main() {
     expect(button.style?.minimumSize?.resolve({})?.height, 44);
   });
 
+  testWidgets('expanded button fills its available width', (tester) async {
+    await tester.pumpWidget(
+      buildSubject(
+        SizedBox(
+          width: 240,
+          child: AppButton(label: 'Continue', expanded: true, onPressed: () {}),
+        ),
+      ),
+    );
+
+    expect(tester.getSize(find.byType(FilledButton)).width, 240);
+  });
+
   testWidgets('selected button uses selected container colors by default', (
     tester,
   ) async {
@@ -44,9 +57,8 @@ void main() {
       ),
     );
 
-    final colorScheme = Theme.of(
-      tester.element(find.byType(AppButton)),
-    ).colorScheme;
+    final colorScheme = Theme.of(tester.element(find.byType(AppButton)))
+        .colorScheme;
     final button = tester.widget<FilledButton>(find.byType(FilledButton));
 
     expect(
@@ -91,9 +103,8 @@ void main() {
     await tester.pump();
 
     expect(taps, 0);
-    final colorScheme = Theme.of(
-      tester.element(find.byType(AppButton)),
-    ).colorScheme;
+    final colorScheme = Theme.of(tester.element(find.byType(AppButton)))
+        .colorScheme;
     final button = tester.widget<FilledButton>(find.byType(FilledButton));
     expect(button.onPressed, isNull);
     expect(
@@ -119,9 +130,8 @@ void main() {
       ),
     );
 
-    final colorScheme = Theme.of(
-      tester.element(find.byType(AppButton)),
-    ).colorScheme;
+    final colorScheme = Theme.of(tester.element(find.byType(AppButton)))
+        .colorScheme;
     final button = tester.widget<TextButton>(find.byType(TextButton));
 
     expect(

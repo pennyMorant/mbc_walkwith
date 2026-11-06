@@ -23,6 +23,7 @@ class AppButton extends StatelessWidget {
     this.textStyle,
     this.semanticLabel,
     this.loading = false,
+    this.expanded = false,
   });
 
   final String label;
@@ -41,6 +42,7 @@ class AppButton extends StatelessWidget {
   final TextStyle? textStyle;
   final String? semanticLabel;
   final bool loading;
+  final bool expanded;
 
   @override
   Widget build(BuildContext context) {
@@ -66,57 +68,60 @@ class AppButton extends StatelessWidget {
         ? null
         : Icon(icon, size: iconSize);
 
-    if (effectiveIcon == null) {
-      return switch (variant) {
-        AppButtonVariant.filled => FilledButton(
-          onPressed: effectiveOnPressed,
-          style: style,
-          child: child,
-        ),
-        AppButtonVariant.tonal => FilledButton.tonal(
-          onPressed: effectiveOnPressed,
-          style: style,
-          child: child,
-        ),
-        AppButtonVariant.outlined => OutlinedButton(
-          onPressed: effectiveOnPressed,
-          style: style,
-          child: child,
-        ),
-        AppButtonVariant.text => TextButton(
-          onPressed: effectiveOnPressed,
-          style: style,
-          child: child,
-        ),
-      };
-    }
+    final button = effectiveIcon == null
+        ? switch (variant) {
+            AppButtonVariant.filled => FilledButton(
+              onPressed: effectiveOnPressed,
+              style: style,
+              child: child,
+            ),
+            AppButtonVariant.tonal => FilledButton.tonal(
+              onPressed: effectiveOnPressed,
+              style: style,
+              child: child,
+            ),
+            AppButtonVariant.outlined => OutlinedButton(
+              onPressed: effectiveOnPressed,
+              style: style,
+              child: child,
+            ),
+            AppButtonVariant.text => TextButton(
+              onPressed: effectiveOnPressed,
+              style: style,
+              child: child,
+            ),
+          }
+        : switch (variant) {
+            AppButtonVariant.filled => FilledButton.icon(
+              onPressed: effectiveOnPressed,
+              style: style,
+              icon: effectiveIcon,
+              label: child,
+            ),
+            AppButtonVariant.tonal => FilledButton.tonalIcon(
+              onPressed: effectiveOnPressed,
+              style: style,
+              icon: effectiveIcon,
+              label: child,
+            ),
+            AppButtonVariant.outlined => OutlinedButton.icon(
+              onPressed: effectiveOnPressed,
+              style: style,
+              icon: effectiveIcon,
+              label: child,
+            ),
+            AppButtonVariant.text => TextButton.icon(
+              onPressed: effectiveOnPressed,
+              style: style,
+              icon: effectiveIcon,
+              label: child,
+            ),
+          };
 
-    return switch (variant) {
-      AppButtonVariant.filled => FilledButton.icon(
-        onPressed: effectiveOnPressed,
-        style: style,
-        icon: effectiveIcon,
-        label: child,
-      ),
-      AppButtonVariant.tonal => FilledButton.tonalIcon(
-        onPressed: effectiveOnPressed,
-        style: style,
-        icon: effectiveIcon,
-        label: child,
-      ),
-      AppButtonVariant.outlined => OutlinedButton.icon(
-        onPressed: effectiveOnPressed,
-        style: style,
-        icon: effectiveIcon,
-        label: child,
-      ),
-      AppButtonVariant.text => TextButton.icon(
-        onPressed: effectiveOnPressed,
-        style: style,
-        icon: effectiveIcon,
-        label: child,
-      ),
-    };
+    if (!expanded) {
+      return button;
+    }
+    return SizedBox(width: double.infinity, child: button);
   }
 
   ButtonStyle _buttonStyle(BuildContext context) {

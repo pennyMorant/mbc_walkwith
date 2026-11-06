@@ -75,15 +75,13 @@ class _MemberRegistrationPageState
           MemberAuthInlineError(message: _error!),
         ],
         const SizedBox(height: 16),
-        SizedBox(
-          width: double.infinity,
-          child: AppButton(
-            label: l10n.memberRegisterAction,
-            variant: AppButtonVariant.filled,
-            minHeight: 52,
-            loading: _loading,
-            onPressed: _loading ? null : _register,
-          ),
+        AppButton(
+          label: l10n.memberRegisterAction,
+          variant: AppButtonVariant.filled,
+          minHeight: 52,
+          loading: _loading,
+          expanded: true,
+          onPressed: _loading ? null : _register,
         ),
         const SizedBox(height: 20),
         MemberFederatedAuthActions(onSignedIn: _finishSignedIn),
