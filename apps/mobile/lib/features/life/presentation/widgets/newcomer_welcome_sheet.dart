@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_bottom_sheet_scaffold.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/newcomer_repository.dart';
@@ -49,99 +50,89 @@ class _NewcomerWelcomeSheetState extends ConsumerState<NewcomerWelcomeSheet> {
         .watch(memberSessionProvider)
         .maybeWhen(data: (session) => session, orElse: () => null);
 
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          0,
-          20,
-          MediaQuery.viewInsetsOf(context).bottom + 20,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return AppBottomSheetScaffold(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Icon(Icons.waving_hand_outlined, color: colorScheme.primary),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      l10n.newcomerSheetTitle,
-                      style: Theme.of(context).textTheme.titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                session == null
-                    ? l10n.newcomerSheetGuestBody
-                    : l10n.newcomerSheetMemberBody,
-                style: Theme.of(context).textTheme.bodyMedium
-                    ?.copyWith(color: colorScheme.onSurfaceVariant),
-              ),
-              const SizedBox(height: 18),
-              AppFilledTextField(
-                controller: _nameController,
-                enabled: !_isSubmitting,
-                textInputAction: TextInputAction.next,
-                hintText: l10n.newcomerNameLabel,
-              ),
-              const SizedBox(height: 10),
-              AppFilledTextField(
-                controller: _emailController,
-                enabled: !_isSubmitting,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                hintText: l10n.newcomerEmailLabel,
-              ),
-              const SizedBox(height: 10),
-              AppFilledTextField(
-                controller: _phoneController,
-                enabled: !_isSubmitting,
-                keyboardType: TextInputType.phone,
-                textInputAction: TextInputAction.next,
-                hintText: l10n.newcomerPhoneLabel,
-              ),
-              const SizedBox(height: 10),
-              AppFilledTextField(
-                controller: _interestController,
-                enabled: !_isSubmitting,
-                minLines: 3,
-                maxLines: 5,
-                textInputAction: TextInputAction.newline,
-                hintText: l10n.newcomerInterestLabel,
-              ),
-              if (_error != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  _error!,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.error,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 18),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: _isSubmitting ? null : _submit,
-                  icon: _isSubmitting
-                      ? const SizedBox.square(
-                          dimension: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.send_outlined),
-                  label: Text(l10n.newcomerSubmitAction),
+              Icon(Icons.waving_hand_outlined, color: colorScheme.primary),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  l10n.newcomerSheetTitle,
+                  style: Theme.of(context).textTheme.titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w800),
                 ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 12),
+          Text(
+            session == null
+                ? l10n.newcomerSheetGuestBody
+                : l10n.newcomerSheetMemberBody,
+            style: Theme.of(context).textTheme.bodyMedium
+                ?.copyWith(color: colorScheme.onSurfaceVariant),
+          ),
+          const SizedBox(height: 18),
+          AppFilledTextField(
+            controller: _nameController,
+            enabled: !_isSubmitting,
+            textInputAction: TextInputAction.next,
+            hintText: l10n.newcomerNameLabel,
+          ),
+          const SizedBox(height: 10),
+          AppFilledTextField(
+            controller: _emailController,
+            enabled: !_isSubmitting,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            hintText: l10n.newcomerEmailLabel,
+          ),
+          const SizedBox(height: 10),
+          AppFilledTextField(
+            controller: _phoneController,
+            enabled: !_isSubmitting,
+            keyboardType: TextInputType.phone,
+            textInputAction: TextInputAction.next,
+            hintText: l10n.newcomerPhoneLabel,
+          ),
+          const SizedBox(height: 10),
+          AppFilledTextField(
+            controller: _interestController,
+            enabled: !_isSubmitting,
+            minLines: 3,
+            maxLines: 5,
+            textInputAction: TextInputAction.newline,
+            hintText: l10n.newcomerInterestLabel,
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              _error!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: colorScheme.error,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          const SizedBox(height: 18),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              onPressed: _isSubmitting ? null : _submit,
+              icon: _isSubmitting
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.send_outlined),
+              label: Text(l10n.newcomerSubmitAction),
+            ),
+          ),
+        ],
       ),
     );
   }

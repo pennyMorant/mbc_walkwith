@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_bottom_sheet_scaffold.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../data/sermon_discussion_guide_repository.dart';
@@ -32,47 +33,43 @@ class _SermonDiscussionResponseSheetState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    return SafeArea(
-      top: false,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 20 + bottomInset),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.sermonDiscussionResponseTitle,
-              style: Theme.of(context).textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w800),
+    return AppBottomSheetScaffold(
+      safeAreaTop: false,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.sermonDiscussionResponseTitle,
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.sermonDiscussionResponsePrivateNote,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.sermonDiscussionResponsePrivateNote,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+          ),
+          const SizedBox(height: 14),
+          AppFilledTextField(
+            controller: _controller,
+            maxLines: 5,
+            minLines: 3,
+            hintText: l10n.sermonDiscussionResponseHint,
+          ),
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerRight,
+            child: AppButton(
+              label: l10n.sermonDiscussionSubmitAction,
+              icon: Icons.send_outlined,
+              loading: _submitting,
+              variant: AppButtonVariant.filled,
+              onPressed: _submit,
             ),
-            const SizedBox(height: 14),
-            AppFilledTextField(
-              controller: _controller,
-              maxLines: 5,
-              minLines: 3,
-              hintText: l10n.sermonDiscussionResponseHint,
-            ),
-            const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerRight,
-              child: AppButton(
-                label: l10n.sermonDiscussionSubmitAction,
-                icon: Icons.send_outlined,
-                loading: _submitting,
-                variant: AppButtonVariant.filled,
-                onPressed: _submit,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

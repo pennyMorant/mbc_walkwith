@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_bottom_sheet_scaffold.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
@@ -47,100 +48,90 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
         .watch(memberSessionProvider)
         .maybeWhen(data: (session) => session, orElse: () => null);
 
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          0,
-          20,
-          MediaQuery.viewInsetsOf(context).bottom + 20,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.careSubmitTitle,
-                style: Theme.of(context).textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w800),
+    return AppBottomSheetScaffold(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.careSubmitTitle,
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            session == null ? l10n.careSignInRequired : l10n.careSubmitBody,
+            style: Theme.of(context).textTheme.bodyMedium
+                ?.copyWith(color: colorScheme.onSurfaceVariant),
+          ),
+          const SizedBox(height: 18),
+          AppFilledTextField(
+            controller: _titleController,
+            enabled: session != null && !_isSubmitting,
+            textInputAction: TextInputAction.next,
+            hintText: l10n.careTitleLabel,
+          ),
+          const SizedBox(height: 10),
+          AppFilledTextField(
+            controller: _bodyController,
+            enabled: session != null && !_isSubmitting,
+            minLines: 4,
+            maxLines: 7,
+            textInputAction: TextInputAction.newline,
+            hintText: l10n.careBodyLabel,
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<String>(
+            isExpanded: true,
+            initialValue: _privacyLevel,
+            decoration: appFilledInputDecoration(
+              context,
+              hintText: l10n.carePrivacyLabel,
+            ),
+            items: [
+              DropdownMenuItem(
+                value: 'pastoral_only',
+                child: Text(l10n.carePrivacyPastoralOnly),
               ),
-              const SizedBox(height: 12),
-              Text(
-                session == null ? l10n.careSignInRequired : l10n.careSubmitBody,
-                style: Theme.of(context).textTheme.bodyMedium
-                    ?.copyWith(color: colorScheme.onSurfaceVariant),
+              DropdownMenuItem(
+                value: 'assigned_team',
+                child: Text(l10n.carePrivacyAssignedTeam),
               ),
-              const SizedBox(height: 18),
-              AppFilledTextField(
-                controller: _titleController,
-                enabled: session != null && !_isSubmitting,
-                textInputAction: TextInputAction.next,
-                hintText: l10n.careTitleLabel,
-              ),
-              const SizedBox(height: 10),
-              AppFilledTextField(
-                controller: _bodyController,
-                enabled: session != null && !_isSubmitting,
-                minLines: 4,
-                maxLines: 7,
-                textInputAction: TextInputAction.newline,
-                hintText: l10n.careBodyLabel,
-              ),
-              const SizedBox(height: 10),
-              DropdownButtonFormField<String>(
-                isExpanded: true,
-                initialValue: _privacyLevel,
-                decoration: appFilledInputDecoration(
-                  context,
-                  hintText: l10n.carePrivacyLabel,
-                ),
-                items: [
-                  DropdownMenuItem(
-                    value: 'pastoral_only',
-                    child: Text(l10n.carePrivacyPastoralOnly),
-                  ),
-                  DropdownMenuItem(
-                    value: 'assigned_team',
-                    child: Text(l10n.carePrivacyAssignedTeam),
-                  ),
-                  DropdownMenuItem(
-                    value: 'admin_restricted',
-                    child: Text(l10n.carePrivacyAdminRestricted),
-                  ),
-                ],
-                onChanged: session == null || _isSubmitting
-                    ? null
-                    : (value) {
-                        if (value != null) {
-                          setState(() => _privacyLevel = value);
-                        }
-                      },
-              ),
-              if (_error != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  _error!,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.error,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 18),
-              SizedBox(
-                width: double.infinity,
-                child: AppButton(
-                  label: l10n.careSubmitAction,
-                  icon: Icons.send_outlined,
-                  variant: AppButtonVariant.filled,
-                  loading: _isSubmitting,
-                  onPressed: session == null ? null : _submit,
-                ),
+              DropdownMenuItem(
+                value: 'admin_restricted',
+                child: Text(l10n.carePrivacyAdminRestricted),
               ),
             ],
+            onChanged: session == null || _isSubmitting
+                ? null
+                : (value) {
+                    if (value != null) {
+                      setState(() => _privacyLevel = value);
+                    }
+                  },
           ),
-        ),
+          if (_error != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              _error!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: colorScheme.error,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          const SizedBox(height: 18),
+          SizedBox(
+            width: double.infinity,
+            child: AppButton(
+              label: l10n.careSubmitAction,
+              icon: Icons.send_outlined,
+              variant: AppButtonVariant.filled,
+              loading: _isSubmitting,
+              onPressed: session == null ? null : _submit,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_bottom_sheet_scaffold.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
@@ -48,105 +49,95 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
         .watch(memberSessionProvider)
         .maybeWhen(data: (session) => session, orElse: () => null);
 
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          0,
-          20,
-          MediaQuery.viewInsetsOf(context).bottom + 20,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.prayerSubmitTitle,
-                style: Theme.of(context).textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w800),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                session == null
-                    ? l10n.prayerGuestSubmitBody
-                    : l10n.prayerMemberSubmitBody,
-                style: Theme.of(context).textTheme.bodyMedium
-                    ?.copyWith(color: colorScheme.onSurfaceVariant),
-              ),
-              const SizedBox(height: 18),
-              AppFilledTextField(
-                controller: _titleController,
-                enabled: !_isSubmitting,
-                textInputAction: TextInputAction.next,
-                hintText: l10n.prayerTitleLabel,
-              ),
-              const SizedBox(height: 10),
-              AppFilledTextField(
-                controller: _bodyController,
-                enabled: !_isSubmitting,
-                minLines: 4,
-                maxLines: 7,
-                textInputAction: TextInputAction.newline,
-                hintText: l10n.prayerBodyLabel,
-              ),
-              if (session == null) ...[
-                const SizedBox(height: 10),
-                AppFilledTextField(
-                  controller: _nameController,
-                  enabled: !_isSubmitting,
-                  textInputAction: TextInputAction.done,
-                  hintText: l10n.prayerNameLabel,
-                ),
-              ],
-              const SizedBox(height: 14),
-              SegmentedButton<String>(
-                segments: [
-                  ButtonSegment(
-                    value: 'private',
-                    icon: const Icon(Icons.lock_outline),
-                    label: Text(l10n.prayerVisibilityPrivate),
-                  ),
-                  if (session != null)
-                    ButtonSegment(
-                      value: 'members',
-                      icon: const Icon(Icons.groups_outlined),
-                      label: Text(l10n.prayerVisibilityMembers),
-                    ),
-                ],
-                selected: {_visibility},
-                onSelectionChanged: _isSubmitting
-                    ? null
-                    : (values) {
-                        setState(() {
-                          _visibility = values.first;
-                        });
-                      },
-              ),
-              if (_error != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  _error!,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.error,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 18),
-              SizedBox(
-                width: double.infinity,
-                child: AppButton(
-                  label: l10n.prayerSubmitAction,
-                  icon: Icons.send_outlined,
-                  variant: AppButtonVariant.filled,
-                  loading: _isSubmitting,
-                  onPressed: _submit,
-                ),
-              ),
-            ],
+    return AppBottomSheetScaffold(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.prayerSubmitTitle,
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.w800),
           ),
-        ),
+          const SizedBox(height: 12),
+          Text(
+            session == null
+                ? l10n.prayerGuestSubmitBody
+                : l10n.prayerMemberSubmitBody,
+            style: Theme.of(context).textTheme.bodyMedium
+                ?.copyWith(color: colorScheme.onSurfaceVariant),
+          ),
+          const SizedBox(height: 18),
+          AppFilledTextField(
+            controller: _titleController,
+            enabled: !_isSubmitting,
+            textInputAction: TextInputAction.next,
+            hintText: l10n.prayerTitleLabel,
+          ),
+          const SizedBox(height: 10),
+          AppFilledTextField(
+            controller: _bodyController,
+            enabled: !_isSubmitting,
+            minLines: 4,
+            maxLines: 7,
+            textInputAction: TextInputAction.newline,
+            hintText: l10n.prayerBodyLabel,
+          ),
+          if (session == null) ...[
+            const SizedBox(height: 10),
+            AppFilledTextField(
+              controller: _nameController,
+              enabled: !_isSubmitting,
+              textInputAction: TextInputAction.done,
+              hintText: l10n.prayerNameLabel,
+            ),
+          ],
+          const SizedBox(height: 14),
+          SegmentedButton<String>(
+            segments: [
+              ButtonSegment(
+                value: 'private',
+                icon: const Icon(Icons.lock_outline),
+                label: Text(l10n.prayerVisibilityPrivate),
+              ),
+              if (session != null)
+                ButtonSegment(
+                  value: 'members',
+                  icon: const Icon(Icons.groups_outlined),
+                  label: Text(l10n.prayerVisibilityMembers),
+                ),
+            ],
+            selected: {_visibility},
+            onSelectionChanged: _isSubmitting
+                ? null
+                : (values) {
+                    setState(() {
+                      _visibility = values.first;
+                    });
+                  },
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              _error!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: colorScheme.error,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          const SizedBox(height: 18),
+          SizedBox(
+            width: double.infinity,
+            child: AppButton(
+              label: l10n.prayerSubmitAction,
+              icon: Icons.send_outlined,
+              variant: AppButtonVariant.filled,
+              loading: _isSubmitting,
+              onPressed: _submit,
+            ),
+          ),
+        ],
       ),
     );
   }

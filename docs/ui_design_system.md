@@ -234,6 +234,11 @@ AppListCard
 AppBottomSheetScaffold
 ```
 
+`AppBottomSheetScaffold` is the canonical keyboard-safe, scrollable frame for
+form-style modal sheets. Feature widgets own their fields, validation, business
+state, and submission; they should not duplicate SafeArea, keyboard inset, or
+standard content-padding code.
+
 Shared component rules:
 
 - Generic components go under `shared/widgets/`.

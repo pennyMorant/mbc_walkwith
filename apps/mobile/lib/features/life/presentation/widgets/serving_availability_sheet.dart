@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_bottom_sheet_scaffold.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
@@ -62,93 +63,87 @@ class _ServingAvailabilitySheetState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        20,
-        0,
-        20,
-        MediaQuery.viewInsetsOf(context).bottom + 24,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    return AppBottomSheetScaffold(
+      safeAreaTop: false,
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.servingAvailabilitySheetTitle,
+            style: Theme.of(context).textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 18),
+          ServingFieldLabel(text: l10n.servingAvailabilityStatusLabel),
+          DropdownButtonFormField<String>(
+            initialValue: _status,
+            decoration: appFilledInputDecoration(
+              context,
+              hintText: l10n.servingAvailabilityStatusLabel,
+            ),
+            items: const ['available', 'unavailable', 'preferred']
+                .map(
+                  (status) => DropdownMenuItem(
+                    value: status,
+                    child: Text(servingAvailabilityStatusLabel(l10n, status)),
+                  ),
+                )
+                .toList(growable: false),
+            onChanged: _isSubmitting
+                ? null
+                : (value) {
+                    if (value != null) {
+                      setState(() => _status = value);
+                    }
+                  },
+          ),
+          const SizedBox(height: 14),
+          ServingDateTimeField(
+            label: l10n.servingAvailabilityStartLabel,
+            value: _startsAt,
+            icon: Icons.event_outlined,
+            enabled: !_isSubmitting,
+            onPressed: () => _selectDateTime(isStart: true),
+          ),
+          const SizedBox(height: 14),
+          ServingDateTimeField(
+            label: l10n.servingAvailabilityEndLabel,
+            value: _endsAt,
+            icon: Icons.event_available_outlined,
+            enabled: !_isSubmitting,
+            onPressed: () => _selectDateTime(isStart: false),
+          ),
+          const SizedBox(height: 14),
+          AppFilledTextField(
+            controller: _noteController,
+            hintText: l10n.servingAvailabilityNoteHint,
+            prefixIcon: const Icon(Icons.notes_outlined),
+            maxLines: 3,
+            minLines: 2,
+            maxLength: 500,
+            enabled: !_isSubmitting,
+          ),
+          if (_validationError != null) ...[
+            const SizedBox(height: 8),
             Text(
-              l10n.servingAvailabilitySheetTitle,
-              style: Theme.of(context).textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 18),
-            ServingFieldLabel(text: l10n.servingAvailabilityStatusLabel),
-            DropdownButtonFormField<String>(
-              initialValue: _status,
-              decoration: appFilledInputDecoration(
-                context,
-                hintText: l10n.servingAvailabilityStatusLabel,
-              ),
-              items: const ['available', 'unavailable', 'preferred']
-                  .map(
-                    (status) => DropdownMenuItem(
-                      value: status,
-                      child: Text(servingAvailabilityStatusLabel(l10n, status)),
-                    ),
-                  )
-                  .toList(growable: false),
-              onChanged: _isSubmitting
-                  ? null
-                  : (value) {
-                      if (value != null) {
-                        setState(() => _status = value);
-                      }
-                    },
-            ),
-            const SizedBox(height: 14),
-            ServingDateTimeField(
-              label: l10n.servingAvailabilityStartLabel,
-              value: _startsAt,
-              icon: Icons.event_outlined,
-              enabled: !_isSubmitting,
-              onPressed: () => _selectDateTime(isStart: true),
-            ),
-            const SizedBox(height: 14),
-            ServingDateTimeField(
-              label: l10n.servingAvailabilityEndLabel,
-              value: _endsAt,
-              icon: Icons.event_available_outlined,
-              enabled: !_isSubmitting,
-              onPressed: () => _selectDateTime(isStart: false),
-            ),
-            const SizedBox(height: 14),
-            AppFilledTextField(
-              controller: _noteController,
-              hintText: l10n.servingAvailabilityNoteHint,
-              prefixIcon: const Icon(Icons.notes_outlined),
-              maxLines: 3,
-              minLines: 2,
-              maxLength: 500,
-              enabled: !_isSubmitting,
-            ),
-            if (_validationError != null) ...[
-              const SizedBox(height: 8),
-              Text(
-                _validationError!,
-                style: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(color: colorScheme.error),
-              ),
-            ],
-            const SizedBox(height: 18),
-            SizedBox(
-              width: double.infinity,
-              child: AppButton(
-                label: l10n.servingAvailabilitySaveAction,
-                icon: Icons.save_outlined,
-                variant: AppButtonVariant.filled,
-                loading: _isSubmitting,
-                onPressed: _submit,
-              ),
+              _validationError!,
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: colorScheme.error),
             ),
           ],
-        ),
+          const SizedBox(height: 18),
+          SizedBox(
+            width: double.infinity,
+            child: AppButton(
+              label: l10n.servingAvailabilitySaveAction,
+              icon: Icons.save_outlined,
+              variant: AppButtonVariant.filled,
+              loading: _isSubmitting,
+              onPressed: _submit,
+            ),
+          ),
+        ],
       ),
     );
   }
