@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_loading_state.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/giving_repository.dart';
@@ -34,7 +35,7 @@ class _AnnualStatementsPageState extends ConsumerState<AnnualStatementsPage> {
     return Scaffold(
       appBar: SecondaryAppBar(title: l10n.annualStatementsTitle),
       body: overviewAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingState(),
         error: (error, stackTrace) => _StatementsMessageCard(
           body: givingErrorMessage(
             error,

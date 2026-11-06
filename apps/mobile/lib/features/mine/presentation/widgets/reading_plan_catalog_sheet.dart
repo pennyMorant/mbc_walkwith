@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_chip.dart';
+import '../../../../shared/widgets/app_loading_state.dart';
 import '../../../study/data/reading_plan_repository.dart';
 import '../../../study/domain/reading_plan.dart';
 
@@ -43,15 +44,13 @@ class ReadingPlanCatalogSheet extends ConsumerWidget {
               const SizedBox(height: 16),
               Expanded(
                 child: plansAsync.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                  loading: () => const AppLoadingState(),
                   error: (error, stackTrace) => _CatalogError(
                     onRetry: () =>
                         ref.invalidate(publishedReadingPlansProvider),
                   ),
                   data: (plans) => assignmentsAsync.when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                    loading: () => const AppLoadingState(),
                     error: (error, stackTrace) => _CatalogError(
                       onRetry: () =>
                           ref.invalidate(activeReadingPlanAssignmentsProvider),

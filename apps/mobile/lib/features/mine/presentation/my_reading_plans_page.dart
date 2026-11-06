@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/app_loading_state.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../study/data/reading_plan_repository.dart';
 import '../../study/domain/reading_plan.dart';
@@ -87,7 +88,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
           ),
           Expanded(
             child: assignmentsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingState(),
               error: (error, stackTrace) => ReadingPlanCollectionErrorState(
                 onRetry: _invalidateCurrentView,
               ),
@@ -127,7 +128,7 @@ class _MyReadingPlansPageState extends ConsumerState<MyReadingPlansPage> {
                         _historyNextCursor != null) ...[
                       const SizedBox(height: 4),
                       if (_isLoadingMoreHistory)
-                        const Center(child: CircularProgressIndicator())
+                        const AppLoadingState()
                       else
                         AppButton(
                           label: _historyLoadMoreFailed

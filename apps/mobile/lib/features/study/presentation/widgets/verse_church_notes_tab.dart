@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_chip.dart';
+import '../../../../shared/widgets/app_loading_state.dart';
 import '../../data/bible_notes_repository.dart';
 import '../../domain/bible_note.dart';
 import '../../domain/bible_verse.dart';
@@ -39,7 +40,7 @@ class ChurchVerseNotesTab extends ConsumerWidget {
     final notesAsync = ref.watch(bibleVerseNotesProvider(verse.id));
 
     return notesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingState(),
       error: (error, stackTrace) => Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

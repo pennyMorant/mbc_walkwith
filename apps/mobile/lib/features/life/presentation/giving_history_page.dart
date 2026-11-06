@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_loading_state.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/giving_repository.dart';
@@ -125,7 +126,7 @@ class _GivingHistoryPageState extends ConsumerState<GivingHistoryPage> {
     return Scaffold(
       appBar: SecondaryAppBar(title: l10n.givingHistoryTitle),
       body: overviewAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingState(),
         error: (error, stackTrace) => GivingMessageCard(
           title: l10n.givingTitle,
           body: givingErrorMessage(error, fallback: l10n.givingLoadError),

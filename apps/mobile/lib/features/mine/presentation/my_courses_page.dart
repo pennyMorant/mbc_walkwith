@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_loading_state.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../life/data/course_repository.dart';
 import '../../life/domain/course_learning.dart';
@@ -25,7 +26,7 @@ class MyCoursesPage extends ConsumerWidget {
         onBack: () => _goBack(context),
       ),
       body: sessionAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingState(),
         error: (error, stackTrace) =>
             LifeErrorView(onRetry: () => ref.invalidate(memberSessionProvider)),
         data: (session) => session == null
@@ -56,7 +57,7 @@ class _MyCoursesList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     return coursesAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingState(),
       error: (error, stackTrace) =>
           LifeErrorView(onRetry: () => ref.invalidate(myCoursesProvider)),
       data: (courses) => RefreshIndicator(

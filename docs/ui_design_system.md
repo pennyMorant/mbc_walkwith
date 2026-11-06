@@ -238,6 +238,10 @@ AppBottomSheetScaffold
 adapters provide localized copy, choose any domain-specific icon, and retain
 ownership of retry behavior.
 
+`AppLoadingState` is the canonical centered progress state for page and panel
+loading branches. Inline action progress remains owned by the relevant button
+or action component.
+
 `AppButton` owns shared button variants, shape, loading, selected state, and
 minimum touch height. Use `expanded: true` when an action must fill its available
 width instead of wrapping the button in a page-local `SizedBox`.

@@ -7,6 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../shared/utils/app_formatters.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_chip.dart';
+import '../../../shared/widgets/app_loading_state.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/serving_repository.dart';
@@ -38,7 +39,7 @@ class _ServingAssignmentDetailPageState
     return Scaffold(
       appBar: SecondaryAppBar(title: '', onBack: () => _goBack(context)),
       body: sessionAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingState(),
         error: (error, stackTrace) =>
             LifeErrorView(onRetry: () => ref.invalidate(memberSessionProvider)),
         data: (session) {
@@ -53,14 +54,14 @@ class _ServingAssignmentDetailPageState
           );
           final checkInsAsync = ref.watch(servingCheckInsProvider);
           return assignmentAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingState(),
             error: (error, stackTrace) => LifeErrorView(
               onRetry: () => ref.invalidate(
                 servingAssignmentByIdProvider(widget.assignmentId),
               ),
             ),
             data: (assignment) => checkInsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const AppLoadingState(),
               error: (error, stackTrace) => LifeErrorView(
                 onRetry: () => ref.invalidate(servingCheckInsProvider),
               ),

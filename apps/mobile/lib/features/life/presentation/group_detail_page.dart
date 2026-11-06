@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
+import '../../../shared/widgets/app_loading_state.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/group_repository.dart';
 import '../domain/ministry_group.dart';
@@ -32,7 +33,7 @@ class _GroupDetailPageState extends ConsumerState<GroupDetailPage> {
     return Scaffold(
       appBar: SecondaryAppBar(title: '', onBack: () => _goBack(context)),
       body: groupAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const AppLoadingState(),
         error: (error, stackTrace) => LifeErrorView(
           onRetry: () =>
               ref.invalidate(ministryGroupByIdProvider(widget.groupId)),

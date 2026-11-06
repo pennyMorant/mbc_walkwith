@@ -5,6 +5,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/utils/app_formatters.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_chip.dart';
+import '../../../../shared/widgets/app_loading_state.dart';
 import '../../../study/data/reading_plan_repository.dart';
 import '../../../study/domain/reading_plan.dart';
 import '../../../study/presentation/widgets/reading_plan_sheet_states.dart';
@@ -33,7 +34,7 @@ class ReadingPlanHistorySheet extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
           child: detailAsync.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AppLoadingState(),
             error: (error, stackTrace) => ReadingPlanSheetErrorState(
               onRetry: () => ref.invalidate(
                 readingPlanAssignmentDetailProvider(assignmentId),

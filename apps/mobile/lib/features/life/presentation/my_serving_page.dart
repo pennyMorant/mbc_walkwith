@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/app_loading_state.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/serving_repository.dart';
@@ -31,7 +32,7 @@ class MyServingPage extends ConsumerWidget {
           onBack: () => _goBack(context),
         ),
         body: sessionAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const AppLoadingState(),
           error: (error, stackTrace) => LifeErrorView(
             onRetry: () => ref.invalidate(memberSessionProvider),
           ),
@@ -125,7 +126,7 @@ class _ServingAvailabilityView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     return availabilityAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const AppLoadingState(),
       error: (error, stackTrace) => LifeErrorView(
         onRetry: () => ref.invalidate(servingAvailabilityProvider),
       ),
