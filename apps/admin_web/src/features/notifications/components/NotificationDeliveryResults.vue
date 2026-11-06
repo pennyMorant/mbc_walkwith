@@ -7,6 +7,7 @@ import type {
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 
 defineProps<{
   deliveries: NotificationDeliveryTask[];
@@ -67,33 +68,25 @@ const { locale, t } = useI18n();
     </v-table>
 
     <div class="d-md-none">
-      <button
+      <AdminMobileRecord
         v-for="delivery in deliveries"
         :key="delivery.id"
-        class="notification-record"
-        type="button"
-        @click="$emit('open', delivery)"
+        @activate="$emit('open', delivery)"
       >
-        <span class="notification-record__main">
-          <strong>{{ delivery.payload.title }}</strong>
-          <span>{{ delivery.type }} · {{ t(delivery.audience) }}</span>
-          <span>{{ formatAdminDateTime(delivery.updatedAt, locale) }}</span>
-        </span>
-        <span class="notification-record__status">
+        <strong>{{ delivery.payload.title }}</strong>
+        <span>{{ delivery.type }} · {{ t(delivery.audience) }}</span>
+        <span>{{ formatAdminDateTime(delivery.updatedAt, locale) }}</span>
+        <template #trailing>
           <v-chip size="small" :color="statusColor(delivery.status)">
             {{ t(delivery.status) }}
           </v-chip>
           <span>{{ t("Attempts") }}: {{ delivery.attempts }}</span>
-        </span>
-        <v-icon icon="mdi-chevron-right" size="20" />
-      </button>
+        </template>
+      </AdminMobileRecord>
     </div>
   </AdminDataState>
 </template>
 
 <style scoped>
 .cursor-pointer { cursor: pointer; }
-.notification-record { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; border: 0; border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08); padding: 14px 16px; color: inherit; background: transparent; text-align: left; }
-.notification-record__main, .notification-record__status { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 4px; }
-.notification-record__main span, .notification-record__status > span { overflow: hidden; color: rgba(var(--v-theme-on-surface), 0.62); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 </style>

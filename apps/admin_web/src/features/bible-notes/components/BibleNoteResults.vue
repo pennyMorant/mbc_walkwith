@@ -7,6 +7,7 @@ import type {
 import { formatAdminDate } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 
 defineProps<{
   notes: AdminBibleVerseNote[];
@@ -91,23 +92,20 @@ const { locale, t } = useI18n();
     </v-table>
 
     <div class="d-md-none">
-      <button
+      <AdminMobileRecord
         v-for="note in notes"
         :key="note.id"
-        class="bible-note-record"
-        type="button"
-        @click="$emit('open', note)"
+        @activate="$emit('open', note)"
       >
-        <span class="bible-note-record__main">
-          <strong>{{ note.verseId }} · {{ note.authorDisplayName }}</strong>
-          <span>{{ t(note.authorType) }} · {{ formatAdminDate(note.updatedAt, locale) }}</span>
-          <span class="bible-note-record__content">{{ note.content }}</span>
-        </span>
-        <v-chip size="small" :color="statusColor(note.status)" variant="tonal">
-          {{ t(note.status) }}
-        </v-chip>
-        <v-icon icon="mdi-chevron-right" size="20" />
-      </button>
+        <strong>{{ note.verseId }} · {{ note.authorDisplayName }}</strong>
+        <span>{{ t(note.authorType) }} · {{ formatAdminDate(note.updatedAt, locale) }}</span>
+        <span class="bible-note-record__content">{{ note.content }}</span>
+        <template #trailing>
+          <v-chip size="small" :color="statusColor(note.status)" variant="tonal">
+            {{ t(note.status) }}
+          </v-chip>
+        </template>
+      </AdminMobileRecord>
     </div>
   </AdminDataState>
 </template>
@@ -115,8 +113,5 @@ const { locale, t } = useI18n();
 <style scoped>
 .cursor-pointer { cursor: pointer; }
 .note-content { max-width: 420px; }
-.bible-note-record { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; border: 0; border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08); padding: 14px 16px; color: inherit; background: transparent; text-align: left; }
-.bible-note-record__main { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
-.bible-note-record__main span { overflow: hidden; color: rgba(var(--v-theme-on-surface), 0.62); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 .bible-note-record__content { color: rgba(var(--v-theme-on-surface), 0.78) !important; font-size: 13px !important; }
 </style>

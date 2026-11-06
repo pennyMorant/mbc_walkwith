@@ -3,6 +3,7 @@ import type { AdminUser, AdminUserStatus } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 
 defineProps<{
   users: AdminUser[];
@@ -54,30 +55,24 @@ const { t } = useI18n();
     </v-table>
 
     <div class="d-md-none">
-      <button
+      <AdminMobileRecord
         v-for="user in users"
         :key="user.id"
-        class="admin-user-record"
-        type="button"
-        @click="$emit('open', user)"
+        @activate="$emit('open', user)"
       >
-        <span class="admin-user-record__main">
-          <strong>{{ user.name }}</strong>
-          <span>{{ user.email }}</span>
-          <span>{{ t(user.role) }}</span>
-        </span>
-        <v-chip size="small" :color="statusColor(user.status)">
-          {{ t(user.status) }}
-        </v-chip>
-        <v-icon icon="mdi-chevron-right" size="20" />
-      </button>
+        <strong>{{ user.name }}</strong>
+        <span>{{ user.email }}</span>
+        <span>{{ t(user.role) }}</span>
+        <template #trailing>
+          <v-chip size="small" :color="statusColor(user.status)">
+            {{ t(user.status) }}
+          </v-chip>
+        </template>
+      </AdminMobileRecord>
     </div>
   </AdminDataState>
 </template>
 
 <style scoped>
 .cursor-pointer { cursor: pointer; }
-.admin-user-record { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; border: 0; border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08); padding: 14px 16px; color: inherit; background: transparent; text-align: left; }
-.admin-user-record__main { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
-.admin-user-record__main span { overflow: hidden; color: rgba(var(--v-theme-on-surface), 0.62); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 </style>

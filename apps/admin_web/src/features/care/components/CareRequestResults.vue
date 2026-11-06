@@ -8,6 +8,7 @@ import type {
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 
 defineProps<{
   requests: CareRequestAdmin[];
@@ -71,35 +72,27 @@ const { locale, t } = useI18n();
     </v-table>
 
     <div class="d-md-none">
-      <button
+      <AdminMobileRecord
         v-for="request in requests"
         :key="request.id"
-        class="care-record"
-        type="button"
-        @click="$emit('open', request)"
+        @activate="$emit('open', request)"
       >
-        <span class="care-record__main">
-          <strong>{{ request.title }}</strong>
-          <span>{{ request.memberDisplayName }} · {{ request.memberEmail }}</span>
-          <span>{{ request.assigneeName || t("common.notSet") }}</span>
-        </span>
-        <span class="care-record__status">
+        <strong>{{ request.title }}</strong>
+        <span>{{ request.memberDisplayName }} · {{ request.memberEmail }}</span>
+        <span>{{ request.assigneeName || t("common.notSet") }}</span>
+        <template #trailing>
           <v-chip size="small" :color="statusColor(request.status)">
             {{ t(request.status) }}
           </v-chip>
           <v-chip size="small" variant="tonal" :color="privacyColor(request.privacyLevel)">
             {{ t(request.privacyLevel) }}
           </v-chip>
-        </span>
-        <v-icon icon="mdi-chevron-right" size="20" />
-      </button>
+        </template>
+      </AdminMobileRecord>
     </div>
   </AdminDataState>
 </template>
 
 <style scoped>
 .cursor-pointer { cursor: pointer; }
-.care-record { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; border: 0; border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08); padding: 14px 16px; color: inherit; background: transparent; text-align: left; }
-.care-record__main, .care-record__status { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 4px; }
-.care-record__main span { overflow: hidden; color: rgba(var(--v-theme-on-surface), 0.62); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 </style>

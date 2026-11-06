@@ -247,6 +247,10 @@ form-style modal sheets. Feature widgets own their fields, validation, business
 state, and submission; they should not duplicate SafeArea, keyboard inset, or
 standard content-padding code.
 
+Admin Web responsive result lists use `AdminMobileRecord` for the small-screen
+interactive row, truncation, trailing status area, and navigation affordance.
+Feature components provide record content and retain command ownership.
+
 Shared component rules:
 
 - Generic components go under `shared/widgets/`.

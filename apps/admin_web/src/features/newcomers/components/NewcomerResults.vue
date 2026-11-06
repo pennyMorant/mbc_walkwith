@@ -3,6 +3,7 @@ import type { NewcomerProfile } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import {
   newcomerContactLine,
   newcomerStatusColor
@@ -79,30 +80,24 @@ const { t } = useI18n();
     </v-table>
 
     <div class="d-md-none">
-      <button
+      <AdminMobileRecord
         v-for="newcomer in newcomers"
         :key="newcomer.id"
-        class="newcomer-record"
-        type="button"
-        @click="$emit('open', newcomer)"
+        @activate="$emit('open', newcomer)"
       >
-        <span class="newcomer-record__main">
-          <strong>{{ newcomer.displayName }}</strong>
-          <span>{{ newcomerContactLine(newcomer) || t("common.notSet") }}</span>
-          <span>{{ newcomer.assigneeName || t("common.notSet") }}</span>
-        </span>
-        <v-chip size="small" :color="newcomerStatusColor(newcomer.status)">
-          {{ t(newcomer.status) }}
-        </v-chip>
-        <v-icon icon="mdi-chevron-right" size="20" />
-      </button>
+        <strong>{{ newcomer.displayName }}</strong>
+        <span>{{ newcomerContactLine(newcomer) || t("common.notSet") }}</span>
+        <span>{{ newcomer.assigneeName || t("common.notSet") }}</span>
+        <template #trailing>
+          <v-chip size="small" :color="newcomerStatusColor(newcomer.status)">
+            {{ t(newcomer.status) }}
+          </v-chip>
+        </template>
+      </AdminMobileRecord>
     </div>
   </AdminDataState>
 </template>
 
 <style scoped>
 .cursor-pointer { cursor: pointer; }
-.newcomer-record { display: grid; width: 100%; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; border: 0; border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08); padding: 14px 16px; color: inherit; background: transparent; text-align: left; }
-.newcomer-record__main { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
-.newcomer-record__main span { overflow: hidden; color: rgba(var(--v-theme-on-surface), 0.62); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 </style>
