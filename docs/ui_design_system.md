@@ -234,6 +234,10 @@ AppListCard
 AppBottomSheetScaffold
 ```
 
+`AppErrorState` owns the shared icon, message, and retry-action layout. Feature
+adapters provide localized copy, choose any domain-specific icon, and retain
+ownership of retry behavior.
+
 `AppButton` owns shared button variants, shape, loading, selected state, and
 minimum touch height. Use `expanded: true` when an action must fill its available
 width instead of wrapping the button in a page-local `SizedBox`.
