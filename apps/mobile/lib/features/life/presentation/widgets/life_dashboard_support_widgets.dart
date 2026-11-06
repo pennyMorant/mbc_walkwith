@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../app/app_routes.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../domain/life_post.dart';
 import '../life_post_detail_presentation.dart';
@@ -146,16 +147,18 @@ class LifePrayerActionCard extends StatelessWidget {
             spacing: 10,
             runSpacing: 10,
             children: [
-              FilledButton.icon(
+              AppButton(
+                label: l10n.prayerSubmitAction,
+                icon: Icons.add,
+                variant: AppButtonVariant.filled,
                 onPressed: () => PrayerRequestSheet.show(context),
-                icon: const Icon(Icons.add),
-                label: Text(l10n.prayerSubmitAction),
               ),
               if (memberSession != null)
-                OutlinedButton.icon(
+                AppButton(
+                  label: l10n.careSubmitAction,
+                  icon: Icons.volunteer_activism_outlined,
+                  variant: AppButtonVariant.outlined,
                   onPressed: () => CareRequestSheet.show(context),
-                  icon: const Icon(Icons.volunteer_activism_outlined),
-                  label: Text(l10n.careSubmitAction),
                 ),
             ],
           ),

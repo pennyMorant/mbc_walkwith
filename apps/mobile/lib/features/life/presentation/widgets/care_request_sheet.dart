@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/api/api_error.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/care_repository.dart';
@@ -59,21 +60,10 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.volunteer_activism_outlined,
-                    color: colorScheme.primary,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      l10n.careSubmitTitle,
-                      style: Theme.of(context).textTheme.titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ],
+              Text(
+                l10n.careSubmitTitle,
+                style: Theme.of(context).textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 12),
               Text(
@@ -99,6 +89,7 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
               ),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 initialValue: _privacyLevel,
                 decoration: appFilledInputDecoration(
                   context,
@@ -139,15 +130,12 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
               const SizedBox(height: 18),
               SizedBox(
                 width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: session == null || _isSubmitting ? null : _submit,
-                  icon: _isSubmitting
-                      ? const SizedBox.square(
-                          dimension: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.send_outlined),
-                  label: Text(l10n.careSubmitAction),
+                child: AppButton(
+                  label: l10n.careSubmitAction,
+                  icon: Icons.send_outlined,
+                  variant: AppButtonVariant.filled,
+                  loading: _isSubmitting,
+                  onPressed: session == null ? null : _submit,
                 ),
               ),
             ],
@@ -158,6 +146,9 @@ class _CareRequestSheetState extends ConsumerState<CareRequestSheet> {
   }
 
   Future<void> _submit() async {
+    if (_isSubmitting) {
+      return;
+    }
     final l10n = AppLocalizations.of(context)!;
     final navigator = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);

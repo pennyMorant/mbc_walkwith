@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/prayer_repository.dart';
@@ -60,18 +61,10 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Icon(Icons.favorite_outline, color: colorScheme.primary),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      l10n.prayerSubmitTitle,
-                      style: Theme.of(context).textTheme.titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ],
+              Text(
+                l10n.prayerSubmitTitle,
+                style: Theme.of(context).textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 12),
               Text(
@@ -84,12 +77,14 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
               const SizedBox(height: 18),
               AppFilledTextField(
                 controller: _titleController,
+                enabled: !_isSubmitting,
                 textInputAction: TextInputAction.next,
                 hintText: l10n.prayerTitleLabel,
               ),
               const SizedBox(height: 10),
               AppFilledTextField(
                 controller: _bodyController,
+                enabled: !_isSubmitting,
                 minLines: 4,
                 maxLines: 7,
                 textInputAction: TextInputAction.newline,
@@ -99,6 +94,7 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
                 const SizedBox(height: 10),
                 AppFilledTextField(
                   controller: _nameController,
+                  enabled: !_isSubmitting,
                   textInputAction: TextInputAction.done,
                   hintText: l10n.prayerNameLabel,
                 ),
@@ -140,15 +136,12 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
               const SizedBox(height: 18),
               SizedBox(
                 width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: _isSubmitting ? null : _submit,
-                  icon: _isSubmitting
-                      ? const SizedBox.square(
-                          dimension: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.send_outlined),
-                  label: Text(l10n.prayerSubmitAction),
+                child: AppButton(
+                  label: l10n.prayerSubmitAction,
+                  icon: Icons.send_outlined,
+                  variant: AppButtonVariant.filled,
+                  loading: _isSubmitting,
+                  onPressed: _submit,
                 ),
               ),
             ],
@@ -159,6 +152,9 @@ class _PrayerRequestSheetState extends ConsumerState<PrayerRequestSheet> {
   }
 
   Future<void> _submit() async {
+    if (_isSubmitting) {
+      return;
+    }
     final l10n = AppLocalizations.of(context)!;
     final navigator = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);
