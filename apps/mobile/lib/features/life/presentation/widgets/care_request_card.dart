@@ -20,43 +20,42 @@ class CareRequestCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.volunteer_activism_outlined,
-                  color: colorScheme.primary,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    request.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-              ],
+            Text(
+              request.title,
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
             Text(
               request.body,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                AppChip(label: _statusLabel(l10n, request.status)),
-                AppChip(label: _privacyLabel(l10n, request.privacyLevel)),
+                AppChip(
+                  label: _statusLabel(l10n, request.status),
+                  selected: true,
+                ),
+                AppChip(
+                  label: _privacyLabel(l10n, request.privacyLevel),
+                  icon: _privacyIcon(request.privacyLevel),
+                ),
                 if (request.assigneeName.isNotEmpty)
-                  AppChip(label: request.assigneeName),
+                  AppChip(
+                    label: request.assigneeName,
+                    icon: Icons.person_outline,
+                  ),
                 if (request.nextFollowUpAt != null)
-                  AppChip(label: _followUpLabel(context, request)),
+                  AppChip(
+                    label: _followUpLabel(context, request),
+                    icon: Icons.event_outlined,
+                  ),
               ],
             ),
           ],
@@ -77,6 +76,15 @@ String _statusLabel(AppLocalizations l10n, String status) {
   };
 }
 
+IconData _privacyIcon(String privacyLevel) {
+  return switch (privacyLevel) {
+    'pastoral_only' => Icons.lock_outline,
+    'assigned_team' => Icons.group_outlined,
+    'admin_restricted' => Icons.admin_panel_settings_outlined,
+    _ => Icons.help_outline,
+  };
+}
+
 String _privacyLabel(AppLocalizations l10n, String privacyLevel) {
   return switch (privacyLevel) {
     'pastoral_only' => l10n.carePrivacyPastoralOnly,
@@ -92,7 +100,6 @@ String _followUpLabel(BuildContext context, CareRequest request) {
     return '';
   }
   final local = MaterialLocalizations.of(context);
-  return AppLocalizations.of(
-    context,
-  )!.careNextFollowUp(local.formatMediumDate(value));
+  return AppLocalizations.of(context)!
+      .careNextFollowUp(local.formatMediumDate(value));
 }

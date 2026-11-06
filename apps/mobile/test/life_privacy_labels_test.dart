@@ -63,14 +63,58 @@ void main() {
     expect(find.text('Private'), findsNothing);
     expect(find.text('Pastoral team only'), findsNothing);
   });
+
+  testWidgets(
+    'prayer and care cards fit Spanish large text on a small screen',
+    (tester) async {
+      tester.view.physicalSize = const Size(320, 760);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        _localizedApp(
+          locale: const Locale('es'),
+          textScaler: const TextScaler.linear(1.3),
+          child: ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
+              PrayerRequestCard(
+                request: _memberDuplicatePrayerRequest,
+                isMine: true,
+              ),
+              const SizedBox(height: 12),
+              CareRequestCard(request: _assignedCareRequest),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Mías'), findsOneWidget);
+      expect(find.text('Solo pastoral'), findsOneWidget);
+      expect(find.byIcon(Icons.favorite_outline), findsNothing);
+      expect(find.byIcon(Icons.volunteer_activism_outlined), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
 
-Widget _localizedApp({required Widget child}) {
+Widget _localizedApp({
+  required Widget child,
+  Locale locale = const Locale('en'),
+  TextScaler textScaler = TextScaler.noScaling,
+}) {
   return ProviderScope(
     child: MaterialApp(
+      locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: AppTheme.build(null, Brightness.light),
+      builder: (context, appChild) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaler: textScaler),
+        child: appChild!,
+      ),
       home: Scaffold(body: child),
     ),
   );
@@ -137,6 +181,21 @@ final _unknownPrivacyCareRequest = CareRequest(
   nextFollowUpAt: null,
   createdAt: DateTime.utc(2026, 1, 4),
   updatedAt: DateTime.utc(2026, 1, 4),
+);
+
+final _assignedCareRequest = CareRequest(
+  id: 'care_assigned',
+  userId: 'member_1',
+  memberDisplayName: 'Member',
+  memberEmail: 'member@example.com',
+  title: 'Acompañamiento pastoral para nuestra familia',
+  body: 'Nos gustaría conversar con el equipo pastoral durante esta semana.',
+  status: 'in_progress',
+  privacyLevel: 'pastoral_only',
+  assigneeName: 'Equipo de acompañamiento pastoral',
+  nextFollowUpAt: DateTime.utc(2026, 11, 8),
+  createdAt: DateTime.utc(2026, 11, 1),
+  updatedAt: DateTime.utc(2026, 11, 2),
 );
 
 const _memberSession = MemberSession(

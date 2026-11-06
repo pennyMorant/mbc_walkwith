@@ -28,18 +28,10 @@ class PrayerRequestCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(Icons.favorite_outline, color: colorScheme.primary),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    request.title,
-                    style: Theme.of(context).textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w800),
-                  ),
-                ),
-              ],
+            Text(
+              request.title,
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
             Text(
@@ -52,6 +44,13 @@ class PrayerRequestCard extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
+                if (isMine)
+                  AppChip(label: l10n.prayerMineLabel, selected: true),
+                if (isMine) AppChip(label: statusLabel),
+                AppChip(
+                  label: visibilityLabel,
+                  icon: _visibilityIcon(request.visibility),
+                ),
                 if (request.submitterName.trim().isNotEmpty)
                   AppChip(
                     label: request.submitterName.trim(),
@@ -61,16 +60,6 @@ class PrayerRequestCard extends StatelessWidget {
                   label: formatDateOnly(context, request.createdAt),
                   icon: Icons.calendar_today_outlined,
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                AppChip(label: visibilityLabel),
-                if (isMine) AppChip(label: statusLabel),
-                if (isMine) AppChip(label: l10n.prayerMineLabel),
               ],
             ),
           ],
@@ -87,6 +76,16 @@ String _statusLabel(AppLocalizations l10n, String status) {
     'hidden' => l10n.prayerStatusHidden,
     'archived' => l10n.prayerStatusArchived,
     _ => l10n.commonStatusUnknownLabel,
+  };
+}
+
+IconData _visibilityIcon(String visibility) {
+  return switch (visibility) {
+    'private' => Icons.lock_outline,
+    'public' => Icons.public_outlined,
+    'members' => Icons.groups_outlined,
+    'group' => Icons.group_outlined,
+    _ => Icons.help_outline,
   };
 }
 
