@@ -40,10 +40,10 @@ function metricIcon(metric: DashboardMetric) {
 </template>
 
 <style scoped>
-.dashboard-metric { border: 1px solid rgba(var(--v-theme-on-surface), 0.07); transition: transform 160ms ease, border-color 160ms ease; }
+.dashboard-metric { transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease; }
 .dashboard-metric:hover { transform: translateY(-2px); border-color: rgba(var(--v-theme-primary), 0.28); }
 .dashboard-metric__value { font-size: 28px; line-height: 1.15; font-weight: 800; }
-.dashboard-metric__icon { display: flex; width: 44px; height: 44px; flex: 0 0 44px; align-items: center; justify-content: center; border-radius: 50%; color: rgb(var(--v-theme-primary)); background: rgba(var(--v-theme-primary), 0.1); }
+.dashboard-metric__icon { display: flex; width: 44px; height: 44px; flex: 0 0 44px; align-items: center; justify-content: center; border-radius: 14px; color: rgb(var(--v-theme-primary)); background: rgba(var(--v-theme-primary), 0.1); }
 .dashboard-metric__icon--warning { color: rgb(var(--v-theme-warning)); background: rgba(var(--v-theme-warning), 0.11); }
 .dashboard-metric__icon--error { color: rgb(var(--v-theme-error)); background: rgba(var(--v-theme-error), 0.1); }
 .dashboard-metric__icon--info { color: rgb(var(--v-theme-info)); background: rgba(var(--v-theme-info), 0.1); }

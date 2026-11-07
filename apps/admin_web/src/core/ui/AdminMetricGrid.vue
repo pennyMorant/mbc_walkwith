@@ -47,14 +47,13 @@ defineProps<{ items: AdminMetricItem[] }>();
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  padding: 18px;
-  border: 1px solid rgba(var(--v-theme-on-surface), 0.07);
+  padding: 20px;
 }
 
 .admin-metric-card__copy { min-width: 0; }
 .admin-metric-card__label { color: rgba(var(--v-theme-on-surface), 0.64); font-size: 13px; font-weight: 600; }
 .admin-metric-card__value { margin-top: 6px; overflow-wrap: anywhere; font-size: 28px; line-height: 1.1; font-weight: 800; }
-.admin-metric-card__icon { display: flex; width: 42px; height: 42px; flex: 0 0 42px; align-items: center; justify-content: center; border-radius: 50%; color: rgb(var(--v-theme-primary)); background: rgba(var(--v-theme-primary), 0.1); }
+.admin-metric-card__icon { display: flex; width: 42px; height: 42px; flex: 0 0 42px; align-items: center; justify-content: center; border-radius: 14px; color: rgb(var(--v-theme-primary)); background: rgba(var(--v-theme-primary), 0.1); }
 .admin-metric-card__icon--secondary { color: rgb(var(--v-theme-secondary)); background: rgba(var(--v-theme-secondary), 0.1); }
 .admin-metric-card__icon--info { color: rgb(var(--v-theme-info)); background: rgba(var(--v-theme-info), 0.1); }
 .admin-metric-card__icon--warning { color: rgb(var(--v-theme-warning)); background: rgba(var(--v-theme-warning), 0.11); }

@@ -103,6 +103,10 @@ Surface rule:
 - Standard feature headers use the shared Core page-header layout for title,
   subtitle, and responsive action placement. The owning Feature still supplies
   localized copy, permission checks, loading state, and action handlers.
+- The shared shell owns the calm Material 3 surface hierarchy, constrained
+  wide-screen workspace, responsive navigation, active-route presentation,
+  and global card, table, dialog, and menu treatment. Feature pages must not
+  recreate shell chrome or override these foundations with page-local themes.
 - Repeated summary metrics use the shared responsive metric grid. Features must
   supply already calculated and localized labels, values, icons, and semantic
   tones; the shared component does not query data or derive business meaning.

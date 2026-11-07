@@ -22,9 +22,11 @@ defineProps<{
 <style scoped>
 .admin-page-header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(var(--v-theme-outline-variant), 0.55);
 }
 
 .admin-page-header__copy {
@@ -33,16 +35,17 @@ defineProps<{
 
 .admin-page-header__title {
   margin: 0;
-  font-size: 28px;
+  font-size: 30px;
   line-height: 1.2;
   font-weight: 800;
   letter-spacing: 0;
 }
 
 .admin-page-header__subtitle {
-  max-width: 760px;
-  margin: 5px 0 0;
+  max-width: 820px;
+  margin: 7px 0 0;
   color: rgba(var(--v-theme-on-surface), 0.68);
+  line-height: 1.5;
 }
 
 .admin-page-header__actions {
@@ -58,7 +61,8 @@ defineProps<{
   .admin-page-header {
     align-items: flex-start;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
+    padding-bottom: 16px;
   }
 
   .admin-page-header__title {

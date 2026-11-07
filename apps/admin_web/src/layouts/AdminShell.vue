@@ -69,13 +69,15 @@ async function handlePasswordChanged() {
   <v-app>
     <v-navigation-drawer
       v-model="navigationDrawer"
+      class="admin-shell-drawer"
+      color="surface"
       :permanent="!mobile"
       :temporary="mobile"
       :width="mobile ? 300 : 260"
     >
       <div class="admin-brand pa-5 d-flex align-center ga-3">
         <div class="admin-brand__mark d-flex align-center justify-center">
-          <v-icon icon="mdi-leaf" size="24" />
+          <v-icon icon="mdi-church" size="25" />
         </div>
         <div>
           <div class="text-h6 font-weight-bold">{{ t("app.brand") }}</div>
@@ -91,7 +93,7 @@ async function handlePasswordChanged() {
           @navigate="navigateTo"
         />
       </div>
-      <div class="admin-navigation px-2 pb-5">
+      <div class="admin-navigation px-3 pb-5">
         <section v-for="group in visibleGroups" :key="group.id" class="admin-navigation__group">
           <div v-if="group.titleKey" class="admin-navigation__label px-3 mb-1">
             {{ t(group.titleKey) }}
@@ -103,6 +105,8 @@ async function handlePasswordChanged() {
               :title="t(item.titleKey)"
               :prepend-icon="item.icon"
               :active="route.path === item.value"
+              color="primary"
+              class="admin-navigation__item"
               rounded="lg"
               @click="navigateTo(item.value)"
             />
@@ -111,7 +115,7 @@ async function handlePasswordChanged() {
       </div>
     </v-navigation-drawer>
 
-    <v-app-bar flat color="surface">
+    <v-app-bar class="admin-app-bar" flat color="surface" height="72">
       <template #prepend>
         <v-app-bar-nav-icon
           v-if="mobile"
@@ -172,8 +176,8 @@ async function handlePasswordChanged() {
       </template>
     </v-app-bar>
 
-    <v-main>
-      <v-container fluid class="pa-3 pa-sm-6 pa-lg-8">
+    <v-main class="admin-main">
+      <v-container fluid class="admin-shell__content pa-3 pa-sm-6 pa-lg-8">
         <slot />
       </v-container>
     </v-main>
@@ -187,16 +191,21 @@ async function handlePasswordChanged() {
 
 <style scoped>
 .admin-brand {
-  min-height: 78px;
+  min-height: 88px;
+  border-bottom: 1px solid rgba(var(--v-theme-outline-variant), 0.55);
 }
 
 .admin-brand__mark {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
-  border-radius: 14px;
-  color: rgb(var(--v-theme-primary));
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 16px;
+  color: rgb(var(--v-theme-on-primary-container));
   background: rgb(var(--v-theme-primary-container));
+}
+
+.admin-navigation {
+  padding-top: 18px;
 }
 
 .admin-navigation__group + .admin-navigation__group {
@@ -209,7 +218,38 @@ async function handlePasswordChanged() {
   font-weight: 700;
 }
 
+.admin-navigation__item {
+  min-height: 42px;
+  margin-block: 2px;
+}
+
+.admin-navigation__item.v-list-item--active {
+  color: rgb(var(--v-theme-on-primary-container));
+  background: rgba(var(--v-theme-primary-container), 0.72);
+  font-weight: 700;
+}
+
+.admin-app-bar {
+  border-bottom: 1px solid rgba(var(--v-theme-outline-variant), 0.55) !important;
+}
+
+.admin-main {
+  background: rgb(var(--v-theme-background));
+}
+
+.admin-shell__content {
+  width: 100%;
+  max-width: 1680px;
+  margin-inline: auto;
+}
+
 .admin-account-button {
   height: 48px;
+}
+
+@media (max-width: 600px) {
+  .admin-brand {
+    min-height: 78px;
+  }
 }
 </style>

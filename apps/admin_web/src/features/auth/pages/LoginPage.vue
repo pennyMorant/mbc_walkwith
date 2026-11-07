@@ -159,9 +159,7 @@ function submit() {
 
 <style scoped>
 .login-main {
-  background:
-    linear-gradient(145deg, rgba(56, 106, 32, 0.14), transparent 46%),
-    rgb(var(--v-theme-background));
+  background: rgb(var(--v-theme-background));
 }
 
 .login-shell {
@@ -175,7 +173,7 @@ function submit() {
 .login-card {
   width: min(100%, 440px);
   padding: 32px;
-  border: 1px solid rgba(86, 98, 76, 0.12);
+  box-shadow: 0 18px 56px rgba(25, 28, 26, 0.08) !important;
 }
 
 .login-brand {
