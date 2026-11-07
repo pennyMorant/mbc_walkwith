@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/utils/app_formatters.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/giving_record.dart';
 
@@ -65,15 +66,12 @@ class AnnualStatementCard extends StatelessWidget {
             ),
             if (onPreview != null) ...[
               const SizedBox(height: 14),
-              FilledButton.icon(
+              AppButton(
                 onPressed: isLoading ? null : onPreview,
-                icon: isLoading
-                    ? const SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.visibility_outlined),
-                label: Text(l10n.annualStatementPreviewAction),
+                icon: Icons.visibility_outlined,
+                label: l10n.annualStatementPreviewAction,
+                loading: isLoading,
+                variant: AppButtonVariant.filled,
               ),
             ] else ...[
               const SizedBox(height: 12),

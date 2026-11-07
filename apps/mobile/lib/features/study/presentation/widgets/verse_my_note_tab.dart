@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../theme/app_theme.dart';
@@ -104,15 +105,12 @@ class MyVerseNoteTab extends StatelessWidget {
           const SizedBox(height: 14),
           Align(
             alignment: Alignment.centerRight,
-            child: FilledButton.icon(
+            child: AppButton(
               onPressed: saving ? null : onNoteSaved,
-              icon: saving
-                  ? const SizedBox.square(
-                      dimension: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.save_outlined),
-              label: Text(l10n.saveNoteAction),
+              icon: Icons.save_outlined,
+              label: l10n.saveNoteAction,
+              loading: saving,
+              variant: AppButtonVariant.filled,
             ),
           ),
         ],

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/app_bottom_sheet_scaffold.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
 import '../../data/newcomer_repository.dart';
@@ -117,18 +118,13 @@ class _NewcomerWelcomeSheetState extends ConsumerState<NewcomerWelcomeSheet> {
             ),
           ],
           const SizedBox(height: 18),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: _isSubmitting ? null : _submit,
-              icon: _isSubmitting
-                  ? const SizedBox.square(
-                      dimension: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.send_outlined),
-              label: Text(l10n.newcomerSubmitAction),
-            ),
+          AppButton(
+            onPressed: _isSubmitting ? null : _submit,
+            icon: Icons.send_outlined,
+            label: l10n.newcomerSubmitAction,
+            loading: _isSubmitting,
+            expanded: true,
+            variant: AppButtonVariant.filled,
           ),
         ],
       ),

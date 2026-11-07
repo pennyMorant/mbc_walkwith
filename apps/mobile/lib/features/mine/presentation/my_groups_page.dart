@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_loading_state.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../life/data/group_repository.dart';
@@ -113,10 +114,11 @@ class _GuestGroupsView extends StatelessWidget {
               children: [
                 Text(l10n.groupSignInToViewMineBody),
                 const SizedBox(height: 12),
-                FilledButton.icon(
+                AppButton(
                   onPressed: onSignIn,
-                  icon: const Icon(Icons.login),
-                  label: Text(l10n.memberSignInAction),
+                  icon: Icons.login,
+                  label: l10n.memberSignInAction,
+                  variant: AppButtonVariant.filled,
                 ),
               ],
             ),

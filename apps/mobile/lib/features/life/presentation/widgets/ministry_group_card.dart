@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../domain/ministry_group.dart';
 
@@ -106,19 +107,14 @@ class MinistryGroupCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 14),
-              FilledButton.icon(
+              AppButton(
                 onPressed: _action(group),
-                icon: isSubmitting
-                    ? const SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Icon(
-                        group.hasSubmittedApplication
-                            ? Icons.cancel_outlined
-                            : Icons.person_add_alt_1_outlined,
-                      ),
-                label: Text(_actionLabel(l10n, group)),
+                icon: group.hasSubmittedApplication
+                    ? Icons.cancel_outlined
+                    : Icons.person_add_alt_1_outlined,
+                label: _actionLabel(l10n, group),
+                loading: isSubmitting,
+                variant: AppButtonVariant.filled,
               ),
             ],
           ),

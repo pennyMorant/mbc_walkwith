@@ -10,6 +10,7 @@ import '../../../../core/ai/member_ai_study_response.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/utils/ai_error_messages.dart';
 import '../../../../shared/widgets/ai_info_panel.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_markdown_body.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 import '../../../member_auth/data/member_session_repository.dart';
@@ -41,9 +42,8 @@ class _SermonAiQuestionSheetState extends ConsumerState<SermonAiQuestionSheet> {
       return;
     }
     _initialized = true;
-    _questionController.text = AppLocalizations.of(
-      context,
-    )!.sermonAiDefaultQuestion;
+    _questionController.text = AppLocalizations.of(context)!
+        .sermonAiDefaultQuestion;
   }
 
   @override
@@ -84,9 +84,8 @@ class _SermonAiQuestionSheetState extends ConsumerState<SermonAiQuestionSheet> {
             children: [
               Text(
                 l10n.sermonAiSheetTitle,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                style: Theme.of(context).textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 8),
               Text(
@@ -115,21 +114,16 @@ class _SermonAiQuestionSheetState extends ConsumerState<SermonAiQuestionSheet> {
                   body: l10n.aiStudySignInBody,
                 )
               else ...[
-                FilledButton.icon(
+                AppButton(
                   onPressed: _loading || _questionController.text.trim().isEmpty
                       ? null
                       : () => _ask(session),
-                  icon: _loading
-                      ? const SizedBox.square(
-                          dimension: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.auto_awesome),
-                  label: Text(
-                    _response == null
-                        ? l10n.sermonAiGenerateAction
-                        : l10n.aiStudyRetryAction,
-                  ),
+                  icon: Icons.auto_awesome,
+                  label: _response == null
+                      ? l10n.sermonAiGenerateAction
+                      : l10n.aiStudyRetryAction,
+                  loading: _loading,
+                  variant: AppButtonVariant.filled,
                 ),
                 if (_error != null) ...[
                   const SizedBox(height: 12),
@@ -144,9 +138,8 @@ class _SermonAiQuestionSheetState extends ConsumerState<SermonAiQuestionSheet> {
                   const SizedBox(height: 18),
                   Text(
                     l10n.aiStudyResultTitle,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
                   ),
                   const SizedBox(height: 8),
                   AppMarkdownBody(data: _response!.markdown),

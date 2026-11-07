@@ -5,6 +5,7 @@ import '../../../../core/ai/member_ai_study_response.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/utils/ai_error_messages.dart';
 import '../../../../shared/widgets/ai_info_panel.dart';
+import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_markdown_body.dart';
 import '../../../../shared/widgets/filled_text_field.dart';
 
@@ -82,21 +83,16 @@ class AiStudySheetContent extends StatelessWidget {
             body: l10n.aiStudySignInBody,
           )
         else ...[
-          FilledButton.icon(
+          AppButton(
             onPressed: loading || questionController.text.trim().isEmpty
                 ? null
                 : onSubmit,
-            icon: loading
-                ? const SizedBox.square(
-                    dimension: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.auto_awesome),
-            label: Text(
-              response == null
-                  ? l10n.aiStudyGenerateAction
-                  : l10n.aiStudyRetryAction,
-            ),
+            icon: Icons.auto_awesome,
+            label: response == null
+                ? l10n.aiStudyGenerateAction
+                : l10n.aiStudyRetryAction,
+            loading: loading,
+            variant: AppButtonVariant.filled,
           ),
           if (error != null) ...[
             const SizedBox(height: 12),
