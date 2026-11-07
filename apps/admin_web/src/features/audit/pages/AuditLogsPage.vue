@@ -7,6 +7,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 import AuditLogDetailDrawer from "../components/AuditLogDetailDrawer.vue";
 import AuditLogFiltersCard from "../components/AuditLogFiltersCard.vue";
@@ -58,27 +59,14 @@ function openLog(log: AuditLog) {
       </template>
     </AdminPageHeader>
 
-    <v-alert
-      v-if="backgroundQueryError"
+    <AdminRetryAlert
+      :message="backgroundQueryError ? t('audit.refreshFailed') : ''"
+      :retry-label="t('Retry')"
       type="warning"
-      variant="tonal"
+      button-color="warning"
       class="mt-4"
-    >
-      <div
-        class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
-      >
-        <span>{{ t("audit.refreshFailed") }}</span>
-        <v-btn
-          color="warning"
-          variant="tonal"
-          size="small"
-          prepend-icon="mdi-refresh"
-          @click="refreshList"
-        >
-          {{ t("Retry") }}
-        </v-btn>
-      </div>
-    </v-alert>
+      @retry="refreshList"
+    />
 
     <AuditLogFiltersCard
       class="mt-6"

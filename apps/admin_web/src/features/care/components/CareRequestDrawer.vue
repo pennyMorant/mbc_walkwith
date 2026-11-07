@@ -11,6 +11,7 @@ import { computed } from "vue";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 import type {
   CareFollowUpEditorForm,
@@ -143,26 +144,13 @@ const followUpDisabled = computed(
               density="comfortable"
               variant="outlined"
             />
-            <v-alert
-              v-if="assigneesErrorMessage"
-              type="error"
-              variant="tonal"
+            <AdminRetryAlert
+              :message="assigneesErrorMessage"
+              :retry-label="t('common.refresh')"
               density="compact"
               class="mb-4"
-            >
-              <div class="d-flex align-center justify-space-between ga-3">
-                <span>{{ assigneesErrorMessage }}</span>
-                <v-btn
-                  size="small"
-                  variant="tonal"
-                  color="error"
-                  prepend-icon="mdi-refresh"
-                  @click="emit('retryAssignees')"
-                >
-                  {{ t("common.refresh") }}
-                </v-btn>
-              </div>
-            </v-alert>
+              @retry="emit('retryAssignees')"
+            />
           </v-col>
           <v-col cols="12" md="6">
             <v-text-field

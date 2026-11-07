@@ -3,6 +3,7 @@ import type { BibleKnowledgeEntity } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 import type { BibleKnowledgeFilterForm } from "../bible_knowledge_workspace_models";
 
@@ -100,25 +101,12 @@ const { optionItems, t } = useI18n();
         indeterminate
         color="primary"
       />
-      <v-alert
-        v-if="refreshErrorMessage"
-        type="error"
-        variant="tonal"
+      <AdminRetryAlert
+        :message="refreshErrorMessage"
+        :retry-label="t('common.refresh')"
         class="ma-4"
-      >
-        <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-          <span>{{ refreshErrorMessage }}</span>
-          <v-btn
-            color="error"
-            prepend-icon="mdi-refresh"
-            size="small"
-            variant="tonal"
-            @click="$emit('retry')"
-          >
-            {{ t("common.refresh") }}
-          </v-btn>
-        </div>
-      </v-alert>
+        @retry="$emit('retry')"
+      />
       <v-table density="comfortable">
         <thead>
           <tr>

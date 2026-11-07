@@ -56,7 +56,8 @@ describe("Bible knowledge query state", () => {
     expect(list).toContain(
       ':pending="(isPending || isFetching) && entities.length === 0"'
     );
-    expect(list).toContain('v-if="refreshErrorMessage"');
+    expect(list).toContain(':message="refreshErrorMessage"');
+    expect(list).toContain("AdminRetryAlert");
     expect(list).toContain("!refreshErrorMessage && entities.length === 0");
     expect(query).toContain("const initialError = computed");
     expect(query).toContain("const refreshError = computed");

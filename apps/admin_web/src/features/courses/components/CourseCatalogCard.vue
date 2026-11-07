@@ -3,6 +3,7 @@ import type { Course } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 defineProps<{
   courses: Course[];
@@ -22,27 +23,14 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
-    <v-alert
-      v-if="refreshErrorMessage"
+    <AdminRetryAlert
+      :message="refreshErrorMessage ? `${t('courses.refreshFailed')} ${refreshErrorMessage}` : ''"
+      :retry-label="t('Retry')"
       type="warning"
-      variant="tonal"
+      button-color="warning"
       class="ma-4"
-    >
-      <div
-        class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
-      >
-        <span>{{ t("courses.refreshFailed") }} {{ refreshErrorMessage }}</span>
-        <v-btn
-          color="warning"
-          variant="tonal"
-          size="small"
-          prepend-icon="mdi-refresh"
-          @click="$emit('retry')"
-        >
-          {{ t("Retry") }}
-        </v-btn>
-      </div>
-    </v-alert>
+      @retry="$emit('retry')"
+    />
     <AdminDataState
       :pending="pending"
       :error-message="errorMessage"

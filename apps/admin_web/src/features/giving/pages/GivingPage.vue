@@ -2,6 +2,7 @@
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 import GivingCategoryReportCard from "../components/GivingCategoryReportCard.vue";
 import GivingFundDrawer from "../components/GivingFundDrawer.vue";
@@ -133,30 +134,16 @@ const {
 
     <GivingSummaryCards :summary="summary" :dollars="dollars" />
 
-    <v-alert
-      v-if="fundDirectoryError"
+    <AdminRetryAlert
+      :message="fundDirectoryError
+        ? `${t('giving.fundDirectoryFailed')} ${formatApiErrorMessage(fundDirectoryError, t('common.error'))}`
+        : ''"
+      :retry-label="t('Retry')"
       class="mt-6"
       type="warning"
-      variant="tonal"
-    >
-      <div
-        class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
-      >
-        <span>
-          {{ t("giving.fundDirectoryFailed") }}
-          {{ formatApiErrorMessage(fundDirectoryError, t("common.error")) }}
-        </span>
-        <v-btn
-          color="warning"
-          variant="tonal"
-          size="small"
-          prepend-icon="mdi-refresh"
-          @click="refreshFundDirectory"
-        >
-          {{ t("Retry") }}
-        </v-btn>
-      </div>
-    </v-alert>
+      button-color="warning"
+      @retry="refreshFundDirectory"
+    />
 
     <GivingReconciliationCard
       :filters="reconciliationFilters"

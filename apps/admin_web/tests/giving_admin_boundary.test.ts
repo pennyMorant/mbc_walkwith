@@ -66,7 +66,8 @@ describe("admin giving boundary", () => {
     expect(commands).toContain("...options.appliedTransactionFilters.value");
     expect(page).toContain('@apply="applyTransactionFilters"');
     expect(page).toContain('@retry="refreshTransactions"');
-    expect(page).toContain('@click="refreshFundDirectory"');
+    expect(page).toContain('@retry="refreshFundDirectory"');
+    expect(page).toContain("AdminRetryAlert");
     expect(page).toContain(':refresh-error="transactionsRefreshError"');
     expect(page).toContain(':error="statementsError"');
     expect(page).not.toContain(

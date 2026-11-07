@@ -7,6 +7,7 @@ import type {
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 import type { LifePostLibraryFilterForm } from "../life_post_library_models";
 import LifePostLibraryFilters from "./LifePostLibraryFilters.vue";
@@ -78,47 +79,24 @@ function sortLabel(weight: number) {
     </div>
     <v-divider />
     <v-progress-linear v-if="pending" indeterminate color="primary" />
-    <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">
-      <div
-        class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
-      >
-        <span>{{ formatApiErrorMessage(error, t("common.error")) }}</span>
-        <v-btn
-          color="error"
-          variant="tonal"
-          size="small"
-          prepend-icon="mdi-refresh"
-          @click="emit('retry')"
-        >
-          {{ t("Retry") }}
-        </v-btn>
-      </div>
-    </v-alert>
+    <AdminRetryAlert
+      v-else-if="error"
+      :message="formatApiErrorMessage(error, t('common.error'))"
+      :retry-label="t('Retry')"
+      class="ma-4"
+      @retry="emit('retry')"
+    />
     <template v-else>
-      <v-alert
-        v-if="refreshError"
+      <AdminRetryAlert
+        :message="refreshError
+          ? `${t('life.refreshFailed')} ${formatApiErrorMessage(refreshError, t('common.error'))}`
+          : ''"
+        :retry-label="t('Retry')"
         type="warning"
-        variant="tonal"
+        button-color="warning"
         class="ma-4"
-      >
-        <div
-          class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
-        >
-          <span>
-            {{ t("life.refreshFailed") }}
-            {{ formatApiErrorMessage(refreshError, t("common.error")) }}
-          </span>
-          <v-btn
-            color="warning"
-            variant="tonal"
-            size="small"
-            prepend-icon="mdi-refresh"
-            @click="emit('retry')"
-          >
-            {{ t("Retry") }}
-          </v-btn>
-        </div>
-      </v-alert>
+        @retry="emit('retry')"
+      />
       <v-table density="comfortable">
         <thead>
           <tr>
