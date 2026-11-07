@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
@@ -67,6 +68,11 @@ const {
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="560">
       <div class="pa-5">
+        <AdminDrawerHeader
+          :title="selectedEntity ? selectedEntity.name : t('New entity')"
+          :close-label="t('common.close')"
+          @close="drawer = false"
+        />
         <BibleKnowledgeEntityEditor
           v-model="form"
           :selected-entity="selectedEntity"

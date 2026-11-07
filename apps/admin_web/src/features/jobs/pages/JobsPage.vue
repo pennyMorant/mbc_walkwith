@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
@@ -102,17 +103,18 @@ const {
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="520">
       <div v-if="selectedJob" class="pa-5">
-        <div class="d-flex align-start justify-space-between ga-4">
-          <div>
-            <div class="text-h6 font-weight-bold">{{ t(selectedJob.type) }}</div>
-            <div class="text-caption text-medium-emphasis mt-1">
-              {{ selectedJob.id }}
-            </div>
-          </div>
-          <v-chip :color="statusColor(selectedJob.status)">
-            {{ t(selectedJob.status) }}
-          </v-chip>
-        </div>
+        <AdminDrawerHeader
+          :title="t(selectedJob.type)"
+          :subtitle="selectedJob.id"
+          :close-label="t('common.close')"
+          @close="drawer = false"
+        >
+          <template #meta>
+            <v-chip :color="statusColor(selectedJob.status)">
+              {{ t(selectedJob.status) }}
+            </v-chip>
+          </template>
+        </AdminDrawerHeader>
 
         <v-divider class="my-5" />
         <div class="text-subtitle-2 font-weight-bold">{{ t("Resource") }}</div>

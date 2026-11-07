@@ -3,6 +3,7 @@ import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
@@ -95,22 +96,21 @@ const summaryMetrics = computed(() => [
 
     <AdminResponsiveDrawer v-model="drawer" :desktop-width="640">
       <div v-if="selectedNewcomer" class="pa-5">
-        <div class="d-flex align-start justify-space-between ga-4">
-          <div>
-            <div class="text-h6 font-weight-bold">
-              {{ selectedNewcomer.displayName }}
-            </div>
-            <div class="text-caption text-medium-emphasis mt-1">
-              {{ newcomerContactLine(selectedNewcomer) || t("common.notSet") }}
-            </div>
-          </div>
-          <v-chip
-            size="small"
-            :color="newcomerStatusColor(selectedNewcomer.status)"
-          >
-            {{ t(selectedNewcomer.status) }}
-          </v-chip>
-        </div>
+        <AdminDrawerHeader
+          :title="selectedNewcomer.displayName"
+          :subtitle="newcomerContactLine(selectedNewcomer) || t('common.notSet')"
+          :close-label="t('common.close')"
+          @close="drawer = false"
+        >
+          <template #meta>
+            <v-chip
+              size="small"
+              :color="newcomerStatusColor(selectedNewcomer.status)"
+            >
+              {{ t(selectedNewcomer.status) }}
+            </v-chip>
+          </template>
+        </AdminDrawerHeader>
 
         <v-alert type="info" variant="tonal" class="mt-5">
           {{ t("newcomers.privacyNotice") }}

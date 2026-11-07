@@ -27,7 +27,19 @@ describe("admin drawer header", () => {
         "settings/components/SettingsEditorDrawer.vue",
         "users/components/AdminUserEditorDrawer.vue",
         "notifications/components/NotificationDeliveryDetailDrawer.vue",
-        "prayer/components/PrayerModerationDrawer.vue"
+        "prayer/components/PrayerModerationDrawer.vue",
+        "bible-knowledge/pages/BibleKnowledgePage.vue",
+        "bible-notes/components/BibleNoteModerationDrawer.vue",
+        "courses/components/CourseEditorDrawer.vue",
+        "discipleship/components/DiscipleshipProgressDrawer.vue",
+        "giving/components/GivingFundDrawer.vue",
+        "giving/components/GivingProviderEventDrawer.vue",
+        "giving/components/GivingTransactionDrawer.vue",
+        "groups/components/GroupEditorDrawer.vue",
+        "jobs/pages/JobsPage.vue",
+        "life-posts/pages/LifePostsPage.vue",
+        "newcomers/pages/NewcomersPage.vue",
+        "sermons/pages/SermonsPage.vue"
       ].map((path) =>
         Bun.file(new URL(`../src/features/${path}`, import.meta.url)).text()
       )

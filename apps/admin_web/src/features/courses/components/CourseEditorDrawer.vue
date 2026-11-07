@@ -8,6 +8,7 @@ import type {
 
 import { courseStatusOptions } from "@/core/api/courses";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const model = defineModel<boolean>({ required: true });
@@ -36,19 +37,18 @@ const statusOptions: CourseStatus[] = courseStatusOptions;
     :desktop-width="480"
     class="pa-0"
   >
-    <v-toolbar flat>
-      <v-toolbar-title>
-        {{ course ? t("Edit course") : t("New course") }}
-      </v-toolbar-title>
-      <v-btn icon="mdi-close" variant="text" @click="model = false" />
-    </v-toolbar>
-    <v-divider />
-    <div class="pa-4">
+    <div class="pa-5">
+      <AdminDrawerHeader
+        :title="course ? t('Edit course') : t('New course')"
+        :subtitle="course?.title || t('Course')"
+        :close-label="t('common.close')"
+        @close="model = false"
+      />
       <v-alert
         v-if="errorMessage"
         type="error"
         variant="tonal"
-        class="mb-4"
+        class="mt-5 mb-4"
       >
         {{ errorMessage }}
       </v-alert>

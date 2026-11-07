@@ -2,6 +2,7 @@
 import type { AdminBibleVerseNote, BibleVerseNoteStatus } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 
 import type { BibleNoteModerationForm } from "../bible_note_workspace_models";
 
@@ -21,17 +22,18 @@ const { t } = useI18n();
 
 <template>
   <div class="pa-5">
-    <div class="d-flex align-center justify-space-between ga-3">
-      <div>
-        <div class="text-h6 font-weight-bold">{{ note.verseId }}</div>
-        <div class="text-body-2 text-medium-emphasis">
-          {{ note.authorDisplayName }} · {{ t(note.authorType) }}
-        </div>
-      </div>
-      <v-chip :color="statusColor(note.status)" variant="tonal">
-        {{ t(note.status) }}
-      </v-chip>
-    </div>
+    <AdminDrawerHeader
+      :title="note.verseId"
+      :subtitle="`${note.authorDisplayName} · ${t(note.authorType)}`"
+      :close-label="t('common.close')"
+      @close="$emit('close')"
+    >
+      <template #meta>
+        <v-chip :color="statusColor(note.status)" variant="tonal">
+          {{ t(note.status) }}
+        </v-chip>
+      </template>
+    </AdminDrawerHeader>
 
     <v-card class="mt-5 pa-4" variant="tonal">
       <div class="text-body-1">{{ note.content }}</div>
@@ -56,9 +58,6 @@ const { t } = useI18n();
     </v-alert>
 
     <div class="d-flex justify-end ga-3 mt-5">
-      <v-btn variant="text" @click="$emit('close')">
-        {{ t("common.close") }}
-      </v-btn>
       <v-btn
         v-if="note.status === 'hidden'"
         color="primary"

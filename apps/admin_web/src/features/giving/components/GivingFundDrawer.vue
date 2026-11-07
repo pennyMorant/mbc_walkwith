@@ -4,6 +4,7 @@ import { computed } from "vue";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 defineProps<{
@@ -39,16 +40,16 @@ const statusItems = computed(() =>
 <template>
   <AdminResponsiveDrawer v-model="drawer" :desktop-width="420">
     <div class="pa-5">
-      <div class="text-h6 font-weight-bold">
-        {{ fund ? fund.name : t("New giving fund") }}
-      </div>
-      <div class="text-body-2 text-medium-emphasis mt-1">
-        {{
+      <AdminDrawerHeader
+        :title="fund ? fund.name : t('New giving fund')"
+        :subtitle="
           fund
             ? fund.description || fund.code
-            : t("Create a restricted giving purpose.")
-        }}
-      </div>
+            : t('Create a restricted giving purpose.')
+        "
+        :close-label="t('common.close')"
+        @close="drawer = false"
+      />
       <v-divider class="my-4" />
 
       <v-form @submit.prevent="save">

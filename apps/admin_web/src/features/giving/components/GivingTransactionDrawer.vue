@@ -5,6 +5,7 @@ import type {
 } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 defineProps<{
@@ -22,26 +23,27 @@ const { t } = useI18n();
 <template>
   <AdminResponsiveDrawer v-model="drawer" :desktop-width="460">
     <div v-if="transaction" class="pa-5">
-      <div class="text-h6 font-weight-bold">
-        {{ t("Giving transaction") }}
-      </div>
-      <div class="text-body-2 text-medium-emphasis mt-1">
-        {{ transaction.id }}
-      </div>
-
-      <v-card class="pa-4 mt-5" variant="outlined">
-        <div class="d-flex justify-space-between ga-4">
-          <div>
-            <div class="text-caption text-medium-emphasis">
-              {{ t("Amount") }}
-            </div>
-            <div class="text-h6 font-weight-bold">
-              {{ dollars(transaction.amountCents) }}
-            </div>
-          </div>
+      <AdminDrawerHeader
+        :title="t('Giving transaction')"
+        :subtitle="transaction.id"
+        :close-label="t('common.close')"
+        @close="drawer = false"
+      >
+        <template #meta>
           <v-chip size="small" :color="statusColor(transaction.status)">
             {{ t(transaction.status) }}
           </v-chip>
+        </template>
+      </AdminDrawerHeader>
+
+      <v-card class="pa-4 mt-5" variant="outlined">
+        <div>
+          <div class="text-caption text-medium-emphasis">
+            {{ t("Amount") }}
+          </div>
+          <div class="text-h6 font-weight-bold">
+            {{ dollars(transaction.amountCents) }}
+          </div>
         </div>
       </v-card>
 

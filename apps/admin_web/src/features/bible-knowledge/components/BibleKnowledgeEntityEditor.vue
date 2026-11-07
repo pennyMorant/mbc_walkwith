@@ -26,9 +26,6 @@ const { optionItems, t } = useI18n();
 </script>
 
 <template>
-  <div class="text-h6 font-weight-bold">
-    {{ selectedEntity ? selectedEntity.name : t("New entity") }}
-  </div>
   <v-form class="mt-5" @submit.prevent="$emit('save')">
     <v-text-field v-model="form.id" :label="t('ID')" density="comfortable" variant="outlined" :readonly="!!selectedEntity" />
     <v-row dense>

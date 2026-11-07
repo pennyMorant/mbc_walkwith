@@ -9,6 +9,7 @@ import type {
 import { computed, reactive, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 type TaskDraft = {
@@ -141,17 +142,12 @@ function saveTask(task: DiscipleshipTask, draft: TaskDraft) {
 <template>
   <AdminResponsiveDrawer v-model="drawer" :desktop-width="680">
     <div v-if="assignment" class="pa-5">
-      <div class="d-flex align-start justify-space-between ga-4">
-        <div>
-          <div class="text-h6 font-weight-bold">
-            {{ t("Manage progress") }}
-          </div>
-          <div class="text-body-2 text-medium-emphasis mt-1">
-            {{ assignment.userId }}
-          </div>
-        </div>
-        <v-btn icon="mdi-close" variant="text" @click="drawer = false" />
-      </div>
+      <AdminDrawerHeader
+        :title="t('Manage progress')"
+        :subtitle="assignment.userId"
+        :close-label="t('common.close')"
+        @close="drawer = false"
+      />
 
       <div class="d-flex flex-wrap ga-2 mt-4">
         <v-chip size="small" variant="tonal">

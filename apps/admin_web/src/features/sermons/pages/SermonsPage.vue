@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getAdminSermon } from "@/core/api/sermons";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
@@ -171,17 +172,18 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
       :desktop-width="640"
     >
       <div v-if="selectedSermon" class="pa-5">
-        <div class="d-flex align-start justify-space-between ga-4">
-          <div>
-            <div class="text-h6 font-weight-bold">{{ selectedSermon.title }}</div>
-            <div class="text-body-2 text-medium-emphasis mt-1">
-              {{ selectedSermon.speaker }} · {{ selectedSermon.sermonDate }}
-            </div>
-          </div>
-          <v-chip :color="statusColor(selectedSermon.status)">
-            {{ t(selectedSermon.status) }}
-          </v-chip>
-        </div>
+        <AdminDrawerHeader
+          :title="selectedSermon.title"
+          :subtitle="`${selectedSermon.speaker} · ${selectedSermon.sermonDate}`"
+          :close-label="t('common.close')"
+          @close="detailDrawer = false"
+        >
+          <template #meta>
+            <v-chip :color="statusColor(selectedSermon.status)">
+              {{ t(selectedSermon.status) }}
+            </v-chip>
+          </template>
+        </AdminDrawerHeader>
 
         <v-form class="mt-5" @submit.prevent="saveCurrentSermon">
           <v-tabs v-model="activeDetailTab" density="compact">
