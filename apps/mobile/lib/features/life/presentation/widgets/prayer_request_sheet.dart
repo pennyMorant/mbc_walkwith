@@ -13,10 +13,8 @@ class PrayerRequestSheet extends ConsumerStatefulWidget {
   const PrayerRequestSheet({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet<void>(
+    return showAppBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
       builder: (context) => const PrayerRequestSheet(),
     );
   }

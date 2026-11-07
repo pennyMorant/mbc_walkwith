@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+Future<T?> showAppBottomSheet<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+}) {
+  return showModalBottomSheet<T>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: builder,
+  );
+}
+
 class AppBottomSheetScaffold extends StatelessWidget {
   const AppBottomSheetScaffold({
     super.key,

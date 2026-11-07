@@ -14,10 +14,8 @@ class CareRequestSheet extends ConsumerStatefulWidget {
   const CareRequestSheet({super.key});
 
   static Future<void> show(BuildContext context) {
-    return showModalBottomSheet<void>(
+    return showAppBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
       builder: (context) => const CareRequestSheet(),
     );
   }

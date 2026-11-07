@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import '../../../shared/widgets/app_bottom_sheet_scaffold.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/study_repository.dart';
@@ -72,10 +75,8 @@ class BibleReaderSheetActions {
     required BibleVerse verse,
     required BibleTranslation translation,
   }) {
-    showModalBottomSheet<void>(
+    showAppBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
       builder: (context) {
         return AiStudySheet(
           book: book,

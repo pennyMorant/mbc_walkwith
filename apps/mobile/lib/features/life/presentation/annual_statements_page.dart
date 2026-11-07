@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/app_bottom_sheet_scaffold.dart';
 import '../../../shared/widgets/app_loading_state.dart';
 import '../../../shared/widgets/app_message_card.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
@@ -94,10 +95,8 @@ class _AnnualStatementsPageState extends ConsumerState<AnnualStatementsPage> {
       if (!mounted) {
         return;
       }
-      await showModalBottomSheet<void>(
+      await showAppBottomSheet<void>(
         context: context,
-        isScrollControlled: true,
-        showDragHandle: true,
         builder: (context) => AnnualStatementExportSheet(export: export),
       );
     } catch (error) {

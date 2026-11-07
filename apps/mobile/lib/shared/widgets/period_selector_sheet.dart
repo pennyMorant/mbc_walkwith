@@ -3,15 +3,14 @@ import 'package:intl/intl.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../utils/date_period.dart';
+import 'app_bottom_sheet_scaffold.dart';
 
 Future<DatePeriod?> showPeriodSelectorSheet(
   BuildContext context,
   DatePeriod initialPeriod,
 ) {
-  return showModalBottomSheet<DatePeriod>(
+  return showAppBottomSheet<DatePeriod>(
     context: context,
-    showDragHandle: true,
-    isScrollControlled: true,
     builder: (context) => _PeriodSelectorSheet(initialPeriod: initialPeriod),
   );
 }
@@ -33,9 +32,8 @@ String periodLabel(
     return DateFormat.yMMM(locale).format(period.start);
   }
   final start = DateFormat.Md(locale).format(period.start);
-  final end = DateFormat.Md(
-    locale,
-  ).format(period.end.subtract(const Duration(days: 1)));
+  final end = DateFormat.Md(locale)
+      .format(period.end.subtract(const Duration(days: 1)));
   return short ? '$start-$end' : '$start - $end';
 }
 
@@ -107,9 +105,8 @@ class _MonthPickerGrid extends StatelessWidget {
               child: Center(
                 child: Text(
                   DateFormat.y(locale).format(selectedPeriod.start),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+                  style: Theme.of(context).textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w800),
                 ),
               ),
             ),

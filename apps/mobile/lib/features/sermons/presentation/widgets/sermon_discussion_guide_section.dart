@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/widgets/app_bottom_sheet_scaffold.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../data/sermon_discussion_guide_repository.dart';
 import '../../domain/sermon_discussion_guide.dart';
@@ -172,10 +173,8 @@ Future<void> _openResponseSheet({
   required BuildContext context,
   required SermonDiscussionGuide guide,
 }) async {
-  final saved = await showModalBottomSheet<bool>(
+  final saved = await showAppBottomSheet<bool>(
     context: context,
-    isScrollControlled: true,
-    showDragHandle: true,
     builder: (context) => SermonDiscussionResponseSheet(guide: guide),
   );
   if (saved != true || !context.mounted) {
