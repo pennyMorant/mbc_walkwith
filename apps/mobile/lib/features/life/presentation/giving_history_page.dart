@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_loading_state.dart';
+import '../../../shared/widgets/app_message_card.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/giving_repository.dart';
@@ -127,7 +128,7 @@ class _GivingHistoryPageState extends ConsumerState<GivingHistoryPage> {
       appBar: SecondaryAppBar(title: l10n.givingHistoryTitle),
       body: overviewAsync.when(
         loading: () => const AppLoadingState(),
-        error: (error, stackTrace) => GivingMessageCard(
+        error: (error, stackTrace) => AppMessageCard(
           title: l10n.givingTitle,
           body: givingErrorMessage(error, fallback: l10n.givingLoadError),
         ),
@@ -152,7 +153,7 @@ class _GivingHistoryPageState extends ConsumerState<GivingHistoryPage> {
               ),
               const SizedBox(height: 12),
               if (overview.transactions.isEmpty)
-                GivingMessageCard(
+                AppMessageCard(
                   title: l10n.givingTransactionsTitle,
                   body: l10n.givingTransactionsEmptyBody,
                 )
@@ -180,7 +181,7 @@ class _GuestGivingView extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
       children: [
-        GivingMessageCard(
+        AppMessageCard(
           title: l10n.givingTitle,
           body: l10n.givingGuestBody,
           action: FilledButton.icon(

@@ -242,6 +242,10 @@ ownership of retry behavior.
 loading branches. Inline action progress remains owned by the relevant button
 or action component.
 
+`AppMessageCard` owns the standard optional title, secondary body copy, and
+optional action layout for informational, empty, and recovery cards. Feature
+wrappers retain placement, localized copy, and action behavior.
+
 `AppButton` owns shared button variants, shape, loading, selected state, and
 minimum touch height. Use `expanded: true` when an action must fill its available
 width instead of wrapping the button in a page-local `SizedBox`.

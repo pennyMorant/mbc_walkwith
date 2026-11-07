@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/app_routes.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/app_loading_state.dart';
+import '../../../shared/widgets/app_message_card.dart';
 import '../../../shared/widgets/secondary_app_bar.dart';
 import '../../member_auth/data/member_session_repository.dart';
 import '../data/giving_repository.dart';
@@ -148,29 +149,11 @@ class _StatementsMessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.annualStatementsTitle,
-              style: Theme.of(context).textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              body,
-              style: Theme.of(context).textTheme.bodyMedium
-                  ?.copyWith(color: colorScheme.onSurfaceVariant),
-            ),
-            if (action != null) ...[const SizedBox(height: 14), action!],
-          ],
-        ),
-      ),
+    return AppMessageCard(
+      title: l10n.annualStatementsTitle,
+      body: body,
+      action: action,
     );
   }
 }

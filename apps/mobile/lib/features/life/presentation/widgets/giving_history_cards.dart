@@ -21,9 +21,8 @@ class GivingSummaryCard extends StatelessWidget {
           children: [
             Text(
               l10n.givingTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+              style: Theme.of(context).textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 12),
             Wrap(
@@ -104,48 +103,6 @@ class GivingTransactionCard extends StatelessWidget {
             AppChip(
               label: _givingTransactionStatusLabel(l10n, transaction.status),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class GivingMessageCard extends StatelessWidget {
-  const GivingMessageCard({
-    super.key,
-    required this.title,
-    required this.body,
-    this.action,
-  });
-
-  final String title;
-  final String body;
-  final Widget? action;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              body,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            if (action != null) ...[const SizedBox(height: 14), action!],
           ],
         ),
       ),
