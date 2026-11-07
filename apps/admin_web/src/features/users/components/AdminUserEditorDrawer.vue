@@ -3,6 +3,7 @@ import type { AdminRole, AdminUser } from "@mbc/api-contracts";
 import { computed, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import {
@@ -201,34 +202,17 @@ function confirmPasswordReset() {
     </div>
   </AdminResponsiveDrawer>
 
-  <v-dialog v-model="confirmReset" max-width="440" :persistent="resetPending">
-    <v-card>
-      <v-card-title class="text-h6 px-6 pt-6">
-        {{ t("users.passwordResetConfirmTitle") }}
-      </v-card-title>
-      <v-card-text class="px-6 pt-4">
-        {{ t("users.passwordResetConfirmBody") }}
-      </v-card-text>
-      <v-card-actions class="px-6 pb-6">
-        <v-spacer />
-        <v-btn
-          variant="text"
-          :disabled="resetPending"
-          @click="confirmReset = false"
-        >
-          {{ t("common.cancel") }}
-        </v-btn>
-        <v-btn
-          color="warning"
-          variant="tonal"
-          :disabled="resetPending"
-          @click="confirmPasswordReset"
-        >
-          {{ t("users.passwordResetAction") }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <AdminConfirmDialog
+    v-model="confirmReset"
+    :title="t('users.passwordResetConfirmTitle')"
+    :message="t('users.passwordResetConfirmBody')"
+    :confirm-label="t('users.passwordResetAction')"
+    :cancel-label="t('common.cancel')"
+    color="warning"
+    icon="mdi-lock-reset"
+    :loading="resetPending"
+    @confirm="confirmPasswordReset"
+  />
 </template>
 
 <style scoped>

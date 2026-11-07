@@ -114,6 +114,10 @@ Surface rule:
   drawer components own operational loading, empty, recovery, compact-list,
   filter-action, and drawer-surface presentation. Feature pages retain query,
   retry, selection, permission, and mutation ownership.
+- Destructive and state-changing confirmation prompts use the shared Admin
+  confirmation dialog for responsive layout, visual tone, and pending-state
+  protection. Features retain permission checks, confirmation copy, target
+  identity, and the command emitted after confirmation.
 - Repeated summary metrics use the shared responsive metric grid. Features must
   supply already calculated and localized labels, values, icons, and semantic
   tones; the shared component does not query data or derive business meaning.

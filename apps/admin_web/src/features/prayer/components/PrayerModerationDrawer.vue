@@ -3,6 +3,7 @@ import type { AdminPrayerRequest } from "@mbc/api-contracts";
 import { ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 import {
   prayerStatusColor,
@@ -177,28 +178,17 @@ function confirmDelete() {
     </div>
   </AdminResponsiveDrawer>
 
-  <v-dialog v-model="deleteDialog" max-width="440">
-    <v-card>
-      <v-card-title>{{ t("Delete prayer request?") }}</v-card-title>
-      <v-card-text>
-        {{ t("This permanently removes the prayer request content.") }}
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn variant="text" @click="deleteDialog = false">
-          {{ t("common.cancel") }}
-        </v-btn>
-        <v-btn
-          color="error"
-          variant="tonal"
-          :loading="deletePending"
-          @click="confirmDelete"
-        >
-          {{ t("Delete") }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <AdminConfirmDialog
+    v-model="deleteDialog"
+    :title="t('Delete prayer request?')"
+    :message="t('This permanently removes the prayer request content.')"
+    :confirm-label="t('Delete')"
+    :cancel-label="t('common.cancel')"
+    color="error"
+    icon="mdi-delete-outline"
+    :loading="deletePending"
+    @confirm="confirmDelete"
+  />
 </template>
 
 <style scoped>

@@ -7,6 +7,7 @@ import { computed, ref, watch } from "vue";
 
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const drawer = defineModel<boolean>({ required: true });
@@ -174,34 +175,17 @@ function dateTime(value: string | null) {
     </div>
   </AdminResponsiveDrawer>
 
-  <v-dialog v-model="confirmCancel" max-width="440" :persistent="cancelPending">
-    <v-card>
-      <v-card-title class="text-h6 px-6 pt-6">
-        {{ t("notifications.cancelConfirmTitle") }}
-      </v-card-title>
-      <v-card-text class="px-6 pt-4">
-        {{ t("notifications.cancelConfirmBody") }}
-      </v-card-text>
-      <v-card-actions class="px-6 pb-6">
-        <v-spacer />
-        <v-btn
-          variant="text"
-          :disabled="cancelPending"
-          @click="confirmCancel = false"
-        >
-          {{ t("common.cancel") }}
-        </v-btn>
-        <v-btn
-          color="error"
-          variant="tonal"
-          :disabled="cancelPending"
-          @click="confirmCancellation"
-        >
-          {{ t("notifications.cancel") }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <AdminConfirmDialog
+    v-model="confirmCancel"
+    :title="t('notifications.cancelConfirmTitle')"
+    :message="t('notifications.cancelConfirmBody')"
+    :confirm-label="t('notifications.cancel')"
+    :cancel-label="t('common.cancel')"
+    color="error"
+    icon="mdi-cancel"
+    :loading="cancelPending"
+    @confirm="confirmCancellation"
+  />
 </template>
 
 <style scoped>

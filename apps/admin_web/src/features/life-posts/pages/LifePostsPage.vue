@@ -5,6 +5,7 @@ import { ref } from "vue";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { getLifePost, translateLifePostNotification } from "@/core/api/life_posts";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
+import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
@@ -12,7 +13,6 @@ import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
 import LifeEventRegistrationsCard from "../components/LifeEventRegistrationsCard.vue";
-import LifePostConfirmDialog from "../components/LifePostConfirmDialog.vue";
 import LifePostDetailsFields from "../components/LifePostDetailsFields.vue";
 import LifePostEditorActions from "../components/LifePostEditorActions.vue";
 import LifePostLibraryCard from "../components/LifePostLibraryCard.vue";
@@ -350,12 +350,18 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
       </div>
     </AdminResponsiveDrawer>
 
-    <LifePostConfirmDialog
+    <AdminConfirmDialog
       v-model="confirmDialog.show"
       :title="confirmDialog.title"
       :message="confirmDialog.message"
       :color="confirmDialog.color"
       :confirm-label="confirmDialog.confirmLabel"
+      :cancel-label="t('common.cancel')"
+      :icon="
+        confirmDialog.color === 'error'
+          ? 'mdi-delete-outline'
+          : 'mdi-archive-outline'
+      "
       @confirm="confirmPendingAction"
     />
 
