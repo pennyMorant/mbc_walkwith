@@ -9,6 +9,7 @@ import { reactive, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
+import AdminDialogActions from "@/core/ui/AdminDialogActions.vue";
 import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 
 const props = defineProps<{
@@ -226,15 +227,13 @@ function save() {
           />
         </v-list>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn variant="text" :disabled="saving" @click="close">
-          {{ t("Cancel") }}
-        </v-btn>
-        <v-btn color="primary" :loading="saving" @click="requestSave">
-          {{ t("Save") }}
-        </v-btn>
-      </v-card-actions>
+      <AdminDialogActions
+        :cancel-label="t('Cancel')"
+        :confirm-label="t('Save')"
+        :loading="saving"
+        @cancel="close"
+        @confirm="requestSave"
+      />
     </v-card>
   </v-dialog>
   <AdminConfirmDialog

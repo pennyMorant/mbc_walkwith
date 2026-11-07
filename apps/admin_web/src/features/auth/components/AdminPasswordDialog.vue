@@ -5,6 +5,7 @@ import { computed, ref, watch } from "vue";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { changeAdminPassword } from "@/core/api/auth";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDialogActions from "@/core/ui/AdminDialogActions.vue";
 import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 
 const props = defineProps<{
@@ -160,24 +161,14 @@ function resetForm() {
         </v-form>
       </v-card-text>
 
-      <v-card-actions class="px-6 pb-6 pt-2">
-        <v-spacer />
-        <v-btn
-          variant="text"
-          :disabled="changePasswordMutation.isPending.value"
-          @click="close"
-        >
-          {{ t("common.cancel") }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          :loading="changePasswordMutation.isPending.value"
-          :disabled="!canSubmit"
-          @click="submit"
-        >
-          {{ t("common.save") }}
-        </v-btn>
-      </v-card-actions>
+      <AdminDialogActions
+        :cancel-label="t('common.cancel')"
+        :confirm-label="t('common.save')"
+        :loading="changePasswordMutation.isPending.value"
+        :confirm-disabled="!canSubmit"
+        @cancel="close"
+        @confirm="submit"
+      />
     </v-card>
   </v-dialog>
 </template>

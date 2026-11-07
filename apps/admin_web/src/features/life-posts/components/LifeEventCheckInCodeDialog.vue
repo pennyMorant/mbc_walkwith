@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import { nextTick, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDialogActions from "@/core/ui/AdminDialogActions.vue";
 import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 import { formatDateTime } from "../life_post_presenters";
 
@@ -161,23 +162,19 @@ function escapeHtml(value: string) {
           </div>
         </div>
       </v-card-text>
-      <v-card-actions>
-        <v-btn variant="tonal" :loading="loading" @click="emit('rotate')">
-          {{ t("Rotate code") }}
-        </v-btn>
-        <v-spacer />
-        <v-btn variant="text" @click="emit('close')">
-          {{ t("Close") }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          variant="flat"
-          :disabled="!code || !qrDataUrl"
-          @click="printCode"
-        >
-          {{ t("Print") }}
-        </v-btn>
-      </v-card-actions>
+      <AdminDialogActions
+        :cancel-label="t('Close')"
+        :confirm-label="t('Print')"
+        :confirm-disabled="!code || !qrDataUrl"
+        @cancel="emit('close')"
+        @confirm="printCode"
+      >
+        <template #leading>
+          <v-btn variant="tonal" :loading="loading" @click="emit('rotate')">
+            {{ t("Rotate code") }}
+          </v-btn>
+        </template>
+      </AdminDialogActions>
     </v-card>
   </v-dialog>
 </template>

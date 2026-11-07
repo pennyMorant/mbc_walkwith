@@ -122,6 +122,10 @@ Surface rule:
   titles, optional supporting identity, visual context, responsive wrapping,
   and an accessible close command. Features retain close guards, form state,
   validation, permissions, and mutation ownership.
+- Editor and utility dialogs use the shared Admin dialog action layout for
+  responsive primary, cancel, and optional leading actions. Features provide
+  localized labels, pending and disabled state, and the commands emitted by
+  each action; the shared layout does not decide what a command means.
 - Detail and editor drawers use the shared Admin drawer header for title,
   supporting identity, status metadata, responsive wrapping, and an accessible
   close command. Features retain the canonical selected record, close guards,

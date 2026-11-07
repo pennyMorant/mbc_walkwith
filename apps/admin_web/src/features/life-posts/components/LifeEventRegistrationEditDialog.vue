@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDialogActions from "@/core/ui/AdminDialogActions.vue";
 import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 
 type RegistrationEditDialog = {
@@ -64,20 +65,14 @@ const canSave = computed(
           :disabled="loading"
         />
       </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn variant="text" :disabled="loading" @click="emit('close')">
-          {{ t("Cancel") }}
-        </v-btn>
-        <v-btn
-          color="primary"
-          :disabled="loading || !canSave"
-          :loading="loading"
-          @click="emit('save')"
-        >
-          {{ t("Save") }}
-        </v-btn>
-      </v-card-actions>
+      <AdminDialogActions
+        :cancel-label="t('Cancel')"
+        :confirm-label="t('Save')"
+        :loading="loading"
+        :confirm-disabled="!canSave"
+        @cancel="emit('close')"
+        @confirm="emit('save')"
+      />
     </v-card>
   </v-dialog>
 </template>
