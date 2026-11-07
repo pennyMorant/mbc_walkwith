@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AdminRetryAlert from "./AdminRetryAlert.vue";
+
 defineProps<{
   message: string | undefined;
   retryLabel: string;
@@ -8,19 +10,13 @@ defineEmits<{ retry: [] }>();
 </script>
 
 <template>
-  <v-alert
-    v-if="message"
+  <AdminRetryAlert
+    :message="message"
+    :retry-label="retryLabel"
     type="warning"
-    variant="tonal"
     density="compact"
-  >
-    <div
-      class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
-    >
-      <span>{{ message }}</span>
-      <v-btn size="small" variant="text" @click="$emit('retry')">
-        {{ retryLabel }}
-      </v-btn>
-    </div>
-  </v-alert>
+    button-variant="text"
+    prepend-icon=""
+    @retry="$emit('retry')"
+  />
 </template>

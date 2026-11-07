@@ -259,6 +259,12 @@ Use `AdminRefreshAlert` when background refresh fails but canonical content
 remains visible. The shared component owns warning presentation and responsive
 retry layout; Feature controllers retain query and retry ownership.
 
+Use `AdminRetryAlert` as the presentation primitive when an admin error or
+warning needs an explicit retry action. It owns the responsive message and
+button layout only; Feature code still decides the alert meaning, visibility,
+message, and retry behavior. `AdminDataState` and `AdminRefreshAlert` compose
+this primitive for their narrower loading-state and stale-data contracts.
+
 Public Web standard content sections use `LandingSectionHeading` for eyebrow,
 heading hierarchy, optional body copy, and the existing section/gallery style
 variants. Hero and compound content layouts keep their own heading structure.

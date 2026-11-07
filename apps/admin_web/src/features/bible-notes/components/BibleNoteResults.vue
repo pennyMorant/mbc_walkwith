@@ -8,6 +8,7 @@ import { formatAdminDate } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 defineProps<{
   notes: AdminBibleVerseNote[];
@@ -37,25 +38,12 @@ const { locale, t } = useI18n();
       indeterminate
       color="primary"
     />
-    <v-alert
-      v-if="refreshErrorMessage"
-      type="error"
-      variant="tonal"
+    <AdminRetryAlert
+      :message="refreshErrorMessage"
+      :retry-label="t('common.refresh')"
       class="ma-4"
-    >
-      <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-        <span>{{ refreshErrorMessage }}</span>
-        <v-btn
-          color="error"
-          variant="tonal"
-          size="small"
-          prepend-icon="mdi-refresh"
-          @click="$emit('retry')"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
-      </div>
-    </v-alert>
+      @retry="$emit('retry')"
+    />
     <v-table class="d-none d-md-block" hover>
       <thead>
         <tr>

@@ -4,6 +4,7 @@ import type { Job, JobStatus, JobType } from "@mbc/api-contracts";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 defineProps<{
   filters: {
@@ -105,25 +106,12 @@ const { locale, optionItems, t } = useI18n();
         indeterminate
         color="primary"
       />
-      <v-alert
-        v-if="jobs.length > 0 && errorMessage"
-        type="error"
-        variant="tonal"
+      <AdminRetryAlert
+        :message="jobs.length > 0 ? errorMessage : ''"
+        :retry-label="t('common.refresh')"
         class="ma-4"
-      >
-        <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-          <span>{{ errorMessage }}</span>
-          <v-btn
-            color="error"
-            variant="tonal"
-            size="small"
-            prepend-icon="mdi-refresh"
-            @click="$emit('retry')"
-          >
-            {{ t("common.refresh") }}
-          </v-btn>
-        </div>
-      </v-alert>
+        @retry="$emit('retry')"
+      />
       <v-table density="comfortable">
         <thead>
           <tr>

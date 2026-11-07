@@ -7,6 +7,7 @@ import type {
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 defineProps<{
   status: SermonProductionPipelineStatusResponse | undefined;
@@ -54,25 +55,12 @@ const { locale, t } = useI18n();
         color="primary"
         class="mt-4"
       />
-      <v-alert
-        v-if="status && errorMessage"
-        type="error"
-        variant="tonal"
+      <AdminRetryAlert
+        :message="status ? errorMessage : ''"
+        :retry-label="t('common.refresh')"
         class="mt-4"
-      >
-        <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-          <span>{{ errorMessage }}</span>
-          <v-btn
-            color="error"
-            variant="tonal"
-            size="small"
-            prepend-icon="mdi-refresh"
-            @click="$emit('retry')"
-          >
-            {{ t("common.refresh") }}
-          </v-btn>
-        </div>
-      </v-alert>
+        @retry="$emit('retry')"
+      />
       <template v-if="status">
         <v-list density="compact" class="mt-3 pa-0">
           <v-list-item

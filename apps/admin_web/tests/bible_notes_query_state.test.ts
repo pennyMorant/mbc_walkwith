@@ -66,7 +66,8 @@ describe("Bible notes query state", () => {
     expect(results).toContain(
       ':pending="(pending || fetching) && notes.length === 0"'
     );
-    expect(results).toContain('v-if="refreshErrorMessage"');
+    expect(results).toContain(':message="refreshErrorMessage"');
+    expect(results).toContain("AdminRetryAlert");
     expect(results).toContain("!refreshErrorMessage && notes.length === 0");
     expect(query).toContain("const initialError = computed");
     expect(query).toContain("const refreshError = computed");

@@ -3,6 +3,7 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 import AiBudgetPanel from "../components/AiBudgetPanel.vue";
 import AiPolicyPanel from "../components/AiPolicyPanel.vue";
@@ -66,25 +67,12 @@ const {
       :retry-label="t('common.refresh')"
       @retry="refreshManagement"
     >
-      <v-alert
-        v-if="refreshErrorMessage"
-        type="error"
-        variant="tonal"
+      <AdminRetryAlert
+        :message="refreshErrorMessage"
+        :retry-label="t('common.refresh')"
         class="mb-4"
-      >
-        <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-          <span>{{ refreshErrorMessage }}</span>
-          <v-btn
-            color="error"
-            variant="tonal"
-            size="small"
-            prepend-icon="mdi-refresh"
-            @click="refreshManagement"
-          >
-            {{ t("common.refresh") }}
-          </v-btn>
-        </div>
-      </v-alert>
+        @retry="refreshManagement"
+      />
       <AdminMetricGrid :items="overviewMetrics" />
 
       <v-tabs v-model="activeTab" class="ai-management-tabs mt-6" color="primary" show-arrows>

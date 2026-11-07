@@ -4,6 +4,7 @@ import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 import type { MemberEditorForm } from "../member_workspace_models";
 import MemberNotificationFields from "./MemberNotificationFields.vue";
@@ -53,27 +54,13 @@ const editorDisabled = computed(() => !props.canManage || props.saving);
         color="primary"
         class="mt-5"
       />
-      <v-alert
+      <AdminRetryAlert
         v-else-if="detailErrorMessage"
-        type="error"
-        variant="tonal"
+        :message="detailErrorMessage"
+        :retry-label="t('common.refresh')"
         class="mt-5"
-      >
-        <div
-          class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
-        >
-          <span>{{ detailErrorMessage }}</span>
-          <v-btn
-            color="error"
-            variant="tonal"
-            size="small"
-            prepend-icon="mdi-refresh"
-            @click="emit('retry')"
-          >
-            {{ t("common.refresh") }}
-          </v-btn>
-        </div>
-      </v-alert>
+        @retry="emit('retry')"
+      />
 
       <v-form
         v-else-if="creating || member"

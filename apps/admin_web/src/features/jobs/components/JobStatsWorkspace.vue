@@ -3,6 +3,7 @@ import type { Job, JobStatsResponse, JobStatus } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 const props = defineProps<{
   stats: JobStatsResponse | undefined;
@@ -36,25 +37,12 @@ function statusCount(status: JobStatus) {
       color="primary"
       class="mt-6"
     />
-    <v-alert
-      v-if="stats && errorMessage"
-      type="error"
-      variant="tonal"
+    <AdminRetryAlert
+      :message="stats ? errorMessage : ''"
+      :retry-label="t('common.refresh')"
       class="mt-6"
-    >
-      <div class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3">
-        <span>{{ errorMessage }}</span>
-        <v-btn
-          color="error"
-          variant="tonal"
-          size="small"
-          prepend-icon="mdi-refresh"
-          @click="$emit('retry')"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
-      </div>
-    </v-alert>
+      @retry="$emit('retry')"
+    />
 
     <template v-if="stats">
       <v-row class="mt-6" dense>

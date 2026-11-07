@@ -25,9 +25,10 @@ const consumers = await Promise.all(
 
 describe("admin refresh alert", () => {
   test("owns the non-destructive refresh recovery presentation", () => {
+    expect(component).toContain("AdminRetryAlert");
     expect(component).toContain('type="warning"');
-    expect(component).toContain('variant="tonal"');
     expect(component).toContain('density="compact"');
+    expect(component).toContain('button-variant="text"');
     expect(component).toContain("$emit('retry')");
   });
 

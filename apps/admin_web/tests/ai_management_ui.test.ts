@@ -47,7 +47,8 @@ describe("AI management workspace", () => {
 
   test("keeps management query errors separate from command errors", () => {
     expect(controller).toContain("managementQuery.error.value");
-    expect(page).toContain('v-if="refreshErrorMessage"');
+    expect(page).toContain(':message="refreshErrorMessage"');
+    expect(page).toContain("AdminRetryAlert");
     expect(page).toContain(":error-message=\"providerErrorMessage\"");
     expect(page).toContain(":error-message=\"policyErrorMessage\"");
     expect(page).toContain(":error-message=\"budgetErrorMessage\"");
