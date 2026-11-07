@@ -55,6 +55,15 @@ describe("jobs query states", () => {
 
   test("does not render failed stats queries as zero-valued diagnostics", () => {
     expect(page).toContain(":error-message=\"statsErrorMessage\"");
+    expect(
+      readFileSync(
+        new URL(
+          "../src/features/jobs/components/JobStatsWorkspace.vue",
+          import.meta.url
+        ),
+        "utf8"
+      )
+    ).toContain("job-stats-workspace--state");
     expect(page).not.toContain("statsQuery.data.value?.byStatus.failed ?? 0");
     expect(page).not.toContain("statusCount(status)");
   });

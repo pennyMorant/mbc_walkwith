@@ -110,6 +110,10 @@ Surface rule:
 - Operational cards with a title, supporting description, and trailing count
   or actions use the shared panel-header layout. Features continue to own the
   labels, status values, permissions, loading state, and emitted intents.
+- Shared data-state, retry-alert, mobile-record, catalog-filter, and responsive
+  drawer components own operational loading, empty, recovery, compact-list,
+  filter-action, and drawer-surface presentation. Feature pages retain query,
+  retry, selection, permission, and mutation ownership.
 - Repeated summary metrics use the shared responsive metric grid. Features must
   supply already calculated and localized labels, values, icons, and semantic
   tones; the shared component does not query data or derive business meaning.

@@ -41,6 +41,8 @@ describe("admin retry alert", () => {
     expect(component).toContain("props.buttonColor || alertType.value");
     expect(component).toContain(":loading=\"retryLoading\"");
     expect(component).toContain("$emit('retry')");
+    expect(component).toContain("admin-retry-alert__message");
+    expect(component).toContain("overflow-wrap: anywhere");
     expect(component).not.toContain("@/core/api");
   });
 

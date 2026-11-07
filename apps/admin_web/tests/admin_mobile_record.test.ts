@@ -26,6 +26,9 @@ describe("admin mobile record", () => {
     expect(component).toContain("$emit('activate')");
     expect(component).toContain('<slot name="trailing" />');
     expect(component).toContain('icon="mdi-chevron-right"');
+    expect(component).toContain("admin-mobile-record__chevron");
+    expect(component).toContain("grid-row: 1 / span 2");
+    expect(component).not.toContain("display: none");
   });
 
   test("is used by responsive result lists without local layout copies", () => {

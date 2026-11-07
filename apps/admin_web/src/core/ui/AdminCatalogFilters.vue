@@ -15,8 +15,8 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <v-card class="mt-5" variant="outlined">
-    <v-card-text>
+  <v-card class="admin-catalog-filters mt-5" variant="outlined">
+    <v-card-text class="pa-4">
       <v-form @submit.prevent="emit('apply')">
         <v-row dense>
           <v-col cols="12" md="4">
@@ -48,7 +48,7 @@ const { t } = useI18n();
               hide-details
             />
           </v-col>
-          <v-col cols="12" md="2" class="d-flex justify-md-end ga-2">
+          <v-col cols="12" md="2" class="admin-catalog-filters__actions">
             <v-btn
               type="submit"
               color="primary"
@@ -73,3 +73,19 @@ const { t } = useI18n();
     </v-card-text>
   </v-card>
 </template>
+
+<style scoped>
+.admin-catalog-filters__actions {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+@media (min-width: 960px) {
+  .admin-catalog-filters__actions {
+    justify-content: flex-end;
+  }
+}
+</style>

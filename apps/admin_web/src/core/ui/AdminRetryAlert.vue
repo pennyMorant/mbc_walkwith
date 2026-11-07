@@ -41,15 +41,15 @@ const retryLoading = computed(() => props.loading ?? false);
 <template>
   <v-alert
     v-if="message"
+    class="admin-retry-alert"
     :type="alertType"
     variant="tonal"
     :density="alertDensity"
   >
-    <div
-      class="d-flex flex-column flex-sm-row align-sm-center justify-space-between ga-3"
-    >
-      <span>{{ message }}</span>
+    <div class="admin-retry-alert__content">
+      <span class="admin-retry-alert__message">{{ message }}</span>
       <v-btn
+        class="admin-retry-alert__action"
         :color="retryButtonColor"
         :variant="retryButtonVariant"
         size="small"
@@ -62,3 +62,34 @@ const retryLoading = computed(() => props.loading ?? false);
     </div>
   </v-alert>
 </template>
+
+<style scoped>
+.admin-retry-alert__content {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-retry-alert__message {
+  min-width: 0;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.admin-retry-alert__action {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 600px) {
+  .admin-retry-alert__content {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-retry-alert__action {
+    width: 100%;
+  }
+}
+</style>

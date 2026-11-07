@@ -46,6 +46,8 @@ describe("admin responsive shell", () => {
 
     expect(component).toContain("max-width: 100vw");
     expect(component).toContain(':width="props.desktopWidth"');
+    expect(component).toContain('color="surface"');
+    expect(component).toContain("overscroll-behavior: contain");
     expect(sources.some((source) => source.includes("<v-navigation-drawer"))).toBe(false);
     expect(sources.filter((source) => source.includes("<AdminResponsiveDrawer"))).toHaveLength(19);
   });

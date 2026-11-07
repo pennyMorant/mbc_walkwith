@@ -23,29 +23,35 @@ function statusCount(status: JobStatus) {
 </script>
 
 <template>
-  <AdminDataState
-    :pending="pending && !stats"
-    :error-message="stats ? '' : errorMessage"
-    :empty="false"
-    empty-title=""
-    :retry-label="t('common.refresh')"
-    @retry="$emit('retry')"
+  <div
+    :class="[
+      'job-stats-workspace',
+      { 'job-stats-workspace--state': !stats }
+    ]"
   >
-    <v-progress-linear
-      v-if="fetching && stats"
-      indeterminate
-      color="primary"
-      class="mt-6"
-    />
-    <AdminRetryAlert
-      :message="stats ? errorMessage : ''"
+    <AdminDataState
+      :pending="pending && !stats"
+      :error-message="stats ? '' : errorMessage"
+      :empty="false"
+      empty-title=""
       :retry-label="t('common.refresh')"
-      class="mt-6"
       @retry="$emit('retry')"
-    />
+    >
+      <v-progress-linear
+        v-if="fetching && stats"
+        indeterminate
+        color="primary"
+        class="mt-6"
+      />
+      <AdminRetryAlert
+        :message="stats ? errorMessage : ''"
+        :retry-label="t('common.refresh')"
+        class="mt-6"
+        @retry="$emit('retry')"
+      />
 
-    <template v-if="stats">
-      <v-row class="mt-6" dense>
+      <template v-if="stats">
+        <v-row class="mt-6" dense>
         <v-col
           v-for="status in ['queued', 'running', 'failed', 'succeeded'] as JobStatus[]"
           :key="status"
@@ -64,9 +70,9 @@ function statusCount(status: JobStatus) {
             </div>
           </v-card>
         </v-col>
-      </v-row>
+        </v-row>
 
-      <v-row class="mt-2" dense>
+        <v-row class="mt-2" dense>
         <v-col cols="12" md="4">
           <v-card class="pa-4">
             <div class="d-flex align-center justify-space-between">
@@ -134,9 +140,9 @@ function statusCount(status: JobStatus) {
             </v-list>
           </v-card>
         </v-col>
-      </v-row>
+        </v-row>
 
-      <v-row class="mt-2" dense>
+        <v-row class="mt-2" dense>
         <v-col cols="12" md="6">
           <v-card class="pa-4">
             <div class="text-subtitle-2 font-weight-bold">
@@ -193,7 +199,18 @@ function statusCount(status: JobStatus) {
             </v-list>
           </v-card>
         </v-col>
-      </v-row>
-    </template>
-  </AdminDataState>
+        </v-row>
+      </template>
+    </AdminDataState>
+  </div>
 </template>
+
+<style scoped>
+.job-stats-workspace--state {
+  margin-top: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--v-theme-outline-variant), 0.55);
+  border-radius: 20px;
+  background: rgb(var(--v-theme-surface));
+}
+</style>

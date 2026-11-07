@@ -14,7 +14,9 @@ defineEmits<{ activate: [] }>();
     <span v-if="$slots.trailing" class="admin-mobile-record__trailing">
       <slot name="trailing" />
     </span>
-    <v-icon icon="mdi-chevron-right" size="20" />
+    <span class="admin-mobile-record__chevron" aria-hidden="true">
+      <v-icon icon="mdi-chevron-right" size="19" />
+    </span>
   </button>
 </template>
 
@@ -25,10 +27,10 @@ defineEmits<{ activate: [] }>();
   min-width: 0;
   grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   border: 0;
-  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08);
-  padding: 14px 16px;
+  border-top: 1px solid rgba(var(--v-theme-outline-variant), 0.48);
+  padding: 16px;
   color: inherit;
   background: transparent;
   text-align: left;
@@ -41,7 +43,11 @@ defineEmits<{ activate: [] }>();
 }
 
 .admin-mobile-record:hover {
-  background: rgba(var(--v-theme-on-surface), 0.035);
+  background: rgba(var(--v-theme-primary), 0.04);
+}
+
+.admin-mobile-record:active {
+  background: rgba(var(--v-theme-primary), 0.08);
 }
 
 .admin-mobile-record:focus-visible {
@@ -66,5 +72,38 @@ defineEmits<{ activate: [] }>();
   font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.admin-mobile-record__main :slotted(strong) {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-mobile-record__chevron {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border-radius: 10px;
+  color: rgba(var(--v-theme-on-surface), 0.68);
+  background: rgba(var(--v-theme-surface-variant), 0.58);
+}
+
+@media (max-width: 420px) {
+  .admin-mobile-record {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .admin-mobile-record__trailing {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .admin-mobile-record__chevron {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
 }
 </style>
