@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 
 import { useDiscipleshipPageController } from "../composables/use_discipleship_page_controller";
 import DiscipleshipAssignmentsPanel from "../components/DiscipleshipAssignmentsPanel.vue";
@@ -106,15 +107,15 @@ const {
 
       <v-col cols="12" lg="8">
         <v-card variant="outlined">
-          <v-card-title>
-            {{ selectedJourney?.title || t("Discipleship journey") }}
-          </v-card-title>
-          <v-card-subtitle>
-            {{
-              selectedJourney?.id ||
-              t("Create a journey before adding stages, tasks, or assignments.")
-            }}
-          </v-card-subtitle>
+          <div class="pa-5 pb-3">
+            <AdminPanelHeader
+              :title="selectedJourney?.title || t('Discipleship journey')"
+              :subtitle="
+                selectedJourney?.id ||
+                t('Create a journey before adding stages, tasks, or assignments.')
+              "
+            />
+          </div>
           <v-card-text>
             <v-btn-toggle
               v-model="activePanel"

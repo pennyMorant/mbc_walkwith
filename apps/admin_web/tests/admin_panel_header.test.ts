@@ -7,6 +7,7 @@ describe("admin panel header", () => {
     ).text();
 
     expect(component).toContain("admin-panel-header__title");
+    expect(component).toContain('<h2 class="admin-panel-header__title">');
     expect(component).toContain('<slot name="actions" />');
     expect(component).toContain("@media (max-width: 600px)");
     expect(component).not.toContain("useAdminAuthStore");
@@ -23,7 +24,15 @@ describe("admin panel header", () => {
       "../src/features/jobs/components/JobQueueCard.vue",
       "../src/features/jobs/components/JobPipelineReadinessCard.vue",
       "../src/features/media/components/MediaCleanupCard.vue",
-      "../src/features/media/components/MediaLibraryCard.vue"
+      "../src/features/media/components/MediaLibraryCard.vue",
+      "../src/features/content-localization/components/ContentLocalizationCard.vue",
+      "../src/features/serving/components/ServingAssignmentsCard.vue",
+      "../src/features/serving/components/ServingSetupCard.vue",
+      "../src/features/groups/components/GroupWorkspaceCard.vue",
+      "../src/features/courses/components/CourseWorkspaceCard.vue",
+      "../src/features/reading-plans/pages/ReadingPlansPage.vue",
+      "../src/features/discipleship/pages/DiscipleshipPage.vue",
+      "../src/features/sermon-discussion-guides/pages/SermonDiscussionGuidesPage.vue"
     ];
     const sources = await Promise.all(
       paths.map((path) => Bun.file(new URL(path, import.meta.url)).text())

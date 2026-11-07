@@ -8,6 +8,7 @@ import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import ServingFeedbackAlerts from "./ServingFeedbackAlerts.vue";
 import type {
   ServingRoleForm,
@@ -55,7 +56,9 @@ function updateRoleStatus(role: ServingRole, status: ServingStatus | null) {
 
 <template>
   <v-card variant="outlined">
-    <v-card-title>{{ t("Teams and roles") }}</v-card-title>
+    <div class="pa-5 pb-3">
+      <AdminPanelHeader :title="t('Teams and roles')" />
+    </div>
     <ServingFeedbackAlerts
       :refresh-error-message="refreshErrorMessage"
       :command-error-message="commandErrorMessage"

@@ -8,6 +8,7 @@ import type {
 } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import CourseEnrollmentsPanel from "./CourseEnrollmentsPanel.vue";
 import CourseLessonsPanel, { type LessonForm } from "./CourseLessonsPanel.vue";
 
@@ -57,21 +58,26 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
-    <v-card-title class="d-flex align-center justify-space-between ga-3">
-      <span>{{ course?.title || t("Course") }}</span>
-      <v-btn
-        v-if="course && canManage"
-        icon="mdi-pencil-outline"
-        variant="text"
-        size="small"
-        :aria-label="t('Edit course')"
-        @click="$emit('edit')"
-      />
-    </v-card-title>
-    <v-card-subtitle v-if="course">
-      {{ course.scheduleText || t("common.notSet") }} ·
-      {{ course.location || t("common.notSet") }}
-    </v-card-subtitle>
+    <div class="pa-5 pb-3">
+      <AdminPanelHeader
+        :title="course?.title || t('Course')"
+        :subtitle="
+          course
+            ? `${course.scheduleText || t('common.notSet')} · ${course.location || t('common.notSet')}`
+            : ''
+        "
+      >
+        <template v-if="course && canManage" #actions>
+          <v-btn
+            icon="mdi-pencil-outline"
+            variant="text"
+            size="small"
+            :aria-label="t('Edit course')"
+            @click="$emit('edit')"
+          />
+        </template>
+      </AdminPanelHeader>
+    </div>
     <v-card-text v-if="!course">
       {{ t("No course selected.") }}
     </v-card-text>

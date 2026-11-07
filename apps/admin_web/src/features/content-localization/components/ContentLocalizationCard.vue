@@ -9,6 +9,7 @@ import {
   saveContentLocalization
 } from "@/core/api/content_localizations";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -194,19 +195,22 @@ function translationChipLabel(targetLocale: ContentLocale) {
 
 <template>
   <v-card class="mt-5" variant="outlined">
-    <v-card-title class="d-flex align-center justify-space-between ga-3 flex-wrap">
-      <span>{{ t("localization.title") }}</span>
-      <v-btn
-        color="primary"
-        size="small"
-        variant="tonal"
-        :disabled="!canEdit || !canUseAi || isGeneratingAll"
-        :loading="isGeneratingAll"
-        @click="generateAll"
-      >
-        {{ t("localization.generateMissing") }}
-      </v-btn>
-    </v-card-title>
+    <div class="pa-5 pb-3">
+      <AdminPanelHeader :title="t('localization.title')">
+        <template #actions>
+          <v-btn
+            color="primary"
+            size="small"
+            variant="tonal"
+            :disabled="!canEdit || !canUseAi || isGeneratingAll"
+            :loading="isGeneratingAll"
+            @click="generateAll"
+          >
+            {{ t("localization.generateMissing") }}
+          </v-btn>
+        </template>
+      </AdminPanelHeader>
+    </div>
     <v-tabs v-model="locale" density="compact" grow>
       <v-tab
         v-for="item in localeOptions"

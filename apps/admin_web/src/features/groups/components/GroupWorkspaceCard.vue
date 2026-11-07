@@ -14,6 +14,7 @@ import type {
 import { ref } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import type {
   GroupAttendanceForm,
   GroupMaterialForm
@@ -128,11 +129,16 @@ function forwardMaterialUpdate(
 
 <template>
   <v-card variant="outlined">
-    <v-card-title>{{ group?.name || t("Group workspace") }}</v-card-title>
-    <v-card-subtitle v-if="group">
-      {{ group.meetingTime || t("common.notSet") }} ·
-      {{ group.location || t("common.notSet") }}
-    </v-card-subtitle>
+    <div class="pa-5 pb-3">
+      <AdminPanelHeader
+        :title="group?.name || t('Group workspace')"
+        :subtitle="
+          group
+            ? `${group.meetingTime || t('common.notSet')} · ${group.location || t('common.notSet')}`
+            : ''
+        "
+      />
+    </div>
     <v-card-text v-if="!group">
       {{ t("Select a group to manage its ministry workflow.") }}
     </v-card-text>

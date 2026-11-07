@@ -8,7 +8,7 @@ defineProps<{
 <template>
   <header class="admin-panel-header">
     <div class="admin-panel-header__copy">
-      <div class="admin-panel-header__title">{{ title }}</div>
+      <h2 class="admin-panel-header__title">{{ title }}</h2>
       <div v-if="subtitle" class="admin-panel-header__subtitle">
         {{ subtitle }}
       </div>
@@ -33,6 +33,7 @@ defineProps<{
 }
 
 .admin-panel-header__title {
+  margin: 0;
   font-size: 16px;
   line-height: 1.35;
   font-weight: 700;

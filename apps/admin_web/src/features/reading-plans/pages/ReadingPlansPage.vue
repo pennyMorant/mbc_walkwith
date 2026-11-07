@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 
 import ReadingPlanAssignmentsPanel from "../components/ReadingPlanAssignmentsPanel.vue";
 import ReadingPlanDaysPanel from "../components/ReadingPlanDaysPanel.vue";
@@ -101,12 +102,12 @@ const {
 
       <v-col cols="12" lg="8">
         <v-card variant="outlined">
-          <v-card-title>
-            {{ selectedPlan?.title || t("Reading plan") }}
-          </v-card-title>
-          <v-card-subtitle>
-            {{ t("Scripture text stays in the App local Bible data.") }}
-          </v-card-subtitle>
+          <div class="pa-5 pb-3">
+            <AdminPanelHeader
+              :title="selectedPlan?.title || t('Reading plan')"
+              :subtitle="t('Scripture text stays in the App local Bible data.')"
+            />
+          </div>
 
           <v-card-text>
             <v-alert

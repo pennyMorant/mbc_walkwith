@@ -6,6 +6,7 @@ import {
   sermonDiscussionResponseUserTypeOptions
 } from "@/core/api/sermon_discussion_guides";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 
 import ContentLocalizationCard from "../../content-localization/components/ContentLocalizationCard.vue";
 import SermonDiscussionGuideEditor from "../components/SermonDiscussionGuideEditor.vue";
@@ -97,16 +98,16 @@ const {
 
       <v-col cols="12" lg="8">
         <v-card variant="outlined">
-          <v-card-title>
-            {{ selectedGuide?.title || t("Discussion guide") }}
-          </v-card-title>
-          <v-card-subtitle>
-            {{
-              selectedGuide
-                ? `${t("Sermon ID")}: ${selectedGuide.sermonId}`
-                : t("Create a guide linked to a sermon record.")
-            }}
-          </v-card-subtitle>
+          <div class="pa-5 pb-3">
+            <AdminPanelHeader
+              :title="selectedGuide?.title || t('Discussion guide')"
+              :subtitle="
+                selectedGuide
+                  ? `${t('Sermon ID')}: ${selectedGuide.sermonId}`
+                  : t('Create a guide linked to a sermon record.')
+              "
+            />
+          </div>
           <v-card-text>
             <v-btn-toggle
               v-model="activePanel"
