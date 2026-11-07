@@ -10,6 +10,7 @@ import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
@@ -57,16 +58,13 @@ const followUpDisabled = computed(
 <template>
   <AdminResponsiveDrawer v-model="drawer" :desktop-width="620">
     <div v-if="request" class="pa-5">
-      <div class="d-flex align-start justify-space-between ga-4">
-        <div class="min-width-0">
-          <div class="text-h6 font-weight-bold text-wrap">
-            {{ request.title }}
-          </div>
-          <div class="text-caption text-medium-emphasis mt-1 text-wrap">
-            {{ request.memberDisplayName }} · {{ request.memberEmail }}
-          </div>
-        </div>
-        <div class="d-flex align-center ga-2">
+      <AdminDrawerHeader
+        :title="request.title"
+        :subtitle="`${request.memberDisplayName} · ${request.memberEmail}`"
+        :close-label="t('common.close')"
+        @close="drawer = false"
+      >
+        <template #meta>
           <v-chip
             size="small"
             variant="tonal"
@@ -74,14 +72,8 @@ const followUpDisabled = computed(
           >
             {{ t(request.privacyLevel) }}
           </v-chip>
-          <v-btn
-            icon="mdi-close"
-            variant="text"
-            :aria-label="t('common.close')"
-            @click="drawer = false"
-          />
-        </div>
-      </div>
+        </template>
+      </AdminDrawerHeader>
 
       <v-alert type="warning" variant="tonal" class="mt-5">
         {{ t("Care notes are sensitive and are not returned to member App APIs.") }}

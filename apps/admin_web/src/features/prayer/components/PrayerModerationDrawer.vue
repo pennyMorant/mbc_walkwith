@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { AdminPrayerRequest } from "@mbc/api-contracts";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 import {
   prayerStatusColor,
@@ -34,6 +35,13 @@ const emit = defineEmits<{
 }>();
 const deleteDialog = ref(false);
 const { optionItems, t } = useI18n();
+const requestSubtitle = computed(() => {
+  if (!props.request) return "";
+  const submitter = props.request.submitterName || t("Anonymous");
+  return props.request.submitterEmail
+    ? `${submitter} · ${props.request.submitterEmail}`
+    : submitter;
+});
 
 watch(
   () => props.request?.id,
@@ -51,17 +59,13 @@ function confirmDelete() {
 <template>
   <AdminResponsiveDrawer v-model="open" :desktop-width="560">
     <div v-if="request" class="pa-5">
-      <div class="d-flex align-start justify-space-between ga-4">
-        <div class="min-width-0">
-          <div class="text-h6 font-weight-bold">{{ request.title }}</div>
-          <div class="text-caption text-medium-emphasis mt-1">
-            {{ request.submitterName || t("Anonymous") }}
-            <span v-if="request.submitterEmail">
-              · {{ request.submitterEmail }}
-            </span>
-          </div>
-        </div>
-        <div class="d-flex ga-2 flex-shrink-0">
+      <AdminDrawerHeader
+        :title="request.title"
+        :subtitle="requestSubtitle"
+        :close-label="t('common.close')"
+        @close="open = false"
+      >
+        <template #meta>
           <v-chip size="small" :color="prayerStatusColor(request.status)">
             {{ t(request.status) }}
           </v-chip>
@@ -72,8 +76,8 @@ function confirmDelete() {
           >
             {{ t(request.visibility) }}
           </v-chip>
-        </div>
-      </div>
+        </template>
+      </AdminDrawerHeader>
 
       <v-alert type="info" variant="tonal" class="mt-5">
         {{ t("prayer.sensitiveNotice") }}

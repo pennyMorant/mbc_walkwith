@@ -3,6 +3,7 @@ import type { AuditLog } from "@mbc/api-contracts";
 
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const drawer = defineModel<boolean>({ required: true });
@@ -18,22 +19,12 @@ function json(value: unknown) {
 <template>
   <AdminResponsiveDrawer v-model="drawer" :desktop-width="620">
     <div v-if="log" class="pa-5">
-      <div class="d-flex align-start justify-space-between ga-3">
-        <div class="min-width-0">
-          <div class="text-h6 font-weight-bold text-wrap">
-            {{ log.action }}
-          </div>
-          <div class="text-body-2 text-medium-emphasis mt-1 id-text">
-            {{ log.resourceType }} · {{ log.resourceId }}
-          </div>
-        </div>
-        <v-btn
-          icon="mdi-close"
-          variant="text"
-          :aria-label="t('common.close')"
-          @click="drawer = false"
-        />
-      </div>
+      <AdminDrawerHeader
+        :title="log.action"
+        :subtitle="`${log.resourceType} · ${log.resourceId}`"
+        :close-label="t('common.close')"
+        @close="drawer = false"
+      />
 
       <v-list density="compact" class="mt-4 detail-list">
         <v-list-item
@@ -64,7 +55,6 @@ function json(value: unknown) {
 </template>
 
 <style scoped>
-.id-text,
 .detail-list :deep(.v-list-item-subtitle) {
   overflow-wrap: anywhere;
   white-space: normal;

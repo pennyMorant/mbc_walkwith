@@ -118,6 +118,10 @@ Surface rule:
   confirmation dialog for responsive layout, visual tone, and pending-state
   protection. Features retain permission checks, confirmation copy, target
   identity, and the command emitted after confirmation.
+- Detail and editor drawers use the shared Admin drawer header for title,
+  supporting identity, status metadata, responsive wrapping, and an accessible
+  close command. Features retain the canonical selected record, close guards,
+  permissions, and command lifecycle.
 - Repeated summary metrics use the shared responsive metric grid. Features must
   supply already calculated and localized labels, values, icons, and semantic
   tones; the shared component does not query data or derive business meaning.

@@ -3,6 +3,7 @@ import type { AppSetting } from "@mbc/api-contracts";
 import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import PublicLandingStructuredEditor from "./PublicLandingStructuredEditor.vue";
@@ -43,21 +44,13 @@ const drawerProxy = computed({
 <template>
   <AdminResponsiveDrawer v-model="drawerProxy" :desktop-width="560">
     <div v-if="setting" class="pa-4 pa-sm-5">
-      <div class="d-flex align-start justify-space-between ga-4">
-        <div>
-          <div class="text-h6 font-weight-bold">{{ settingTitle(setting) }}</div>
-          <div class="text-body-2 text-medium-emphasis mt-1">
-            {{ settingDescription(setting) }}
-          </div>
-        </div>
-        <v-btn
-          icon="mdi-close"
-          variant="text"
-          :aria-label="t('common.close')"
-          :disabled="savePending"
-          @click="drawerProxy = false"
-        />
-      </div>
+      <AdminDrawerHeader
+        :title="settingTitle(setting)"
+        :subtitle="settingDescription(setting)"
+        :close-label="t('common.close')"
+        :close-disabled="savePending"
+        @close="drawerProxy = false"
+      />
 
       <div class="d-flex flex-wrap ga-2 mt-4">
         <v-chip size="small" variant="tonal">{{ categoryTitle(setting.category) }}</v-chip>

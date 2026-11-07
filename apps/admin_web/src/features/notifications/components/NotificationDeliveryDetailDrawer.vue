@@ -8,6 +8,7 @@ import { computed, ref, watch } from "vue";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 const drawer = defineModel<boolean>({ required: true });
@@ -68,28 +69,19 @@ function dateTime(value: string | null) {
 <template>
   <AdminResponsiveDrawer v-model="drawerProxy" :desktop-width="560">
     <div v-if="task" class="pa-5">
-      <div class="d-flex align-start justify-space-between ga-3">
-        <div class="min-width-0">
-          <div class="text-h6 font-weight-bold text-wrap">
-            {{ task.payload.title || task.type }}
-          </div>
-          <div class="text-body-2 text-medium-emphasis mt-1 id-text">
-            {{ task.type }} · {{ task.id }}
-          </div>
-        </div>
-        <div class="d-flex align-center ga-1">
+      <AdminDrawerHeader
+        :title="task.payload.title || task.type"
+        :subtitle="`${task.type} · ${task.id}`"
+        :close-label="t('common.close')"
+        :close-disabled="busy"
+        @close="drawerProxy = false"
+      >
+        <template #meta>
           <v-chip :color="statusColor(task.status)">
             {{ t(task.status) }}
           </v-chip>
-          <v-btn
-            icon="mdi-close"
-            variant="text"
-            :aria-label="t('common.close')"
-            :disabled="busy"
-            @click="drawerProxy = false"
-          />
-        </div>
-      </div>
+        </template>
+      </AdminDrawerHeader>
 
       <v-alert v-if="errorMessage" type="error" variant="tonal" class="mt-5">
         {{ errorMessage }}
@@ -193,7 +185,6 @@ function dateTime(value: string | null) {
   min-width: 0;
 }
 
-.id-text,
 .detail-list :deep(.v-list-item-subtitle) {
   overflow-wrap: anywhere;
   white-space: normal;

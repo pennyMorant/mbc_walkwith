@@ -3,6 +3,7 @@ import type { MemberProfile } from "@mbc/api-contracts";
 import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
@@ -36,17 +37,11 @@ const editorDisabled = computed(() => !props.canManage || props.saving);
 <template>
   <AdminResponsiveDrawer v-model="drawer" :desktop-width="500">
     <div class="pa-5">
-      <div class="d-flex align-center justify-space-between ga-3">
-        <div class="text-h6 font-weight-bold text-truncate">
-          {{ title }}
-        </div>
-        <v-btn
-          icon="mdi-close"
-          variant="text"
-          :aria-label="t('common.close')"
-          @click="drawer = false"
-        />
-      </div>
+      <AdminDrawerHeader
+        :title="title"
+        :close-label="t('common.close')"
+        @close="drawer = false"
+      />
 
       <v-progress-linear
         v-if="detailLoading"

@@ -4,6 +4,7 @@ import { computed, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
+import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import {
@@ -66,33 +67,19 @@ function confirmPasswordReset() {
 <template>
   <AdminResponsiveDrawer v-model="drawerProxy" :desktop-width="480">
     <div v-if="user" class="pa-5">
-      <div class="d-flex align-start justify-space-between ga-3">
-        <div class="min-width-0">
-          <div class="d-flex align-center flex-wrap ga-2">
-            <span class="text-h6 font-weight-bold text-truncate">
-              {{ user.name }}
-            </span>
-            <v-chip
-              v-if="user.id === currentUserId"
-              size="small"
-              color="primary"
-              variant="tonal"
-            >
-              {{ t("users.currentAccount") }}
-            </v-chip>
-          </div>
-          <div class="text-body-2 text-medium-emphasis mt-1 text-truncate">
-            {{ user.email }}
-          </div>
-        </div>
-        <v-btn
-          icon="mdi-close"
-          variant="text"
-          :aria-label="t('common.close')"
-          :disabled="busy"
-          @click="drawerProxy = false"
-        />
-      </div>
+      <AdminDrawerHeader
+        :title="user.name"
+        :subtitle="user.email"
+        :close-label="t('common.close')"
+        :close-disabled="busy"
+        @close="drawerProxy = false"
+      >
+        <template v-if="user.id === currentUserId" #meta>
+          <v-chip size="small" color="primary" variant="tonal">
+            {{ t("users.currentAccount") }}
+          </v-chip>
+        </template>
+      </AdminDrawerHeader>
 
       <v-alert v-if="!canManage" type="info" variant="tonal" class="mt-5">
         {{ t("users.readOnly") }}
