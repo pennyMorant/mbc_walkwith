@@ -5,6 +5,7 @@ import { computed, ref, watch } from "vue";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { changeAdminPassword } from "@/core/api/auth";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 
 const props = defineProps<{
   modelValue: boolean;
@@ -93,14 +94,13 @@ function resetForm() {
     @update:model-value="handleDialogModelUpdate"
   >
     <v-card>
-      <v-card-title class="d-flex align-center ga-3 px-6 pt-6">
-        <v-avatar color="primary" variant="tonal" rounded="lg" size="40">
-          <v-icon icon="mdi-lock-reset" />
-        </v-avatar>
-        <span class="text-h6 font-weight-bold">
-          {{ t("auth.changePassword") }}
-        </span>
-      </v-card-title>
+      <AdminDialogHeader
+        :title="t('auth.changePassword')"
+        :close-label="t('common.close')"
+        icon="mdi-lock-reset"
+        :close-disabled="changePasswordMutation.isPending.value"
+        @close="close"
+      />
 
       <v-card-text class="px-6 pt-5">
         <v-form @submit.prevent="submit">

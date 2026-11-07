@@ -5,7 +5,7 @@ const props = withDefaults(
   defineProps<{
     modelValue: boolean;
     title: string;
-    message: string;
+    message?: string;
     confirmLabel: string;
     cancelLabel: string;
     color?: string;
@@ -17,6 +17,7 @@ const props = withDefaults(
   {
     color: "primary",
     icon: "mdi-alert-circle-outline",
+    message: "",
     loading: false,
     disabled: false,
     maxWidth: 440
@@ -67,7 +68,7 @@ function confirm() {
       </div>
 
       <v-card-text class="admin-confirm-dialog__message">
-        {{ message }}
+        <slot>{{ message }}</slot>
       </v-card-text>
 
       <v-card-actions class="admin-confirm-dialog__actions">

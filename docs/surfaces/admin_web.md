@@ -118,6 +118,10 @@ Surface rule:
   confirmation dialog for responsive layout, visual tone, and pending-state
   protection. Features retain permission checks, confirmation copy, target
   identity, and the command emitted after confirmation.
+- Editor and utility dialogs use the shared Admin dialog header for semantic
+  titles, optional supporting identity, visual context, responsive wrapping,
+  and an accessible close command. Features retain close guards, form state,
+  validation, permissions, and mutation ownership.
 - Detail and editor drawers use the shared Admin drawer header for title,
   supporting identity, status metadata, responsive wrapping, and an accessible
   close command. Features retain the canonical selected record, close guards,

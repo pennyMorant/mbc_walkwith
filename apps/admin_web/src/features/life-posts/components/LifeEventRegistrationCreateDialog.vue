@@ -2,6 +2,7 @@
 import { computed } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 
 type RegistrationCreateDialog = {
   show: boolean;
@@ -36,9 +37,15 @@ const canSave = computed(() => {
 </script>
 
 <template>
-  <v-dialog v-model="dialog.show" max-width="520">
+  <v-dialog v-model="dialog.show" max-width="520" :persistent="loading">
     <v-card>
-      <v-card-title>{{ t("Add registration") }}</v-card-title>
+      <AdminDialogHeader
+        :title="t('Add registration')"
+        :close-label="t('common.close')"
+        icon="mdi-account-plus-outline"
+        :close-disabled="loading"
+        @close="emit('close')"
+      />
       <v-card-text>
         <v-text-field
           v-model="dialog.attendeeName"

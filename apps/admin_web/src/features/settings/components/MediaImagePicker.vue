@@ -5,6 +5,7 @@ import { computed, onMounted, ref } from "vue";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { listMediaImages, uploadMediaImage } from "@/core/api/media";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -80,7 +81,12 @@ function select(asset: MediaAsset) {
 
   <v-dialog v-model="dialog" max-width="920">
     <v-card>
-      <v-card-title>{{ t("settings.landing.mediaLibrary") }}</v-card-title>
+      <AdminDialogHeader
+        :title="t('settings.landing.mediaLibrary')"
+        :close-label="t('common.close')"
+        icon="mdi-image-multiple-outline"
+        @close="dialog = false"
+      />
       <v-card-text>
         <div v-if="assets.length" class="media-grid">
           <button v-for="asset in assets" :key="asset.id" type="button" class="media-option" @click="select(asset)">

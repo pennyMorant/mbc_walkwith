@@ -11,6 +11,7 @@ describe("admin confirmation dialog", () => {
     expect(component).toContain(':persistent="dialogLoading"');
     expect(component).toContain("const confirmDisabled = computed");
     expect(component).toContain("admin-confirm-dialog__actions");
+    expect(component).toContain("<slot>{{ message }}</slot>");
     expect(component).toContain("grid-template-columns: 1fr");
     expect(component).toContain('aria-hidden="true"');
     expect(component).not.toContain("@/core/api");
@@ -23,7 +24,9 @@ describe("admin confirmation dialog", () => {
         "users/components/AdminUserEditorDrawer.vue",
         "notifications/components/NotificationDeliveryDetailDrawer.vue",
         "prayer/components/PrayerModerationDrawer.vue",
-        "life-posts/pages/LifePostsPage.vue"
+        "life-posts/pages/LifePostsPage.vue",
+        "life-posts/components/LifeEventRegistrationList.vue",
+        "media/components/MediaAssetEditDialog.vue"
       ].map((path) =>
         Bun.file(new URL(`../src/features/${path}`, import.meta.url)).text()
       )

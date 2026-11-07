@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import { nextTick, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 import { formatDateTime } from "../life_post_presenters";
 
 const props = defineProps<{
@@ -132,10 +133,13 @@ function escapeHtml(value: string) {
     @update:model-value="(value) => !value && emit('close')"
   >
     <v-card class="check-in-dialog-card">
-      <v-card-title class="d-flex align-center justify-space-between ga-3">
-        <span>{{ t("Check-in QR") }}</span>
-        <v-btn icon="mdi-close" variant="text" @click="emit('close')" />
-      </v-card-title>
+      <AdminDialogHeader
+        :title="t('Check-in QR')"
+        :subtitle="post.title"
+        :close-label="t('common.close')"
+        icon="mdi-qrcode-scan"
+        @close="emit('close')"
+      />
       <v-card-text>
         <v-alert v-if="qrErrorMessage" type="error" variant="tonal" class="mb-4">
           {{ qrErrorMessage }}

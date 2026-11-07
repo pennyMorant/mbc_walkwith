@@ -8,6 +8,8 @@ import type {
 import { reactive, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
+import AdminDialogHeader from "@/core/ui/AdminDialogHeader.vue";
 
 const props = defineProps<{
   modelValue: boolean;
@@ -92,8 +94,14 @@ function save() {
     @update:model-value="emit('update:modelValue', $event)"
   >
     <v-card v-if="asset">
-      <v-card-title>{{ t("media.editTitle") }}</v-card-title>
-      <v-card-subtitle>{{ asset.originalFileName }}</v-card-subtitle>
+      <AdminDialogHeader
+        :title="t('media.editTitle')"
+        :subtitle="asset.originalFileName"
+        :close-label="t('common.close')"
+        icon="mdi-image-edit-outline"
+        :close-disabled="saving"
+        @close="close"
+      />
       <v-card-text class="media-form">
         <div class="media-preview">
           <v-img
@@ -229,28 +237,19 @@ function save() {
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-dialog v-model="restrictionConfirmation" max-width="520">
-    <v-card>
-      <v-card-title>{{ t("media.restrictConfirmTitle") }}</v-card-title>
-      <v-card-text>
-        {{
-          t("media.restrictConfirmBody").replace(
-            "{count}",
-            String(usages.length)
-          )
-        }}
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn variant="text" @click="restrictionConfirmation = false">
-          {{ t("Cancel") }}
-        </v-btn>
-        <v-btn color="error" variant="tonal" @click="save">
-          {{ t("media.restrictConfirmAction") }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <AdminConfirmDialog
+    v-model="restrictionConfirmation"
+    :title="t('media.restrictConfirmTitle')"
+    :message="
+      t('media.restrictConfirmBody').replace('{count}', String(usages.length))
+    "
+    :confirm-label="t('media.restrictConfirmAction')"
+    :cancel-label="t('Cancel')"
+    color="error"
+    icon="mdi-image-off-outline"
+    :max-width="520"
+    @confirm="save"
+  />
 </template>
 
 <style scoped>

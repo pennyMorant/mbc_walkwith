@@ -6,6 +6,7 @@ import type {
 import { ref } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
 import { eventRegistrationStatusColor } from "../life_event_registration_presenters";
 
 const props = defineProps<{
@@ -143,40 +144,32 @@ function confirmStatusChange() {
     </template>
   </v-list>
 
-  <v-dialog
+  <AdminConfirmDialog
     :model-value="Boolean(pendingStatusChange)"
-    max-width="440"
+    :title="t('Change registration status')"
+    :confirm-label="t('Confirm')"
+    :cancel-label="t('Cancel')"
+    icon="mdi-account-convert-outline"
     @update:model-value="(value) => !value && (pendingStatusChange = null)"
+    @confirm="confirmStatusChange"
   >
-    <v-card>
-      <v-card-title>{{ t("Change registration status") }}</v-card-title>
-      <v-card-text v-if="pendingStatusChange">
-        <div class="font-weight-bold">
-          {{ pendingStatusChange.registration.attendeeName }}
-        </div>
-        <v-chip
-          :color="eventRegistrationStatusColor(pendingStatusChange.status)"
-          class="my-3"
-          size="small"
-          variant="tonal"
-        >
-          {{ t(pendingStatusChange.status) }}
-        </v-chip>
-        <div class="text-body-2 text-medium-emphasis">
-          {{ t("Confirm this registration status change.") }}
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn variant="text" @click="pendingStatusChange = null">
-          {{ t("Cancel") }}
-        </v-btn>
-        <v-btn color="primary" @click="confirmStatusChange">
-          {{ t("Confirm") }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+    <template v-if="pendingStatusChange">
+      <div class="font-weight-bold">
+        {{ pendingStatusChange.registration.attendeeName }}
+      </div>
+      <v-chip
+        :color="eventRegistrationStatusColor(pendingStatusChange.status)"
+        class="my-3"
+        size="small"
+        variant="tonal"
+      >
+        {{ t(pendingStatusChange.status) }}
+      </v-chip>
+      <div class="text-body-2 text-medium-emphasis">
+        {{ t("Confirm this registration status change.") }}
+      </div>
+    </template>
+  </AdminConfirmDialog>
 </template>
 
 <style scoped>
