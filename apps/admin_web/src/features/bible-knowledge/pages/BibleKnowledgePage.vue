@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import BibleKnowledgeEntityEditor from "../components/BibleKnowledgeEntityEditor.vue";
@@ -36,15 +37,11 @@ const {
   <div>
     <AdminPageHeader :title="t('nav.bibleKnowledge')" :subtitle="t('bible.entitySubtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="entitiesQuery.isFetching.value"
-          @click="entitiesQuery.refetch()"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="entitiesQuery.refetch()"
+        />
         <v-btn
           v-if="canManage"
           color="primary"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import JobFailureDiagnostics from "../components/JobFailureDiagnostics.vue";
@@ -51,15 +52,11 @@ const {
   <div>
     <AdminPageHeader :title="t('System diagnostics')" :subtitle="t('jobs.subtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="isRefreshing"
-          @click="refreshAll"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshAll"
+        />
       </template>
     </AdminPageHeader>
 

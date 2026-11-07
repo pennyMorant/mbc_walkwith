@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import BibleNoteFilterCard from "../components/BibleNoteFilterCard.vue";
@@ -36,15 +37,11 @@ const {
   <div>
     <AdminPageHeader :title="t('nav.bibleNotes')" :subtitle="t('bibleNotes.pageSubtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="notesQuery.isFetching.value"
-          @click="notesQuery.refetch()"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="notesQuery.refetch()"
+        />
       </template>
     </AdminPageHeader>
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 
 import PrayerModerationDrawer from "../components/PrayerModerationDrawer.vue";
 import PrayerRequestsTable from "../components/PrayerRequestsTable.vue";
@@ -45,15 +46,11 @@ const {
   <div>
     <AdminPageHeader :title="t('nav.prayer')" :subtitle="t('prayer.pageSubtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="requestsQuery.isFetching.value"
-          @click="refreshList"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshList"
+        />
       </template>
     </AdminPageHeader>
 

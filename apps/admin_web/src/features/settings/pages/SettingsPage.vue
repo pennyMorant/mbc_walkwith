@@ -10,6 +10,7 @@ import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 
 import SettingsEditorDrawer from "../components/SettingsEditorDrawer.vue";
 import SettingsFiltersCard from "../components/SettingsFiltersCard.vue";
@@ -293,15 +294,11 @@ watch(drawer, (open) => {
   <div>
     <AdminPageHeader :title="t('settings.title')" :subtitle="t('settings.subtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="settingsQuery.isFetching.value"
-          @click="refreshList"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshList"
+        />
       </template>
     </AdminPageHeader>
 

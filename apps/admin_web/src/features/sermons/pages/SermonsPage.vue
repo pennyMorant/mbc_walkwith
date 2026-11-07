@@ -2,6 +2,7 @@
 import { getAdminSermon } from "@/core/api/sermons";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
@@ -116,15 +117,11 @@ const deepLink = useAdminResourceDeepLink(getAdminSermon, openSermon);
     </v-alert>
     <AdminPageHeader :title="t('nav.sermons')" :subtitle="t('sermons.subtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="sermonsQuery.isFetching.value"
-          @click="refreshList"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshList"
+        />
       </template>
     </AdminPageHeader>
 

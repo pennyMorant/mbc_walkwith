@@ -6,6 +6,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { getLifePost, translateLifePostNotification } from "@/core/api/life_posts";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import AdminAiDraftPanel from "../../ai/components/AdminAiDraftPanel.vue";
@@ -174,15 +175,11 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
     </v-alert>
     <AdminPageHeader :title="t('nav.lifePosts')" :subtitle="t('life.pageSubtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="postsQuery.isFetching.value"
-          @click="refreshPosts"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshPosts"
+        />
         <v-btn
           v-if="authStore.can('life_posts:update')"
           color="primary"

@@ -6,6 +6,7 @@ import { computed, ref } from "vue";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 
 import AuditLogDetailDrawer from "../components/AuditLogDetailDrawer.vue";
 import AuditLogFiltersCard from "../components/AuditLogFiltersCard.vue";
@@ -49,15 +50,11 @@ function openLog(log: AuditLog) {
   <div>
     <AdminPageHeader :title="t('nav.audit')" :subtitle="t('audit.subtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="logsQuery.isFetching.value"
-          @click="refreshList"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshList"
+        />
       </template>
     </AdminPageHeader>
 

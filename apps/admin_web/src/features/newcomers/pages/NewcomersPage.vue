@@ -5,6 +5,7 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 import AdminResponsiveDrawer from "@/core/ui/AdminResponsiveDrawer.vue";
 
 import NewcomerFiltersCard from "../components/NewcomerFiltersCard.vue";
@@ -61,15 +62,11 @@ const summaryMetrics = computed(() => [
   <div>
     <AdminPageHeader :title="t('nav.newcomers')" :subtitle="t('newcomers.pageSubtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="newcomersQuery.isFetching.value"
-          prepend-icon="mdi-refresh"
-          @click="refreshList"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshList"
+        />
       </template>
     </AdminPageHeader>
 

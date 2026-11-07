@@ -15,6 +15,7 @@ import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 
 import MemberEditorDrawer from "../components/MemberEditorDrawer.vue";
 import MemberResults from "../components/MemberResults.vue";
@@ -226,15 +227,11 @@ watch(drawer, (open) => {
     </v-alert>
     <AdminPageHeader :title="t('nav.members')" :subtitle="t('members.pageSubtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="membersQuery.isFetching.value"
-          @click="refreshList"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshList"
+        />
         <v-btn v-if="canManage" color="primary" prepend-icon="mdi-plus" @click="newMember">
           {{ t("New member") }}
         </v-btn>

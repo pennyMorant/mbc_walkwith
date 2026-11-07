@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 
 import GivingCategoryReportCard from "../components/GivingCategoryReportCard.vue";
 import GivingFundDrawer from "../components/GivingFundDrawer.vue";
@@ -113,15 +114,11 @@ const {
   <div>
     <AdminPageHeader :title="t('nav.giving')" :subtitle="t('giving.pageSubtitle')">
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="isRefreshing"
-          @click="refreshAll"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshAll"
+        />
         <v-btn
           color="primary"
           prepend-icon="mdi-download"

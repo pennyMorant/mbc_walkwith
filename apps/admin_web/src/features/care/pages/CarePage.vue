@@ -23,6 +23,7 @@ import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 
 import CareRequestDrawer from "../components/CareRequestDrawer.vue";
 import CareRequestResults from "../components/CareRequestResults.vue";
@@ -285,15 +286,11 @@ function addCareFollowUp() {
       :subtitle="t('Care request assignment, privacy, follow-up, and audit queue.')"
     >
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="requestsQuery.isFetching.value"
-          prepend-icon="mdi-refresh"
-          @click="requestsQuery.refetch()"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="requestsQuery.refetch()"
+        />
       </template>
     </AdminPageHeader>
 

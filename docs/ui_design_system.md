@@ -265,6 +265,10 @@ button layout only; Feature code still decides the alert meaning, visibility,
 message, and retry behavior. `AdminDataState` and `AdminRefreshAlert` compose
 this primitive for their narrower loading-state and stale-data contracts.
 
+Use `AdminRefreshButton` for the standard primary refresh action in admin page
+headers. The component owns the icon and button styling while the page supplies
+localized copy, pending/disabled state, and the refresh callback.
+
 Public Web standard content sections use `LandingSectionHeading` for eyebrow,
 heading hierarchy, optional body copy, and the existing section/gallery style
 variants. Hero and compound content layouts keep their own heading structure.

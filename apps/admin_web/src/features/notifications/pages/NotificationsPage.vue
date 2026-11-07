@@ -15,6 +15,7 @@ import {
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
+import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
 
 import NotificationDeliveryDetailDrawer from "../components/NotificationDeliveryDetailDrawer.vue";
 import NotificationDeliveryFiltersCard from "../components/NotificationDeliveryFiltersCard.vue";
@@ -252,16 +253,12 @@ watch(drawer, (open) => {
       :subtitle="t('notifications.subtitle')"
     >
       <template #actions>
-        <v-btn
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-refresh"
+        <AdminRefreshButton
+          :label="t('common.refresh')"
           :loading="deliveriesQuery.isFetching.value"
           :disabled="anyCommandPending"
-          @click="refreshList"
-        >
-          {{ t("common.refresh") }}
-        </v-btn>
+          @refresh="refreshList"
+        />
         <v-btn
           v-if="canManage"
           color="warning"
