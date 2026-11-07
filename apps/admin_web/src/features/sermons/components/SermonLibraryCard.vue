@@ -3,6 +3,7 @@ import type { Sermon } from "@mbc/api-contracts";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import { sermonStatusColor } from "../sermon_pipeline";
 
 type SermonLibraryFilters = {
@@ -36,19 +37,14 @@ const { optionItems, t } = useI18n();
 <template>
   <v-card>
     <div class="pa-5">
-      <div
-        class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+      <AdminPanelHeader
+        :title="t('Sermon library')"
+        :subtitle="t('sermons.librarySubtitle')"
       >
-        <div>
-          <div class="text-subtitle-1 font-weight-bold">
-            {{ t("Sermon library") }}
-          </div>
-          <div class="text-body-2 text-medium-emphasis">
-            {{ t("sermons.librarySubtitle") }}
-          </div>
-        </div>
-        <v-chip>{{ sermons.length }}</v-chip>
-      </div>
+        <template #actions>
+          <v-chip>{{ sermons.length }}</v-chip>
+        </template>
+      </AdminPanelHeader>
       <v-row dense class="mt-4">
         <v-col cols="12" md="3">
           <v-text-field

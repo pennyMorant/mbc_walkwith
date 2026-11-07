@@ -25,6 +25,10 @@ const componentFiles = [
   "JobStatsWorkspace.vue",
   "JobQueueCard.vue"
 ];
+const messages = readFileSync(
+  new URL("../src/core/i18n/i18n.ts", import.meta.url),
+  "utf8"
+);
 
 describe("jobs query states", () => {
   test.each(componentFiles)("keeps %s query presentation-only", (file) => {
@@ -85,5 +89,16 @@ describe("jobs query states", () => {
     expect(controller).not.toContain("onSuccess: async (job) =>");
     expect(page).not.toContain("cancelMutation");
     expect(page).not.toContain("markSucceededMutation");
+  });
+
+  test("localizes the primary diagnostics workspace copy", () => {
+    for (const key of [
+      "jobs.subtitle",
+      "jobs.readinessTitle",
+      "jobs.pipelineChecks",
+      "jobs.filterSubtitle"
+    ]) {
+      expect(messages.match(new RegExp(`"${key}"`, "g"))?.length).toBe(4);
+    }
   });
 });

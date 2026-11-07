@@ -107,6 +107,9 @@ Surface rule:
   wide-screen workspace, responsive navigation, active-route presentation,
   and global card, table, dialog, and menu treatment. Feature pages must not
   recreate shell chrome or override these foundations with page-local themes.
+- Operational cards with a title, supporting description, and trailing count
+  or actions use the shared panel-header layout. Features continue to own the
+  labels, status values, permissions, loading state, and emitted intents.
 - Repeated summary metrics use the shared responsive metric grid. Features must
   supply already calculated and localized labels, values, icons, and semantic
   tones; the shared component does not query data or derive business meaning.

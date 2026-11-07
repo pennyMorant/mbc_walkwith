@@ -4,6 +4,7 @@ import type { Job, JobStatus, JobType } from "@mbc/api-contracts";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 defineProps<{
@@ -35,17 +36,14 @@ const { locale, optionItems, t } = useI18n();
 <template>
   <v-card>
     <div class="pa-5">
-      <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-        <div>
-          <div class="text-subtitle-1 font-weight-bold">
-            {{ t("Job queue") }}
-          </div>
-          <div class="text-body-2 text-medium-emphasis">
-            {{ t("jobs.filterSubtitle") }}
-          </div>
-        </div>
-        <v-chip>{{ jobs.length }}</v-chip>
-      </div>
+      <AdminPanelHeader
+        :title="t('Job queue')"
+        :subtitle="t('jobs.filterSubtitle')"
+      >
+        <template #actions>
+          <v-chip>{{ jobs.length }}</v-chip>
+        </template>
+      </AdminPanelHeader>
       <v-row dense class="mt-4">
         <v-col cols="12" md="3">
           <v-select

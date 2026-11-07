@@ -7,6 +7,7 @@ import type {
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 import type { LifePostLibraryFilterForm } from "../life_post_library_models";
@@ -50,26 +51,22 @@ function sortLabel(weight: number) {
 <template>
   <v-card class="mt-6">
     <div class="pa-5">
-      <div
-        class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4 mb-4"
+      <AdminPanelHeader
+        class="mb-4"
+        :title="t('life.queueTitle')"
+        :subtitle="t('life.queueSubtitle')"
       >
-        <div>
-          <div class="text-subtitle-1 font-weight-bold">
-            {{ t("life.queueTitle") }}
+        <template #actions>
+          <div class="d-flex flex-wrap ga-2">
+            <v-chip color="success" variant="tonal">
+              {{ t("published") }} {{ publicPostCount }}
+            </v-chip>
+            <v-chip color="secondary" variant="tonal">
+              {{ t("Not published") }} {{ privatePostCount }}
+            </v-chip>
           </div>
-          <div class="text-body-2 text-medium-emphasis">
-            {{ t("life.queueSubtitle") }}
-          </div>
-        </div>
-        <div class="d-flex ga-2">
-          <v-chip color="success" variant="tonal">
-            {{ t("published") }} {{ publicPostCount }}
-          </v-chip>
-          <v-chip color="secondary" variant="tonal">
-            {{ t("Not published") }} {{ privatePostCount }}
-          </v-chip>
-        </div>
-      </div>
+        </template>
+      </AdminPanelHeader>
       <LifePostLibraryFilters
         :filters="filters"
         :fetching="fetching"

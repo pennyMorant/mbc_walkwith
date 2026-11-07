@@ -4,6 +4,7 @@ import type { MediaCleanupStatus, MediaCleanupTask } from "@mbc/api-contracts";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
 
 const status = defineModel<MediaCleanupStatus | "">("status", {
@@ -37,48 +38,44 @@ function statusColor(value: MediaCleanupStatus) {
 
 <template>
   <v-card v-if="canRead" class="mt-6" variant="outlined">
-    <div
-      class="pa-5 d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+    <AdminPanelHeader
+      class="pa-5"
+      :title="t('media.cleanupTitle')"
+      :subtitle="t('media.cleanupSubtitle')"
     >
-      <div>
-        <div class="text-subtitle-1 font-weight-bold">
-          {{ t("media.cleanupTitle") }}
+      <template #actions>
+        <div class="d-flex align-center ga-2 cleanup-actions">
+          <v-select
+            v-model="status"
+            :items="optionItems(statuses)"
+            :label="t('Status')"
+            density="compact"
+            variant="outlined"
+            hide-details
+            class="status-filter"
+          />
+          <v-chip variant="tonal">{{ tasks.length }}</v-chip>
+          <v-btn
+            icon="mdi-filter-check-outline"
+            size="small"
+            variant="tonal"
+            :aria-label="t('media.applyFilters')"
+            :title="t('media.applyFilters')"
+            :loading="fetching"
+            @click="emit('apply')"
+          />
+          <v-btn
+            icon="mdi-refresh"
+            size="small"
+            variant="text"
+            :aria-label="t('common.refresh')"
+            :title="t('common.refresh')"
+            :disabled="fetching"
+            @click="emit('retryQuery')"
+          />
         </div>
-        <div class="text-body-2 text-medium-emphasis">
-          {{ t("media.cleanupSubtitle") }}
-        </div>
-      </div>
-      <div class="d-flex align-center ga-2 cleanup-actions">
-        <v-select
-          v-model="status"
-          :items="optionItems(statuses)"
-          :label="t('Status')"
-          density="compact"
-          variant="outlined"
-          hide-details
-          class="status-filter"
-        />
-        <v-chip variant="tonal">{{ tasks.length }}</v-chip>
-        <v-btn
-          icon="mdi-filter-check-outline"
-          size="small"
-          variant="tonal"
-          :aria-label="t('media.applyFilters')"
-          :title="t('media.applyFilters')"
-          :loading="fetching"
-          @click="emit('apply')"
-        />
-        <v-btn
-          icon="mdi-refresh"
-          size="small"
-          variant="text"
-          :aria-label="t('common.refresh')"
-          :title="t('common.refresh')"
-          :disabled="fetching"
-          @click="emit('retryQuery')"
-        />
-      </div>
-    </div>
+      </template>
+    </AdminPanelHeader>
     <v-divider />
     <v-alert
       v-if="retryErrorMessage"

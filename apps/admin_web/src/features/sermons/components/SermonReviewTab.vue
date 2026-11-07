@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 
 defineProps<{
   reviewChecks: Array<{
@@ -19,21 +20,16 @@ const { t } = useI18n();
 <template>
   <div>
     <v-card variant="outlined" class="pa-4 mb-4">
-      <div
-        class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+      <AdminPanelHeader
+        :title="t('Review readiness')"
+        :subtitle="ready ? t('Ready to publish') : t('Needs attention')"
       >
-        <div>
-          <div class="text-subtitle-1 font-weight-bold">
-            {{ t("Review readiness") }}
-          </div>
-          <div class="text-body-2 text-medium-emphasis">
-            {{ ready ? t("Ready to publish") : t("Needs attention") }}
-          </div>
-        </div>
-        <v-chip :color="ready ? 'success' : 'warning'">
-          {{ ready ? t("Ready") : t("Incomplete") }}
-        </v-chip>
-      </div>
+        <template #actions>
+          <v-chip :color="ready ? 'success' : 'warning'">
+            {{ ready ? t("Ready") : t("Incomplete") }}
+          </v-chip>
+        </template>
+      </AdminPanelHeader>
 
       <v-list density="compact" class="mt-3">
         <v-list-item

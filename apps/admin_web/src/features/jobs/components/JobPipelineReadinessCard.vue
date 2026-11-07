@@ -7,6 +7,7 @@ import type {
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
 defineProps<{
@@ -23,23 +24,19 @@ const { locale, t } = useI18n();
 
 <template>
   <v-card class="pa-4 mt-6">
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4">
-      <div>
-        <div class="text-subtitle-1 font-weight-bold">
-          {{ t("jobs.readinessTitle") }}
-        </div>
-        <div class="text-body-2 text-medium-emphasis">
-          {{ t("jobs.pipelineChecks") }}
-        </div>
-      </div>
-      <v-chip
-        v-if="status"
-        :color="status.ready ? 'success' : 'warning'"
-        variant="tonal"
-      >
-        {{ status.ready ? t("Ready") : t("Needs setup") }}
-      </v-chip>
-    </div>
+    <AdminPanelHeader
+      :title="t('jobs.readinessTitle')"
+      :subtitle="t('jobs.pipelineChecks')"
+    >
+      <template v-if="status" #actions>
+        <v-chip
+          :color="status.ready ? 'success' : 'warning'"
+          variant="tonal"
+        >
+          {{ status.ready ? t("Ready") : t("Needs setup") }}
+        </v-chip>
+      </template>
+    </AdminPanelHeader>
 
     <AdminDataState
       :pending="pending && !status"

@@ -5108,6 +5108,32 @@ Object.assign(messages["zh-Hant"], {
   "members.refreshFailed": "會友列表重新整理失敗，已保留上次成功載入的結果。"
 });
 
+Object.assign(messages.en, {
+  "jobs.subtitle":
+    "Review background job history, system health, and sermon production diagnostics.",
+  "jobs.readinessTitle": "Sermon production readiness"
+});
+
+Object.assign(messages.es, {
+  "System diagnostics": "Diagnóstico del sistema",
+  "Job queue": "Cola de tareas",
+  "jobs.subtitle":
+    "Revise el historial de tareas en segundo plano, el estado del sistema y los diagnósticos de producción de sermones.",
+  "jobs.readinessTitle": "Preparación de producción de sermones",
+  "jobs.pipelineChecks":
+    "Comprueba Postgres, el almacenamiento de audio y el flujo local de paquetes de sermones.",
+  "jobs.filterSubtitle": "Filtre por estado, tipo o recurso."
+});
+
+Object.assign(messages["zh-Hant"], {
+  "System diagnostics": "系統診斷",
+  "Job queue": "任務佇列",
+  "jobs.subtitle": "查看背景任務歷史、系統狀態和講道製作診斷。",
+  "jobs.readinessTitle": "講道製作準備度",
+  "jobs.pipelineChecks": "檢查 Postgres、音訊儲存和本地講道包上傳鏈路。",
+  "jobs.filterSubtitle": "按狀態、類型或資源篩選。"
+});
+
 watchEffect(() => {
   document.documentElement.lang = currentLocale.value;
 });

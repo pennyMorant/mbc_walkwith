@@ -13,6 +13,7 @@ import {
 } from "@/core/api/sermons";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 
 const cleanupQueryKey = ["admin-sermon-audio-cleanups"];
 const cleanupStatuses = ["", "failed", "pending", "succeeded"] as const;
@@ -81,43 +82,38 @@ function formatDateTime(value: string) {
 <template>
   <v-card v-if="canRead" class="mt-4">
     <div class="pa-5">
-      <div
-        class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+      <AdminPanelHeader
+        :title="t('sermons.audioCleanupTitle')"
+        :subtitle="t('sermons.audioCleanupSubtitle')"
       >
-        <div>
-          <div class="text-subtitle-1 font-weight-bold">
-            {{ t("sermons.audioCleanupTitle") }}
+        <template #actions>
+          <div class="d-flex align-center ga-2 cleanup-actions">
+            <v-select
+              v-model="status"
+              :items="statusItems"
+              :label="t('Status')"
+              density="compact"
+              variant="outlined"
+              hide-details
+              class="status-filter"
+            />
+            <v-chip variant="tonal">{{ tasks.length }}</v-chip>
+            <v-tooltip :text="t('common.refresh')">
+              <template #activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  icon="mdi-refresh"
+                  size="small"
+                  variant="tonal"
+                  :aria-label="t('common.refresh')"
+                  :loading="cleanupQuery.isFetching.value"
+                  @click="cleanupQuery.refetch()"
+                />
+              </template>
+            </v-tooltip>
           </div>
-          <div class="text-body-2 text-medium-emphasis">
-            {{ t("sermons.audioCleanupSubtitle") }}
-          </div>
-        </div>
-        <div class="d-flex align-center ga-2 cleanup-actions">
-          <v-select
-            v-model="status"
-            :items="statusItems"
-            :label="t('Status')"
-            density="compact"
-            variant="outlined"
-            hide-details
-            class="status-filter"
-          />
-          <v-chip variant="tonal">{{ tasks.length }}</v-chip>
-          <v-tooltip :text="t('common.refresh')">
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon="mdi-refresh"
-                size="small"
-                variant="tonal"
-                :aria-label="t('common.refresh')"
-                :loading="cleanupQuery.isFetching.value"
-                @click="cleanupQuery.refetch()"
-              />
-            </template>
-          </v-tooltip>
-        </div>
-      </div>
+        </template>
+      </AdminPanelHeader>
     </div>
 
     <v-divider />

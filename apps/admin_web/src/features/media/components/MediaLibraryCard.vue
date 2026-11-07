@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
 
 import type { MediaLibraryFilterForm } from "../media_workspace_models";
@@ -49,73 +50,68 @@ function onFileChange(event: Event) {
 <template>
   <v-card variant="outlined">
     <div class="pa-5">
-      <div
-        class="d-flex flex-column flex-lg-row align-start align-lg-center justify-space-between ga-4"
+      <AdminPanelHeader
+        :title="t('media.libraryTitle')"
+        :subtitle="t('media.librarySubtitle')"
       >
-        <div>
-          <div class="text-subtitle-1 font-weight-bold">
-            {{ t("media.libraryTitle") }}
-          </div>
-          <div class="text-body-2 text-medium-emphasis">
-            {{ t("media.librarySubtitle") }}
-          </div>
-        </div>
-        <div class="library-actions">
-          <v-select
-            v-model="filters.visibility"
-            :items="optionItems(visibilities)"
-            :label="t('media.visibility')"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-          <v-select
-            v-model="filters.consentStatus"
-            :items="optionItems(consentStatuses)"
-            :label="t('media.consentStatus')"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-          <div class="d-flex justify-end ga-2">
-            <v-btn
-              type="button"
-              icon="mdi-filter-remove-outline"
-              variant="text"
-              :disabled="fetching"
-              :aria-label="t('media.clearFilters')"
-              :title="t('media.clearFilters')"
-              @click="emit('clear')"
+        <template #actions>
+          <div class="library-actions">
+            <v-select
+              v-model="filters.visibility"
+              :items="optionItems(visibilities)"
+              :label="t('media.visibility')"
+              density="compact"
+              variant="outlined"
+              hide-details
             />
-            <v-btn
-              type="button"
-              icon="mdi-filter-check-outline"
-              color="primary"
-              variant="tonal"
-              :loading="fetching"
-              :aria-label="t('media.applyFilters')"
-              :title="t('media.applyFilters')"
-              @click="emit('apply')"
+            <v-select
+              v-model="filters.consentStatus"
+              :items="optionItems(consentStatuses)"
+              :label="t('media.consentStatus')"
+              density="compact"
+              variant="outlined"
+              hide-details
             />
-            <input
-              ref="fileInput"
-              hidden
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
-              @change="onFileChange"
-            />
-            <v-btn
-              v-if="canManage"
-              color="primary"
-              prepend-icon="mdi-cloud-upload-outline"
-              :loading="uploading"
-              @click="selectFile"
-            >
-              {{ t("media.upload") }}
-            </v-btn>
+            <div class="d-flex justify-end ga-2">
+              <v-btn
+                type="button"
+                icon="mdi-filter-remove-outline"
+                variant="text"
+                :disabled="fetching"
+                :aria-label="t('media.clearFilters')"
+                :title="t('media.clearFilters')"
+                @click="emit('clear')"
+              />
+              <v-btn
+                type="button"
+                icon="mdi-filter-check-outline"
+                color="primary"
+                variant="tonal"
+                :loading="fetching"
+                :aria-label="t('media.applyFilters')"
+                :title="t('media.applyFilters')"
+                @click="emit('apply')"
+              />
+              <input
+                ref="fileInput"
+                hidden
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+                @change="onFileChange"
+              />
+              <v-btn
+                v-if="canManage"
+                color="primary"
+                prepend-icon="mdi-cloud-upload-outline"
+                :loading="uploading"
+                @click="selectFile"
+              >
+                {{ t("media.upload") }}
+              </v-btn>
+            </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </AdminPanelHeader>
     </div>
     <v-divider />
     <v-alert

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "@/core/i18n/i18n";
+import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import type {
   SermonPipelineAction,
   SermonPipelineStep
@@ -23,35 +24,30 @@ const { t } = useI18n();
 <template>
   <div>
     <v-card variant="outlined" class="pa-4 mb-4">
-      <div
-        class="d-flex flex-column flex-sm-row align-start align-sm-center justify-space-between ga-4"
+      <AdminPanelHeader
+        :title="t('Sermon pipeline')"
+        :subtitle="
+          nextStep
+            ? `${t('sermons.pipelineNext')}: ${nextStep.title}`
+            : t('sermons.pipelineComplete')
+        "
       >
-        <div>
-          <div class="text-subtitle-1 font-weight-bold">
-            {{ t("Sermon pipeline") }}
+        <template #actions>
+          <div class="d-flex align-center ga-2">
+            <v-chip color="info" size="small" variant="tonal">
+              {{ progress }}%
+            </v-chip>
+            <v-btn
+              size="small"
+              variant="tonal"
+              :loading="workflowRefreshing"
+              @click="emit('refresh')"
+            >
+              {{ t("common.refresh") }}
+            </v-btn>
           </div>
-          <div class="text-body-2 text-medium-emphasis">
-            {{
-              nextStep
-                ? `${t("sermons.pipelineNext")}: ${nextStep.title}`
-                : t("sermons.pipelineComplete")
-            }}
-          </div>
-        </div>
-        <div class="d-flex align-center ga-2">
-          <v-chip color="info" size="small" variant="tonal">
-            {{ progress }}%
-          </v-chip>
-          <v-btn
-            size="small"
-            variant="tonal"
-            :loading="workflowRefreshing"
-            @click="emit('refresh')"
-          >
-            {{ t("common.refresh") }}
-          </v-btn>
-        </div>
-      </div>
+        </template>
+      </AdminPanelHeader>
 
       <v-progress-linear
         class="mt-4"
