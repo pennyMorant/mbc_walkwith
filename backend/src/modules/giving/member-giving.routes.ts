@@ -12,6 +12,7 @@ import type { AuditService } from "../audit/audit.service.js";
 import { requireMember } from "../members/auth/member-auth.middleware.js";
 import type { MemberAuthService } from "../members/auth/member-auth.service.js";
 import type { GivingService } from "./giving.service.js";
+import { toGivingStatementView } from "./giving_statement_projection.js";
 
 export async function registerMemberGivingRoutes(
   app: FastifyInstance,
@@ -56,7 +57,7 @@ export async function registerMemberGivingRoutes(
         request.member!.id,
         query
       );
-      return ok({ items: statements });
+      return ok({ items: statements.map(toGivingStatementView) });
     }
   );
 
@@ -82,7 +83,7 @@ export async function registerMemberGivingRoutes(
           nextAction: "refresh"
         });
       }
-      return ok(statement);
+      return ok(toGivingStatementView(statement));
     }
   );
 

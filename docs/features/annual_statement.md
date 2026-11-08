@@ -87,6 +87,8 @@ App 不可以：
 - 查看审计。
 
 管理 Web 不可以绕过后端直接读私有 PDF。
+管理 Web 和 App 的证明列表只消费 `downloadAvailable` 安全投影；`pdfObjectKey`、
+bucket 与签名 URL 不进入客户端响应契约。
 
 ## Backend Service Boundary
 

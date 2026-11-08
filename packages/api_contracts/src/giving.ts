@@ -96,6 +96,12 @@ export const givingStatementSchema = z.object({
   updatedAt: z.string()
 });
 
+export const givingStatementViewSchema = givingStatementSchema
+  .omit({ pdfObjectKey: true, downloadUrl: true })
+  .extend({
+    downloadAvailable: z.boolean()
+  });
+
 export const paymentProviderEventSchema = z.object({
   id: z.string(),
   provider: z.string(),
@@ -232,7 +238,7 @@ export const givingTransactionListResponseSchema = z.object({
 });
 
 export const givingStatementListResponseSchema = z.object({
-  items: z.array(givingStatementSchema)
+  items: z.array(givingStatementViewSchema)
 });
 
 export const paymentProviderEventListResponseSchema = z.object({
@@ -295,6 +301,7 @@ export type GivingCheckoutSessionResponse = z.infer<
   typeof givingCheckoutSessionResponseSchema
 >;
 export type GivingStatement = z.infer<typeof givingStatementSchema>;
+export type GivingStatementView = z.infer<typeof givingStatementViewSchema>;
 export type PaymentProviderEvent = z.infer<
   typeof paymentProviderEventSchema
 >;

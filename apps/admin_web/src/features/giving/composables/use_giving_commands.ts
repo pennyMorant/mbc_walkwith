@@ -1,7 +1,7 @@
 import type {
   GivingExportResponse,
   GivingFund,
-  GivingStatement
+  GivingStatementView
 } from "@mbc/api-contracts";
 import { useMutation, type QueryClient } from "@tanstack/vue-query";
 import { computed, reactive, ref, type Ref } from "vue";
@@ -82,7 +82,7 @@ export function useGivingCommands(options: GivingCommandOptions) {
   });
 
   const downloadStatementMutation = useMutation({
-    mutationFn: (statement: GivingStatement) => {
+    mutationFn: (statement: GivingStatementView) => {
       requireCanExport();
       if (!canDownloadStatement(statement)) {
         throw new Error(t("Statement is not ready for download."));
@@ -161,14 +161,14 @@ export function useGivingCommands(options: GivingCommandOptions) {
     }
   }
 
-  function downloadStatement(statement: GivingStatement) {
+  function downloadStatement(statement: GivingStatementView) {
     if (!isDownloadingStatement.value && canDownloadStatement(statement)) {
       downloadStatementMutation.mutate(statement);
     }
   }
 
-  function canDownloadStatement(statement: GivingStatement) {
-    return canExport.value && ["ready", "sent"].includes(statement.status);
+  function canDownloadStatement(statement: GivingStatementView) {
+    return canExport.value && statement.downloadAvailable;
   }
 
   function newFund() {

@@ -3,7 +3,7 @@ import {
   givingExportResponseSchema,
   givingReconciliationResponseSchema,
   givingStatementListResponseSchema,
-  givingStatementSchema,
+  givingStatementViewSchema,
   givingTransactionListResponseSchema,
   givingTransactionSchema
 } from "@mbc/api-contracts";
@@ -88,11 +88,14 @@ describe("giving routes", () => {
     expect(statementResponse.statusCode).toBe(200);
     const statement = expectResponseData(
       statementResponse,
-      givingStatementSchema,
+      givingStatementViewSchema,
       "admin giving statement generate"
     );
     expect(statement.status).toBe("ready");
     expect(statement.totalAmountCents).toBe(5000);
+    expect(statement.downloadAvailable).toBe(true);
+    expect(statementResponse.json().data).not.toHaveProperty("pdfObjectKey");
+    expect(statementResponse.json().data).not.toHaveProperty("downloadUrl");
 
     const statementsResponse = await app.inject({
       method: "GET",
@@ -195,7 +198,7 @@ describe("giving routes", () => {
     expect(allDonorsResponse.statusCode).toBe(200);
     const allDonorsStatement = expectResponseData(
       allDonorsResponse,
-      givingStatementSchema,
+      givingStatementViewSchema,
       "admin all-donor giving statement generate"
     );
     expect(allDonorsStatement.donorName).toBe("All donors");
@@ -283,10 +286,12 @@ describe("giving routes", () => {
     expect(statementResponse.statusCode).toBe(200);
     const statement = expectResponseData(
       statementResponse,
-      givingStatementSchema,
+      givingStatementViewSchema,
       "member giving statement"
     );
     expect(statement.userId).toBe("member-lee");
+    expect(statementResponse.json().data).not.toHaveProperty("pdfObjectKey");
+    expect(statementResponse.json().data).not.toHaveProperty("downloadUrl");
 
     const statementDownloadResponse = await app.inject({
       method: "GET",

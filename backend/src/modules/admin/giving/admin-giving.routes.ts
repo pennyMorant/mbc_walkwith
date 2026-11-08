@@ -15,6 +15,7 @@ import { ok } from "../../../shared/http/api-response.js";
 import { appError } from "../../../shared/http/app-error.js";
 import type { AuditService } from "../../audit/audit.service.js";
 import type { GivingService } from "../../giving/giving.service.js";
+import { toGivingStatementView } from "../../giving/giving_statement_projection.js";
 import {
   fundParamsSchema,
   statementParamsSchema,
@@ -202,7 +203,7 @@ export async function registerAdminGivingRoutes(
           count: statements.length
         }
       });
-      return ok({ items: statements });
+      return ok({ items: statements.map(toGivingStatementView) });
     }
   );
 
@@ -237,7 +238,7 @@ export async function registerAdminGivingRoutes(
           hasPdfObjectKey: Boolean(statement.pdfObjectKey)
         }
       });
-      return ok(statement);
+      return ok(toGivingStatementView(statement));
     }
   );
 
@@ -303,7 +304,7 @@ export async function registerAdminGivingRoutes(
           hasDonorEmail: Boolean(statement.donorEmail)
         }
       });
-      return ok(statement);
+      return ok(toGivingStatementView(statement));
     }
   );
 

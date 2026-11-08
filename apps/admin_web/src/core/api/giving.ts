@@ -7,7 +7,7 @@ import {
   givingReconciliationResponseSchema,
   givingStatementGenerateRequestSchema,
   givingStatementListResponseSchema,
-  givingStatementSchema,
+  givingStatementViewSchema,
   givingTransactionListResponseSchema,
   paymentProviderEventListResponseSchema,
   type GivingExportResponse,
@@ -17,7 +17,7 @@ import {
   type GivingFundUpsertRequest,
   type GivingReconciliationQuery,
   type GivingReconciliationResponse,
-  type GivingStatement,
+  type GivingStatementView,
   type GivingStatementListQuery,
   type GivingStatementGenerateRequest,
   type GivingTransactionListQuery,
@@ -100,7 +100,7 @@ export async function updateGivingFund(
 
 export async function listGivingStatements(
   filters: GivingStatementFilters = {}
-): Promise<GivingStatement[]> {
+): Promise<GivingStatementView[]> {
   const params = new URLSearchParams();
   if (filters.year) {
     params.set("year", String(filters.year));
@@ -151,12 +151,12 @@ export async function getGivingReconciliation(
 export async function generateGivingStatement(
   year: number,
   input: GivingStatementGenerateRequest
-): Promise<GivingStatement> {
+): Promise<GivingStatementView> {
   const payload = givingStatementGenerateRequestSchema.parse(input);
   return apiClient.postData(
     `/admin/giving/statements/${pathSegment(year)}/generate`,
     payload,
-    givingStatementSchema
+    givingStatementViewSchema
   );
 }
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {
-  GivingStatement,
+  GivingStatementView,
   GivingStatementStatus
 } from "@mbc/api-contracts";
 
@@ -13,9 +13,9 @@ import GivingRefreshError from "./GivingRefreshError.vue";
 
 defineProps<{
   filters: GivingStatementFilterForm;
-  statements: GivingStatement[];
-  canDownloadStatement: (statement: GivingStatement) => boolean;
-  downloadStatement: (statement: GivingStatement) => void;
+  statements: GivingStatementView[];
+  canDownloadStatement: (statement: GivingStatementView) => boolean;
+  downloadStatement: (statement: GivingStatementView) => void;
   isPending: boolean;
   isFetching: boolean;
   isDownloadingStatement: boolean;
@@ -85,7 +85,7 @@ const { optionItems, t } = useI18n();
           <th>{{ t("Year") }}</th>
           <th>{{ t("Total") }}</th>
           <th>{{ t("Status") }}</th>
-          <th>{{ t("PDF key") }}</th>
+          <th>{{ t("Document") }}</th>
           <th>{{ t("Actions") }}</th>
         </tr>
       </thead>
@@ -107,7 +107,9 @@ const { optionItems, t } = useI18n();
               {{ t(statement.status) }}
             </v-chip>
           </td>
-          <td>{{ statement.pdfObjectKey || t("Not generated") }}</td>
+          <td>
+            {{ statement.downloadAvailable ? t("Ready") : t("Not generated") }}
+          </td>
           <td>
             <v-btn
               size="small"
