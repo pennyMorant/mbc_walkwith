@@ -3,6 +3,7 @@ import type { Sermon } from "@mbc/api-contracts";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import { sermonStatusColor } from "../sermon_pipeline";
 
@@ -125,48 +126,86 @@ const { optionItems, t } = useI18n();
       {{ formatApiErrorMessage(error, t("common.error")) }}
     </v-alert>
 
-    <v-table v-else density="comfortable">
-      <thead>
-        <tr>
-          <th>{{ t("Title") }}</th>
-          <th>{{ t("Speaker") }}</th>
-          <th>{{ t("Date") }}</th>
-          <th>{{ t("Audio") }}</th>
-          <th>{{ t("Status") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
+    <v-empty-state
+      v-else-if="sermons.length === 0"
+      icon="mdi-microphone-off"
+      :title="t('sermons.noResults')"
+    />
+
+    <template v-else>
+      <v-table class="d-none d-md-block" density="comfortable">
+        <thead>
+          <tr>
+            <th>{{ t("Title") }}</th>
+            <th>{{ t("Speaker") }}</th>
+            <th>{{ t("Date") }}</th>
+            <th>{{ t("Audio") }}</th>
+            <th>{{ t("Status") }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="sermon in sermons"
+            :key="sermon.id"
+            class="cursor-pointer"
+            @click="emit('open', sermon)"
+          >
+            <td>
+              <div class="font-weight-bold">{{ sermon.title }}</div>
+              <div class="text-caption text-medium-emphasis">
+                {{ sermon.primaryReference || t("No Scripture tagged") }}
+              </div>
+            </td>
+            <td>{{ sermon.speaker }}</td>
+            <td>{{ sermon.sermonDate }}</td>
+            <td>
+              <v-chip
+                size="small"
+                :color="sermon.audio.status === 'ready' ? 'success' : 'grey'"
+                variant="tonal"
+              >
+                {{ t(sermon.audio.status) }}
+              </v-chip>
+            </td>
+            <td>
+              <v-chip size="small" :color="sermonStatusColor(sermon.status)">
+                {{ t(sermon.status) }}
+              </v-chip>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
+
+      <div class="d-md-none">
+        <AdminMobileRecord
           v-for="sermon in sermons"
           :key="sermon.id"
-          class="cursor-pointer"
-          @click="emit('open', sermon)"
+          @activate="emit('open', sermon)"
         >
-          <td>
-            <div class="font-weight-bold">{{ sermon.title }}</div>
-            <div class="text-caption text-medium-emphasis">
-              {{ sermon.primaryReference || t("No Scripture tagged") }}
+          <strong>{{ sermon.title }}</strong>
+          <span>{{ sermon.speaker }} · {{ sermon.sermonDate }}</span>
+          <span>{{ sermon.primaryReference || t("No Scripture tagged") }}</span>
+          <template #trailing>
+            <div class="d-flex flex-column align-end ga-1">
+              <v-chip
+                size="small"
+                :color="sermonStatusColor(sermon.status)"
+                variant="tonal"
+              >
+                {{ t(sermon.status) }}
+              </v-chip>
+              <v-chip
+                size="small"
+                :color="sermon.audio.status === 'ready' ? 'success' : 'grey'"
+                variant="tonal"
+              >
+                {{ t(sermon.audio.status) }}
+              </v-chip>
             </div>
-          </td>
-          <td>{{ sermon.speaker }}</td>
-          <td>{{ sermon.sermonDate }}</td>
-          <td>
-            <v-chip
-              size="small"
-              :color="sermon.audio.status === 'ready' ? 'success' : 'grey'"
-              variant="tonal"
-            >
-              {{ t(sermon.audio.status) }}
-            </v-chip>
-          </td>
-          <td>
-            <v-chip size="small" :color="sermonStatusColor(sermon.status)">
-              {{ t(sermon.status) }}
-            </v-chip>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
+          </template>
+        </AdminMobileRecord>
+      </div>
+    </template>
 
     <div v-if="hasMore" class="pa-4 d-flex justify-center">
       <v-btn variant="tonal" :loading="fetching" @click="emit('loadMore')">

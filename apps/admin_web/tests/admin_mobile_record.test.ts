@@ -13,7 +13,9 @@ const consumers = await Promise.all(
     "care/components/CareRequestResults.vue",
     "notifications/components/NotificationDeliveryResults.vue",
     "prayer/components/PrayerRequestsTable.vue",
-    "dashboard/components/DashboardRecentContent.vue"
+    "dashboard/components/DashboardRecentContent.vue",
+    "sermons/components/SermonLibraryCard.vue",
+    "life-posts/components/LifePostLibraryCard.vue"
   ].map((path) =>
     Bun.file(new URL(`../src/features/${path}`, import.meta.url)).text()
   )

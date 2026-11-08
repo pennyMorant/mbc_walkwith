@@ -7,6 +7,7 @@ import type {
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
@@ -94,7 +95,12 @@ function sortLabel(weight: number) {
         class="ma-4"
         @retry="emit('retry')"
       />
-      <v-table density="comfortable">
+      <v-empty-state
+        v-if="posts.length === 0"
+        icon="mdi-post-outline"
+        :title="t('life.noPosts')"
+      />
+      <v-table v-else class="d-none d-md-block" density="comfortable">
         <thead>
           <tr>
             <th>{{ t("Title") }}</th>
@@ -109,11 +115,6 @@ function sortLabel(weight: number) {
           </tr>
         </thead>
         <tbody>
-          <tr v-if="posts.length === 0">
-            <td colspan="9" class="text-center text-medium-emphasis py-8">
-              {{ t("life.noPosts") }}
-            </td>
-          </tr>
           <tr
             v-for="post in posts"
             :key="post.id"
@@ -166,6 +167,45 @@ function sortLabel(weight: number) {
           </tr>
         </tbody>
       </v-table>
+
+      <div v-if="posts.length > 0" class="d-md-none">
+        <AdminMobileRecord
+          v-for="post in posts"
+          :key="post.id"
+          @activate="emit('open', post)"
+        >
+          <strong>{{ post.title }}</strong>
+          <span>{{ t(post.type) }} · {{ formatSchedule(post) }}</span>
+          <span>
+            {{ sortLabel(post.sort) }} · {{ formatDateTime(post.updatedAt) }}
+          </span>
+          <span v-if="post.meta">{{ post.meta }}</span>
+          <span v-if="post.registrationEnabled">
+            {{ t("Registrations") }}
+            {{ post.registrationSummary.registeredCount }}/{{
+              post.registrationSummary.capacity ?? "∞"
+            }}
+          </span>
+          <template #trailing>
+            <div class="d-flex flex-column align-end ga-1">
+              <v-chip
+                size="small"
+                :color="statusColor(post.status)"
+                variant="tonal"
+              >
+                {{ t(post.status) }}
+              </v-chip>
+              <v-chip
+                size="small"
+                :color="visibilityColor(post.visibility)"
+                variant="tonal"
+              >
+                {{ t(post.visibility) }}
+              </v-chip>
+            </div>
+          </template>
+        </AdminMobileRecord>
+      </div>
     </template>
   </v-card>
 </template>

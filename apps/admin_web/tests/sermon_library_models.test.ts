@@ -34,4 +34,23 @@ describe("sermon library models", () => {
       )
     ).toBeTrue();
   });
+
+  test("keeps desktop and mobile sermon results on the same open intent", async () => {
+    const [component, messages] = await Promise.all([
+      Bun.file(
+        new URL(
+          "../src/features/sermons/components/SermonLibraryCard.vue",
+          import.meta.url
+        )
+      ).text(),
+      Bun.file(new URL("../src/core/i18n/i18n.ts", import.meta.url)).text()
+    ]);
+
+    expect(component).toContain('class="d-none d-md-block"');
+    expect(component).toContain('class="d-md-none"');
+    expect(component).toContain("<AdminMobileRecord");
+    expect(component).toContain("@activate=\"emit('open', sermon)\"");
+    expect(component).toContain(":title=\"t('sermons.noResults')\"");
+    expect(messages.split('"sermons.noResults":').length - 1).toBe(4);
+  });
 });

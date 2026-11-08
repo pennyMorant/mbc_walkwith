@@ -4984,6 +4984,7 @@ Object.assign(messages.en, {
   "life.clearFilters": "Clear filters",
   "life.noPosts": "No church life content matches the current filters.",
   "life.refreshFailed": "The latest church life content could not be loaded.",
+  "sermons.noResults": "No sermons match the current filters.",
   "newcomers.applyFilters": "Apply filters",
   "newcomers.clearFilters": "Clear filters",
   "newcomers.refreshFailed": "The latest newcomer queue could not be loaded."
@@ -4997,6 +4998,7 @@ Object.assign(messages.es, {
   "life.clearFilters": "Borrar filtros",
   "life.noPosts": "Ningún contenido de la vida de la iglesia coincide con los filtros actuales.",
   "life.refreshFailed": "No se pudo cargar el contenido más reciente de la vida de la iglesia.",
+  "sermons.noResults": "Ningún sermón coincide con los filtros actuales.",
   "newcomers.applyFilters": "Aplicar filtros",
   "newcomers.clearFilters": "Borrar filtros",
   "newcomers.refreshFailed": "No se pudo cargar la cola de nuevos visitantes más reciente."
@@ -5010,6 +5012,7 @@ Object.assign(messages["zh-Hans"], {
   "life.clearFilters": "清除筛选",
   "life.noPosts": "当前筛选下没有教会生活内容。",
   "life.refreshFailed": "无法加载最新的教会生活内容。",
+  "sermons.noResults": "当前筛选下没有讲道。",
   "newcomers.applyFilters": "应用筛选",
   "newcomers.clearFilters": "清除筛选",
   "newcomers.refreshFailed": "无法加载最新的新朋友队列。"
@@ -5023,6 +5026,7 @@ Object.assign(messages["zh-Hant"], {
   "life.clearFilters": "清除篩選",
   "life.noPosts": "目前篩選下沒有教會生活內容。",
   "life.refreshFailed": "無法載入最新的教會生活內容。",
+  "sermons.noResults": "目前篩選下沒有講道。",
   "newcomers.applyFilters": "套用篩選",
   "newcomers.clearFilters": "清除篩選",
   "newcomers.refreshFailed": "無法載入最新的新朋友佇列。"
