@@ -6,6 +6,7 @@ import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 
 import type { BibleKnowledgeFilterForm } from "../bible_knowledge_workspace_models";
 
@@ -109,7 +110,9 @@ const { optionItems, t } = useI18n();
         class="ma-4"
         @retry="$emit('retry')"
       />
-      <v-table class="d-none d-md-block" density="comfortable">
+      <AdminResponsiveTable>
+        <template #desktop>
+      <v-table density="comfortable">
         <thead>
           <tr>
             <th>{{ t("Name") }}</th>
@@ -140,7 +143,9 @@ const { optionItems, t } = useI18n();
           </AdminTableActionRow>
         </tbody>
       </v-table>
-      <div class="d-md-none">
+        </template>
+        <template #mobile>
+      <div>
         <AdminMobileRecord
           v-for="entity in entities"
           :key="`${entity.translationId}:${entity.locale}:${entity.id}`"
@@ -154,6 +159,8 @@ const { optionItems, t } = useI18n();
           </template>
         </AdminMobileRecord>
       </div>
+        </template>
+      </AdminResponsiveTable>
     </AdminDataState>
   </v-card>
 </template>

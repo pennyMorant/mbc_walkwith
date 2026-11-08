@@ -46,6 +46,11 @@ describe("Bible knowledge query state", () => {
 
   test("keeps list query presentation component-owned", () => {
     expect(list).toContain("AdminDataState");
+    expect(list).toContain("AdminResponsiveTable");
+    expect(list).toContain('<template #desktop>');
+    expect(list).toContain('<template #mobile>');
+    expect(list).not.toContain("d-none d-md-block");
+    expect(list).not.toContain("d-md-none");
     expect(list).toContain("$emit('retry')");
     expect(list).not.toContain("@/core/api/");
     expect(list).not.toContain("useQuery");

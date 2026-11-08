@@ -7,6 +7,7 @@ import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
@@ -112,7 +113,9 @@ const { locale, optionItems, t } = useI18n();
         class="ma-4"
         @retry="$emit('retry')"
       />
-      <v-table class="d-none d-md-block" density="comfortable">
+      <AdminResponsiveTable>
+        <template #desktop>
+      <v-table density="comfortable">
         <thead>
           <tr>
             <th>{{ t("Type") }}</th>
@@ -146,7 +149,9 @@ const { locale, optionItems, t } = useI18n();
         </tbody>
       </v-table>
 
-      <div class="d-md-none">
+        </template>
+        <template #mobile>
+      <div>
         <AdminMobileRecord
           v-for="job in jobs"
           :key="job.id"
@@ -164,6 +169,8 @@ const { locale, optionItems, t } = useI18n();
           </template>
         </AdminMobileRecord>
       </div>
+        </template>
+      </AdminResponsiveTable>
 
       <div v-if="nextCursor" class="pa-4 d-flex justify-center">
         <v-btn

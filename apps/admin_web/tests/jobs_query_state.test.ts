@@ -84,7 +84,11 @@ describe("jobs query states", () => {
     );
 
     expect(queueCard).toContain("AdminMobileRecord");
-    expect(queueCard).toContain('class="d-none d-md-block"');
+    expect(queueCard).toContain("AdminResponsiveTable");
+    expect(queueCard).toContain('<template #desktop>');
+    expect(queueCard).toContain('<template #mobile>');
+    expect(queueCard).not.toContain('class="d-none d-md-block"');
+    expect(queueCard).not.toContain('class="d-md-none"');
     expect(queueCard).toContain("@activate=\"$emit('openJob', job)\"");
   });
 
