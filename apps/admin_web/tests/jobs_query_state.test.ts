@@ -74,6 +74,20 @@ describe("jobs query states", () => {
     expect(page).toContain('@filters-changed="applyJobFilters"');
   });
 
+  test("projects the queue into responsive records without changing open intent", () => {
+    const queueCard = readFileSync(
+      new URL(
+        "../src/features/jobs/components/JobQueueCard.vue",
+        import.meta.url
+      ),
+      "utf8"
+    );
+
+    expect(queueCard).toContain("AdminMobileRecord");
+    expect(queueCard).toContain('class="d-none d-md-block"');
+    expect(queueCard).toContain("@activate=\"$emit('openJob', job)\"");
+  });
+
   test("lets the infinite query own cursor pages without query side effects", () => {
     expect(queueQuery).toContain("useInfiniteQuery");
     expect(queueQuery).toContain("initialPageParam: null");

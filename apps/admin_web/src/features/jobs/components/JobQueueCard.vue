@@ -4,6 +4,7 @@ import type { Job, JobStatus, JobType } from "@mbc/api-contracts";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
 
@@ -110,7 +111,7 @@ const { locale, optionItems, t } = useI18n();
         class="ma-4"
         @retry="$emit('retry')"
       />
-      <v-table density="comfortable">
+      <v-table class="d-none d-md-block" density="comfortable">
         <thead>
           <tr>
             <th>{{ t("Type") }}</th>
@@ -144,6 +145,25 @@ const { locale, optionItems, t } = useI18n();
           </tr>
         </tbody>
       </v-table>
+
+      <div class="d-md-none">
+        <AdminMobileRecord
+          v-for="job in jobs"
+          :key="job.id"
+          @activate="$emit('openJob', job)"
+        >
+          <strong>{{ t(job.type) }}</strong>
+          <span>{{ job.resourceType || "-" }}</span>
+          <span v-if="job.resourceId">{{ job.resourceId }}</span>
+          <span>{{ formatAdminDateTime(job.createdAt, locale) }}</span>
+          <template #trailing>
+            <v-chip size="small" :color="statusColor(job.status)">
+              {{ t(job.status) }}
+            </v-chip>
+            <span>{{ t("Attempts") }}: {{ job.attempts }} / {{ job.maxAttempts }}</span>
+          </template>
+        </AdminMobileRecord>
+      </div>
 
       <div v-if="nextCursor" class="pa-4 d-flex justify-center">
         <v-btn

@@ -13,14 +13,16 @@ import {
 } from "@/core/api/sermons";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
+import SermonAudioCleanupResults from "./SermonAudioCleanupResults.vue";
 
 const cleanupQueryKey = ["admin-sermon-audio-cleanups"];
 const cleanupStatuses = ["", "failed", "pending", "succeeded"] as const;
 
 const authStore = useAdminAuthStore();
 const queryClient = useQueryClient();
-const { locale, optionItems, t } = useI18n();
+const { optionItems, t } = useI18n();
 const status = ref<SermonAudioCleanupStatus | "">("failed");
 const retryingTaskId = ref<string | null>(null);
 const canRead = computed(() => authStore.can("sermons:read"));
@@ -48,6 +50,11 @@ const tasks = computed(() => cleanupQuery.data.value ?? []);
 const actionError = computed(() =>
   formatApiErrorMessage(retryMutation.error.value, t("common.error"))
 );
+const queryError = computed(() =>
+  cleanupQuery.error.value
+    ? formatApiErrorMessage(cleanupQuery.error.value, t("common.error"))
+    : ""
+);
 
 async function retryTask(task: SermonAudioCleanupTask) {
   if (!canRetry.value || retryMutation.isPending.value) {
@@ -61,22 +68,6 @@ async function retryTask(task: SermonAudioCleanupTask) {
   }
 }
 
-function statusColor(value: SermonAudioCleanupStatus) {
-  if (value === "succeeded") {
-    return "success";
-  }
-  if (value === "failed") {
-    return "error";
-  }
-  return "warning";
-}
-
-function formatDateTime(value: string) {
-  return new Intl.DateTimeFormat(locale.value, {
-    dateStyle: "medium",
-    timeStyle: "short"
-  }).format(new Date(value));
-}
 </script>
 
 <template>
@@ -117,80 +108,25 @@ function formatDateTime(value: string) {
     </div>
 
     <v-divider />
-    <v-progress-linear
-      v-if="cleanupQuery.isPending.value"
-      indeterminate
-      color="primary"
-    />
-    <v-alert
-      v-else-if="cleanupQuery.error.value"
-      type="error"
-      variant="tonal"
-      class="ma-4"
+    <AdminDataState
+      :pending="cleanupQuery.isPending.value"
+      :error-message="tasks.length === 0 ? queryError : ''"
+      :empty="!cleanupQuery.isPending.value && tasks.length === 0"
+      :empty-title="t('sermons.audioCleanupEmpty')"
+      :retry-label="t('common.refresh')"
+      @retry="cleanupQuery.refetch()"
     >
-      {{ formatApiErrorMessage(cleanupQuery.error.value, t("common.error")) }}
-    </v-alert>
-    <v-alert
-      v-else-if="tasks.length === 0"
-      type="info"
-      variant="tonal"
-      class="ma-4"
-    >
-      {{ t("sermons.audioCleanupEmpty") }}
-    </v-alert>
-    <template v-else>
-      <v-alert v-if="retryMutation.error.value" type="error" variant="tonal" class="ma-4">
-        {{ actionError }}
-      </v-alert>
-      <v-table density="comfortable">
-        <thead>
-          <tr>
-            <th>{{ t("Sermon") }}</th>
-            <th>{{ t("Reason") }}</th>
-            <th>{{ t("Status") }}</th>
-            <th>{{ t("Attempts") }}</th>
-            <th>{{ t("Updated") }}</th>
-            <th class="text-end">{{ t("common.actions") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="task in tasks" :key="task.id">
-            <td class="task-id text-caption">{{ task.sermonId }}</td>
-            <td>
-              <div>{{ t(task.reason) }}</div>
-              <div
-                v-if="task.lastError"
-                class="error-copy text-caption text-error mt-1"
-              >
-                {{ task.lastError }}
-              </div>
-            </td>
-            <td>
-              <v-chip size="small" :color="statusColor(task.status)" variant="tonal">
-                {{ t(task.status) }}
-              </v-chip>
-            </td>
-            <td>{{ task.attempts }}</td>
-            <td class="text-no-wrap">{{ formatDateTime(task.updatedAt) }}</td>
-            <td class="text-end">
-              <v-btn
-                v-if="task.status !== 'succeeded'"
-                color="primary"
-                variant="tonal"
-                size="small"
-                prepend-icon="mdi-refresh"
-                :disabled="!canRetry"
-                :loading="retryingTaskId === task.id"
-                @click="retryTask(task)"
-              >
-                {{ t("Retry") }}
-              </v-btn>
-              <span v-else class="text-medium-emphasis">-</span>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
-    </template>
+      <SermonAudioCleanupResults
+        :tasks="tasks"
+        :can-retry="canRetry"
+        :retrying-task-id="retryingTaskId"
+        :action-error="retryMutation.error.value ? actionError : ''"
+        :refresh-error="tasks.length > 0 ? queryError : ''"
+        :is-fetching="cleanupQuery.isFetching.value"
+        @refresh="cleanupQuery.refetch()"
+        @retry="retryTask"
+      />
+    </AdminDataState>
   </v-card>
 </template>
 
@@ -203,13 +139,13 @@ function formatDateTime(value: string) {
   min-width: 150px;
 }
 
-.task-id {
-  max-width: 220px;
-  overflow-wrap: anywhere;
-}
+@media (max-width: 600px) {
+  .cleanup-actions {
+    width: 100%;
+  }
 
-.error-copy {
-  max-width: 360px;
-  overflow-wrap: anywhere;
+  .status-filter {
+    min-width: 0;
+  }
 }
 </style>
