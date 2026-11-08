@@ -6,6 +6,7 @@ import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 import {
@@ -107,7 +108,9 @@ const { locale, optionItems, t } = useI18n();
       :retry-label="t('common.refresh')"
       @retry="emit('retry')"
     >
-      <v-table class="d-none d-md-block" density="comfortable" hover>
+      <AdminResponsiveTable>
+        <template #desktop>
+      <v-table density="comfortable" hover>
         <thead>
           <tr>
             <th>{{ t("Title") }}</th>
@@ -149,7 +152,9 @@ const { locale, optionItems, t } = useI18n();
         </tbody>
       </v-table>
 
-      <div class="d-md-none">
+        </template>
+        <template #mobile>
+      <div>
         <AdminMobileRecord
           v-for="request in requests"
           :key="request.id"
@@ -174,6 +179,8 @@ const { locale, optionItems, t } = useI18n();
           </template>
         </AdminMobileRecord>
       </div>
+        </template>
+      </AdminResponsiveTable>
     </AdminDataState>
   </v-card>
 </template>

@@ -12,8 +12,11 @@ const discussionResponses = await Bun.file(
 
 describe("content moderation responsive results", () => {
   test("projects the same Bible note records into desktop and mobile views", () => {
-    expect(bibleNotes).toContain("d-none d-md-block");
-    expect(bibleNotes).toContain("d-md-none");
+    expect(bibleNotes).toContain("AdminResponsiveTable");
+    expect(bibleNotes).toContain('<template #desktop>');
+    expect(bibleNotes).toContain('<template #mobile>');
+    expect(bibleNotes).not.toContain("d-none d-md-block");
+    expect(bibleNotes).not.toContain("d-md-none");
     expect(bibleNotes.match(/v-for="note in notes"/g)).toHaveLength(2);
     expect(bibleNotes).toContain("$emit('open', note)");
     expect(bibleNotes).toContain("AdminDataState");

@@ -46,8 +46,11 @@ describe("prayer query and command state", () => {
   test("keeps responsive list presentation transport-free", async () => {
     const table = await Bun.file(new URL(paths.table, import.meta.url)).text();
 
-    expect(table).toContain("d-none d-md-block");
-    expect(table).toContain("d-md-none");
+    expect(table).toContain("AdminResponsiveTable");
+    expect(table).toContain('<template #desktop>');
+    expect(table).toContain('<template #mobile>');
+    expect(table).not.toContain("d-none d-md-block");
+    expect(table).not.toContain("d-md-none");
     expect(table.match(/v-for="request in requests"/g)).toHaveLength(2);
     expect(table).toContain("emit('open', request)");
     expect(table).not.toContain("auth_store");

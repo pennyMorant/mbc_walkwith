@@ -9,6 +9,7 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
@@ -45,7 +46,9 @@ const { locale, t } = useI18n();
       class="ma-4"
       @retry="$emit('retry')"
     />
-    <v-table class="d-none d-md-block" hover>
+    <AdminResponsiveTable>
+      <template #desktop>
+    <v-table hover>
       <thead>
         <tr>
           <th>{{ t("Verse") }}</th>
@@ -79,7 +82,9 @@ const { locale, t } = useI18n();
       </tbody>
     </v-table>
 
-    <div class="d-md-none">
+      </template>
+      <template #mobile>
+    <div>
       <AdminMobileRecord
         v-for="note in notes"
         :key="note.id"
@@ -95,6 +100,8 @@ const { locale, t } = useI18n();
         </template>
       </AdminMobileRecord>
     </div>
+      </template>
+    </AdminResponsiveTable>
   </AdminDataState>
 </template>
 
