@@ -10,6 +10,7 @@ import type {
 import { computed, ref, watch } from "vue";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import DiscipleshipAssignmentResults from "./DiscipleshipAssignmentResults.vue";
 import DiscipleshipProgressDrawer from "./DiscipleshipProgressDrawer.vue";
 import DiscipleshipRecoveryAlerts from "./DiscipleshipRecoveryAlerts.vue";
@@ -80,39 +81,38 @@ function openProgress(assignment: DiscipleshipAssignment) {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-md-row justify-space-between ga-3">
-      <div>
+    <AdminFilterToolbar @apply="$emit('apply')">
+      <template #heading>
         <div class="text-subtitle-2 font-weight-bold">
           {{ t("Journey assignments") }}
         </div>
         <div class="text-body-2 text-medium-emphasis">
           {{ t("Assignments connect a member or newcomer to the selected journey.") }}
         </div>
-      </div>
-      <div class="d-flex flex-column flex-sm-row ga-2">
-        <v-select
-          v-model="assignmentFilters.status"
-          :items="assignmentStatusItems"
-          :label="t('Status')"
-          density="compact"
-          hide-details
-          style="min-width: 180px"
-          variant="outlined"
-        />
-        <v-text-field
-          v-model="assignmentFilters.userId"
-          :label="t('User ID')"
-          density="compact"
-          hide-details
-          style="min-width: 200px"
-          variant="outlined"
-          @keyup.enter="$emit('apply')"
-        />
-        <v-btn variant="tonal" :loading="fetching" @click="$emit('apply')">
+      </template>
+      <v-select
+        v-model="assignmentFilters.status"
+        class="admin-filter-control"
+        :items="assignmentStatusItems"
+        :label="t('Status')"
+        density="compact"
+        hide-details
+        variant="outlined"
+      />
+      <v-text-field
+        v-model="assignmentFilters.userId"
+        class="admin-filter-control"
+        :label="t('User ID')"
+        density="compact"
+        hide-details
+        variant="outlined"
+      />
+      <template #actions>
+        <v-btn type="submit" variant="tonal" :loading="fetching">
           {{ t("common.go") }}
         </v-btn>
-      </div>
-    </div>
+      </template>
+    </AdminFilterToolbar>
 
     <DiscipleshipRecoveryAlerts
       class="mt-4"

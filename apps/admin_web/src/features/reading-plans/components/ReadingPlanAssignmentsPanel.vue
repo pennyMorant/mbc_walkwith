@@ -7,6 +7,7 @@ import type {
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
 import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
@@ -46,27 +47,25 @@ const { t } = useI18n();
 
 <template>
   <div class="mt-4">
-    <div class="d-flex align-center justify-space-between mb-3 ga-3">
-      <div class="text-subtitle-2">{{ t("Assignments") }}</div>
-      <div class="d-flex ga-2">
-        <v-select
-          v-model="assignmentFilters.status"
-          :items="assignmentStatusItems"
-          :label="t('Status')"
-          density="compact"
-          variant="outlined"
-          hide-details
-          style="width: 180px"
-        />
-        <v-btn
-          variant="tonal"
-          :loading="loading"
-          @click="$emit('apply')"
-        >
+    <AdminFilterToolbar class="mb-3" @apply="$emit('apply')">
+      <template #heading>
+        <div class="text-subtitle-2">{{ t("Assignments") }}</div>
+      </template>
+      <v-select
+        v-model="assignmentFilters.status"
+        class="admin-filter-control"
+        :items="assignmentStatusItems"
+        :label="t('Status')"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <template #actions>
+        <v-btn type="submit" variant="tonal" :loading="loading">
           {{ t("common.go") }}
         </v-btn>
-      </div>
-    </div>
+      </template>
+    </AdminFilterToolbar>
 
     <AdminRefreshAlert
       class="mb-4"

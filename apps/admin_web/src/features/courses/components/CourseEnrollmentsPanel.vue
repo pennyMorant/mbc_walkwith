@@ -6,6 +6,7 @@ import type {
 } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
 import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 
@@ -44,21 +45,21 @@ const { optionItems, t } = useI18n();
 
 <template>
   <v-card-text>
-    <div class="d-flex flex-column flex-md-row ga-2 mb-2">
-      <div class="text-subtitle-2 flex-grow-1 align-self-md-center">
-        {{ t("Enrollments") }}
-      </div>
+    <AdminFilterToolbar class="mb-2" @apply="$emit('refresh')">
+      <template #heading>
+        <div class="text-subtitle-2">{{ t("Enrollments") }}</div>
+      </template>
       <v-text-field
         v-model="enrollmentQuery"
+        class="admin-filter-control"
         :label="t('Search enrollments')"
         density="compact"
         variant="outlined"
         hide-details
-        max-width="240"
-        @keyup.enter="$emit('refresh')"
       />
       <v-select
         v-model="enrollmentStatus"
+        class="admin-filter-control"
         :items="
           optionItems([
             '',
@@ -73,12 +74,13 @@ const { optionItems, t } = useI18n();
         density="compact"
         variant="outlined"
         hide-details
-        max-width="180"
       />
-      <v-btn variant="tonal" @click="$emit('refresh')">
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn type="submit" variant="tonal">
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminFilterToolbar>
     <v-alert
       v-if="errorMessage || refreshErrorMessage"
       :type="errorMessage ? 'error' : 'warning'"

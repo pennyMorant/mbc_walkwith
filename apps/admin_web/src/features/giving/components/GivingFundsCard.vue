@@ -3,9 +3,9 @@ import type { GivingFund } from "@mbc/api-contracts";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
 
 import type { GivingFundFilterForm } from "../giving_workspace_models";
-import GivingFilterActions from "./GivingFilterActions.vue";
 import GivingRefreshError from "./GivingRefreshError.vue";
 
 defineProps<{
@@ -78,9 +78,11 @@ const { optionItems, t } = useI18n();
         />
       </v-col>
       </v-row>
-      <GivingFilterActions
+      <AdminFilterActions
         class="mt-4"
-        :pending="isFetching"
+        :apply-label="t('giving.applyFilters')"
+        :clear-label="t('giving.clearFilters')"
+        :loading="isFetching"
         @clear="$emit('clear')"
       />
     </v-form>

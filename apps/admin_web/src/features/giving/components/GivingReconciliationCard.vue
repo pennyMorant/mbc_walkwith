@@ -3,9 +3,10 @@ import type { GivingReconciliationResponse } from "@mbc/api-contracts";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 
 import type { GivingReconciliationFilterForm } from "../giving_workspace_models";
-import GivingFilterActions from "./GivingFilterActions.vue";
 import GivingRefreshError from "./GivingRefreshError.vue";
 
 defineProps<{
@@ -26,52 +27,51 @@ const { optionItems, t } = useI18n();
 
 <template>
   <v-card class="mt-6">
-    <div class="pa-5 d-flex flex-column flex-lg-row align-start align-lg-center justify-space-between ga-4">
-      <div>
+    <AdminFilterToolbar class="pa-5" @apply="$emit('apply')">
+      <template #heading>
         <div class="text-subtitle-1 font-weight-bold">
           {{ t("Reconciliation") }}
         </div>
         <div class="text-body-2 text-medium-emphasis">
           {{ t("Fees, net deposits, refunds, disputes, and payout readiness.") }}
         </div>
-      </div>
-      <v-form
-        class="d-flex flex-column flex-sm-row align-sm-center ga-2 w-100 w-lg-auto"
-        @submit.prevent="$emit('apply')"
-      >
-        <v-text-field
-          v-model.number="filters.year"
-          :label="t('Year')"
-          type="number"
-          density="compact"
-          variant="outlined"
-          hide-details
-          style="min-width: 120px"
-        />
-        <v-select
-          v-model="filters.fundId"
-          :label="t('Fund')"
-          :items="fundItems"
-          density="compact"
-          variant="outlined"
-          hide-details
-          style="min-width: 190px"
-        />
-        <v-select
-          v-model="filters.status"
-          :label="t('Status')"
-          :items="optionItems(['', 'unreconciled', 'reconciled', 'needs_review'])"
-          density="compact"
-          variant="outlined"
-          hide-details
-          style="min-width: 170px"
-        />
-        <GivingFilterActions
-          :pending="isFetching"
+      </template>
+      <v-text-field
+        v-model.number="filters.year"
+        class="admin-filter-control"
+        :label="t('Year')"
+        type="number"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <v-select
+        v-model="filters.fundId"
+        class="admin-filter-control"
+        :label="t('Fund')"
+        :items="fundItems"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <v-select
+        v-model="filters.status"
+        class="admin-filter-control"
+        :label="t('Status')"
+        :items="optionItems(['', 'unreconciled', 'reconciled', 'needs_review'])"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <template #actions>
+        <AdminFilterActions
+          :apply-label="t('giving.applyFilters')"
+          :clear-label="t('giving.clearFilters')"
+          :loading="isFetching"
           @clear="$emit('clear')"
         />
-      </v-form>
-    </div>
+      </template>
+    </AdminFilterToolbar>
     <v-divider />
     <v-progress-linear v-if="isPending" indeterminate color="primary" />
     <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">

@@ -135,6 +135,11 @@ Surface rule:
   layout for button semantics, pending protection, accessible icon mode, and
   compact responsive placement. Features retain draft values, applied snapshots,
   validation, result counts, and query ownership.
+- Filter sections that combine a heading with compact controls use the shared
+  Admin filter toolbar. It owns form submission and responsive control wrapping,
+  while the Feature supplies localized headings, draft values, option lists,
+  pending state, and the apply/clear intents. Features must not create local
+  copies of the shared filter action buttons.
 - Destructive and state-changing confirmation prompts use the shared Admin
   confirmation dialog for responsive layout, visual tone, and pending-state
   protection. Features retain permission checks, confirmation copy, target
