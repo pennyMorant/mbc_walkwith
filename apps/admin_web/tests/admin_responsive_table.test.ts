@@ -7,6 +7,9 @@ const shell = await Bun.file(
 const consumers = await Promise.all(
   [
     "courses/components/CourseEnrollmentsPanel.vue",
+    "discipleship/components/DiscipleshipAssignmentResults.vue",
+    "discipleship/components/DiscipleshipStagesTable.vue",
+    "discipleship/components/DiscipleshipTasksTable.vue",
     "giving/components/GivingProviderEventsCard.vue",
     "giving/components/GivingStatementsCard.vue",
     "giving/components/GivingTransactionsCard.vue",
