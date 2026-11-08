@@ -8,6 +8,8 @@ import { computed } from "vue";
 import type { ServingAvailabilityFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import ServingFeedbackAlerts from "./ServingFeedbackAlerts.vue";
 import {
   formatServingDateTime,
@@ -151,34 +153,54 @@ const filterMemberItems = computed(() =>
       </v-col>
       </v-row>
 
-      <v-table density="compact">
-      <thead>
-        <tr>
-          <th>{{ t("Member") }}</th>
-          <th>{{ t("Time") }}</th>
-          <th>{{ t("Status") }}</th>
-          <th>{{ t("Note") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="!loading && records.length === 0">
-          <td colspan="4" class="text-medium-emphasis py-6">
+      <AdminResponsiveTable>
+        <template #desktop>
+          <v-table density="compact">
+            <thead>
+              <tr>
+                <th>{{ t("Member") }}</th>
+                <th>{{ t("Time") }}</th>
+                <th>{{ t("Status") }}</th>
+                <th>{{ t("Note") }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="!loading && records.length === 0">
+                <td colspan="4" class="text-medium-emphasis py-6">
+                  {{ t("No availability records match the current filters.") }}
+                </td>
+              </tr>
+              <tr v-for="record in records" :key="record.id">
+                <td>{{ servingMemberLabelById(members, record.userId) }}</td>
+                <td>
+                  {{ formatServingDateTime(record.startsAt, locale) }}
+                  <div class="text-caption text-medium-emphasis">
+                    {{ formatServingDateTime(record.endsAt, locale) }}
+                  </div>
+                </td>
+                <td>{{ t(record.status) }}</td>
+                <td>{{ record.note || t("common.notSet") }}</td>
+              </tr>
+            </tbody>
+          </v-table>
+        </template>
+        <template #mobile>
+          <div v-if="!loading && records.length === 0" class="text-medium-emphasis py-6">
             {{ t("No availability records match the current filters.") }}
-          </td>
-        </tr>
-        <tr v-for="record in records" :key="record.id">
-          <td>{{ servingMemberLabelById(members, record.userId) }}</td>
-          <td>
-            {{ formatServingDateTime(record.startsAt, locale) }}
-            <div class="text-caption text-medium-emphasis">
-              {{ formatServingDateTime(record.endsAt, locale) }}
-            </div>
-          </td>
-          <td>{{ t(record.status) }}</td>
-          <td>{{ record.note || t("common.notSet") }}</td>
-        </tr>
-      </tbody>
-      </v-table>
+          </div>
+          <AdminMobileDataRow v-for="record in records" :key="record.id">
+            <strong>{{ servingMemberLabelById(members, record.userId) }}</strong>
+            <span>{{ record.note || t("common.notSet") }}</span>
+            <template #trailing>
+              <v-chip size="small">{{ t(record.status) }}</v-chip>
+            </template>
+            <template #meta>
+              <span>{{ formatServingDateTime(record.startsAt, locale) }}</span>
+              <span>{{ formatServingDateTime(record.endsAt, locale) }}</span>
+            </template>
+          </AdminMobileDataRow>
+        </template>
+      </AdminResponsiveTable>
     </AdminDataState>
   </div>
 </template>

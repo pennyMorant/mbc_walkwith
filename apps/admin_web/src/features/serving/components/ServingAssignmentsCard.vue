@@ -12,11 +12,9 @@ import type { ServingAssignmentFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
+import ServingAssignmentResults from "./ServingAssignmentResults.vue";
 import ServingFeedbackAlerts from "./ServingFeedbackAlerts.vue";
-import {
-  formatServingDateTime,
-  servingMemberLabel
-} from "../serving_presenters";
+import { servingMemberLabel } from "../serving_presenters";
 import type { ServingAssignmentForm } from "../serving_workspace_models";
 
 const form = defineModel<ServingAssignmentForm>("form", { required: true });
@@ -46,7 +44,7 @@ const emit = defineEmits<{
     status: ServingAssignmentStatus
   ];
 }>();
-const { locale, optionItems, t } = useI18n();
+const { optionItems, t } = useI18n();
 
 const teamItems = computed(() =>
   props.teams.map((team) => ({ title: team.name, value: team.id }))
@@ -206,60 +204,13 @@ const memberItems = computed(() =>
           </v-btn>
         </v-col>
       </v-row>
-      <v-table density="compact">
-        <thead>
-          <tr>
-            <th>{{ t("Assignment") }}</th>
-            <th>{{ t("Member") }}</th>
-            <th>{{ t("Time") }}</th>
-            <th>{{ t("Status") }}</th>
-            <th class="text-right">{{ t("common.actions") }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!loading && assignments.length === 0">
-            <td colspan="5" class="text-medium-emphasis py-6">
-              {{ t("No assignments match the current filters.") }}
-            </td>
-          </tr>
-          <tr v-for="assignment in assignments" :key="assignment.id">
-            <td>
-              <div class="font-weight-medium">{{ assignment.title }}</div>
-              <div class="text-caption text-medium-emphasis">
-                {{ assignment.teamName }} · {{ assignment.roleName }}
-              </div>
-            </td>
-            <td>
-              <div>{{ assignment.memberDisplayName }}</div>
-              <div class="text-caption text-medium-emphasis">
-                {{ assignment.memberEmail }}
-              </div>
-            </td>
-            <td>{{ formatServingDateTime(assignment.startsAt, locale) }}</td>
-            <td>{{ t(assignment.status) }}</td>
-            <td class="text-right">
-              <v-btn
-                v-if="canManage && assignment.status !== 'confirmed'"
-                size="small"
-                variant="tonal"
-                :disabled="updatePending"
-                @click="emit('updateStatus', assignment, 'confirmed')"
-              >
-                {{ t("Confirm") }}
-              </v-btn>
-              <v-btn
-                v-if="canManage && assignment.status !== 'cancelled'"
-                size="small"
-                variant="text"
-                :disabled="updatePending"
-                @click="emit('updateStatus', assignment, 'cancelled')"
-              >
-                {{ t("Cancel") }}
-              </v-btn>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
+      <ServingAssignmentResults
+        :assignments="assignments"
+        :loading="loading"
+        :can-manage="canManage"
+        :update-pending="updatePending"
+        @update-status="(assignment, status) => emit('updateStatus', assignment, status)"
+      />
       </v-card-text>
     </AdminDataState>
   </v-card>

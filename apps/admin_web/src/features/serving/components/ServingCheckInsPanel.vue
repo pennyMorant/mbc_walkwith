@@ -9,6 +9,8 @@ import { computed } from "vue";
 import type { ServingCheckInFilters } from "@/core/api/serving";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import ServingFeedbackAlerts from "./ServingFeedbackAlerts.vue";
 import {
   formatServingDateTime,
@@ -150,31 +152,51 @@ function assignmentById(assignmentId: string) {
       </v-col>
       </v-row>
 
-      <v-table density="compact">
-      <thead>
-        <tr>
-          <th>{{ t("Assignment") }}</th>
-          <th>{{ t("Member") }}</th>
-          <th>{{ t("Status") }}</th>
-          <th>{{ t("Arrival time") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="!loading && records.length === 0">
-          <td colspan="4" class="text-medium-emphasis py-6">
+      <AdminResponsiveTable>
+        <template #desktop>
+          <v-table density="compact">
+            <thead>
+              <tr>
+                <th>{{ t("Assignment") }}</th>
+                <th>{{ t("Member") }}</th>
+                <th>{{ t("Status") }}</th>
+                <th>{{ t("Arrival time") }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="!loading && records.length === 0">
+                <td colspan="4" class="text-medium-emphasis py-6">
+                  {{ t("No arrival records match the current filters.") }}
+                </td>
+              </tr>
+              <tr v-for="record in records" :key="record.id">
+                <td>
+                  {{ assignmentById(record.assignmentId)?.title ?? record.assignmentId }}
+                </td>
+                <td>{{ servingMemberLabelById(members, record.userId) }}</td>
+                <td>{{ t(record.status) }}</td>
+                <td>{{ formatServingDateTime(record.checkedInAt, locale) }}</td>
+              </tr>
+            </tbody>
+          </v-table>
+        </template>
+        <template #mobile>
+          <div v-if="!loading && records.length === 0" class="text-medium-emphasis py-6">
             {{ t("No arrival records match the current filters.") }}
-          </td>
-        </tr>
-        <tr v-for="record in records" :key="record.id">
-          <td>
-            {{ assignmentById(record.assignmentId)?.title ?? record.assignmentId }}
-          </td>
-          <td>{{ servingMemberLabelById(members, record.userId) }}</td>
-          <td>{{ t(record.status) }}</td>
-          <td>{{ formatServingDateTime(record.checkedInAt, locale) }}</td>
-        </tr>
-      </tbody>
-      </v-table>
+          </div>
+          <AdminMobileDataRow v-for="record in records" :key="record.id">
+            <strong>{{ assignmentById(record.assignmentId)?.title ?? record.assignmentId }}</strong>
+            <span>{{ servingMemberLabelById(members, record.userId) }}</span>
+            <template #trailing>
+              <v-chip size="small">{{ t(record.status) }}</v-chip>
+            </template>
+            <template #meta>
+              <span>{{ formatServingDateTime(record.checkedInAt, locale) }}</span>
+              <span v-if="record.note">{{ record.note }}</span>
+            </template>
+          </AdminMobileDataRow>
+        </template>
+      </AdminResponsiveTable>
     </AdminDataState>
   </div>
 </template>
