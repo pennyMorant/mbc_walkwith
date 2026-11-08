@@ -84,6 +84,38 @@ describe("admin resource deep links", () => {
 
     expect(opened).toEqual([]);
   });
+
+  test("retries the current route resource through the same guarded lifecycle", async () => {
+    const first = deferred<{ id: string }>();
+    const second = deferred<{ id: string }>();
+    const requests = [first, second];
+    const opened: string[] = [];
+    route.query.open = "member-retry";
+
+    const scope = effectScope();
+    const state = scope.run(() =>
+      useAdminResourceDeepLink(
+        () => requests.shift()!.promise,
+        (resource) => opened.push(resource.id)
+      )
+    )!;
+
+    first.reject(new Error("temporary failure"));
+    await flushPromises();
+    expect(state.pending.value).toBe(false);
+    expect(state.error.value).toBeInstanceOf(Error);
+
+    state.retry();
+    expect(state.pending.value).toBe(true);
+    expect(state.error.value).toBeNull();
+    second.resolve({ id: "member-retry" });
+    await flushPromises();
+
+    expect(opened).toEqual(["member-retry"]);
+    expect(state.pending.value).toBe(false);
+    expect(state.error.value).toBeNull();
+    scope.stop();
+  });
 });
 
 afterAll(() => {

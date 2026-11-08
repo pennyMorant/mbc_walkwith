@@ -6,6 +6,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { getLifePost, translateLifePostNotification } from "@/core/api/life_posts";
 import { useAdminResourceDeepLink } from "@/core/navigation/use_admin_resource_deep_link";
 import AdminConfirmDialog from "@/core/ui/AdminConfirmDialog.vue";
+import AdminDeepLinkState from "@/core/ui/AdminDeepLinkState.vue";
 import AdminDrawerHeader from "@/core/ui/AdminDrawerHeader.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
@@ -170,10 +171,12 @@ const deepLink = useAdminResourceDeepLink(getLifePost, openPost);
 
 <template>
   <div>
-    <v-progress-linear v-if="deepLink.pending.value" indeterminate color="primary" class="mb-4" />
-    <v-alert v-if="deepLink.error.value" type="error" variant="tonal" class="mb-4">
-      {{ t("nav.openResourceFailed") }}
-    </v-alert>
+    <AdminDeepLinkState
+      :pending="deepLink.pending.value"
+      :error-message="deepLink.error.value ? t('nav.openResourceFailed') : ''"
+      :retry-label="t('common.refresh')"
+      @retry="deepLink.retry"
+    />
     <AdminPageHeader :title="t('nav.lifePosts')" :subtitle="t('life.pageSubtitle')">
       <template #actions>
         <AdminRefreshButton

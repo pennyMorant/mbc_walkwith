@@ -231,7 +231,9 @@ Surface rule:
   cross-tab session changes re-run the current route through the canonical guard,
   so revoked permissions cannot leave an unauthorized workspace mounted.
   Search and recent-content links identify a record
-  with `?open=<resourceId>`; the destination Feature owns detail loading and errors.
+  with `?open=<resourceId>`; the destination Feature owns the resource loader,
+  selected record, and localized error copy. The shared Core lifecycle owns
+  cancellation, guarded retry, and loading/error presentation.
   Clearing or replacing that query invalidates the previous detail request, and
   an unmounted page cannot apply a late resource result.
 - Admin login keeps local email validation, password visibility, pending state, and
