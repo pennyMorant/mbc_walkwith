@@ -7,7 +7,9 @@ import type {
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 
 type AssignmentFilters = {
   status: ReadingPlanAssignmentStatus | "";
@@ -90,25 +92,44 @@ const { t } = useI18n();
       @retry="$emit('retry')"
     >
       <v-progress-linear v-if="loading" indeterminate color="primary" />
-      <v-table density="compact">
-      <thead>
-        <tr>
-          <th>{{ t("User") }}</th>
-          <th>{{ t("Source") }}</th>
-          <th>{{ t("Status") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="!loading && assignments.length === 0">
-          <td colspan="3">{{ t("No assignments yet.") }}</td>
-        </tr>
-        <tr v-for="assignment in assignments" :key="assignment.id">
-          <td>{{ t(assignment.userType) }} · {{ assignment.userId }}</td>
-          <td>{{ t(assignment.sourceType) }}</td>
-          <td>{{ t(assignment.status) }}</td>
-        </tr>
-      </tbody>
-      </v-table>
+      <AdminResponsiveTable>
+        <template #desktop>
+          <v-table density="compact">
+            <thead>
+              <tr>
+                <th>{{ t("User") }}</th>
+                <th>{{ t("Source") }}</th>
+                <th>{{ t("Status") }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="!loading && assignments.length === 0">
+                <td colspan="3">{{ t("No assignments yet.") }}</td>
+              </tr>
+              <tr v-for="assignment in assignments" :key="assignment.id">
+                <td>{{ t(assignment.userType) }} · {{ assignment.userId }}</td>
+                <td>{{ t(assignment.sourceType) }}</td>
+                <td>{{ t(assignment.status) }}</td>
+              </tr>
+            </tbody>
+          </v-table>
+        </template>
+        <template #mobile>
+          <div v-if="!loading && assignments.length === 0" class="text-medium-emphasis py-4">
+            {{ t("No assignments yet.") }}
+          </div>
+          <AdminMobileDataRow
+            v-for="assignment in assignments"
+            :key="assignment.id"
+          >
+            <strong>{{ t(assignment.userType) }} · {{ assignment.userId }}</strong>
+            <span>{{ t(assignment.sourceType) }}</span>
+            <template #trailing>
+              <v-chip size="small">{{ t(assignment.status) }}</v-chip>
+            </template>
+          </AdminMobileDataRow>
+        </template>
+      </AdminResponsiveTable>
 
       <v-row v-if="canManage && hasSelectedPlan" class="mt-4" dense>
       <v-col cols="12" md="3">

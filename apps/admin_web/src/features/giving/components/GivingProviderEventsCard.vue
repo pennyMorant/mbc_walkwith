@@ -6,6 +6,8 @@ import type {
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 import type { GivingProviderEventFilterForm } from "../giving_workspace_models";
@@ -80,7 +82,9 @@ const { optionItems, t } = useI18n();
     </v-alert>
     <template v-else>
       <GivingRefreshError :error="refreshError" @retry="$emit('retry')" />
-      <v-table density="comfortable">
+      <AdminResponsiveTable>
+        <template #desktop>
+          <v-table density="comfortable">
       <thead>
         <tr>
           <th>{{ t("Provider") }}</th>
@@ -123,7 +127,30 @@ const { optionItems, t } = useI18n();
           </td>
         </AdminTableActionRow>
       </tbody>
-      </v-table>
+          </v-table>
+        </template>
+        <template #mobile>
+          <div v-if="events.length === 0" class="text-center text-medium-emphasis py-8 px-4">
+            {{ t("No payment provider events match the current filters.") }}
+          </div>
+          <AdminMobileRecord
+            v-for="event in events"
+            :key="event.id"
+            @activate="$emit('open', event)"
+          >
+            <strong>{{ event.eventType }}</strong>
+            <span>{{ event.provider }} · {{ event.providerEventId }}</span>
+            <span>{{ t("Received") }}: {{ dateTime(event.receivedAt) }}</span>
+            <span>{{ t("Processed") }}: {{ dateTime(event.processedAt) }}</span>
+            <span v-if="event.errorMessage">{{ event.errorMessage }}</span>
+            <template #trailing>
+              <v-chip size="small" :color="eventStatusColor(event.status)">
+                {{ t(event.status) }}
+              </v-chip>
+            </template>
+          </AdminMobileRecord>
+        </template>
+      </AdminResponsiveTable>
     </template>
   </v-card>
 </template>

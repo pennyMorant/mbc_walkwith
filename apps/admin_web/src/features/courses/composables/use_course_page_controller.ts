@@ -186,6 +186,12 @@ export function useCoursePageController() {
     },
     onError: mutationFeedback.capture
   });
+  const pendingEnrollmentId = computed(
+    () => enrollmentMutation.variables.value?.enrollmentId ?? null
+  );
+  const pendingEnrollmentStatus = computed(
+    () => enrollmentMutation.variables.value?.status ?? null
+  );
 
   const listErrorMessage = computed(() =>
     coursesError.value
@@ -360,6 +366,8 @@ export function useCoursePageController() {
     enrollmentFilters,
     enrollmentMutationErrorMessage,
     enrollmentMutation,
+    pendingEnrollmentId,
+    pendingEnrollmentStatus,
     enrollments,
     enrollmentsErrorMessage,
     enrollmentsQuery,

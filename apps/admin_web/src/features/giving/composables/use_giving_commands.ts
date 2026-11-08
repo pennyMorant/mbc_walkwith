@@ -134,6 +134,9 @@ export function useGivingCommands(options: GivingCommandOptions) {
   const isDownloadingStatement = computed(
     () => downloadStatementMutation.isPending.value
   );
+  const downloadingStatementId = computed(
+    () => downloadStatementMutation.variables.value?.id ?? null
+  );
   const isSavingFund = computed(() => saveFundMutation.isPending.value);
   const canGenerateStatement = computed(
     () =>
@@ -228,6 +231,7 @@ export function useGivingCommands(options: GivingCommandOptions) {
     canManageFunds,
     canSaveFund,
     downloadStatement,
+    downloadingStatementId,
     downloadStatementError: downloadStatementMutation.error,
     exportedCsv,
     exportedFilename,

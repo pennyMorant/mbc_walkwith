@@ -24,6 +24,8 @@ const {
   enrollmentFilters,
   enrollmentMutationErrorMessage,
   enrollmentMutation,
+  pendingEnrollmentId,
+  pendingEnrollmentStatus,
   enrollments,
   enrollmentsErrorMessage,
   enrollmentsQuery,
@@ -110,6 +112,8 @@ const {
           :lesson-pending="lessonMutation.isPending.value"
           :lesson-status-pending="lessonStatusMutation.isPending.value"
           :enrollment-pending="enrollmentMutation.isPending.value"
+          :pending-enrollment-id="pendingEnrollmentId"
+          :pending-enrollment-status="pendingEnrollmentStatus"
           :lessons-error-message="lessonsErrorMessage"
           :lessons-refresh-error-message="lessonsRefreshErrorMessage"
           :enrollments-error-message="enrollmentsErrorMessage"

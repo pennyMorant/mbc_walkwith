@@ -36,6 +36,7 @@ const {
   dateTime,
   dollars,
   downloadStatement,
+  downloadingStatementId,
   downloadStatementError,
   eventStatusColor,
   exportedCsv,
@@ -216,6 +217,7 @@ const {
       :statements="statements"
       :can-download-statement="canDownloadStatement"
       :download-statement="downloadStatement"
+      :downloading-statement-id="downloadingStatementId"
       :is-downloading-statement="isDownloadingStatement"
       :is-pending="statementsPending"
       :is-fetching="statementsFetching"

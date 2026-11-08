@@ -6,6 +6,8 @@ import type {
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 import type { GivingTransactionFilterForm } from "../giving_workspace_models";
@@ -102,7 +104,9 @@ const { optionItems, t } = useI18n();
     </v-alert>
     <template v-else>
       <GivingRefreshError :error="refreshError" @retry="$emit('retry')" />
-      <v-table density="comfortable">
+      <AdminResponsiveTable>
+        <template #desktop>
+          <v-table density="comfortable">
       <thead>
         <tr>
           <th>{{ t("Donor") }}</th>
@@ -154,7 +158,37 @@ const { optionItems, t } = useI18n();
           <td>{{ dateTime(transaction.givenAt) }}</td>
         </AdminTableActionRow>
       </tbody>
-      </v-table>
+          </v-table>
+        </template>
+        <template #mobile>
+          <div v-if="transactions.length === 0" class="text-center text-medium-emphasis py-8 px-4">
+            {{ t("No giving transactions match the current filters.") }}
+          </div>
+          <AdminMobileRecord
+            v-for="transaction in transactions"
+            :key="transaction.id"
+            @activate="$emit('open', transaction)"
+          >
+            <strong>{{ transaction.donorName || t("Anonymous") }}</strong>
+            <span>{{ transaction.donorEmail || transaction.userId || t("No ID") }}</span>
+            <span>{{ dollars(transaction.amountCents) }} · {{ fundName(transaction.fundId) }}</span>
+            <span>{{ t(transaction.category) }} · {{ dateTime(transaction.givenAt) }}</span>
+            <span>
+              {{ transaction.provider }} ·
+              {{
+                transaction.providerTransactionId ||
+                transaction.providerCheckoutSessionId ||
+                t("Pending")
+              }}
+            </span>
+            <template #trailing>
+              <v-chip size="small" :color="statusColor(transaction.status)">
+                {{ t(transaction.status) }}
+              </v-chip>
+            </template>
+          </AdminMobileRecord>
+        </template>
+      </AdminResponsiveTable>
     </template>
   </v-card>
 </template>

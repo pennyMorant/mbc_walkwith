@@ -32,6 +32,8 @@ defineProps<{
   lessonPending: boolean;
   lessonStatusPending: boolean;
   enrollmentPending: boolean;
+  pendingEnrollmentId: string | null;
+  pendingEnrollmentStatus: CourseEnrollmentStatus | null;
   lessonsErrorMessage: string;
   lessonsRefreshErrorMessage: string;
   enrollmentsErrorMessage: string;
@@ -108,6 +110,8 @@ const { t } = useI18n();
         :can-manage="canManage"
         :pending="enrollmentsPending"
         :mutation-pending="enrollmentPending"
+        :pending-enrollment-id="pendingEnrollmentId"
+        :pending-enrollment-status="pendingEnrollmentStatus"
         :error-message="enrollmentsErrorMessage"
         :refresh-error-message="enrollmentsRefreshErrorMessage"
         :command-error-message="enrollmentMutationErrorMessage"
