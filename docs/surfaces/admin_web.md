@@ -114,6 +114,23 @@ Surface rule:
   drawer components own operational loading, empty, recovery, compact-list,
   filter-action, and drawer-surface presentation. Feature pages retain query,
   retry, selection, permission, and mutation ownership.
+- Every operational desktop table must expose the same canonical collection as
+  a compact mobile projection. New table work uses `AdminResponsiveTable` for
+  breakpoint ownership, `AdminMobileRecord` for a whole-record detail intent,
+  and `AdminMobileDataRow` when the record contains inline controls. These Core
+  components own presentation only; filters, permissions, formatters, commands,
+  and status meaning stay in the Feature.
+- A desktop row whose whole surface opens a record uses
+  `AdminTableActionRow`, including Enter, Space, and focus-visible behavior.
+  Rows containing independent controls remain ordinary non-clickable rows so
+  nested buttons keep their own semantics.
+- Mutation feedback is scoped to the targeted record whenever the command has
+  a stable resource id. A workspace may disable sibling commands while one
+  write is active, but only the target row or button may display loading.
+- Admin tables consume backend-safe DTO projections. Provider object keys,
+  private storage paths, signed URLs, and other infrastructure identifiers are
+  never rendered as document state. The backend projects user-facing readiness
+  and exposes authorized download actions through dedicated endpoints.
 - Filter forms with explicit apply and clear intents use the shared filter action
   layout for button semantics, pending protection, accessible icon mode, and
   compact responsive placement. Features retain draft values, applied snapshots,
