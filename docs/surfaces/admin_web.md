@@ -288,6 +288,8 @@ Surface rule:
   申请、材料和出席远程筛选也只在显式应用后请求；申请、成员、材料和出席分别拥有
   初始错误、刷新警告、区域重试与命令错误。页面 controller 在 action 边界冻结小组
   id、子资源 id 和 payload，迟到结果刷新 canonical cache 但不覆盖当前小组或表单。
+  成员、材料和出席在桌面表格与移动端数据行中消费同一 canonical 数组；状态下拉框
+  继续发出原有 Feature command intent，移动投影不维护第二份状态或权限判断。
 - Group ministry v2：Admin 已接入成员状态、材料分配和出席记录；小组长 App
   工作台、关怀提醒和小组通知仍归 group ministry feature 后续阶段。
 - Course learning：Courses 页面维护课程、课次、报名名单和学习进度；mutation 后必须

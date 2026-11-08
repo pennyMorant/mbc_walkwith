@@ -6,6 +6,7 @@ import type {
 
 import { groupMembershipStatusOptions } from "@/core/api/groups";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
 import { formatGroupDateTime } from "../group_presenters";
 import GroupPanelState from "./GroupPanelState.vue";
 
@@ -70,7 +71,7 @@ function updateStatus(
         {{ t("common.refresh") }}
       </v-btn>
     </div>
-    <v-table density="compact">
+    <v-table class="d-none d-md-block" density="compact">
       <thead>
         <tr>
           <th>{{ t("Member") }}</th>
@@ -110,5 +111,36 @@ function updateStatus(
         </tr>
       </tbody>
     </v-table>
+    <div class="d-md-none">
+      <p
+        v-if="!pending && memberships.length === 0"
+        class="text-body-2 text-medium-emphasis py-3 mb-0"
+      >
+        {{ t("No members match the current filters.") }}
+      </p>
+      <AdminMobileDataRow
+        v-for="membership in memberships"
+        :key="membership.userId"
+      >
+        <strong>{{ membership.memberDisplayName }}</strong>
+        <span class="text-caption text-medium-emphasis">
+          {{ membership.memberEmail || membership.userId }}
+        </span>
+        <template #meta>
+          <span>{{ formatGroupDateTime(membership.updatedAt, locale) }}</span>
+        </template>
+        <template #actions>
+          <v-select
+            :model-value="membership.status"
+            :items="optionItems(groupMembershipStatusOptions)"
+            :disabled="!canManage || updatePending"
+            density="compact"
+            variant="outlined"
+            hide-details
+            @update:model-value="updateStatus(membership, $event)"
+          />
+        </template>
+      </AdminMobileDataRow>
+    </div>
   </GroupPanelState>
 </template>

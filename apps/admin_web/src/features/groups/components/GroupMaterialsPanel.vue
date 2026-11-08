@@ -10,6 +10,7 @@ import {
   groupTaskStatusOptions
 } from "@/core/api/group_activity";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
 import { formatGroupDateTime } from "../group_presenters";
 import type { GroupMaterialForm } from "../group_workspace_models";
 import GroupPanelState from "./GroupPanelState.vue";
@@ -79,7 +80,7 @@ function updateStatus(
         {{ t("common.go") }}
       </v-btn>
     </div>
-    <v-table density="compact">
+    <v-table class="d-none d-md-block" density="compact">
       <thead>
         <tr>
           <th>{{ t("Material") }}</th>
@@ -117,6 +118,37 @@ function updateStatus(
         </tr>
       </tbody>
     </v-table>
+    <div class="d-md-none">
+      <p
+        v-if="!pending && materials.length === 0"
+        class="text-body-2 text-medium-emphasis py-3 mb-0"
+      >
+        {{ t("No materials match the current filters.") }}
+      </p>
+      <AdminMobileDataRow v-for="material in materials" :key="material.id">
+        <strong>{{ material.title }}</strong>
+        <span class="text-caption text-medium-emphasis">
+          {{ t(material.materialType) }} · {{ material.materialId }}
+        </span>
+        <template #meta>
+          <span>
+            {{ t("Due") }}:
+            {{ formatGroupDateTime(material.dueAt, locale) || t("common.notSet") }}
+          </span>
+        </template>
+        <template #actions>
+          <v-select
+            :model-value="material.status"
+            :items="optionItems(groupTaskStatusOptions)"
+            :disabled="!canManage || mutationPending"
+            density="compact"
+            variant="outlined"
+            hide-details
+            @update:model-value="updateStatus(material, $event)"
+          />
+        </template>
+      </AdminMobileDataRow>
+    </div>
 
     <v-divider class="my-4" />
     <div v-if="canManage" class="text-subtitle-2 mb-3">
