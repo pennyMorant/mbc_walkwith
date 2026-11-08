@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterActions from "./AdminFilterActions.vue";
 
 defineProps<{
   statusItems: Array<{ title: string; value: string }>;
@@ -48,24 +49,14 @@ const { t } = useI18n();
               hide-details
             />
           </v-col>
-          <v-col cols="12" md="2" class="admin-catalog-filters__actions">
-            <v-btn
-              type="submit"
-              color="primary"
-              variant="tonal"
-              icon="mdi-filter-outline"
+          <v-col cols="12" md="2">
+            <AdminFilterActions
+              :apply-label="t('catalog.applyFilters')"
+              :clear-label="t('catalog.clearFilters')"
               :loading="fetching"
-              :aria-label="t('catalog.applyFilters')"
-              :title="t('catalog.applyFilters')"
-            />
-            <v-btn
-              type="button"
-              variant="text"
-              icon="mdi-filter-remove-outline"
-              :disabled="fetching"
-              :aria-label="t('catalog.clearFilters')"
-              :title="t('catalog.clearFilters')"
-              @click="emit('clear')"
+              icon-only
+              align-end
+              @clear="emit('clear')"
             />
           </v-col>
         </v-row>
@@ -73,19 +64,3 @@ const { t } = useI18n();
     </v-card-text>
   </v-card>
 </template>
-
-<style scoped>
-.admin-catalog-filters__actions {
-  display: flex;
-  min-height: 40px;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-@media (min-width: 960px) {
-  .admin-catalog-filters__actions {
-    justify-content: flex-end;
-  }
-}
-</style>

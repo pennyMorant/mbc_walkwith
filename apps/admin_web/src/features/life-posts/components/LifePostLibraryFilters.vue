@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
 
 import type { LifePostLibraryFilterForm } from "../life_post_library_models";
 
@@ -46,24 +47,14 @@ const { optionItems, t } = useI18n();
           hide-details
         />
       </v-col>
-      <v-col cols="12" md="2" class="d-flex justify-md-end ga-2">
-        <v-btn
-          type="submit"
-          color="primary"
-          variant="tonal"
-          icon="mdi-filter-outline"
+      <v-col cols="12" md="2">
+        <AdminFilterActions
+          :apply-label="t('life.applyFilters')"
+          :clear-label="t('life.clearFilters')"
           :loading="fetching"
-          :aria-label="t('life.applyFilters')"
-          :title="t('life.applyFilters')"
-        />
-        <v-btn
-          type="button"
-          variant="text"
-          icon="mdi-filter-remove-outline"
-          :disabled="fetching"
-          :aria-label="t('life.clearFilters')"
-          :title="t('life.clearFilters')"
-          @click="emit('clear')"
+          icon-only
+          align-end
+          @clear="emit('clear')"
         />
       </v-col>
     </v-row>

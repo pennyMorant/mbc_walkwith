@@ -2,6 +2,7 @@
 import type { NotificationDeliveryStatus } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
 
 import type { NotificationDeliveryFilterForm } from "../notification_delivery_workspace_models";
 
@@ -39,25 +40,12 @@ const { optionItems, t } = useI18n();
           clearable
           class="filter-control"
         />
-        <div class="d-flex flex-wrap ga-2">
-          <v-btn
-            type="submit"
-            color="primary"
-            variant="tonal"
-            prepend-icon="mdi-filter-outline"
-            :loading="pending"
-          >
-            {{ t("notifications.applyFilters") }}
-          </v-btn>
-          <v-btn
-            variant="text"
-            prepend-icon="mdi-filter-remove-outline"
-            :disabled="pending"
-            @click="$emit('clear')"
-          >
-            {{ t("notifications.clearFilters") }}
-          </v-btn>
-        </div>
+        <AdminFilterActions
+          :apply-label="t('notifications.applyFilters')"
+          :clear-label="t('notifications.clearFilters')"
+          :loading="pending"
+          @clear="$emit('clear')"
+        />
         <v-spacer class="d-none d-lg-block" />
         <v-chip color="primary" variant="tonal">
           {{ t("notifications.loaded") }} {{ loadedCount }}
@@ -69,7 +57,14 @@ const { optionItems, t } = useI18n();
 
 <style scoped>
 .filter-control {
-  flex: 1 1 220px;
-  min-width: min(100%, 220px);
+  width: 100%;
+  min-width: 0;
+}
+
+@media (min-width: 1280px) {
+  .filter-control {
+    min-width: 220px;
+    flex: 1 1 220px;
+  }
 }
 </style>

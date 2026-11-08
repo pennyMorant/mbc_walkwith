@@ -2,6 +2,7 @@
 import type { NewcomerStatus } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
 
 defineProps<{
   fetching: boolean;
@@ -40,24 +41,14 @@ const { t } = useI18n();
           />
         </v-col>
         <v-col cols="12" sm="4" md="2">
-          <div class="d-flex justify-end ga-2">
-            <v-btn
-              icon="mdi-filter-remove-outline"
-              variant="text"
-              :aria-label="t('newcomers.clearFilters')"
-              :title="t('newcomers.clearFilters')"
-              @click="$emit('clear')"
-            />
-            <v-btn
-              type="submit"
-              icon="mdi-filter-check-outline"
-              color="primary"
-              variant="tonal"
-              :loading="fetching"
-              :aria-label="t('newcomers.applyFilters')"
-              :title="t('newcomers.applyFilters')"
-            />
-          </div>
+          <AdminFilterActions
+            :apply-label="t('newcomers.applyFilters')"
+            :clear-label="t('newcomers.clearFilters')"
+            :loading="fetching"
+            icon-only
+            align-end
+            @clear="$emit('clear')"
+          />
         </v-col>
       </v-row>
     </v-form>

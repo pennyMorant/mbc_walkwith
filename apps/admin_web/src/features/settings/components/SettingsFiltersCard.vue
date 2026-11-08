@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
 
 import type { SettingsFilterForm } from "../settings_workspace_models";
 
@@ -42,23 +43,12 @@ const { t } = useI18n();
         </v-col>
       </v-row>
       <div class="d-flex flex-wrap align-center ga-2 mt-4">
-        <v-btn
-          type="submit"
-          color="primary"
-          variant="tonal"
-          prepend-icon="mdi-filter-outline"
+        <AdminFilterActions
+          :apply-label="t('settings.applyFilters')"
+          :clear-label="t('settings.clearFilters')"
           :loading="pending"
-        >
-          {{ t("settings.applyFilters") }}
-        </v-btn>
-        <v-btn
-          variant="text"
-          prepend-icon="mdi-filter-remove-outline"
-          :disabled="pending"
-          @click="$emit('clear')"
-        >
-          {{ t("settings.clearFilters") }}
-        </v-btn>
+          @clear="$emit('clear')"
+        />
         <v-spacer />
         <v-chip color="primary" variant="tonal">
           {{ t("settings.loaded") }} {{ loadedCount }}

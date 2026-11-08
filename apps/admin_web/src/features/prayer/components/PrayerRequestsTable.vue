@@ -3,6 +3,7 @@ import type { AdminPrayerRequest } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
 
@@ -77,26 +78,14 @@ const { locale, optionItems, t } = useI18n();
           />
         </v-col>
         <v-col cols="12" sm="4" md="2">
-          <div class="d-flex justify-end ga-2">
-            <v-btn
-              type="button"
-              icon="mdi-filter-remove-outline"
-              variant="text"
-              :disabled="fetching"
-              :aria-label="t('prayer.clearFilters')"
-              :title="t('prayer.clearFilters')"
-              @click="emit('clear')"
-            />
-            <v-btn
-              type="submit"
-              icon="mdi-filter-check-outline"
-              color="primary"
-              variant="tonal"
-              :loading="fetching"
-              :aria-label="t('prayer.applyFilters')"
-              :title="t('prayer.applyFilters')"
-            />
-          </div>
+          <AdminFilterActions
+            :apply-label="t('prayer.applyFilters')"
+            :clear-label="t('prayer.clearFilters')"
+            :loading="fetching"
+            icon-only
+            align-end
+            @clear="emit('clear')"
+          />
         </v-col>
       </v-row>
     </v-form>

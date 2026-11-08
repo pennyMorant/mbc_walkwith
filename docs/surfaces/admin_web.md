@@ -114,6 +114,10 @@ Surface rule:
   drawer components own operational loading, empty, recovery, compact-list,
   filter-action, and drawer-surface presentation. Feature pages retain query,
   retry, selection, permission, and mutation ownership.
+- Filter forms with explicit apply and clear intents use the shared filter action
+  layout for button semantics, pending protection, accessible icon mode, and
+  compact responsive placement. Features retain draft values, applied snapshots,
+  validation, result counts, and query ownership.
 - Destructive and state-changing confirmation prompts use the shared Admin
   confirmation dialog for responsive layout, visual tone, and pending-state
   protection. Features retain permission checks, confirmation copy, target
