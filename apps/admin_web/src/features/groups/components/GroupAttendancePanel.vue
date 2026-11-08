@@ -8,6 +8,7 @@ import { computed } from "vue";
 
 import { groupAttendanceStatusOptions } from "@/core/api/group_activity";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
 import { formatGroupDate } from "../group_presenters";
 import type { GroupAttendanceForm } from "../group_workspace_models";
@@ -56,20 +57,22 @@ const memberItems = computed(() =>
     :command-error-message="commandErrorMessage"
     @retry="emit('retry')"
   >
-    <div class="d-flex flex-column flex-md-row ga-2 mb-3">
+    <AdminFilterToolbar class="mb-3" @apply="emit('applyFilters')">
       <v-select
         v-model="status"
+        class="admin-filter-control"
         :label="t('Status')"
         :items="optionItems(['', ...groupAttendanceStatusOptions])"
         density="compact"
         variant="outlined"
         hide-details
-        max-width="220"
       />
-      <v-btn variant="tonal" @click="emit('applyFilters')">
-        {{ t("common.go") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn type="submit" variant="tonal">
+          {{ t("common.go") }}
+        </v-btn>
+      </template>
+    </AdminFilterToolbar>
     <v-table class="d-none d-md-block" density="compact">
       <thead>
         <tr>

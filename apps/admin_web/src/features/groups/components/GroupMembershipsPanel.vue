@@ -6,6 +6,7 @@ import type {
 
 import { groupMembershipStatusOptions } from "@/core/api/groups";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
 import { formatGroupDateTime } from "../group_presenters";
 import GroupPanelState from "./GroupPanelState.vue";
@@ -50,9 +51,10 @@ function updateStatus(
     :command-error-message="commandErrorMessage"
     @retry="emit('retry')"
   >
-    <div class="d-flex flex-column flex-md-row ga-2 mb-3">
+    <AdminFilterToolbar class="mb-3" @apply="emit('retry')">
       <v-text-field
         v-model="query"
+        class="admin-filter-control"
         :label="t('Search members')"
         density="compact"
         variant="outlined"
@@ -60,17 +62,19 @@ function updateStatus(
       />
       <v-select
         v-model="status"
+        class="admin-filter-control"
         :label="t('Status')"
         :items="optionItems(['', ...groupMembershipStatusOptions])"
         density="compact"
         variant="outlined"
         hide-details
-        max-width="190"
       />
-      <v-btn variant="tonal" @click="emit('retry')">
-        {{ t("common.refresh") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn type="submit" variant="tonal">
+          {{ t("common.refresh") }}
+        </v-btn>
+      </template>
+    </AdminFilterToolbar>
     <v-table class="d-none d-md-block" density="compact">
       <thead>
         <tr>

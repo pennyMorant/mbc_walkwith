@@ -7,6 +7,7 @@ import type {
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 
 type ResponseFilters = {
   userType: "member" | "external" | "";
@@ -46,39 +47,41 @@ function responseStatusColor(status: SermonDiscussionResponse["status"]) {
 
 <template>
   <div>
-    <div class="d-flex flex-column flex-md-row justify-space-between ga-3">
-      <div>
-        <div class="text-subtitle-2 font-weight-bold">
-          {{ t("Responses") }}
+    <AdminFilterToolbar @apply="$emit('apply')">
+      <template #heading>
+        <div>
+          <div class="text-subtitle-2 font-weight-bold">
+            {{ t("Responses") }}
+          </div>
+          <div class="text-body-2 text-medium-emphasis">
+            {{
+              selectedGuide
+                ? selectedGuide.title
+                : t("Select a discussion guide to review responses.")
+            }}
+          </div>
         </div>
-        <div class="text-body-2 text-medium-emphasis">
-          {{
-            selectedGuide
-              ? selectedGuide.title
-              : t("Select a discussion guide to review responses.")
-          }}
-        </div>
-      </div>
-      <div class="d-flex flex-column flex-sm-row ga-2">
-        <v-select
-          v-model="filters.userType"
-          :items="userTypeItems"
-          :label="t('User type')"
-          density="compact"
-          hide-details
-          style="min-width: 180px"
-          variant="outlined"
-        />
+      </template>
+      <v-select
+        v-model="filters.userType"
+        class="admin-filter-control"
+        :items="userTypeItems"
+        :label="t('User type')"
+        density="compact"
+        hide-details
+        variant="outlined"
+      />
+      <template #actions>
         <v-btn
+          type="submit"
           :disabled="!selectedGuide"
           :loading="fetching"
           variant="tonal"
-          @click="$emit('apply')"
         >
           {{ t("common.go") }}
         </v-btn>
-      </div>
-    </div>
+      </template>
+    </AdminFilterToolbar>
 
     <v-alert
       v-if="!selectedGuide"

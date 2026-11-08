@@ -10,6 +10,7 @@ import {
   groupTaskStatusOptions
 } from "@/core/api/group_activity";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
 import { formatGroupDateTime } from "../group_presenters";
 import type { GroupMaterialForm } from "../group_workspace_models";
@@ -59,9 +60,10 @@ function updateStatus(
     :command-error-message="commandErrorMessage"
     @retry="emit('retry')"
   >
-    <div class="d-flex flex-column flex-md-row ga-2 mb-3">
+    <AdminFilterToolbar class="mb-3" @apply="emit('applyFilters')">
       <v-select
         v-model="materialType"
+        class="admin-filter-control"
         :label="t('Material type')"
         :items="optionItems(['', ...groupMaterialTypeOptions])"
         density="compact"
@@ -70,16 +72,19 @@ function updateStatus(
       />
       <v-select
         v-model="status"
+        class="admin-filter-control"
         :label="t('Status')"
         :items="optionItems(['', ...groupTaskStatusOptions])"
         density="compact"
         variant="outlined"
         hide-details
       />
-      <v-btn variant="tonal" @click="emit('applyFilters')">
-        {{ t("common.go") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn type="submit" variant="tonal">
+          {{ t("common.go") }}
+        </v-btn>
+      </template>
+    </AdminFilterToolbar>
     <v-table class="d-none d-md-block" density="compact">
       <thead>
         <tr>

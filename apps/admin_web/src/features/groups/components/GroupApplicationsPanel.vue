@@ -5,6 +5,7 @@ import type {
 } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import GroupPanelState from "./GroupPanelState.vue";
 
 const status = defineModel<GroupApplicationStatus | "">("status", {
@@ -42,17 +43,18 @@ const { optionItems, t } = useI18n();
     :command-error-message="commandErrorMessage"
     @retry="emit('retry')"
   >
-    <div class="d-flex flex-column flex-md-row ga-2 mb-3">
+    <AdminFilterToolbar class="mb-3" @apply="emit('applyFilters')">
       <v-text-field
         v-model="query"
+        class="admin-filter-control"
         :label="t('Search applications')"
         density="compact"
         variant="outlined"
         hide-details
-        @keyup.enter="emit('applyFilters')"
       />
       <v-select
         v-model="status"
+        class="admin-filter-control"
         :label="t('Status')"
         :items="
           optionItems(['', 'submitted', 'approved', 'declined', 'withdrawn'])
@@ -60,12 +62,13 @@ const { optionItems, t } = useI18n();
         density="compact"
         variant="outlined"
         hide-details
-        max-width="190"
       />
-      <v-btn variant="tonal" @click="emit('applyFilters')">
-        {{ t("common.go") }}
-      </v-btn>
-    </div>
+      <template #actions>
+        <v-btn type="submit" variant="tonal">
+          {{ t("common.go") }}
+        </v-btn>
+      </template>
+    </AdminFilterToolbar>
     <v-list density="compact">
       <v-list-item v-if="!pending && applications.length === 0">
         <v-list-item-title class="text-medium-emphasis">
