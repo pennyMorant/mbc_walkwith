@@ -53,8 +53,11 @@ describe("sermon command state", () => {
     expect(cleanup).toContain('@retry="retryTask"');
     expect(cleanup).toContain(":refresh-error=\"tasks.length > 0 ? queryError : ''\"");
     expect(cleanupResults).toContain("AdminRetryAlert");
-    expect(cleanupResults).toContain('class="d-none d-md-block"');
-    expect(cleanupResults).toContain("cleanup-mobile-list d-md-none");
+    expect(cleanupResults).toContain("AdminResponsiveTable");
+    expect(cleanupResults).toContain('<template #desktop>');
+    expect(cleanupResults).toContain('<template #mobile>');
+    expect(cleanupResults).not.toContain('class="d-none d-md-block"');
+    expect(cleanupResults).not.toContain("cleanup-mobile-list d-md-none");
     expect(cleanupResults.match(/\$emit\('retry', task\)/g)?.length).toBe(2);
     expect(cleanupResults).toContain("formatAdminDateTime(task.updatedAt, locale)");
     expect(cleanupResults).not.toContain("new Intl.DateTimeFormat");

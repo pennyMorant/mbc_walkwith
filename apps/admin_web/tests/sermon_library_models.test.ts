@@ -46,8 +46,11 @@ describe("sermon library models", () => {
       Bun.file(new URL("../src/core/i18n/i18n.ts", import.meta.url)).text()
     ]);
 
-    expect(component).toContain('class="d-none d-md-block"');
-    expect(component).toContain('class="d-md-none"');
+    expect(component).toContain("AdminResponsiveTable");
+    expect(component).toContain('<template #desktop>');
+    expect(component).toContain('<template #mobile>');
+    expect(component).not.toContain('class="d-none d-md-block"');
+    expect(component).not.toContain('class="d-md-none"');
     expect(component).toContain("<AdminMobileRecord");
     expect(component).toContain("@activate=\"emit('open', sermon)\"");
     expect(component).toContain(":title=\"t('sermons.noResults')\"");

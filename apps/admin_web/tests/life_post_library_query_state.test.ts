@@ -80,8 +80,11 @@ describe("life post library query state", () => {
       expect(source).not.toContain("@keyup.enter");
       expect(source).not.toContain("refetch");
     }
-    expect(card).toContain('class="d-none d-md-block"');
-    expect(card).toContain('class="d-md-none"');
+    expect(card).toContain("AdminResponsiveTable");
+    expect(card).toContain('<template #desktop>');
+    expect(card).toContain('<template #mobile>');
+    expect(card).not.toContain('class="d-none d-md-block"');
+    expect(card).not.toContain('class="d-md-none"');
     expect(card).toContain("<AdminMobileRecord");
     expect(card).toContain("@activate=\"emit('open', post)\"");
   });

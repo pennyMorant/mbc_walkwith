@@ -5,6 +5,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 import { sermonStatusColor } from "../sermon_pipeline";
 
@@ -134,7 +135,9 @@ const { optionItems, t } = useI18n();
     />
 
     <template v-else>
-      <v-table class="d-none d-md-block" density="comfortable">
+      <AdminResponsiveTable>
+        <template #desktop>
+      <v-table density="comfortable">
         <thead>
           <tr>
             <th>{{ t("Title") }}</th>
@@ -176,7 +179,9 @@ const { optionItems, t } = useI18n();
         </tbody>
       </v-table>
 
-      <div class="d-md-none">
+        </template>
+        <template #mobile>
+      <div>
         <AdminMobileRecord
           v-for="sermon in sermons"
           :key="sermon.id"
@@ -205,6 +210,8 @@ const { optionItems, t } = useI18n();
           </template>
         </AdminMobileRecord>
       </div>
+        </template>
+      </AdminResponsiveTable>
     </template>
 
     <div v-if="hasMore" class="pa-4 d-flex justify-center">

@@ -10,6 +10,7 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 import type { LifePostLibraryFilterForm } from "../life_post_library_models";
@@ -101,7 +102,9 @@ function sortLabel(weight: number) {
         icon="mdi-post-outline"
         :title="t('life.noPosts')"
       />
-      <v-table v-else class="d-none d-md-block" density="comfortable">
+      <AdminResponsiveTable v-if="posts.length > 0">
+        <template #desktop>
+      <v-table density="comfortable">
         <thead>
           <tr>
             <th>{{ t("Title") }}</th>
@@ -168,7 +171,9 @@ function sortLabel(weight: number) {
         </tbody>
       </v-table>
 
-      <div v-if="posts.length > 0" class="d-md-none">
+        </template>
+        <template #mobile>
+      <div>
         <AdminMobileRecord
           v-for="post in posts"
           :key="post.id"
@@ -206,6 +211,8 @@ function sortLabel(weight: number) {
           </template>
         </AdminMobileRecord>
       </div>
+        </template>
+      </AdminResponsiveTable>
     </template>
   </v-card>
 </template>

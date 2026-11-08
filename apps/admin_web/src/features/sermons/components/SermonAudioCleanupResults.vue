@@ -7,6 +7,7 @@ import type {
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 
 defineProps<{
   tasks: SermonAudioCleanupTask[];
@@ -46,7 +47,9 @@ function statusColor(value: SermonAudioCleanupStatus) {
     {{ actionError }}
   </v-alert>
 
-  <v-table class="d-none d-md-block" density="comfortable">
+  <AdminResponsiveTable>
+    <template #desktop>
+  <v-table density="comfortable">
     <thead>
       <tr>
         <th>{{ t("Sermon") }}</th>
@@ -97,7 +100,9 @@ function statusColor(value: SermonAudioCleanupStatus) {
     </tbody>
   </v-table>
 
-  <div class="cleanup-mobile-list d-md-none">
+    </template>
+    <template #mobile>
+  <div class="cleanup-mobile-list">
     <article v-for="task in tasks" :key="task.id" class="cleanup-mobile-task">
       <div class="cleanup-mobile-task__heading">
         <span class="task-id text-caption text-medium-emphasis">
@@ -129,6 +134,8 @@ function statusColor(value: SermonAudioCleanupStatus) {
       </v-btn>
     </article>
   </div>
+    </template>
+  </AdminResponsiveTable>
 </template>
 
 <style scoped>
