@@ -22,8 +22,11 @@ describe("content moderation responsive results", () => {
   });
 
   test("keeps discussion moderation available in both responsive views", () => {
-    expect(discussionResponses).toContain("d-none d-md-block");
-    expect(discussionResponses).toContain("d-md-none");
+    expect(discussionResponses).toContain("AdminResponsiveTable");
+    expect(discussionResponses).toContain('<template #desktop>');
+    expect(discussionResponses).toContain('<template #mobile>');
+    expect(discussionResponses).not.toContain("d-none d-md-block");
+    expect(discussionResponses).not.toContain("d-md-none");
     expect(discussionResponses.match(/v-for="response in responses"/g)).toHaveLength(2);
     expect(discussionResponses.match(/\$emit\('hideResponse', response.id\)/g)).toHaveLength(2);
     expect(discussionResponses).toContain("AdminDataState");

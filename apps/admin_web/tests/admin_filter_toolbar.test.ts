@@ -70,4 +70,23 @@ describe("admin filter toolbar", () => {
     }
     expect(await removedCopy.exists()).toBe(false);
   });
+
+  test("shares responsive result switching beside shared filters", async () => {
+    const resultPanels = await Promise.all(
+      [
+        "groups/components/GroupAttendancePanel.vue",
+        "groups/components/GroupMaterialsPanel.vue",
+        "groups/components/GroupMembershipsPanel.vue",
+        "sermon-discussion-guides/components/SermonDiscussionResponsesPanel.vue"
+      ].map((path) =>
+        Bun.file(new URL(`../src/features/${path}`, import.meta.url)).text()
+      )
+    );
+
+    for (const source of resultPanels) {
+      expect(source).toContain("AdminResponsiveTable");
+      expect(source).not.toContain('class="d-none d-md-block"');
+      expect(source).not.toContain('class="d-md-none"');
+    }
+  });
 });

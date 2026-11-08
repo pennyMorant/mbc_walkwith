@@ -8,6 +8,7 @@ import { groupMembershipStatusOptions } from "@/core/api/groups";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import { formatGroupDateTime } from "../group_presenters";
 import GroupPanelState from "./GroupPanelState.vue";
 
@@ -75,76 +76,84 @@ function updateStatus(
         </v-btn>
       </template>
     </AdminFilterToolbar>
-    <v-table class="d-none d-md-block" density="compact">
-      <thead>
-        <tr>
-          <th>{{ t("Member") }}</th>
-          <th>{{ t("Status") }}</th>
-          <th>{{ t("Updated") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="!pending && memberships.length === 0">
-          <td colspan="3" class="text-medium-emphasis py-4">
+    <AdminResponsiveTable>
+      <template #desktop>
+        <v-table density="compact">
+          <thead>
+            <tr>
+              <th>{{ t("Member") }}</th>
+              <th>{{ t("Status") }}</th>
+              <th>{{ t("Updated") }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="!pending && memberships.length === 0">
+              <td colspan="3" class="text-medium-emphasis py-4">
+                {{ t("No members match the current filters.") }}
+              </td>
+            </tr>
+            <tr v-for="membership in memberships" :key="membership.userId">
+              <td>
+                <div class="font-weight-medium">
+                  {{ membership.memberDisplayName }}
+                </div>
+                <div class="text-caption text-medium-emphasis">
+                  {{ membership.memberEmail || membership.userId }}
+                </div>
+              </td>
+              <td style="min-width: 170px">
+                <v-select
+                  :model-value="membership.status"
+                  :items="optionItems(groupMembershipStatusOptions)"
+                  :disabled="!canManage || updatePending"
+                  density="compact"
+                  variant="outlined"
+                  hide-details
+                  @update:model-value="updateStatus(membership, $event)"
+                />
+              </td>
+              <td class="text-no-wrap">
+                {{ formatGroupDateTime(membership.updatedAt, locale) }}
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+      </template>
+      <template #mobile>
+        <div>
+          <p
+            v-if="!pending && memberships.length === 0"
+            class="text-body-2 text-medium-emphasis py-3 mb-0"
+          >
             {{ t("No members match the current filters.") }}
-          </td>
-        </tr>
-        <tr v-for="membership in memberships" :key="membership.userId">
-          <td>
-            <div class="font-weight-medium">
-              {{ membership.memberDisplayName }}
-            </div>
-            <div class="text-caption text-medium-emphasis">
+          </p>
+          <AdminMobileDataRow
+            v-for="membership in memberships"
+            :key="membership.userId"
+          >
+            <strong>{{ membership.memberDisplayName }}</strong>
+            <span class="text-caption text-medium-emphasis">
               {{ membership.memberEmail || membership.userId }}
-            </div>
-          </td>
-          <td style="min-width: 170px">
-            <v-select
-              :model-value="membership.status"
-              :items="optionItems(groupMembershipStatusOptions)"
-              :disabled="!canManage || updatePending"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @update:model-value="updateStatus(membership, $event)"
-            />
-          </td>
-          <td class="text-no-wrap">
-            {{ formatGroupDateTime(membership.updatedAt, locale) }}
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-    <div class="d-md-none">
-      <p
-        v-if="!pending && memberships.length === 0"
-        class="text-body-2 text-medium-emphasis py-3 mb-0"
-      >
-        {{ t("No members match the current filters.") }}
-      </p>
-      <AdminMobileDataRow
-        v-for="membership in memberships"
-        :key="membership.userId"
-      >
-        <strong>{{ membership.memberDisplayName }}</strong>
-        <span class="text-caption text-medium-emphasis">
-          {{ membership.memberEmail || membership.userId }}
-        </span>
-        <template #meta>
-          <span>{{ formatGroupDateTime(membership.updatedAt, locale) }}</span>
-        </template>
-        <template #actions>
-          <v-select
-            :model-value="membership.status"
-            :items="optionItems(groupMembershipStatusOptions)"
-            :disabled="!canManage || updatePending"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @update:model-value="updateStatus(membership, $event)"
-          />
-        </template>
-      </AdminMobileDataRow>
-    </div>
+            </span>
+            <template #meta>
+              <span>{{
+                formatGroupDateTime(membership.updatedAt, locale)
+              }}</span>
+            </template>
+            <template #actions>
+              <v-select
+                :model-value="membership.status"
+                :items="optionItems(groupMembershipStatusOptions)"
+                :disabled="!canManage || updatePending"
+                density="compact"
+                variant="outlined"
+                hide-details
+                @update:model-value="updateStatus(membership, $event)"
+              />
+            </template>
+          </AdminMobileDataRow>
+        </div>
+      </template>
+    </AdminResponsiveTable>
   </GroupPanelState>
 </template>

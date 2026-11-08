@@ -12,6 +12,7 @@ import {
 import { useI18n } from "@/core/i18n/i18n";
 import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import { formatGroupDateTime } from "../group_presenters";
 import type { GroupMaterialForm } from "../group_workspace_models";
 import GroupPanelState from "./GroupPanelState.vue";
@@ -85,75 +86,87 @@ function updateStatus(
         </v-btn>
       </template>
     </AdminFilterToolbar>
-    <v-table class="d-none d-md-block" density="compact">
-      <thead>
-        <tr>
-          <th>{{ t("Material") }}</th>
-          <th>{{ t("Due") }}</th>
-          <th>{{ t("Status") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="!pending && materials.length === 0">
-          <td colspan="3" class="text-medium-emphasis py-4">
+    <AdminResponsiveTable>
+      <template #desktop>
+        <v-table density="compact">
+          <thead>
+            <tr>
+              <th>{{ t("Material") }}</th>
+              <th>{{ t("Due") }}</th>
+              <th>{{ t("Status") }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="!pending && materials.length === 0">
+              <td colspan="3" class="text-medium-emphasis py-4">
+                {{ t("No materials match the current filters.") }}
+              </td>
+            </tr>
+            <tr v-for="material in materials" :key="material.id">
+              <td>
+                <div class="font-weight-medium">{{ material.title }}</div>
+                <div class="text-caption text-medium-emphasis">
+                  {{ t(material.materialType) }} · {{ material.materialId }}
+                </div>
+              </td>
+              <td class="text-no-wrap">
+                {{
+                  formatGroupDateTime(material.dueAt, locale) ||
+                  t("common.notSet")
+                }}
+              </td>
+              <td style="min-width: 180px">
+                <v-select
+                  :model-value="material.status"
+                  :items="optionItems(groupTaskStatusOptions)"
+                  :disabled="!canManage || mutationPending"
+                  density="compact"
+                  variant="outlined"
+                  hide-details
+                  @update:model-value="updateStatus(material, $event)"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+      </template>
+      <template #mobile>
+        <div>
+          <p
+            v-if="!pending && materials.length === 0"
+            class="text-body-2 text-medium-emphasis py-3 mb-0"
+          >
             {{ t("No materials match the current filters.") }}
-          </td>
-        </tr>
-        <tr v-for="material in materials" :key="material.id">
-          <td>
-            <div class="font-weight-medium">{{ material.title }}</div>
-            <div class="text-caption text-medium-emphasis">
+          </p>
+          <AdminMobileDataRow v-for="material in materials" :key="material.id">
+            <strong>{{ material.title }}</strong>
+            <span class="text-caption text-medium-emphasis">
               {{ t(material.materialType) }} · {{ material.materialId }}
-            </div>
-          </td>
-          <td class="text-no-wrap">
-            {{ formatGroupDateTime(material.dueAt, locale) || t("common.notSet") }}
-          </td>
-          <td style="min-width: 180px">
-            <v-select
-              :model-value="material.status"
-              :items="optionItems(groupTaskStatusOptions)"
-              :disabled="!canManage || mutationPending"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @update:model-value="updateStatus(material, $event)"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
-    <div class="d-md-none">
-      <p
-        v-if="!pending && materials.length === 0"
-        class="text-body-2 text-medium-emphasis py-3 mb-0"
-      >
-        {{ t("No materials match the current filters.") }}
-      </p>
-      <AdminMobileDataRow v-for="material in materials" :key="material.id">
-        <strong>{{ material.title }}</strong>
-        <span class="text-caption text-medium-emphasis">
-          {{ t(material.materialType) }} · {{ material.materialId }}
-        </span>
-        <template #meta>
-          <span>
-            {{ t("Due") }}:
-            {{ formatGroupDateTime(material.dueAt, locale) || t("common.notSet") }}
-          </span>
-        </template>
-        <template #actions>
-          <v-select
-            :model-value="material.status"
-            :items="optionItems(groupTaskStatusOptions)"
-            :disabled="!canManage || mutationPending"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @update:model-value="updateStatus(material, $event)"
-          />
-        </template>
-      </AdminMobileDataRow>
-    </div>
+            </span>
+            <template #meta>
+              <span>
+                {{ t("Due") }}:
+                {{
+                  formatGroupDateTime(material.dueAt, locale) ||
+                  t("common.notSet")
+                }}
+              </span>
+            </template>
+            <template #actions>
+              <v-select
+                :model-value="material.status"
+                :items="optionItems(groupTaskStatusOptions)"
+                :disabled="!canManage || mutationPending"
+                density="compact"
+                variant="outlined"
+                hide-details
+                @update:model-value="updateStatus(material, $event)"
+              />
+            </template>
+          </AdminMobileDataRow>
+        </div>
+      </template>
+    </AdminResponsiveTable>
 
     <v-divider class="my-4" />
     <div v-if="canManage" class="text-subtitle-2 mb-3">

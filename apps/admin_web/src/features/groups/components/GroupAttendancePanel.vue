@@ -10,6 +10,7 @@ import { groupAttendanceStatusOptions } from "@/core/api/group_activity";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileDataRow from "@/core/ui/AdminMobileDataRow.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import { formatGroupDate } from "../group_presenters";
 import type { GroupAttendanceForm } from "../group_workspace_models";
 import GroupPanelState from "./GroupPanelState.vue";
@@ -46,7 +47,6 @@ const memberItems = computed(() =>
       value: membership.userId
     }))
 );
-
 </script>
 
 <template>
@@ -73,53 +73,59 @@ const memberItems = computed(() =>
         </v-btn>
       </template>
     </AdminFilterToolbar>
-    <v-table class="d-none d-md-block" density="compact">
-      <thead>
-        <tr>
-          <th>{{ t("Date") }}</th>
-          <th>{{ t("Member") }}</th>
-          <th>{{ t("Status") }}</th>
-          <th>{{ t("Note") }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="!pending && attendance.length === 0">
-          <td colspan="4" class="text-medium-emphasis py-4">
+    <AdminResponsiveTable>
+      <template #desktop>
+        <v-table density="compact">
+          <thead>
+            <tr>
+              <th>{{ t("Date") }}</th>
+              <th>{{ t("Member") }}</th>
+              <th>{{ t("Status") }}</th>
+              <th>{{ t("Note") }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="!pending && attendance.length === 0">
+              <td colspan="4" class="text-medium-emphasis py-4">
+                {{ t("No attendance records match the current filters.") }}
+              </td>
+            </tr>
+            <tr v-for="record in attendance" :key="record.id">
+              <td class="text-no-wrap">
+                {{ formatGroupDate(record.meetingDate, locale) }}
+              </td>
+              <td>{{ record.memberDisplayName }}</td>
+              <td>{{ t(record.status) }}</td>
+              <td>{{ record.note || t("common.notSet") }}</td>
+            </tr>
+          </tbody>
+        </v-table>
+      </template>
+      <template #mobile>
+        <div>
+          <p
+            v-if="!pending && attendance.length === 0"
+            class="text-body-2 text-medium-emphasis py-3 mb-0"
+          >
             {{ t("No attendance records match the current filters.") }}
-          </td>
-        </tr>
-        <tr v-for="record in attendance" :key="record.id">
-          <td class="text-no-wrap">
-            {{ formatGroupDate(record.meetingDate, locale) }}
-          </td>
-          <td>{{ record.memberDisplayName }}</td>
-          <td>{{ t(record.status) }}</td>
-          <td>{{ record.note || t("common.notSet") }}</td>
-        </tr>
-      </tbody>
-    </v-table>
-    <div class="d-md-none">
-      <p
-        v-if="!pending && attendance.length === 0"
-        class="text-body-2 text-medium-emphasis py-3 mb-0"
-      >
-        {{ t("No attendance records match the current filters.") }}
-      </p>
-      <AdminMobileDataRow v-for="record in attendance" :key="record.id">
-        <strong>{{ record.memberDisplayName }}</strong>
-        <span class="text-caption text-medium-emphasis">
-          {{ formatGroupDate(record.meetingDate, locale) }}
-        </span>
-        <template #trailing>
-          <v-chip size="small" variant="tonal">
-            {{ t(record.status) }}
-          </v-chip>
-        </template>
-        <template #meta>
-          <span>{{ record.note || t("common.notSet") }}</span>
-        </template>
-      </AdminMobileDataRow>
-    </div>
+          </p>
+          <AdminMobileDataRow v-for="record in attendance" :key="record.id">
+            <strong>{{ record.memberDisplayName }}</strong>
+            <span class="text-caption text-medium-emphasis">
+              {{ formatGroupDate(record.meetingDate, locale) }}
+            </span>
+            <template #trailing>
+              <v-chip size="small" variant="tonal">
+                {{ t(record.status) }}
+              </v-chip>
+            </template>
+            <template #meta>
+              <span>{{ record.note || t("common.notSet") }}</span>
+            </template>
+          </AdminMobileDataRow>
+        </div>
+      </template>
+    </AdminResponsiveTable>
 
     <v-divider class="my-4" />
     <div v-if="canManage" class="text-subtitle-2 mb-3">
