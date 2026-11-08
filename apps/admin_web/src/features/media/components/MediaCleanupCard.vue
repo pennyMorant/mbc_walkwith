@@ -6,6 +6,7 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 
 const status = defineModel<MediaCleanupStatus | "">("status", {
   required: true
@@ -100,7 +101,9 @@ function statusColor(value: MediaCleanupStatus) {
       :retry-label="t('common.refresh')"
       @retry="emit('retryQuery')"
     >
-      <v-table class="d-none d-md-block" density="comfortable">
+      <AdminResponsiveTable>
+        <template #desktop>
+      <v-table density="comfortable">
         <thead>
           <tr>
             <th>{{ t("media.asset") }}</th>
@@ -152,7 +155,9 @@ function statusColor(value: MediaCleanupStatus) {
         </tbody>
       </v-table>
 
-      <div class="d-md-none">
+        </template>
+        <template #mobile>
+      <div>
         <div v-for="task in tasks" :key="task.id" class="cleanup-record">
           <div class="min-width-0">
             <div class="text-caption font-weight-medium task-id">
@@ -189,6 +194,8 @@ function statusColor(value: MediaCleanupStatus) {
           </div>
         </div>
       </div>
+        </template>
+      </AdminResponsiveTable>
     </AdminDataState>
   </v-card>
 </template>

@@ -3,6 +3,7 @@ import type { MediaAsset } from "@mbc/api-contracts";
 
 import { formatAdminDate } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 
 defineProps<{
   assets: MediaAsset[];
@@ -29,7 +30,9 @@ function formatSize(sizeBytes: number) {
 </script>
 
 <template>
-  <v-table class="d-none d-md-block" density="comfortable">
+  <AdminResponsiveTable>
+    <template #desktop>
+  <v-table density="comfortable">
     <thead>
       <tr>
         <th>{{ t("media.asset") }}</th>
@@ -92,7 +95,9 @@ function formatSize(sizeBytes: number) {
       </tr>
     </tbody>
   </v-table>
-  <div class="d-md-none">
+    </template>
+    <template #mobile>
+  <div>
     <component
       :is="canManage ? 'button' : 'div'"
       v-for="asset in assets"
@@ -138,6 +143,8 @@ function formatSize(sizeBytes: number) {
       />
     </component>
   </div>
+    </template>
+  </AdminResponsiveTable>
 </template>
 
 <style scoped>

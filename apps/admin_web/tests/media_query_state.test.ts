@@ -70,8 +70,11 @@ describe("media query and command state", () => {
     ]);
 
     for (const component of [table, cleanup]) {
-      expect(component).toContain("d-none d-md-block");
-      expect(component).toContain("d-md-none");
+      expect(component).toContain("AdminResponsiveTable");
+      expect(component).toContain('<template #desktop>');
+      expect(component).toContain('<template #mobile>');
+      expect(component).not.toContain("d-none d-md-block");
+      expect(component).not.toContain("d-md-none");
     }
     expect(table.match(/v-for="asset in assets"/g)).toHaveLength(2);
     expect(cleanup.match(/v-for="task in tasks"/g)).toHaveLength(2);
