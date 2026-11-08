@@ -4,6 +4,7 @@ import type { AdminUser, AdminUserStatus } from "@mbc/api-contracts";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
@@ -27,7 +28,9 @@ const { t } = useI18n();
     :retry-label="t('Retry')"
     @retry="$emit('retry')"
   >
-    <v-table class="d-none d-md-block" density="comfortable" hover>
+    <AdminResponsiveTable>
+      <template #desktop>
+    <v-table density="comfortable" hover>
       <thead>
         <tr>
           <th>{{ t("Name") }}</th>
@@ -54,7 +57,9 @@ const { t } = useI18n();
       </tbody>
     </v-table>
 
-    <div class="d-md-none">
+      </template>
+      <template #mobile>
+    <div>
       <AdminMobileRecord
         v-for="user in users"
         :key="user.id"
@@ -70,5 +75,7 @@ const { t } = useI18n();
         </template>
       </AdminMobileRecord>
     </div>
+      </template>
+    </AdminResponsiveTable>
   </AdminDataState>
 </template>

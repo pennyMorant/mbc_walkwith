@@ -34,8 +34,11 @@ describe("system workspace responsive results", () => {
     ["notifications", notificationResults, 'v-for="delivery in deliveries"'],
     ["audit", auditResults, 'v-for="log in logs"']
   ])("keeps %s desktop and mobile projections presentation-only", (_, source, loop) => {
-    expect(source).toContain("d-none d-md-block");
-    expect(source).toContain("d-md-none");
+    expect(source).toContain("AdminResponsiveTable");
+    expect(source).toContain('<template #desktop>');
+    expect(source).toContain('<template #mobile>');
+    expect(source).not.toContain("d-none d-md-block");
+    expect(source).not.toContain("d-md-none");
     expect(source.split(loop)).toHaveLength(3);
     expect(source).toContain("$emit('open'");
     expect(source).not.toContain("@/core/api");

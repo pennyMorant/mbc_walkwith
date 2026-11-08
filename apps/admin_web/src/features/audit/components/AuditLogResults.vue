@@ -5,6 +5,7 @@ import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{ logs: AuditLog[]; pending: boolean; errorMessage: string }>();
@@ -23,7 +24,9 @@ const { locale, t } = useI18n();
     :retry-label="t('Retry')"
     @retry="$emit('retry')"
   >
-    <v-table class="d-none d-md-block" density="comfortable" hover>
+    <AdminResponsiveTable>
+      <template #desktop>
+    <v-table density="comfortable" hover>
       <thead>
         <tr>
           <th>{{ t("Action") }}</th>
@@ -46,7 +49,9 @@ const { locale, t } = useI18n();
       </tbody>
     </v-table>
 
-    <div class="d-md-none">
+      </template>
+      <template #mobile>
+    <div>
       <AdminMobileRecord
         v-for="log in logs"
         :key="log.id"
@@ -57,5 +62,7 @@ const { locale, t } = useI18n();
         <span>{{ log.actorUserId || t("audit.systemActor") }} · {{ formatAdminDateTime(log.createdAt, locale) }}</span>
       </AdminMobileRecord>
     </div>
+      </template>
+    </AdminResponsiveTable>
   </AdminDataState>
 </template>

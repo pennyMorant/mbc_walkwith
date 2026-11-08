@@ -56,8 +56,11 @@ describe("AI management workspace", () => {
 
   test("keeps usage presentation responsive and outside transport ownership", () => {
     expect(page).toContain("<AiUsagePanel");
-    expect(usagePanel).toContain("d-none d-md-block");
-    expect(usagePanel).toContain("d-md-none");
+    expect(usagePanel).toContain("AdminResponsiveTable");
+    expect(usagePanel).toContain('<template #desktop>');
+    expect(usagePanel).toContain('<template #mobile>');
+    expect(usagePanel).not.toContain("d-none d-md-block");
+    expect(usagePanel).not.toContain("d-md-none");
     expect(usagePanel).not.toContain("@/core/api");
     expect(usagePanel).not.toContain("auth_store");
   });

@@ -2,6 +2,7 @@
 import type { AiUsageRecord } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 
 import { formatAiUsageTimestamp } from "../ai_management_presenters";
 
@@ -22,7 +23,9 @@ function statusColor(status: AiUsageRecord["status"]) {
     <div class="pa-5 pb-3 section-heading">{{ t("ai.usage") }}</div>
 
     <template v-if="records.length > 0">
-      <v-table class="d-none d-md-block" hover>
+      <AdminResponsiveTable>
+        <template #desktop>
+      <v-table hover>
         <thead>
           <tr>
             <th>{{ t("ai.time") }}</th>
@@ -53,7 +56,9 @@ function statusColor(status: AiUsageRecord["status"]) {
         </tbody>
       </v-table>
 
-      <div class="d-md-none">
+        </template>
+        <template #mobile>
+      <div>
         <div v-for="record in records" :key="record.id" class="ai-usage-record">
           <div class="ai-usage-record__main">
             <strong>{{ record.task }}</strong>
@@ -68,6 +73,8 @@ function statusColor(status: AiUsageRecord["status"]) {
           </div>
         </div>
       </div>
+        </template>
+      </AdminResponsiveTable>
     </template>
 
     <div v-else class="ai-usage-empty pa-5 pt-3">
