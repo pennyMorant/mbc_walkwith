@@ -10,6 +10,7 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 import type { LifePostLibraryFilterForm } from "../life_post_library_models";
 import LifePostLibraryFilters from "./LifePostLibraryFilters.vue";
@@ -115,11 +116,10 @@ function sortLabel(weight: number) {
           </tr>
         </thead>
         <tbody>
-          <tr
+          <AdminTableActionRow
             v-for="post in posts"
             :key="post.id"
-            class="cursor-pointer"
-            @click="emit('open', post)"
+            @activate="emit('open', post)"
           >
             <td class="font-weight-bold">{{ post.title }}</td>
             <td>{{ t(post.type) }}</td>
@@ -164,7 +164,7 @@ function sortLabel(weight: number) {
             <td>{{ post.meta }}</td>
             <td>{{ formatSchedule(post) }}</td>
             <td>{{ formatDateTime(post.updatedAt) }}</td>
-          </tr>
+          </AdminTableActionRow>
         </tbody>
       </v-table>
 
@@ -209,9 +209,3 @@ function sortLabel(weight: number) {
     </template>
   </v-card>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>

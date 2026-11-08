@@ -8,6 +8,7 @@ import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
   deliveries: NotificationDeliveryTask[];
@@ -42,11 +43,10 @@ const { locale, t } = useI18n();
         </tr>
       </thead>
       <tbody>
-        <tr
+        <AdminTableActionRow
           v-for="delivery in deliveries"
           :key="delivery.id"
-          class="cursor-pointer"
-          @click="$emit('open', delivery)"
+          @activate="$emit('open', delivery)"
         >
           <td class="font-weight-bold">{{ delivery.type }}</td>
           <td>
@@ -63,7 +63,7 @@ const { locale, t } = useI18n();
           </td>
           <td>{{ delivery.attempts }}</td>
           <td>{{ formatAdminDateTime(delivery.updatedAt, locale) }}</td>
-        </tr>
+        </AdminTableActionRow>
       </tbody>
     </v-table>
 
@@ -86,7 +86,3 @@ const { locale, t } = useI18n();
     </div>
   </AdminDataState>
 </template>
-
-<style scoped>
-.cursor-pointer { cursor: pointer; }
-</style>

@@ -161,6 +161,9 @@ function statusColor(value: MediaCleanupStatus) {
             <div class="text-body-2 text-medium-emphasis mt-1">
               {{ t(task.reason) }} · {{ task.attempts }}
             </div>
+            <div class="text-caption text-medium-emphasis mt-1">
+              {{ formatAdminDateTime(task.updatedAt, locale) }}
+            </div>
             <div v-if="task.lastError" class="text-caption text-error mt-1">
               {{ task.lastError }}
             </div>

@@ -9,6 +9,7 @@ import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
   requests: CareRequestAdmin[];
@@ -43,11 +44,10 @@ const { locale, t } = useI18n();
         </tr>
       </thead>
       <tbody>
-        <tr
+        <AdminTableActionRow
           v-for="request in requests"
           :key="request.id"
-          class="cursor-pointer"
-          @click="$emit('open', request)"
+          @activate="$emit('open', request)"
         >
           <td>
             <div class="font-weight-bold">{{ request.title }}</div>
@@ -67,7 +67,7 @@ const { locale, t } = useI18n();
           </td>
           <td>{{ request.assigneeName || t("common.notSet") }}</td>
           <td>{{ formatAdminDateTime(request.updatedAt, locale) }}</td>
-        </tr>
+        </AdminTableActionRow>
       </tbody>
     </v-table>
 
@@ -80,6 +80,7 @@ const { locale, t } = useI18n();
         <strong>{{ request.title }}</strong>
         <span>{{ request.memberDisplayName }} · {{ request.memberEmail }}</span>
         <span>{{ request.assigneeName || t("common.notSet") }}</span>
+        <span>{{ formatAdminDateTime(request.updatedAt, locale) }}</span>
         <template #trailing>
           <v-chip size="small" :color="statusColor(request.status)">
             {{ t(request.status) }}
@@ -92,7 +93,3 @@ const { locale, t } = useI18n();
     </div>
   </AdminDataState>
 </template>
-
-<style scoped>
-.cursor-pointer { cursor: pointer; }
-</style>

@@ -5,6 +5,7 @@ import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 import { sermonStatusColor } from "../sermon_pipeline";
 
 type SermonLibraryFilters = {
@@ -144,11 +145,10 @@ const { optionItems, t } = useI18n();
           </tr>
         </thead>
         <tbody>
-          <tr
+          <AdminTableActionRow
             v-for="sermon in sermons"
             :key="sermon.id"
-            class="cursor-pointer"
-            @click="emit('open', sermon)"
+            @activate="emit('open', sermon)"
           >
             <td>
               <div class="font-weight-bold">{{ sermon.title }}</div>
@@ -172,7 +172,7 @@ const { optionItems, t } = useI18n();
                 {{ t(sermon.status) }}
               </v-chip>
             </td>
-          </tr>
+          </AdminTableActionRow>
         </tbody>
       </v-table>
 
@@ -214,9 +214,3 @@ const { optionItems, t } = useI18n();
     </div>
   </v-card>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>

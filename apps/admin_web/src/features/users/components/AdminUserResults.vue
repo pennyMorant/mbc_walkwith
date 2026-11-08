@@ -4,6 +4,7 @@ import type { AdminUser, AdminUserStatus } from "@mbc/api-contracts";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
   users: AdminUser[];
@@ -36,11 +37,10 @@ const { t } = useI18n();
         </tr>
       </thead>
       <tbody>
-        <tr
+        <AdminTableActionRow
           v-for="user in users"
           :key="user.id"
-          class="cursor-pointer"
-          @click="$emit('open', user)"
+          @activate="$emit('open', user)"
         >
           <td class="font-weight-bold">{{ user.name }}</td>
           <td>{{ user.email }}</td>
@@ -50,7 +50,7 @@ const { t } = useI18n();
               {{ t(user.status) }}
             </v-chip>
           </td>
-        </tr>
+        </AdminTableActionRow>
       </tbody>
     </v-table>
 
@@ -72,7 +72,3 @@ const { t } = useI18n();
     </div>
   </AdminDataState>
 </template>
-
-<style scoped>
-.cursor-pointer { cursor: pointer; }
-</style>

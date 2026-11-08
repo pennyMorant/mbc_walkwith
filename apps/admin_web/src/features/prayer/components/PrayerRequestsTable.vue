@@ -6,6 +6,7 @@ import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 import {
   formatPrayerDateTime,
@@ -117,11 +118,10 @@ const { locale, optionItems, t } = useI18n();
           </tr>
         </thead>
         <tbody>
-          <tr
+          <AdminTableActionRow
             v-for="request in requests"
             :key="request.id"
-            class="cursor-pointer"
-            @click="emit('open', request)"
+            @activate="emit('open', request)"
           >
             <td>
               <div class="font-weight-bold">{{ request.title }}</div>
@@ -145,7 +145,7 @@ const { locale, optionItems, t } = useI18n();
             </td>
             <td>{{ request.submitterName || t("Anonymous") }}</td>
             <td>{{ formatPrayerDateTime(request.updatedAt, locale) }}</td>
-          </tr>
+          </AdminTableActionRow>
         </tbody>
       </v-table>
 
@@ -177,9 +177,3 @@ const { locale, optionItems, t } = useI18n();
     </AdminDataState>
   </v-card>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>

@@ -4,6 +4,8 @@ import type { AuditLog } from "@mbc/api-contracts";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{ logs: AuditLog[]; pending: boolean; errorMessage: string }>();
 defineEmits<{ open: [log: AuditLog]; retry: [] }>();
@@ -31,70 +33,29 @@ const { locale, t } = useI18n();
         </tr>
       </thead>
       <tbody>
-        <tr
+        <AdminTableActionRow
           v-for="log in logs"
           :key="log.id"
-          class="cursor-pointer"
-          @click="$emit('open', log)"
+          @activate="$emit('open', log)"
         >
           <td class="font-weight-bold">{{ log.action }}</td>
           <td>{{ log.resourceType }} · {{ log.resourceId }}</td>
           <td>{{ log.actorUserId || t("audit.systemActor") }}</td>
           <td>{{ formatAdminDateTime(log.createdAt, locale) }}</td>
-        </tr>
+        </AdminTableActionRow>
       </tbody>
     </v-table>
 
     <div class="d-md-none">
-      <button
+      <AdminMobileRecord
         v-for="log in logs"
         :key="log.id"
-        class="audit-record"
-        type="button"
-        @click="$emit('open', log)"
+        @activate="$emit('open', log)"
       >
-        <span class="audit-record__main">
-          <strong>{{ log.action }}</strong>
-          <span>{{ log.resourceType }} · {{ log.resourceId }}</span>
-          <span>{{ log.actorUserId || t("audit.systemActor") }} · {{ formatAdminDateTime(log.createdAt, locale) }}</span>
-        </span>
-        <v-icon icon="mdi-chevron-right" size="20" />
-      </button>
+        <strong>{{ log.action }}</strong>
+        <span>{{ log.resourceType }} · {{ log.resourceId }}</span>
+        <span>{{ log.actorUserId || t("audit.systemActor") }} · {{ formatAdminDateTime(log.createdAt, locale) }}</span>
+      </AdminMobileRecord>
     </div>
   </AdminDataState>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.audit-record {
-  display: grid;
-  width: 100%;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  border: 0;
-  border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08);
-  padding: 14px 16px;
-  color: inherit;
-  background: transparent;
-  text-align: left;
-}
-
-.audit-record__main {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.audit-record__main span {
-  overflow: hidden;
-  color: rgba(var(--v-theme-on-surface), 0.62);
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-</style>

@@ -9,6 +9,7 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
   notes: AdminBibleVerseNote[];
@@ -55,11 +56,10 @@ const { locale, t } = useI18n();
         </tr>
       </thead>
       <tbody>
-        <tr
+        <AdminTableActionRow
           v-for="note in notes"
           :key="note.id"
-          class="cursor-pointer"
-          @click="$emit('open', note)"
+          @activate="$emit('open', note)"
         >
           <td class="font-weight-bold">{{ note.verseId }}</td>
           <td>
@@ -75,7 +75,7 @@ const { locale, t } = useI18n();
             </v-chip>
           </td>
           <td>{{ formatAdminDate(note.updatedAt, locale) }}</td>
-        </tr>
+        </AdminTableActionRow>
       </tbody>
     </v-table>
 
@@ -99,7 +99,6 @@ const { locale, t } = useI18n();
 </template>
 
 <style scoped>
-.cursor-pointer { cursor: pointer; }
 .note-content { max-width: 420px; }
 .bible-note-record__content { color: rgba(var(--v-theme-on-surface), 0.78) !important; font-size: 13px !important; }
 </style>

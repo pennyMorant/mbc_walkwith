@@ -5,6 +5,7 @@ import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
   members: MemberListItem[];
@@ -46,11 +47,10 @@ const { t } = useI18n();
         </tr>
       </thead>
       <tbody>
-        <tr
+        <AdminTableActionRow
           v-for="member in members"
           :key="member.id"
-          class="cursor-pointer"
-          @click="$emit('open', member)"
+          @activate="$emit('open', member)"
         >
           <td class="font-weight-bold">{{ member.displayName }}</td>
           <td>{{ member.email }}</td>
@@ -62,7 +62,7 @@ const { t } = useI18n();
           <td>{{ member.roles.map((role) => t(role)).join(", ") }}</td>
           <td>{{ member.fellowshipGroupId || t("common.notSet") }}</td>
           <td>{{ member.appLocale }}</td>
-        </tr>
+        </AdminTableActionRow>
       </tbody>
     </v-table>
 
@@ -84,7 +84,3 @@ const { t } = useI18n();
     </div>
   </AdminDataState>
 </template>
-
-<style scoped>
-.cursor-pointer { cursor: pointer; }
-</style>

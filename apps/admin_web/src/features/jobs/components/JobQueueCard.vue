@@ -7,6 +7,7 @@ import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 defineProps<{
   filters: {
@@ -122,11 +123,10 @@ const { locale, optionItems, t } = useI18n();
           </tr>
         </thead>
         <tbody>
-          <tr
+          <AdminTableActionRow
             v-for="job in jobs"
             :key="job.id"
-            class="cursor-pointer"
-            @click="$emit('openJob', job)"
+            @activate="$emit('openJob', job)"
           >
             <td class="font-weight-bold">{{ t(job.type) }}</td>
             <td>
@@ -142,7 +142,7 @@ const { locale, optionItems, t } = useI18n();
             </td>
             <td>{{ job.attempts }} / {{ job.maxAttempts }}</td>
             <td>{{ formatAdminDateTime(job.createdAt, locale) }}</td>
-          </tr>
+          </AdminTableActionRow>
         </tbody>
       </v-table>
 
@@ -177,9 +177,3 @@ const { locale, optionItems, t } = useI18n();
     </AdminDataState>
   </v-card>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>

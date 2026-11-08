@@ -6,6 +6,7 @@ import type {
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 
 import type { GivingProviderEventFilterForm } from "../giving_workspace_models";
 import GivingFilterActions from "./GivingFilterActions.vue";
@@ -95,11 +96,10 @@ const { optionItems, t } = useI18n();
             {{ t("No payment provider events match the current filters.") }}
           </td>
         </tr>
-        <tr
+        <AdminTableActionRow
           v-for="event in events"
           :key="event.id"
-          class="cursor-pointer"
-          @click="$emit('open', event)"
+          @activate="$emit('open', event)"
         >
           <td>{{ event.provider }}</td>
           <td>{{ event.eventType }}</td>
@@ -121,15 +121,9 @@ const { optionItems, t } = useI18n();
               {{ dateTime(event.processedAt) }}
             </div>
           </td>
-        </tr>
+        </AdminTableActionRow>
       </tbody>
       </v-table>
     </template>
   </v-card>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>

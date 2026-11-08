@@ -4,6 +4,8 @@ import type { BibleKnowledgeEntity } from "@mbc/api-contracts";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
+import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 
 import type { BibleKnowledgeFilterForm } from "../bible_knowledge_workspace_models";
 
@@ -107,7 +109,7 @@ const { optionItems, t } = useI18n();
         class="ma-4"
         @retry="$emit('retry')"
       />
-      <v-table density="comfortable">
+      <v-table class="d-none d-md-block" density="comfortable">
         <thead>
           <tr>
             <th>{{ t("Name") }}</th>
@@ -118,11 +120,10 @@ const { optionItems, t } = useI18n();
           </tr>
         </thead>
         <tbody>
-          <tr
+          <AdminTableActionRow
             v-for="entity in entities"
             :key="`${entity.translationId}:${entity.locale}:${entity.id}`"
-            class="cursor-pointer"
-            @click="$emit('openEntity', entity)"
+            @activate="$emit('openEntity', entity)"
           >
             <td>
               <div class="font-weight-bold">{{ entity.name }}</div>
@@ -136,15 +137,23 @@ const { optionItems, t } = useI18n();
               <v-chip size="small">{{ t(entity.status) }}</v-chip>
             </td>
             <td>{{ entity.aliases.length }}</td>
-          </tr>
+          </AdminTableActionRow>
         </tbody>
       </v-table>
+      <div class="d-md-none">
+        <AdminMobileRecord
+          v-for="entity in entities"
+          :key="`${entity.translationId}:${entity.locale}:${entity.id}`"
+          @activate="$emit('openEntity', entity)"
+        >
+          <strong>{{ entity.name }}</strong>
+          <span>{{ t(entity.type) }} · {{ entity.category }}</span>
+          <span>{{ entity.id }} · {{ t("Aliases") }}: {{ entity.aliases.length }}</span>
+          <template #trailing>
+            <v-chip size="small">{{ t(entity.status) }}</v-chip>
+          </template>
+        </AdminMobileRecord>
+      </div>
     </AdminDataState>
   </v-card>
 </template>
-
-<style scoped>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>

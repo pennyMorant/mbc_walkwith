@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { NewcomerProfile } from "@mbc/api-contracts";
 
+import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminRefreshAlert from "@/core/ui/AdminRefreshAlert.vue";
+import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
 import {
   newcomerContactLine,
   newcomerStatusColor
@@ -18,7 +20,7 @@ defineProps<{
 }>();
 defineEmits<{ open: [newcomer: NewcomerProfile]; retry: [] }>();
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 </script>
 
 <template>
@@ -48,11 +50,10 @@ const { t } = useI18n();
         </tr>
       </thead>
       <tbody>
-        <tr
+        <AdminTableActionRow
           v-for="newcomer in newcomers"
           :key="newcomer.id"
-          class="cursor-pointer"
-          @click="$emit('open', newcomer)"
+          @activate="$emit('open', newcomer)"
         >
           <td>
             <div class="font-weight-bold">{{ newcomer.displayName }}</div>
@@ -67,8 +68,14 @@ const { t } = useI18n();
           </td>
           <td>{{ newcomer.assigneeName || t("common.notSet") }}</td>
           <td>{{ newcomer.source || t("common.notSet") }}</td>
-          <td>{{ newcomer.nextFollowUpAt || t("Not scheduled") }}</td>
-        </tr>
+          <td>
+            {{
+              newcomer.nextFollowUpAt
+                ? formatAdminDateTime(newcomer.nextFollowUpAt, locale)
+                : t("Not scheduled")
+            }}
+          </td>
+        </AdminTableActionRow>
       </tbody>
     </v-table>
 
@@ -81,6 +88,14 @@ const { t } = useI18n();
         <strong>{{ newcomer.displayName }}</strong>
         <span>{{ newcomerContactLine(newcomer) || t("common.notSet") }}</span>
         <span>{{ newcomer.assigneeName || t("common.notSet") }}</span>
+        <span>
+          {{ newcomer.source || t("common.notSet") }} ·
+          {{
+            newcomer.nextFollowUpAt
+              ? formatAdminDateTime(newcomer.nextFollowUpAt, locale)
+              : t("Not scheduled")
+          }}
+        </span>
         <template #trailing>
           <v-chip size="small" :color="newcomerStatusColor(newcomer.status)">
             {{ t(newcomer.status) }}
@@ -90,7 +105,3 @@ const { t } = useI18n();
     </div>
   </AdminDataState>
 </template>
-
-<style scoped>
-.cursor-pointer { cursor: pointer; }
-</style>
