@@ -19,8 +19,11 @@ describe("people workspace responsive results", () => {
     ["newcomers", newcomerResults, 'v-for="newcomer in newcomers"'],
     ["care", careResults, 'v-for="request in requests"']
   ])("keeps %s desktop and mobile projections presentation-only", (_, source, loop) => {
-    expect(source).toContain("d-none d-md-block");
-    expect(source).toContain("d-md-none");
+    expect(source).toContain("AdminResponsiveTable");
+    expect(source).toContain('<template #desktop>');
+    expect(source).toContain('<template #mobile>');
+    expect(source).not.toContain("d-none d-md-block");
+    expect(source).not.toContain("d-md-none");
     expect(source.match(new RegExp(loop.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"))).toHaveLength(2);
     expect(source).toContain("$emit('open'");
     expect(source).toContain("AdminDataState");
