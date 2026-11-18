@@ -15,6 +15,9 @@ defineEmits<{ apply: [] }>();
       <div v-if="$slots.actions" class="admin-filter-toolbar__actions">
         <slot name="actions" />
       </div>
+      <div v-if="$slots.meta" class="admin-filter-toolbar__meta">
+        <slot name="meta" />
+      </div>
     </v-form>
   </div>
 </template>
@@ -49,6 +52,13 @@ defineEmits<{ apply: [] }>();
   flex: 0 0 auto;
 }
 
+.admin-filter-toolbar__meta {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+}
+
 .admin-filter-toolbar__actions > :deep(.v-btn) {
   width: 100%;
 }
@@ -65,7 +75,8 @@ defineEmits<{ apply: [] }>();
   }
 
   .admin-filter-toolbar__actions,
-  .admin-filter-toolbar__actions > :deep(.v-btn) {
+  .admin-filter-toolbar__actions > :deep(.v-btn),
+  .admin-filter-toolbar__meta {
     width: auto;
   }
 }
@@ -90,6 +101,10 @@ defineEmits<{ apply: [] }>();
   .admin-filter-toolbar__controls :deep(.admin-filter-control) {
     width: 180px;
     flex: 0 1 180px;
+  }
+
+  .admin-filter-toolbar__meta {
+    margin-inline-start: auto;
   }
 }
 </style>

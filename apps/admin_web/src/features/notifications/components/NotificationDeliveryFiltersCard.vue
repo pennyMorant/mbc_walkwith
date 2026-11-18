@@ -3,6 +3,7 @@ import type { NotificationDeliveryStatus } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 
 import type { NotificationDeliveryFilterForm } from "../notification_delivery_workspace_models";
 
@@ -20,51 +21,38 @@ const { optionItems, t } = useI18n();
 
 <template>
   <v-card>
-    <v-form class="pa-5" @submit.prevent="$emit('apply')">
-      <div class="d-flex flex-column flex-lg-row align-lg-end ga-4">
-        <v-select
-          v-model="filters.status"
-          :items="optionItems(statuses)"
-          :label="t('notifications.statusFilter')"
-          density="compact"
-          variant="outlined"
-          hide-details
-          class="filter-control"
-        />
-        <v-text-field
-          v-model="filters.type"
-          :label="t('notifications.typeFilter')"
-          density="compact"
-          variant="outlined"
-          hide-details
-          clearable
-          class="filter-control"
-        />
+    <AdminFilterToolbar class="pa-5" @apply="$emit('apply')">
+      <v-select
+        v-model="filters.status"
+        class="admin-filter-control"
+        :items="optionItems(statuses)"
+        :label="t('notifications.statusFilter')"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <v-text-field
+        v-model="filters.type"
+        class="admin-filter-control"
+        :label="t('notifications.typeFilter')"
+        density="compact"
+        variant="outlined"
+        hide-details
+        clearable
+      />
+      <template #actions>
         <AdminFilterActions
           :apply-label="t('notifications.applyFilters')"
           :clear-label="t('notifications.clearFilters')"
           :loading="pending"
           @clear="$emit('clear')"
         />
-        <v-spacer class="d-none d-lg-block" />
+      </template>
+      <template #meta>
         <v-chip color="primary" variant="tonal">
           {{ t("notifications.loaded") }} {{ loadedCount }}
         </v-chip>
-      </div>
-    </v-form>
+      </template>
+    </AdminFilterToolbar>
   </v-card>
 </template>
-
-<style scoped>
-.filter-control {
-  width: 100%;
-  min-width: 0;
-}
-
-@media (min-width: 1280px) {
-  .filter-control {
-    min-width: 220px;
-    flex: 1 1 220px;
-  }
-}
-</style>

@@ -34,11 +34,11 @@ describe("admin filter actions", () => {
     for (const source of sources) {
       expect(source).toContain("<AdminFilterActions");
       expect(source).toContain('@clear="');
-      expect(source).toContain("@submit.prevent");
+      expect(source).toMatch(/@submit\.prevent|AdminFilterToolbar/);
     }
   });
 
-  test("keeps notification controls compact before the desktop row breakpoint", async () => {
+  test("uses the shared toolbar for system filter layout", async () => {
     const source = await Bun.file(
       new URL(
         "../src/features/notifications/components/NotificationDeliveryFiltersCard.vue",
@@ -46,8 +46,9 @@ describe("admin filter actions", () => {
       )
     ).text();
 
-    expect(source).toContain(".filter-control {\n  width: 100%;");
-    expect(source).toContain("@media (min-width: 1280px)");
-    expect(source).toContain("flex: 1 1 220px");
+    expect(source).toContain("AdminFilterToolbar");
+    expect(source).toContain("admin-filter-control");
+    expect(source).toContain('<template #meta>');
+    expect(source).not.toContain(".filter-control");
   });
 });

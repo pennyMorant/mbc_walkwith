@@ -8,6 +8,7 @@ const consumers = await Promise.all(
   [
     "courses/components/CourseEnrollmentsPanel.vue",
     "discipleship/components/DiscipleshipAssignmentsPanel.vue",
+    "audit/components/AuditLogFiltersCard.vue",
     "giving/components/GivingProviderEventsCard.vue",
     "giving/components/GivingReconciliationCard.vue",
     "giving/components/GivingStatementsCard.vue",
@@ -16,7 +17,9 @@ const consumers = await Promise.all(
     "groups/components/GroupMaterialsPanel.vue",
     "groups/components/GroupMembershipsPanel.vue",
     "reading-plans/components/ReadingPlanAssignmentsPanel.vue",
-    "sermon-discussion-guides/components/SermonDiscussionResponsesPanel.vue"
+    "sermon-discussion-guides/components/SermonDiscussionResponsesPanel.vue",
+    "notifications/components/NotificationDeliveryFiltersCard.vue",
+    "settings/components/SettingsFiltersCard.vue"
   ].map((path) =>
     Bun.file(new URL(`../src/features/${path}`, import.meta.url)).text()
   )
@@ -28,6 +31,7 @@ describe("admin filter toolbar", () => {
     expect(toolbar).toContain("$emit('apply')");
     expect(toolbar).toContain('<slot name="heading"');
     expect(toolbar).toContain('<slot name="actions"');
+    expect(toolbar).toContain('<slot name="meta"');
     expect(toolbar).toContain("admin-filter-control");
     expect(toolbar).toContain("@media (min-width: 600px)");
     expect(toolbar).toContain("@media (min-width: 1280px)");
