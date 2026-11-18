@@ -7,6 +7,7 @@ import type {
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
 import AdminTableActionRow from "@/core/ui/AdminTableActionRow.vue";
@@ -40,65 +41,59 @@ const { optionItems, t } = useI18n();
 
 <template>
   <v-card>
-    <v-form class="pa-5" @submit.prevent="$emit('apply')">
-      <v-row dense>
-        <v-col cols="12" sm="6" lg="2">
-          <v-text-field
-            v-model.number="filters.year"
-            :label="t('Year')"
-            type="number"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-        </v-col>
-        <v-col cols="12" sm="6" lg="2">
-          <v-select
-            v-model="filters.status"
-            :label="t('Status')"
-            :items="optionItems(['', 'pending', 'succeeded', 'failed', 'refunded'])"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-        </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-select
-            v-model="filters.fundId"
-            :label="t('Fund')"
-            :items="fundItems"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-        </v-col>
-        <v-col cols="12" sm="6" lg="2">
-          <v-text-field
-            v-model="filters.category"
-            :label="t('Category')"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-        </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-text-field
-            v-model="filters.query"
-            :label="t('Search')"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-        </v-col>
-      </v-row>
-      <AdminFilterActions
-        class="mt-4"
-        :apply-label="t('giving.applyFilters')"
-        :clear-label="t('giving.clearFilters')"
-        :loading="isFetching"
-        @clear="$emit('clear')"
+    <AdminFilterToolbar class="pa-5" @apply="$emit('apply')">
+      <v-text-field
+        v-model.number="filters.year"
+        class="admin-filter-control"
+        :label="t('Year')"
+        type="number"
+        density="compact"
+        variant="outlined"
+        hide-details
       />
-    </v-form>
+      <v-select
+        v-model="filters.status"
+        class="admin-filter-control"
+        :label="t('Status')"
+        :items="optionItems(['', 'pending', 'succeeded', 'failed', 'refunded'])"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <v-select
+        v-model="filters.fundId"
+        class="admin-filter-control"
+        :label="t('Fund')"
+        :items="fundItems"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <v-text-field
+        v-model="filters.category"
+        class="admin-filter-control"
+        :label="t('Category')"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <v-text-field
+        v-model="filters.query"
+        class="admin-filter-control"
+        :label="t('Search')"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <template #actions>
+        <AdminFilterActions
+          :apply-label="t('giving.applyFilters')"
+          :clear-label="t('giving.clearFilters')"
+          :loading="isFetching"
+          @clear="$emit('clear')"
+        />
+      </template>
+    </AdminFilterToolbar>
     <v-divider />
     <v-progress-linear v-if="isPending" indeterminate color="primary" />
     <v-alert v-else-if="error" type="error" variant="tonal" class="ma-4">

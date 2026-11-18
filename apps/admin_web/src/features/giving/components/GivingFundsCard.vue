@@ -4,6 +4,7 @@ import type { GivingFund } from "@mbc/api-contracts";
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 
 import type { GivingFundFilterForm } from "../giving_workspace_models";
 import GivingRefreshError from "./GivingRefreshError.vue";
@@ -56,36 +57,33 @@ const { optionItems, t } = useI18n();
       </v-btn>
     </div>
 
-    <v-form class="mt-4" @submit.prevent="$emit('apply')">
-      <v-row dense>
-      <v-col cols="12" sm="6">
-        <v-select
-          v-model="filters.status"
-          :label="t('Status')"
-          :items="optionItems(['', 'draft', 'active', 'paused', 'archived'])"
-          density="compact"
-          variant="outlined"
-          hide-details
-        />
-      </v-col>
-      <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="filters.query"
-          :label="t('Search')"
-          density="compact"
-          variant="outlined"
-          hide-details
-        />
-      </v-col>
-      </v-row>
-      <AdminFilterActions
-        class="mt-4"
-        :apply-label="t('giving.applyFilters')"
-        :clear-label="t('giving.clearFilters')"
-        :loading="isFetching"
-        @clear="$emit('clear')"
+    <AdminFilterToolbar class="mt-4" @apply="$emit('apply')">
+      <v-select
+        v-model="filters.status"
+        class="admin-filter-control"
+        :label="t('Status')"
+        :items="optionItems(['', 'draft', 'active', 'paused', 'archived'])"
+        density="compact"
+        variant="outlined"
+        hide-details
       />
-    </v-form>
+      <v-text-field
+        v-model="filters.query"
+        class="admin-filter-control"
+        :label="t('Search')"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <template #actions>
+        <AdminFilterActions
+          :apply-label="t('giving.applyFilters')"
+          :clear-label="t('giving.clearFilters')"
+          :loading="isFetching"
+          @clear="$emit('clear')"
+        />
+      </template>
+    </AdminFilterToolbar>
 
     <v-progress-linear v-if="isPending" class="mt-4" indeterminate />
     <v-alert v-else-if="error" type="error" variant="tonal" class="mt-4">
