@@ -5,6 +5,7 @@ import type {
 } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 
 type GuideFilters = {
   query: string;
@@ -22,23 +23,45 @@ const { t } = useI18n();
 <template>
   <v-card class="mt-5" variant="outlined">
     <v-card-text>
-      <v-row dense>
-        <v-col cols="12" md="4">
-          <v-text-field v-model="filters.query" :label="t('Search')" density="compact" hide-details variant="outlined" @keyup.enter="$emit('apply')" />
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field v-model="filters.sermonId" :label="t('Sermon ID')" density="compact" hide-details variant="outlined" @keyup.enter="$emit('apply')" />
-        </v-col>
-        <v-col cols="12" md="2">
-          <v-select v-model="filters.status" :items="statusItems" :label="t('Status')" density="compact" hide-details variant="outlined" />
-        </v-col>
-        <v-col cols="12" md="2">
-          <v-select v-model="filters.audienceType" :items="audienceItems" :label="t('Audience')" density="compact" hide-details variant="outlined" />
-        </v-col>
-        <v-col cols="12" md="1">
-          <v-btn block variant="tonal" @click="$emit('apply')">{{ t("common.go") }}</v-btn>
-        </v-col>
-      </v-row>
+      <AdminFilterToolbar @apply="$emit('apply')">
+        <v-text-field
+          v-model="filters.query"
+          class="admin-filter-control"
+          :label="t('Search')"
+          density="compact"
+          hide-details
+          variant="outlined"
+        />
+        <v-text-field
+          v-model="filters.sermonId"
+          class="admin-filter-control"
+          :label="t('Sermon ID')"
+          density="compact"
+          hide-details
+          variant="outlined"
+        />
+        <v-select
+          v-model="filters.status"
+          class="admin-filter-control"
+          :items="statusItems"
+          :label="t('Status')"
+          density="compact"
+          hide-details
+          variant="outlined"
+        />
+        <v-select
+          v-model="filters.audienceType"
+          class="admin-filter-control"
+          :items="audienceItems"
+          :label="t('Audience')"
+          density="compact"
+          hide-details
+          variant="outlined"
+        />
+        <template #actions>
+          <v-btn type="submit" variant="tonal">{{ t("common.go") }}</v-btn>
+        </template>
+      </AdminFilterToolbar>
     </v-card-text>
   </v-card>
 </template>

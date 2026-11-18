@@ -57,8 +57,9 @@ describe("Bible notes query state", () => {
   });
 
   test("submits filters only through an explicit search intent", () => {
-    expect(filters).toContain("@keyup.enter=\"$emit('apply')\"");
-    expect(filters).toContain("@click=\"$emit('apply')\"");
+    expect(filters).toContain("AdminFilterToolbar");
+    expect(filters).toContain("@apply=\"$emit('apply')\"");
+    expect(filters).toContain('type="submit"');
     expect(filters).not.toContain("@update:model-value");
   });
 
