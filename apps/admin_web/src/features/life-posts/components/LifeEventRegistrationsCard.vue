@@ -6,6 +6,7 @@ import type {
 } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import { eventRegistrationCountLabel } from "../life_event_registration_presenters";
 import type {
   CheckInCodeDialog,
@@ -126,20 +127,20 @@ const { optionItems, t } = useI18n();
         </div>
       </div>
 
-      <div class="d-flex ga-2">
+      <AdminFilterToolbar @apply="emit('applyFilters')">
         <v-text-field
           v-model="filters.query"
+          class="admin-filter-control"
           :label="t('Search')"
           append-inner-icon="mdi-magnify"
           density="compact"
           variant="outlined"
           hide-details
           @click:append-inner="emit('applyFilters')"
-          @keyup.enter="emit('applyFilters')"
         />
         <v-select
           v-model="filters.status"
-          class="registration-status-filter"
+          class="admin-filter-control"
           :label="t('Status')"
           :items="optionItems(['', 'confirmed', 'cancelled', 'checked_in', 'absent'])"
           density="compact"
@@ -147,7 +148,7 @@ const { optionItems, t } = useI18n();
           hide-details
           @update:model-value="emit('applyFilters')"
         />
-      </div>
+      </AdminFilterToolbar>
     </div>
 
     <v-progress-linear
@@ -220,15 +221,3 @@ const { optionItems, t } = useI18n();
     />
   </v-card>
 </template>
-
-<style scoped>
-.registration-status-filter {
-  flex: 0 0 150px;
-}
-
-@media (max-width: 480px) {
-  .registration-status-filter {
-    flex-basis: 130px;
-  }
-}
-</style>

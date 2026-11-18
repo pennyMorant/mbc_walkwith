@@ -1,6 +1,20 @@
 import { describe, expect, test } from "bun:test";
 
+const registrationCard = await Bun.file(
+  new URL(
+    "../src/features/life-posts/components/LifeEventRegistrationsCard.vue",
+    import.meta.url
+  )
+).text();
+
 describe("admin event registration localization", () => {
+  test("uses the shared responsive filter layout", () => {
+    expect(registrationCard).toContain("AdminFilterToolbar");
+    expect(registrationCard).toContain("@apply=\"emit('applyFilters')\"");
+    expect(registrationCard).toContain("admin-filter-control");
+    expect(registrationCard).not.toContain("registration-status-filter");
+  });
+
   test("defines the complete registration workspace in every locale", async () => {
     const source = await Bun.file(
       new URL("../src/core/i18n/i18n.ts", import.meta.url)
