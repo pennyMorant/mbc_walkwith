@@ -21,6 +21,7 @@ const consumers = await Promise.all(
     "groups/components/GroupAttendancePanel.vue",
     "groups/components/GroupMaterialsPanel.vue",
     "groups/components/GroupMembershipsPanel.vue",
+    "jobs/components/JobQueueCard.vue",
     "life-posts/components/LifePostLibraryFilters.vue",
     "newcomers/components/NewcomerFiltersCard.vue",
     "prayer/components/PrayerRequestsTable.vue",

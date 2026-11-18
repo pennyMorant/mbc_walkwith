@@ -69,9 +69,22 @@ describe("jobs query states", () => {
   });
 
   test("separates draft filters from applied query filters", () => {
+    const queueCard = readFileSync(
+      new URL(
+        "../src/features/jobs/components/JobQueueCard.vue",
+        import.meta.url
+      ),
+      "utf8"
+    );
+
     expect(queueQuery).toContain("const appliedFilters = ref<JobListFilters>");
     expect(queueQuery).toContain("function applyJobFilters()");
     expect(page).toContain('@filters-changed="applyJobFilters"');
+    expect(queueCard).toContain("AdminFilterToolbar");
+    expect(queueCard).toContain("@apply=\"$emit('filtersChanged')\"");
+    expect(queueCard).toContain(
+      "@update:model-value=\"$emit('filtersChanged')\""
+    );
   });
 
   test("projects the queue into responsive records without changing open intent", () => {

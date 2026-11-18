@@ -4,6 +4,7 @@ import type { Job, JobStatus, JobType } from "@mbc/api-contracts";
 import { formatAdminDateTime } from "@/core/i18n/date_time";
 import { useI18n } from "@/core/i18n/i18n";
 import AdminDataState from "@/core/ui/AdminDataState.vue";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminRetryAlert from "@/core/ui/AdminRetryAlert.vue";
@@ -47,50 +48,47 @@ const { locale, optionItems, t } = useI18n();
           <v-chip>{{ jobs.length }}</v-chip>
         </template>
       </AdminPanelHeader>
-      <v-row dense class="mt-4">
-        <v-col cols="12" md="3">
-          <v-select
-            v-model="filters.status"
-            :label="t('Status')"
-            :items="optionItems(jobStatuses)"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @update:model-value="$emit('filtersChanged')"
-          />
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-select
-            v-model="filters.type"
-            :label="t('Type')"
-            :items="optionItems(['', ...jobTypes])"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @update:model-value="$emit('filtersChanged')"
-          />
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field
-            v-model="filters.resourceType"
-            :label="t('Resource type')"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @keyup.enter="$emit('filtersChanged')"
-          />
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-text-field
-            v-model="filters.resourceId"
-            :label="t('Resource ID')"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @keyup.enter="$emit('filtersChanged')"
-          />
-        </v-col>
-      </v-row>
+      <AdminFilterToolbar
+        class="mt-4"
+        @apply="$emit('filtersChanged')"
+      >
+        <v-select
+          v-model="filters.status"
+          class="admin-filter-control"
+          :label="t('Status')"
+          :items="optionItems(jobStatuses)"
+          density="compact"
+          variant="outlined"
+          hide-details
+          @update:model-value="$emit('filtersChanged')"
+        />
+        <v-select
+          v-model="filters.type"
+          class="admin-filter-control"
+          :label="t('Type')"
+          :items="optionItems(['', ...jobTypes])"
+          density="compact"
+          variant="outlined"
+          hide-details
+          @update:model-value="$emit('filtersChanged')"
+        />
+        <v-text-field
+          v-model="filters.resourceType"
+          class="admin-filter-control"
+          :label="t('Resource type')"
+          density="compact"
+          variant="outlined"
+          hide-details
+        />
+        <v-text-field
+          v-model="filters.resourceId"
+          class="admin-filter-control"
+          :label="t('Resource ID')"
+          density="compact"
+          variant="outlined"
+          hide-details
+        />
+      </AdminFilterToolbar>
     </div>
     <v-divider />
 
