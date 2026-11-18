@@ -80,6 +80,9 @@ describe("life post library query state", () => {
       expect(source).not.toContain("@keyup.enter");
       expect(source).not.toContain("refetch");
     }
+    expect(filters).toContain("AdminFilterToolbar");
+    expect(filters).toContain("admin-filter-control");
+    expect(filters).not.toContain("<v-form");
     expect(card).toContain("AdminResponsiveTable");
     expect(card).toContain('<template #desktop>');
     expect(card).toContain('<template #mobile>');

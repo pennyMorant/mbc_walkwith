@@ -26,6 +26,9 @@ describe("prayer query and command state", () => {
     expect(table).not.toContain("@keyup.enter");
     expect(table).not.toContain("@update:model-value");
     expect(table).not.toContain("@/core/api");
+    expect(table).toContain("AdminFilterToolbar");
+    expect(table).toContain("admin-filter-control");
+    expect(table).not.toContain("<v-form");
   });
 
   test("preserves canonical results when a refresh fails", async () => {

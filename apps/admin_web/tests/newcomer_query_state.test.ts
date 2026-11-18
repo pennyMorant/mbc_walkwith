@@ -28,6 +28,9 @@ describe("newcomer query state", () => {
     expect(filters).not.toContain("@/core/api");
     expect(filters).not.toContain("refetch");
     expect(filters).not.toContain("@update:model-value");
+    expect(filters).toContain("AdminFilterToolbar");
+    expect(filters).toContain("admin-filter-control");
+    expect(filters).not.toContain("<v-form");
   });
 
   test("preserves the last successful list during refresh failures", async () => {

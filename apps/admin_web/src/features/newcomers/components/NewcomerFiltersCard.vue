@@ -3,6 +3,7 @@ import type { NewcomerStatus } from "@mbc/api-contracts";
 
 import { useI18n } from "@/core/i18n/i18n";
 import AdminFilterActions from "@/core/ui/AdminFilterActions.vue";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 
 defineProps<{
   fetching: boolean;
@@ -19,38 +20,34 @@ const { t } = useI18n();
 
 <template>
   <v-card variant="outlined">
-    <v-form class="pa-5" @submit.prevent="$emit('apply')">
-      <v-row dense align="center">
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="query"
-            :label="t('Search')"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-        </v-col>
-        <v-col cols="12" sm="8" md="4">
-          <v-select
-            v-model="status"
-            :label="t('Status')"
-            :items="statusItems"
-            density="compact"
-            variant="outlined"
-            hide-details
-          />
-        </v-col>
-        <v-col cols="12" sm="4" md="2">
-          <AdminFilterActions
-            :apply-label="t('newcomers.applyFilters')"
-            :clear-label="t('newcomers.clearFilters')"
-            :loading="fetching"
-            icon-only
-            align-end
-            @clear="$emit('clear')"
-          />
-        </v-col>
-      </v-row>
-    </v-form>
+    <AdminFilterToolbar class="pa-5" @apply="$emit('apply')">
+      <v-text-field
+        v-model="query"
+        class="admin-filter-control"
+        :label="t('Search')"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <v-select
+        v-model="status"
+        class="admin-filter-control"
+        :label="t('Status')"
+        :items="statusItems"
+        density="compact"
+        variant="outlined"
+        hide-details
+      />
+      <template #actions>
+        <AdminFilterActions
+          :apply-label="t('newcomers.applyFilters')"
+          :clear-label="t('newcomers.clearFilters')"
+          :loading="fetching"
+          icon-only
+          align-end
+          @clear="$emit('clear')"
+        />
+      </template>
+    </AdminFilterToolbar>
   </v-card>
 </template>
