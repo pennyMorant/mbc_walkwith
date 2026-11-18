@@ -7,6 +7,7 @@ const toolbar = await Bun.file(
 const consumers = await Promise.all(
   [
     "bible-notes/components/BibleNoteFilterCard.vue",
+    "bible-knowledge/components/BibleKnowledgeEntityListCard.vue",
     "courses/components/CourseEnrollmentsPanel.vue",
     "discipleship/components/DiscipleshipAssignmentsPanel.vue",
     "discipleship/components/DiscipleshipFiltersCard.vue",
@@ -27,6 +28,7 @@ const consumers = await Promise.all(
     "reading-plans/components/ReadingPlanAssignmentsPanel.vue",
     "sermon-discussion-guides/components/SermonDiscussionGuideFiltersCard.vue",
     "sermon-discussion-guides/components/SermonDiscussionResponsesPanel.vue",
+    "sermons/components/SermonLibraryCard.vue",
     "notifications/components/NotificationDeliveryFiltersCard.vue",
     "settings/components/SettingsFiltersCard.vue"
   ].map((path) =>

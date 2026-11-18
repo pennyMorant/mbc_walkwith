@@ -52,6 +52,9 @@ describe("sermon library models", () => {
     expect(component).not.toContain('class="d-none d-md-block"');
     expect(component).not.toContain('class="d-md-none"');
     expect(component).toContain("<AdminMobileRecord");
+    expect(component).toContain("AdminFilterToolbar");
+    expect(component).toContain("@apply=\"emit('search')\"");
+    expect(component).toContain('type="submit"');
     expect(component).toContain("@activate=\"emit('open', sermon)\"");
     expect(component).toContain(":title=\"t('sermons.noResults')\"");
     expect(messages.split('"sermons.noResults":').length - 1).toBe(4);

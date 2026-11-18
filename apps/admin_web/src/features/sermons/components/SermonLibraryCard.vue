@@ -3,6 +3,7 @@ import type { Sermon } from "@mbc/api-contracts";
 
 import { formatApiErrorMessage } from "@/core/api/api_errors";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMobileRecord from "@/core/ui/AdminMobileRecord.vue";
 import AdminPanelHeader from "@/core/ui/AdminPanelHeader.vue";
 import AdminResponsiveTable from "@/core/ui/AdminResponsiveTable.vue";
@@ -48,77 +49,69 @@ const { optionItems, t } = useI18n();
           <v-chip>{{ sermons.length }}</v-chip>
         </template>
       </AdminPanelHeader>
-      <v-row dense class="mt-4">
-        <v-col cols="12" md="3">
-          <v-text-field
-            v-model="filters.query"
-            :label="t('Search')"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @keyup.enter="emit('search')"
-          />
-        </v-col>
-        <v-col cols="12" md="2">
-          <v-select
-            v-model="filters.status"
-            :label="t('Status')"
-            :items="
-              optionItems([
-                '',
-                'draft',
-                'processing',
-                'needs_review',
-                'published',
-                'archived',
-                'failed'
-              ])
-            "
-            density="compact"
-            variant="outlined"
-            hide-details
-            @update:model-value="emit('search')"
-          />
-        </v-col>
-        <v-col cols="12" md="2">
-          <v-text-field
-            v-model="filters.speaker"
-            :label="t('Speaker')"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @keyup.enter="emit('search')"
-          />
-        </v-col>
-        <v-col cols="12" md="2">
-          <v-text-field
-            v-model="filters.series"
-            :label="t('Series')"
-            density="compact"
-            variant="outlined"
-            hide-details
-            @keyup.enter="emit('search')"
-          />
-        </v-col>
-        <v-col cols="12" md="2">
-          <v-combobox
-            v-model="filters.topic"
-            :label="t('Topic')"
-            :items="topicOptions"
-            :loading="topicsLoading"
-            density="compact"
-            variant="outlined"
-            clearable
-            hide-details
-            @update:model-value="emit('search')"
-          />
-        </v-col>
-        <v-col cols="12" md="1">
-          <v-btn block variant="tonal" @click="emit('search')">
+      <AdminFilterToolbar class="mt-4" @apply="emit('search')">
+        <v-text-field
+          v-model="filters.query"
+          class="admin-filter-control"
+          :label="t('Search')"
+          density="compact"
+          variant="outlined"
+          hide-details
+        />
+        <v-select
+          v-model="filters.status"
+          class="admin-filter-control"
+          :label="t('Status')"
+          :items="
+            optionItems([
+              '',
+              'draft',
+              'processing',
+              'needs_review',
+              'published',
+              'archived',
+              'failed'
+            ])
+          "
+          density="compact"
+          variant="outlined"
+          hide-details
+          @update:model-value="emit('search')"
+        />
+        <v-text-field
+          v-model="filters.speaker"
+          class="admin-filter-control"
+          :label="t('Speaker')"
+          density="compact"
+          variant="outlined"
+          hide-details
+        />
+        <v-text-field
+          v-model="filters.series"
+          class="admin-filter-control"
+          :label="t('Series')"
+          density="compact"
+          variant="outlined"
+          hide-details
+        />
+        <v-combobox
+          v-model="filters.topic"
+          class="admin-filter-control"
+          :label="t('Topic')"
+          :items="topicOptions"
+          :loading="topicsLoading"
+          density="compact"
+          variant="outlined"
+          clearable
+          hide-details
+          @update:model-value="emit('search')"
+        />
+        <template #actions>
+          <v-btn type="submit" variant="tonal">
             {{ t("common.go") }}
           </v-btn>
-        </v-col>
-      </v-row>
+        </template>
+      </AdminFilterToolbar>
     </div>
     <v-divider />
 
