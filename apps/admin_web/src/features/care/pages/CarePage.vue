@@ -21,6 +21,7 @@ import {
 } from "@/core/api/care";
 import { useAdminAuthStore } from "@/core/auth/auth_store";
 import { useI18n } from "@/core/i18n/i18n";
+import AdminFilterToolbar from "@/core/ui/AdminFilterToolbar.vue";
 import AdminMetricGrid from "@/core/ui/AdminMetricGrid.vue";
 import AdminPageHeader from "@/core/ui/AdminPageHeader.vue";
 import AdminRefreshButton from "@/core/ui/AdminRefreshButton.vue";
@@ -297,45 +298,40 @@ function addCareFollowUp() {
     <AdminMetricGrid :items="summaryMetrics" />
 
     <v-card class="mt-6" variant="outlined">
-      <div class="pa-5">
-        <v-row dense>
-          <v-col cols="12" md="5">
-            <v-text-field
-              v-model="filters.query"
-              :label="t('Search')"
-              density="compact"
-              variant="outlined"
-              hide-details
-              @keyup.enter="applyFilters"
-            />
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-select
-              v-model="filters.status"
-              :label="t('Status')"
-              :items="
-                optionItems([
-                  '',
-                  'submitted',
-                  'assigned',
-                  'in_progress',
-                  'resolved',
-                  'archived'
-                ])
-              "
-              density="compact"
-              variant="outlined"
-              hide-details
-              @update:model-value="applyFilters"
-            />
-          </v-col>
-          <v-col cols="12" md="3">
-            <v-btn block variant="tonal" @click="applyFilters">
-              {{ t("common.go") }}
-            </v-btn>
-          </v-col>
-        </v-row>
-      </div>
+      <AdminFilterToolbar class="pa-5" @apply="applyFilters">
+        <v-text-field
+          v-model="filters.query"
+          class="admin-filter-control"
+          :label="t('Search')"
+          density="compact"
+          variant="outlined"
+          hide-details
+        />
+        <v-select
+          v-model="filters.status"
+          class="admin-filter-control"
+          :label="t('Status')"
+          :items="
+            optionItems([
+              '',
+              'submitted',
+              'assigned',
+              'in_progress',
+              'resolved',
+              'archived'
+            ])
+          "
+          density="compact"
+          variant="outlined"
+          hide-details
+          @update:model-value="applyFilters"
+        />
+        <template #actions>
+          <v-btn type="submit" variant="tonal">
+            {{ t("common.go") }}
+          </v-btn>
+        </template>
+      </AdminFilterToolbar>
       <v-divider />
       <CareRequestResults
         :requests="requests"

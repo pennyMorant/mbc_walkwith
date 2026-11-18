@@ -94,6 +94,8 @@ describe("people workspace responsive results", () => {
 
     expect(listQuery).toContain("appliedFilters");
     expect(listQuery).toContain("memberFilterSnapshot(filters)");
+    expect(page).toContain("AdminFilterToolbar");
+    expect(page).toContain('@apply="applyFilters"');
     expect(listQuery).toContain("initialError");
     expect(listQuery).toContain("refreshError");
     expect(page).toContain("detailRequestVersion");
@@ -151,6 +153,8 @@ describe("people workspace responsive results", () => {
 
     expect(page).toContain("appliedFilters");
     expect(page).toContain("careFilterSnapshot(filters)");
+    expect(page).toContain("AdminFilterToolbar");
+    expect(page).toContain('@apply="applyFilters"');
     expect(page).toContain("careContextVersion");
     expect(page).toContain("isCurrentCareContext");
     expect(page).toContain('updateErrorMessage = ref("")');
