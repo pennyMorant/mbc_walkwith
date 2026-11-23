@@ -31,7 +31,7 @@ describe("member workspace models", () => {
     form.email = " member@example.com ";
     form.displayName = " Grace Member ";
     form.phone = "   ";
-    form.address = "  123 Church Street ";
+    form.address = "  Example Campus ";
     form.faithStartYear = " 2004 ";
     form.baptizedYear = "2005";
     form.joinedChurchAt = "2020-01-05";
@@ -43,7 +43,7 @@ describe("member workspace models", () => {
     expect(payload.email).toBe("member@example.com");
     expect(payload.displayName).toBe("Grace Member");
     expect(payload.phone).toBeNull();
-    expect(payload.address).toBe("123 Church Street");
+    expect(payload.address).toBe("Example Campus");
     expect(payload.faithStartYear).toBe(2004);
     expect(payload.baptizedYear).toBe(2005);
     expect(payload.joinedChurchAt).toBe("2020-01-05");
@@ -73,7 +73,7 @@ describe("member workspace models", () => {
       email: "member@example.com",
       displayName: "Member",
       phone: "555-0101",
-      address: "123 Church Street",
+      address: "Example Campus",
       faithStartYear: 2004,
       baptizedYear: 2005,
       joinedChurchAt: "2020-01-05",
@@ -93,7 +93,7 @@ describe("member workspace models", () => {
       updatedAt: "2026-01-01T00:00:00.000Z"
     });
 
-    expect(form.address).toBe("123 Church Street");
+    expect(form.address).toBe("Example Campus");
     expect(form.faithStartYear).toBe("2004");
     expect(form.baptizedYear).toBe("2005");
     expect(form.joinedChurchAt).toBe("2020-01-05");
