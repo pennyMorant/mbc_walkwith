@@ -1,0 +1,20 @@
+title = "MBC WalkWith Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Allow the fixed Stripe test placeholder only in its provider test."
+condition = "AND"
+targetRules = ["stripe-access-token"]
+regexTarget = "line"
+paths = ['''^backend/tests/stripe-giving\.provider\.test\.ts$''']
+regexes = ['''stripeSecretKey:\s*"sk_test_configured"''']
+
+[[allowlists]]
+description = "Allow explicit Docker example auth placeholders only in the example environment file."
+condition = "AND"
+targetRules = ["generic-api-key"]
+regexTarget = "line"
+paths = ['''^infra/docker/backend\.env\.example$''']
+regexes = ['''(auth_secret=replace-with-an-independent-secret-of-at-least-32-characters|app_user_auth_secret=replace-with-another-secret-of-at-least-32-characters)''']
